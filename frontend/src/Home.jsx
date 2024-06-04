@@ -2,7 +2,6 @@ import { Box } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import { Navbar } from "./Navbar.jsx";
 import { Header } from "./Header.jsx";
-import { Category } from "./Category.jsx";
 
 export function Home() {
   return (
@@ -12,9 +11,6 @@ export function Home() {
       </Box>
       <Box>
         <Header />
-      </Box>
-      <Box>
-        <Category />
       </Box>
       <Box>
         <Outlet />
