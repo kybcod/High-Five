@@ -7,6 +7,7 @@ export function Navbar() {
   return (
     <Flex bgColor={"blue"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
+      <Center onClick={() => navigate("/write")}>upload</Center>
       <Center>📢</Center>
     </Flex>
   );
