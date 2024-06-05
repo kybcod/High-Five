@@ -1,8 +1,9 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Home } from "./Home.jsx";
-import { ProductList } from "./product/ProductList.jsx";
-import { ProductUpload } from "./product/ProductUpload.jsx";
+import {ChakraProvider} from "@chakra-ui/react";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {Home} from "./Home.jsx";
+import {ProductList} from "./product/ProductList.jsx";
+import {ProductUpload} from "./product/ProductUpload.jsx";
+import {QnaCreate} from "./QnaCreate.jsx";
 
 const router = createBrowserRouter([
   {
@@ -11,6 +12,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <ProductList /> },
       { path: "write", element: <ProductUpload /> },
+      { path: "qna", element: <QnaCreate /> },
     ],
   },
 ]);

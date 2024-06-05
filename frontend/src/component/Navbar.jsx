@@ -1,13 +1,14 @@
-import { Center, Flex } from "@chakra-ui/react";
+import {Box, HStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 export function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <Flex bgColor={"lightgreen"}>
-      <Center onClick={() => navigate("/")}>HOME</Center>
-      <Center onClick={() => navigate("/write")}>upload</Center>
-    </Flex>
+    <HStack bgColor={"seashell"}>
+      <Box onClick={() => navigate("/")}>HOME</Box>
+      <Box onClick={() => navigate("/write")}>upload</Box>
+      <Box onClick={() => navigate("/qna")} cursor="pointer">QnA</Box>
+    </HStack>
   );
 }
