@@ -1,8 +1,8 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home } from "./Home.jsx";
-import { ProductList } from "./ProductList.jsx";
-import { ProductUpload } from "./ProductUpload.jsx";
+import { ProductList } from "./product/ProductList.jsx";
+import { ProductUpload } from "./product/ProductUpload.jsx";
 
 const router = createBrowserRouter([
   {

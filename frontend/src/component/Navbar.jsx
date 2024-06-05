@@ -5,10 +5,9 @@ export function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <Flex bgColor={"blue"}>
+    <Flex bgColor={"lightgreen"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
       <Center onClick={() => navigate("/write")}>upload</Center>
-      <Center>📢</Center>
     </Flex>
   );
 }
