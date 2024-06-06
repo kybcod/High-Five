@@ -1,6 +1,7 @@
 package com.backend.service.Product;
 
 import com.backend.domain.Product.Product;
+import com.backend.domain.Product.ProductFile;
 import com.backend.mapper.Product.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -52,4 +54,20 @@ public class ProductService {
     }
 
 
+    public List<Product> list(Integer id) {
+        List<Product> products = mapper.selectAll();
+        System.out.println("products = " + products);
+
+        // 각 product에 첫 번째 파일을 설정
+        for (Product product : products) {
+            List<String> productFiles = mapper.selectFileByProductId(product.getId());
+            if (!productFiles.isEmpty()) {
+                ProductFile firstFile = new ProductFile(productFiles.get(0), STR."\{srcPrefix}\{product.getId()}/\{productFiles.get(0)}");
+                product.setProductFileList(List.of(firstFile));
+            }
+        }
+        return products;
+    }
+
+    ;
 }

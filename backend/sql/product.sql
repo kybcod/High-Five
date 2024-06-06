@@ -2,9 +2,20 @@ USE prj3;
 
 SELECT *
 FROM product;
-INSERT INTO product
-    (title, category, start_price, content, end_time)
-VALUES ('123', 'goods', '100', '123', '2024-06-06T19:04');
+
+SELECT p.id,
+       p.title,
+       p.category,
+       p.start_price,
+       p.start_time,
+       p.end_time,
+       p.content,
+       pf.file_name
+FROM product p
+         LEFT JOIN (SELECT product_id, file_name
+                    FROM product_file
+                    GROUP BY product_id) pf ON p.id = pf.product_id
+ORDER BY p.end_time;
 
 DESC product;
 
