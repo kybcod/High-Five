@@ -22,7 +22,6 @@ public class ProductController {
     @PostMapping("")
     public void upload(Product product,
                        @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
-        System.out.println("product = " + product);
         service.upload(product, files);
     }
 }

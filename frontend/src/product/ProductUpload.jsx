@@ -1,8 +1,11 @@
 import {
   Box,
   Button,
+  Center,
+  Flex,
   FormControl,
   FormLabel,
+  Image,
   Input,
   Select,
   Textarea,
@@ -43,9 +46,18 @@ export function ProductUpload() {
       });
   }
 
+  const filePreview = Array.from(files).map((file, index) => (
+    <Box key={index}>
+      <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
+    </Box>
+  ));
+
   return (
     <Box>
       <Box>
+        <Flex>
+          <Center>{filePreview}</Center>
+        </Flex>
         <FormControl>
           <FormLabel>상품 이미지</FormLabel>
           <Input
