@@ -9,8 +9,8 @@ import org.apache.ibatis.annotations.Options;
 public interface ProductMapper {
 
     @Insert("""
-            INSERT INTO product (id, category, start_price, end_time, content)
-            VALUES (#{id}, #{category}, #{startPrice}, #{endTime}, #{content})
+            INSERT INTO product (title, category, start_price, end_time, content)
+            VALUES (#{title}, #{category}, #{startPrice}, #{endTime}, #{content})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Product product);

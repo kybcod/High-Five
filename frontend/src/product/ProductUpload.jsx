@@ -10,30 +10,27 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function ProductUpload() {
-  const [prodcutList, setProdcutList] = useState([]);
-  const [id, setId] = useState(0);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [startPrice, setStartPrice] = useState(0);
-  const [endPrice, setEndPrice] = useState(0);
   const [endTime, setEndTime] = useState(null);
-  const [productFiles, setProductFiles] = useState([]);
+  const [files, setFiles] = useState([]);
   const [content, setContent] = useState("");
   const toast = useToast();
+  const navigate = useNavigate();
 
   function handleSaleClick() {
     axios
       .postForm("/api/products", {
-        id,
         title,
         category,
         startPrice,
-        endPrice,
         endTime,
-        productFiles,
         content,
+        files,
       })
       .then(() => {
         toast({
@@ -42,6 +39,7 @@ export function ProductUpload() {
           position: "top-right",
           duration: 1000,
         });
+        navigate("/");
       });
   }
 
@@ -53,7 +51,8 @@ export function ProductUpload() {
           <Input
             type={"file"}
             multiple
-            onChange={(e) => setProductFiles(e.target.files)}
+            accept={"image/*"}
+            onChange={(e) => setFiles(e.target.files)}
           />
         </FormControl>
       </Box>
@@ -71,7 +70,7 @@ export function ProductUpload() {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="clothes">의류</option>
-            <option value="option2">잡화</option>
+            <option value="goods">잡화</option>
             <option value="food">식품</option>
             <option value="digital">디지털</option>
             <option value="sport">스포츠</option>
