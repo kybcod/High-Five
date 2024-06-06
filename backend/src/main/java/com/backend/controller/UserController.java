@@ -1,6 +1,6 @@
 package com.backend.controller;
 
-import com.backend.service.UserService;
+import com.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,10 +17,9 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("users")
-    public void addUser(@RequestBody Map<String, String> user, String phoneNumber) {
-        System.out.println("email = " + user.get("email"));
-        System.out.println("password = " + user.get("password"));
-        System.out.println("nickName = " + user.get("nickName"));
-        System.out.println("phoneNumber = " + user.get("phoneNumber"));
+    public void addUser(@RequestBody Map<String, String> user, String phoneNumber, String customerCodee) {
+
+        String verificationCode = service.sendMessage(phoneNumber);
+        service.checkVerificationCode(verificationCode, customerCodee);
     }
 }

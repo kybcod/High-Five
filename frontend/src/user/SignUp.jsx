@@ -12,8 +12,6 @@ export function SignUp() {
     axios.post("/api/users", { email, password, nickName, phoneNumber });
   }
 
-  console.log(email);
-
   return (
     <Box>
       <Box>회원 가입</Box>
