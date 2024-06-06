@@ -58,16 +58,15 @@ public class ProductService {
         List<Product> products = mapper.selectAll();
         System.out.println("products = " + products);
 
-        // 각 product에 첫 번째 파일을 설정
+        // 각 product에 모든 파일을 설정
         for (Product product : products) {
             List<String> productFiles = mapper.selectFileByProductId(product.getId());
-            if (!productFiles.isEmpty()) {
-                ProductFile firstFile = new ProductFile(productFiles.get(0), STR."\{srcPrefix}\{product.getId()}/\{productFiles.get(0)}");
-                product.setProductFileList(List.of(firstFile));
-            }
+            List<ProductFile> files = productFiles.stream()
+                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+                    .toList();
+            product.setProductFileList(files);
         }
         return products;
     }
 
-    ;
 }
