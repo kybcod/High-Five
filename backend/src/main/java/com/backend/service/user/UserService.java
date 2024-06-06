@@ -1,8 +1,10 @@
 package com.backend.service.user;
 
 import com.backend.component.SmsUtil;
+import com.backend.domain.User;
 import com.backend.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserMapper mapper;
     private final SmsUtil sms;
+    private final PasswordEncoder passwordEncoder;
 
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
@@ -24,5 +27,11 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    public void addUser(User user) {
+        // TODO. password 테이블 글자수 변경(최대 1000자 하자....)
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        mapper.insertUser(user);
     }
 }

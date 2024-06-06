@@ -23,7 +23,9 @@ public class UserController {
         user.setPhoneNumber(phoneNumber);
 
         // TODO. 전화번호 보내는 API 분리
-        String verificationCode = service.sendMessage(phoneNumber);
-        service.checkVerificationCode(verificationCode, customerCodee);
+//        String verificationCode = service.sendMessage(phoneNumber);
+//        service.checkVerificationCode(verificationCode, customerCodee);
+
+        service.addUser(user);
     }
 }
