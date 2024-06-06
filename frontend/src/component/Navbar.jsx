@@ -8,6 +8,7 @@ export function Navbar() {
     <Flex bgColor={"lightgreen"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
       <Center onClick={() => navigate("/write")}>upload</Center>
+      <Center onClick={() => navigate("/signup")}>signup</Center>
     </Flex>
   );
 }
