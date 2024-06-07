@@ -46,7 +46,6 @@ export function ProductList() {
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
     setSearchParams(searchParams);
-    // navigate(`?${searchParams}`);
   }
 
   return (

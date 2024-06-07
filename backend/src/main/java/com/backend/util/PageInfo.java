@@ -19,8 +19,8 @@ public class PageInfo {
 
         int leftPageNumber = ((currentPageNumber - 1) / 10) * 10 + 1;
         int rightPageNumber = Math.min(leftPageNumber + 9, lastPageNumber);
-        int nextPageNumber = Math.min(currentPageNumber + 1, lastPageNumber);
-        int prevPageNumber = Math.max(currentPageNumber - 1, 1);
+        int nextPageNumber = Math.min(rightPageNumber + 1, lastPageNumber);
+        int prevPageNumber = Math.max(leftPageNumber - 1, 1);
 
 
         this.currentPageNumber = currentPageNumber;
