@@ -34,7 +34,7 @@ public interface ProductMapper {
                    p.end_time,
                    p.content
             FROM product p
-            ORDER BY p.end_time;
+            ORDER BY p.end_time
             """)
     List<Product> selectAll();
 
@@ -52,6 +52,8 @@ public interface ProductMapper {
 
 
     @Select("""
+            <script>
+            <bind name="pattern" value="'%' + keyword + '%'" />
             SELECT p.id,
                     p.title,
                     p.category,
@@ -59,10 +61,13 @@ public interface ProductMapper {
                     p.start_time,
                     p.end_time,
                     p.content
-             FROM product p
-            LIMIT #{pageSize} OFFSET #{offset}
-             """)
-    List<Product> selectWithPageable(Pageable pageable);
+            FROM product p
+            WHERE p.title LIKE #{pattern}
+            ORDER BY p.end_time
+            LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+            </script>
+            """)
+    List<Product> selectWithPageable(Pageable pageable, String keyword);
 
     @Select("""
             SELECT COUNT(*) FROM product

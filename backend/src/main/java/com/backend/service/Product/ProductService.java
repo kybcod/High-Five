@@ -73,8 +73,8 @@ public class ProductService {
         return products;
     }
 
-    public Map<String, Object> getList(Pageable pageable) {
-        List<Product> content = mapper.selectWithPageable(pageable);
+    public Map<String, Object> getList(Pageable pageable, String keyword) {
+        List<Product> content = mapper.selectWithPageable(pageable, keyword);
 
         // 각 product에 모든 파일을 설정
         for (Product product : content) {

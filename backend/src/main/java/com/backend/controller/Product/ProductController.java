@@ -31,9 +31,9 @@ public class ProductController {
     }
 
     @GetMapping("list")
-    public Map<String, Object> getListProduct(@RequestParam(defaultValue = "1") int page) {
-        Map<String, Object> test = service.getList(PageRequest.of(page - 1, 20));
-        return test;
+    public Map<String, Object> getListProduct(@RequestParam(defaultValue = "1") int page,
+                                              @RequestParam(defaultValue = "") String keyword) {
+        return service.getList(PageRequest.of(page - 1, 20), keyword);
     }
 
 }

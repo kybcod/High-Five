@@ -28,15 +28,15 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 export function ProductList() {
   const [productList, setProductList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
-  const [page] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`/api/products/list?${page}`).then((res) => {
+    axios.get(`/api/products/list?${searchParams}`).then((res) => {
       setProductList(res.data.content);
       setPageInfo(res.data.pageInfo);
     });
-  }, [page]);
+  }, [searchParams]);
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
@@ -44,8 +44,9 @@ export function ProductList() {
   }
 
   function handlePageButtonClick(pageNumber) {
-    page.set("page", pageNumber);
-    navigate(`?${page}`);
+    searchParams.set("page", pageNumber);
+    setSearchParams(searchParams);
+    // navigate(`?${searchParams}`);
   }
 
   return (
