@@ -3,6 +3,7 @@ package com.backend.domain.Product;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
@@ -19,4 +20,14 @@ public class Product {
     private int viewCount;
     private Boolean reviewStatus;
     private List<ProductFile> productFileList;
+
+    public String getEndTimeFormat() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH시 mm분 까지");
+        return endTime.format(formatter);
+    }
+
+    public String getStartTimeFormat() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        return startTime.format(formatter);
+    }
 }

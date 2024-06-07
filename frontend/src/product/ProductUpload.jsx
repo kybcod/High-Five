@@ -109,6 +109,7 @@ export function ProductUpload() {
         <FormControl>
           <FormLabel>상품 상세내용</FormLabel>
           <Textarea
+            whiteSpace={"pre-wrap"}
             onChange={(e) => setContent(e.target.value)}
             placeholder={"상품에 대한 정보 작성해주세요."}
           />
