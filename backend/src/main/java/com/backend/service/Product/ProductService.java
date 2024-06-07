@@ -3,8 +3,12 @@ package com.backend.service.Product;
 import com.backend.domain.Product.Product;
 import com.backend.domain.Product.ProductFile;
 import com.backend.mapper.Product.ProductMapper;
+import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +19,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -56,7 +61,6 @@ public class ProductService {
 
     public List<Product> list(Integer id) {
         List<Product> products = mapper.selectAll();
-        System.out.println("products = " + products);
 
         // 각 product에 모든 파일을 설정
         for (Product product : products) {
@@ -69,4 +73,21 @@ public class ProductService {
         return products;
     }
 
+    public Map<String, Object> getList(Pageable pageable) {
+        List<Product> content = mapper.selectWithPageable(pageable);
+
+        // 각 product에 모든 파일을 설정
+        for (Product product : content) {
+            List<String> productFiles = mapper.selectFileByProductId(product.getId());
+            List<ProductFile> files = productFiles.stream()
+                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+                    .toList();
+            product.setProductFileList(files);
+        }
+
+        int total = mapper.selectTotalCount();
+        Page<Product> page = new PageImpl<>(content, pageable, total);
+        PageInfo pageInfo = new PageInfo().setting(page);
+        return Map.of("content", content, "pageInfo", pageInfo);
+    }
 }

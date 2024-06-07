@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -31,12 +32,8 @@ public interface ProductMapper {
                    p.start_price,
                    p.start_time,
                    p.end_time,
-                   p.content,
-                   pf.file_name
+                   p.content
             FROM product p
-                     LEFT JOIN (SELECT product_id, file_name
-                                FROM product_file
-                                GROUP BY product_id) pf ON p.id = pf.product_id
             ORDER BY p.end_time;
             """)
     List<Product> selectAll();
@@ -52,4 +49,23 @@ public interface ProductMapper {
             WHERE id = #{id}
             """)
     Product selectById(Integer id);
+
+
+    @Select("""
+            SELECT p.id,
+                    p.title,
+                    p.category,
+                    p.start_price,
+                    p.start_time,
+                    p.end_time,
+                    p.content
+             FROM product p
+            LIMIT #{pageSize} OFFSET #{offset}
+             """)
+    List<Product> selectWithPageable(Pageable pageable);
+
+    @Select("""
+            SELECT COUNT(*) FROM product
+            """)
+    int selectTotalCount();
 }

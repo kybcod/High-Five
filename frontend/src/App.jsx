@@ -3,14 +3,16 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home } from "./Home.jsx";
 import { ProductList } from "./product/ProductList.jsx";
 import { ProductUpload } from "./product/ProductUpload.jsx";
+import { MainProduct } from "./product/MainProduct.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
     children: [
-      { index: true, element: <ProductList /> },
+      { index: true, element: <MainProduct /> },
       { path: "write", element: <ProductUpload /> },
+      { path: "list", element: <ProductList /> },
     ],
   },
 ]);

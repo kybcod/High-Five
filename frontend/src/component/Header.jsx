@@ -11,8 +11,17 @@ import {
 } from "@chakra-ui/react";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
+  const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
+
+  function handleSearchClick() {
+    navigate(`/?keyword=${keyword}`);
+  }
+
   return (
     <Box>
       <Flex mb={7} gap={3}>
@@ -26,11 +35,15 @@ export function Header() {
               <Box>
                 <InputGroup>
                   <InputLeftAddon>
-                    <Button size={"100%"}>
+                    <Button onClick={handleSearchClick} size={"100%"}>
                       <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </Button>
                   </InputLeftAddon>
-                  <Input w={"300px"} placeholder={"검색어를 입력하세요."} />
+                  <Input
+                    w={"300px"}
+                    placeholder={"검색어를 입력하세요."}
+                    onChange={(e) => setKeyword(e.target.value)}
+                  />
                 </InputGroup>
               </Box>
               <Box gap={1}></Box>

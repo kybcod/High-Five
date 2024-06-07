@@ -1,7 +1,6 @@
 import {
   Badge,
   Box,
-  Button,
   Card,
   CardBody,
   Center,
@@ -16,37 +15,13 @@ import {
 import { Category } from "../component/Category.jsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  faAngleLeft,
-  faAngleRight,
-  faAnglesLeft,
-  faAnglesRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate, useSearchParams } from "react-router-dom";
 
-export function ProductList() {
+export function MainProduct() {
   const [productList, setProductList] = useState([]);
-  const [pageInfo, setPageInfo] = useState({});
-  const [page] = useSearchParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`/api/products/list?${page}`).then((res) => {
-      setProductList(res.data.content);
-      setPageInfo(res.data.pageInfo);
-    });
-  }, [page]);
-
-  const pageNumbers = [];
-  for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
-    pageNumbers.push(i);
-  }
-
-  function handlePageButtonClick(pageNumber) {
-    page.set("page", pageNumber);
-    navigate(`?${page}`);
-  }
+    axios.get("/api/products").then((res) => setProductList(res.data));
+  }, []);
 
   return (
     <Box>
@@ -110,52 +85,6 @@ export function ProductList() {
           </GridItem>
         ))}
       </Grid>
-      <Center>
-        <Box mt={"30px"}>
-          {pageInfo.prevPageNumber && (
-            <>
-              <Button mr={"10px"} onClick={() => handlePageButtonClick(1)}>
-                <FontAwesomeIcon icon={faAnglesLeft} />
-              </Button>
-              <Button
-                mr={"10px"}
-                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleLeft} />
-              </Button>
-            </>
-          )}
-
-          {pageNumbers.map((pageNumber) => (
-            <Button
-              mr={"10px"}
-              onClick={() => handlePageButtonClick(pageNumber)}
-              key={pageNumber}
-              colorScheme={
-                pageNumber - 1 == pageInfo.currentPageNumber ? "teal" : "gray"
-              }
-            >
-              {pageNumber}
-            </Button>
-          ))}
-
-          {pageInfo.nextPageNumber && (
-            <>
-              <Button
-                mr={"10px"}
-                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleRight} />
-              </Button>
-              <Button
-                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAnglesRight} />
-              </Button>
-            </>
-          )}
-        </Box>
-      </Center>
     </Box>
   );
 }
