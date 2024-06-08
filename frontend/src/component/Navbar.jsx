@@ -12,14 +12,24 @@ export function Navbar() {
   return (
     <Flex gap={2} bgColor={"lightgreen"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
-      <Center onClick={() => navigate("/write")}>upload</Center>
-      <Center onClick={() => navigate("/signup")}>signup</Center>
-      <Center onClick={() => navigate("/login")}>login</Center>
-      <Center onClick={() => account.logout()}>logout</Center>
-      <Center>
-        <FontAwesomeIcon icon={faUser} />
-        {account.nickName} 님
-      </Center>
+      {account.isLoggedIn && (
+        <Center onClick={() => navigate("/write")}>upload</Center>
+      )}
+      {account.isLoggedIn || (
+        <Center onClick={() => navigate("/signup")}>signup</Center>
+      )}
+      {account.isLoggedIn || (
+        <Center onClick={() => navigate("/login")}>login</Center>
+      )}
+      {account.isLoggedIn && (
+        <Center onClick={() => account.logout()}>logout</Center>
+      )}
+      {account.isLoggedIn && (
+        <Center>
+          <FontAwesomeIcon icon={faUser} />
+          {account.nickName} 님
+        </Center>
+      )}
     </Flex>
   );
 }
