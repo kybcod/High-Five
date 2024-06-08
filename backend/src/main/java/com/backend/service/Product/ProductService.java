@@ -98,9 +98,6 @@ public class ProductService {
                 .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
                 .toList();
         product.setProductFileList(files);
-        System.out.println("product = " + product);
-        System.out.println("files = " + files);
-        System.out.println("productFiles = " + productFiles);
         return product;
     }
 }
