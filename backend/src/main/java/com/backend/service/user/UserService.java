@@ -30,8 +30,7 @@ public class UserService {
     }
 
     public void addUser(User user) {
-        // TODO. password 테이블 글자수 변경(최대 1000자 하자....)
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         mapper.insertUser(user);
     }
 }

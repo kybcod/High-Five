@@ -23,7 +23,7 @@ export function SignUp() {
   // TODO. 휴대폰 번호 11자리 (-)없이 숫자만 입력 가능하게끔 설정, 표시 메세지, 형식 다르면 메세지 전송버튼 활성화 X
 
   function handleSendCode() {
-    axios.get("/api/users/code");
+    axios.get(`/api/users/code?phoneNumber=${phoneNumber}`);
   }
 
   return (
