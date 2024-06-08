@@ -11,7 +11,7 @@ export function Login() {
   function handleLogin() {
     axios
       .post("api/users/login", { email, password })
-      .then((res) => account.login("token", res.data.token));
+      .then((res) => account.login(res.data.token));
   }
 
   return (
