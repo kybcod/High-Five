@@ -1,15 +1,17 @@
 import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
+import { LoginContext } from "./component/LoginProvider.jsx";
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const account = useContext(LoginContext);
 
   function handleLogin() {
     axios
       .post("api/users/login", { email, password })
-      .then((res) => localStorage.setItem("token", res.data.token));
+      .then((res) => account.login("token", res.data.token));
   }
 
   return (

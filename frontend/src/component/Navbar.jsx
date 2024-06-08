@@ -1,8 +1,11 @@
 import { Center, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { LoginContext } from "./LoginProvider.jsx";
 
 export function Navbar() {
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
 
   return (
     <Flex bgColor={"lightgreen"}>
@@ -10,6 +13,7 @@ export function Navbar() {
       <Center onClick={() => navigate("/write")}>upload</Center>
       <Center onClick={() => navigate("/signup")}>signup</Center>
       <Center onClick={() => navigate("/login")}>login</Center>
+      <Center onClick={() => account.logout()}>logout</Center>
     </Flex>
   );
 }
