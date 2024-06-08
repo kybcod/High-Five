@@ -36,4 +36,8 @@ public class ProductController {
         return service.getList(PageRequest.of(page - 1, 20), keyword);
     }
 
+    @GetMapping("{id}")
+    public Product getProduct(@PathVariable Integer id) {
+        return service.get(id);
+    }
 }

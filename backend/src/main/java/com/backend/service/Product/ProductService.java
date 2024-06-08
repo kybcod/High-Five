@@ -90,4 +90,17 @@ public class ProductService {
         PageInfo pageInfo = new PageInfo().setting(page);
         return Map.of("content", content, "pageInfo", pageInfo);
     }
+
+    public Product get(Integer id) {
+        Product product = mapper.selectById(id);
+        List<String> productFiles = mapper.selectFileByProductId(product.getId());
+        List<ProductFile> files = productFiles.stream()
+                .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+                .toList();
+        product.setProductFileList(files);
+        System.out.println("product = " + product);
+        System.out.println("files = " + files);
+        System.out.println("productFiles = " + productFiles);
+        return product;
+    }
 }
