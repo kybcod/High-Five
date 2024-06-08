@@ -1,4 +1,13 @@
-import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
 
@@ -12,6 +21,10 @@ export function SignUp() {
     axios.post("/api/users", { email, password, nickName, phoneNumber });
   }
   // TODO. 휴대폰 번호 11자리 (-)없이 숫자만 입력 가능하게끔 설정, 표시 메세지, 형식 다르면 메세지 전송버튼 활성화 X
+
+  function handleSendCode() {
+    axios.get("/api/users/code");
+  }
 
   return (
     <Box>
@@ -30,7 +43,15 @@ export function SignUp() {
       </FormControl>
       <FormControl>
         <FormLabel>휴대폰 번호</FormLabel>
-        <Input onChange={(e) => setPhoneNumber(e.target.value)} />
+        <InputGroup>
+          <Input onChange={(e) => setPhoneNumber(e.target.value)} />
+          <InputRightElement>
+            <Button onClick={handleSendCode}>인증 요청</Button>
+          </InputRightElement>
+        </InputGroup>
+        <FormHelperText>
+          휴대폰 번호는 (-)를 제외한 숫자만 입력해주세요 ex)01011112222
+        </FormHelperText>
       </FormControl>
       <Button onClick={handleSignUp}>회원가입</Button>
     </Box>
