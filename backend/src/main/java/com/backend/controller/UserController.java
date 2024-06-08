@@ -23,7 +23,7 @@ public class UserController {
     }
 
     // TODO. 나중에 활성화
-    @GetMapping("users/code")
+    @GetMapping("users/codes")
     public void sendCode(String phoneNumber) {
 //        String verificationCode = service.sendMessage(phoneNumber);
         // TODO. 인증 확인 API 분리
@@ -38,5 +38,25 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(token);
+    }
+
+    @GetMapping("/users/emails")
+    public ResponseEntity emails(String email) {
+        User user = service.getUserByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users/nickNames")
+    public ResponseEntity nickNames(String nickName) {
+        User user = service.getUserByNickName(nickName);
+
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
     }
 }

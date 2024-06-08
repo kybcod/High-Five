@@ -12,19 +12,19 @@ export function Navbar() {
   return (
     <Flex gap={2} bgColor={"lightgreen"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
-      {account.isLoggedIn && (
+      {account.isLoggedIn() && (
         <Center onClick={() => navigate("/write")}>upload</Center>
       )}
-      {account.isLoggedIn || (
+      {account.isLoggedIn() || (
         <Center onClick={() => navigate("/signup")}>signup</Center>
       )}
-      {account.isLoggedIn || (
+      {account.isLoggedIn() || (
         <Center onClick={() => navigate("/login")}>login</Center>
       )}
-      {account.isLoggedIn && (
+      {account.isLoggedIn() && (
         <Center onClick={() => account.logout()}>logout</Center>
       )}
-      {account.isLoggedIn && (
+      {account.isLoggedIn() && (
         <Center>
           <FontAwesomeIcon icon={faUser} />
           {account.nickName} 님

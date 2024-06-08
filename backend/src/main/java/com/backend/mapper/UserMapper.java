@@ -20,4 +20,18 @@ public interface UserMapper {
             WHERE email = #{email}
             """)
     User getUserByEmail(String email);
+
+    @Select("""
+                SELECT * 
+                FROM user
+                WHERE email = #{email}
+            """)
+    User selectUserByEmail(String email);
+
+    @Select("""
+                SELECT *
+                FROM user
+                WHERE nick_name = #{nickName}
+            """)
+    User selectUserByNickName(String nickName);
 }

@@ -47,7 +47,6 @@ public class UserService {
         Map<String, Object> result = null;
 
         User db = mapper.getUserByEmail(user.getEmail());
-        System.out.println("db.getNickName() = " + db.getNickName());
 
         if (db != null) {
             if (passwordEncoder.matches(user.getPassword(), db.getPassword())) {
@@ -72,5 +71,13 @@ public class UserService {
         }
 
         return result;
+    }
+
+    public User getUserByEmail(String email) {
+        return mapper.selectUserByEmail(email);
+    }
+
+    public User getUserByNickName(String nickName) {
+        return mapper.selectUserByNickName(nickName);
     }
 }
