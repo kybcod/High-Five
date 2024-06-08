@@ -36,9 +36,8 @@ export function LoginProvider({ children }) {
     setExpired(payload.exp);
     setId(payload.sub);
     setNickName(payload.nickName);
-    setAuthority(payload.scope.split(" "));
-
-    console.log(typeof payload);
+    // TODO. authority 추가되면 활성화
+    // setAuthority(payload.scope.split(" "));
   }
 
   function logout() {
