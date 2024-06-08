@@ -10,7 +10,7 @@ export function Navbar() {
   const account = useContext(LoginContext);
 
   return (
-    <Flex bgColor={"lightgreen"}>
+    <Flex gap={2} bgColor={"lightgreen"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
       <Center onClick={() => navigate("/write")}>upload</Center>
       <Center onClick={() => navigate("/signup")}>signup</Center>
