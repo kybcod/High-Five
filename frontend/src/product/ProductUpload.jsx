@@ -14,13 +14,16 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCamera, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 export function ProductUpload() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
-  const [startPrice, setStartPrice] = useState(0);
+  const [startPrice, setStartPrice] = useState("");
   const [endTime, setEndTime] = useState(null);
   const [files, setFiles] = useState([]);
+  const [filePreview, setFilePreView] = useState(null);
   const [content, setContent] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
@@ -46,27 +49,73 @@ export function ProductUpload() {
       });
   }
 
-  const filePreview = Array.from(files).map((file, index) => (
-    <Box key={index}>
-      <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
-    </Box>
-  ));
+  function handleRemoveFile(index) {
+    const newFiles = [...files];
+    const newFilePreviews = [...filePreview];
+    files.splice(index, 1);
+    filePreview.splice(index, 1);
+    setFiles(newFiles);
+    setFilePreView(newFilePreviews);
+  }
+
+  function handleChangeFiles(e) {
+    const fileList = e.target.files;
+    setFiles(fileList);
+
+    const filePreviewList = Array.from(fileList).map((file, index) => (
+      <Box key={index} boxSize={"180px"} position="relative">
+        <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
+        <Button
+          position="absolute"
+          top={1}
+          right={2}
+          variant="ghost"
+          onClick={() => handleRemoveFile(index)}
+        >
+          <FontAwesomeIcon icon={faCircleXmark} size="lg" />
+        </Button>
+      </Box>
+    ));
+    setFilePreView(filePreviewList);
+  }
+
+  const formattedPrice = (money) => {
+    return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   return (
     <Box>
       <Box>
-        <Flex>
-          <Center>{filePreview}</Center>
-        </Flex>
+        <Flex></Flex>
         <FormControl>
           <FormLabel>상품 이미지</FormLabel>
-          <Input
-            type={"file"}
-            multiple
-            accept={"image/*"}
-            onChange={(e) => setFiles(e.target.files)}
-          />
         </FormControl>
+        <Flex>
+          <Center>
+            <FormLabel htmlFor="file-upload">
+              <Box
+                boxSize={"180px"}
+                border={"1px dashed gray"}
+                textAlign="center"
+                cursor="pointer"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <FontAwesomeIcon icon={faCamera} size="2xl" />
+                <Input
+                  id="file-upload"
+                  type="file"
+                  multiple
+                  accept={"image/*"}
+                  style={{ display: "none" }}
+                  onChange={(e) => handleChangeFiles(e)}
+                />
+              </Box>
+            </FormLabel>
+            <Center>{filePreview}</Center>
+          </Center>
+        </Flex>
       </Box>
       <Box>
         <FormControl>
@@ -93,7 +142,10 @@ export function ProductUpload() {
       <Box>
         <FormControl>
           <FormLabel>입찰 시작가</FormLabel>
-          <Input onChange={(e) => setStartPrice(e.target.value)} />
+          <Input
+            value={formattedPrice(startPrice)}
+            onChange={(e) => setStartPrice(e.target.value.replaceAll(",", ""))} //콤마 제거}
+          />
         </FormControl>
       </Box>
       <Box>

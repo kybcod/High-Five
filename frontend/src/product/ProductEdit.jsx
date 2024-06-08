@@ -130,6 +130,10 @@ export function ProductEdit() {
     setNewFilePreviews(updatedNewFilePreviews);
   }
 
+  const formattedPrice = (money) => {
+    return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
     <Box>
       <Box>
@@ -141,7 +145,7 @@ export function ProductEdit() {
             <FormLabel htmlFor="file-upload">
               <Box
                 boxSize={"180px"}
-                border={"1px solid gray"}
+                border={"1px dashed gray"}
                 textAlign="center"
                 cursor="pointer"
                 display="flex"
@@ -162,7 +166,7 @@ export function ProductEdit() {
             {/* 기존 이미지 표시 */}
             {existingFilePreviews.map((file) => (
               <Box boxSize={"180px"} key={file.fileName} position="relative">
-                <Image boxSize={"150px"} src={file.filePath} mr={2} />
+                <Image boxSize={"180px"} src={file.filePath} mr={2} />
                 <Button
                   position="absolute"
                   top={1}
@@ -224,9 +228,12 @@ export function ProductEdit() {
         <FormControl>
           <FormLabel>입찰 시작가</FormLabel>
           <Input
-            defaultValue={product.startPrice}
+            value={formattedPrice(product.startPrice)}
             onChange={(e) =>
-              setProduct({ ...product, startPrice: e.target.value })
+              setProduct({
+                ...product,
+                startPrice: e.target.value.replaceAll(",", ""),
+              })
             }
           />
         </FormControl>
