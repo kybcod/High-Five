@@ -10,15 +10,24 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
+import { CustomToast } from "../component/CustomToast.jsx";
+import { useNavigate } from "react-router-dom";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickName, setNickName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const { successToast, errorToast } = CustomToast();
+  const navigate = useNavigate();
 
   function handleSignUp() {
-    axios.post("/api/users", { email, password, nickName, phoneNumber });
+    axios
+      .post("/api/users", { email, password, nickName, phoneNumber })
+      .then(() => {
+        successToast("회원가입이 완료되었습니다");
+        navigate("/login");
+      });
   }
   // TODO. 휴대폰 번호 11자리 (-)없이 숫자만 입력 가능하게끔 설정, 표시 메세지, 형식 다르면 메세지 전송버튼 활성화 X
 
