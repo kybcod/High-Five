@@ -1,10 +1,7 @@
 package com.backend.mapper.Product;
 
 import com.backend.domain.Product.Product;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -73,4 +70,14 @@ public interface ProductMapper {
             SELECT COUNT(*) FROM product
             """)
     int selectTotalCount();
+
+    @Delete("DELETE FROM product_file WHERE product_id=#{productId} AND file_name=#{fileName}")
+    int deleteFileByProductIdAndFileName(Integer productId, String fileName);
+
+    @Update("""
+            UPDATE product 
+            SET title=#{title}, category=#{category}, end_time=#{endTime}, content=#{content}, start_price=#{startPrice}
+            WHERE id=#{id}
+            """)
+    int update(Product product);
 }

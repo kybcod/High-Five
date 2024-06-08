@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -99,5 +100,44 @@ public class ProductService {
                 .toList();
         product.setProductFileList(files);
         return product;
+    }
+
+    public void edit(Product product, List<String> removedFileList, MultipartFile[] newFileList) throws IOException {
+        if (removedFileList != null && removedFileList.size() > 0) {
+            //s3 파일 삭제
+            for (String name : removedFileList) {
+                String key = STR."prj3/\{product.getId()}/\{name}";
+                DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .build();
+                s3Client.deleteObject(deleteObjectRequest);
+
+                mapper.deleteFileByProductIdAndFileName(product.getId(), name);
+            }
+        }
+
+        if (newFileList != null && newFileList.length > 0) {
+            List<String> fileNameList = mapper.selectFileByProductId(product.getId());
+
+            for (MultipartFile file : newFileList) {
+                String name = file.getOriginalFilename();
+                if (!fileNameList.contains(name)) {
+                    mapper.insertFile(product.getId(), name);
+                }
+
+                //실제 파일 저장
+                String key = STR."prj3/\{product.getId()}/\{name}";
+                PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .acl(ObjectCannedACL.PUBLIC_READ)
+                        .build();
+
+                s3Client.putObject(putObjectRequest,
+                        RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            }
+        }
+        mapper.update(product);
     }
 }

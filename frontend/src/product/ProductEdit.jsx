@@ -7,9 +7,16 @@ import {
   FormLabel,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Select,
   Spinner,
   Textarea,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -20,12 +27,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function ProductEdit() {
   const { id } = useParams();
-  const [product, setProduct] = useState([]);
+  const [product, setProduct] = useState(null);
   const [existingFilePreviews, setExistingFilePreviews] = useState([]);
   const [newFilePreviews, setNewFilePreviews] = useState([]);
-  const [newFiles, setNewFiles] = useState([]);
-  const [removedFiles, setRemovedFiles] = useState([]);
+  const [newFileList, setNewFileList] = useState([]);
+  const [removedFileList, setRemovedFileList] = useState([]);
   const toast = useToast();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,16 +44,36 @@ export function ProductEdit() {
   }, []);
 
   function handleUpdateClick() {
-    axios.postForm("api/products", {
-      id: product.id,
-      title: product.title,
-      category: product.category,
-      endTime: product.endTime,
-      startPrice: product.startPrice,
-      content: product.content,
-      removedFiles,
-      newFiles,
-    });
+    axios
+      .putForm("/api/products", {
+        id: product.id,
+        title: product.title,
+        category: product.category,
+        endTime: product.endTime,
+        startPrice: product.startPrice,
+        content: product.content,
+        removedFileList,
+        newFileList,
+      })
+      .then(() =>
+        toast({
+          status: "success",
+          description: "해당 상품 정보가 수정되었습니다.",
+          position: "top-right",
+          duration: 1000,
+        }),
+      )
+      .catch((err) => {
+        toast({
+          status: "error",
+          description: "수정되지 않았습니다. 작성한 내용을 다시 확인해주세요.",
+          position: "top-right",
+          duration: 1000,
+        });
+      })
+      .finally(() => {
+        onClose();
+      });
   }
 
   if (product === null) {
@@ -54,7 +82,7 @@ export function ProductEdit() {
 
   function handleChangeFiles(e) {
     const newSelectedFiles = Array.from(e.target.files);
-    setNewFiles([...newFiles, ...newSelectedFiles]);
+    setNewFileList([...newFileList, ...newSelectedFiles]);
     const newPreviews = newSelectedFiles.map((file) =>
       URL.createObjectURL(file),
     );
@@ -62,18 +90,18 @@ export function ProductEdit() {
   }
 
   function handleRemoveExistingFile(fileName) {
-    setRemovedFiles([...removedFiles, fileName]);
+    setRemovedFileList([...removedFileList, fileName]);
     setExistingFilePreviews(
       existingFilePreviews.filter((file) => file.fileName !== fileName),
     );
   }
 
   function handleRemoveNewFile(index) {
-    const updatedNewFiles = [...newFiles];
+    const updatedNewFiles = [...newFileList];
     const updatedNewFilePreviews = [...newFilePreviews];
     updatedNewFiles.splice(index, 1);
     updatedNewFilePreviews.splice(index, 1);
-    setNewFiles(updatedNewFiles);
+    setNewFileList(updatedNewFiles);
     setNewFilePreviews(updatedNewFilePreviews);
   }
 
@@ -203,10 +231,26 @@ export function ProductEdit() {
           />
         </FormControl>
       </Box>
-      <Box>
-        <Button onClick={handleUpdateClick}>수정</Button>
-        <Button>삭제</Button>
-      </Box>
+      <Flex>
+        <Box>
+          <Button onClick={onOpen}>수정</Button>
+        </Box>
+        <Box>
+          <Button>삭제</Button>
+        </Box>
+      </Flex>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader></ModalHeader>
+          <ModalBody>정말로 수정하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={handleUpdateClick}>확인</Button>
+            <Button onClick={onClose}>취소</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

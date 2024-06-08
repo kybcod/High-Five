@@ -40,4 +40,13 @@ public class ProductController {
     public Product getProduct(@PathVariable Integer id) {
         return service.get(id);
     }
+
+    @PutMapping
+    public void updateProduct(Product product,
+                              @RequestParam(value = "removedFileList[]", required = false) List<String> removedFileList,
+                              @RequestParam(value = "newFileList[]", required = false) MultipartFile[] newFileList
+    ) throws IOException {
+        service.edit(product, removedFileList, newFileList);
+
+    }
 }
