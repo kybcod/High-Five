@@ -7,7 +7,9 @@ export function Login() {
   const [password, setPassword] = useState("");
 
   function handleLogin() {
-    axios.post("api/login", { email, password });
+    axios
+      .post("api/users/login", { email, password })
+      .then((res) => localStorage.setItem("token", res.data.token));
   }
 
   return (

@@ -3,7 +3,11 @@ package com.backend.controller;
 import com.backend.domain.User;
 import com.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("api")
@@ -24,5 +28,15 @@ public class UserController {
 //        String verificationCode = service.sendMessage(phoneNumber);
         // TODO. 인증 확인 API 분리
 //        service.checkVerificationCode(verificationCode, "");
+    }
+
+    @PostMapping("users/login")
+    public ResponseEntity login(@RequestBody User user) {
+        Map<String, Object> token = service.issueToken(user);
+
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(token);
     }
 }

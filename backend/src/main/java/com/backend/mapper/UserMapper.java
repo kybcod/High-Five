@@ -3,6 +3,7 @@ package com.backend.mapper;
 import com.backend.domain.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface UserMapper {
@@ -13,4 +14,10 @@ public interface UserMapper {
                 VALUES (#{email}, #{password}, #{nickName}, #{phoneNumber})
             """)
     int insertUser(User user);
+
+    @Select("""
+            SELECT * FROM user
+            WHERE email = #{email}
+            """)
+    User getUserByEmail(String email);
 }
