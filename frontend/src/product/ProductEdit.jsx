@@ -33,7 +33,8 @@ export function ProductEdit() {
   const [newFileList, setNewFileList] = useState([]);
   const [removedFileList, setRemovedFileList] = useState([]);
   const toast = useToast();
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const updateModal = useDisclosure();
+  const deleteModal = useDisclosure();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,7 +73,31 @@ export function ProductEdit() {
         });
       })
       .finally(() => {
-        onClose();
+        updateModal.onClose();
+      });
+  }
+
+  function handleDeleteClick() {
+    axios
+      .delete(`/api/products/${id}`)
+      .then(() =>
+        toast({
+          status: "info",
+          description: "해당 상품이 삭제되었습니다.",
+          position: "top-right",
+          duration: 1000,
+        }),
+      )
+      .catch((err) => {
+        toast({
+          status: "warning",
+          description: "삭제되지 않았습니다. 다시 확인해주세요.",
+          position: "top-right",
+          duration: 1000,
+        });
+      })
+      .finally(() => {
+        deleteModal.onClose();
       });
   }
 
@@ -233,21 +258,33 @@ export function ProductEdit() {
       </Box>
       <Flex>
         <Box>
-          <Button onClick={onOpen}>수정</Button>
+          <Button onClick={updateModal.onOpen}>수정</Button>
         </Box>
         <Box>
-          <Button>삭제</Button>
+          <Button onClick={deleteModal.onOpen}>삭제</Button>
         </Box>
       </Flex>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={updateModal.isOpen} onClose={updateModal.onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader></ModalHeader>
           <ModalBody>정말로 수정하시겠습니까?</ModalBody>
           <ModalFooter>
             <Button onClick={handleUpdateClick}>확인</Button>
-            <Button onClick={onClose}>취소</Button>
+            <Button onClick={updateModal.onClose}>취소</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={deleteModal.isOpen} onClose={deleteModal.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader></ModalHeader>
+          <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={handleDeleteClick}>확인</Button>
+            <Button onClick={deleteModal.onClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

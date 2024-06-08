@@ -80,4 +80,10 @@ public interface ProductMapper {
             WHERE id=#{id}
             """)
     int update(Product product);
+
+    @Delete("DELETE FROM product WHERE id=#{id}")
+    int deleteByProductId(Integer id);
+
+    @Delete("DELETE FROM product_file WHERE product_id=#{productId}")
+    int deleteFileByProductId(Integer productId);
 }

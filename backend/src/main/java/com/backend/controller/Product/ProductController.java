@@ -47,6 +47,10 @@ public class ProductController {
                               @RequestParam(value = "newFileList[]", required = false) MultipartFile[] newFileList
     ) throws IOException {
         service.edit(product, removedFileList, newFileList);
+    }
 
+    @DeleteMapping("{id}")
+    public void deleteProduct(@PathVariable Integer id) {
+        service.remove(id);
     }
 }

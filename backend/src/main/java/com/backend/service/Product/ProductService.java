@@ -140,4 +140,22 @@ public class ProductService {
         }
         mapper.update(product);
     }
+
+    public void remove(Integer id) {
+
+        // s3에서 파일(이미지) 삭제
+        List<String> fileNameList = mapper.selectFileByProductId(id);
+        for (String fileName : fileNameList) {
+            String key = STR."prj3/\{id}/\{fileName}";
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+            s3Client.deleteObject(deleteObjectRequest);
+        }
+
+        mapper.deleteFileByProductId(id);
+
+        mapper.deleteByProductId(id);
+    }
 }
