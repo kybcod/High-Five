@@ -1,4 +1,4 @@
-import {Box, Button, Center, FormHelperText, Input, InputGroup, InputRightElement, Textarea} from "@chakra-ui/react";
+import {Box, Button, Center, Input, InputGroup, InputRightElement, Textarea} from "@chakra-ui/react";
 
 export function QnaCreate() {
   return <Box>

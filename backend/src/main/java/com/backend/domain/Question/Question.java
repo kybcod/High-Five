@@ -1,8 +1,10 @@
 package com.backend.domain.Question;
 
+import com.backend.domain.QuestionFile.QuestionFile;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class Question {
@@ -12,5 +14,5 @@ public class Question {
     private String content;
     private LocalDateTime inserted;
 
-    private String file_name;
+    private List<QuestionFile> fileList;
 }

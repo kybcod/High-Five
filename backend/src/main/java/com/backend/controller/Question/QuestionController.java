@@ -3,10 +3,11 @@ package com.backend.controller.Question;
 import com.backend.domain.Question.Question;
 import com.backend.service.Question.QuestionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,7 +16,12 @@ public class QuestionController {
     private final QuestionService service;
 
     @PostMapping("")
-    public void add(@RequestBody Question question){
-        service.add(question);
+    public ResponseEntity add(@RequestBody Question question, @RequestParam(value="files[]", required=false) MultipartFile[] files) throws IOException {
+        if (service.validate(question)) {
+            service.add(question, files);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
