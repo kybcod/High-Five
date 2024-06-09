@@ -46,20 +46,29 @@ export function ProductUpload() {
           duration: 1000,
         });
         navigate("/");
+      })
+      .catch((err) => {
+        if (err.response.status === 413) {
+          toast({
+            status: "error",
+            description: `파일이 용량이 큽니다. 다른 파일로 변경해주세요.`,
+            position: "top-right",
+          });
+        }
       });
   }
 
-  function handleRemoveFile(index) {
+  function handleRemoveFile(fileName) {
     setFiles((prevFiles) => {
-      const newFiles = [...prevFiles]; // 이전 파일 배열 복사
-      newFiles.splice(index, 1); // 해당 인덱스의 요소 삭제
-      return newFiles; // 새로운 파일 배열 반환
+      const newFiles = prevFiles.filter((file) => file.name !== fileName);
+      return newFiles;
     });
 
     setFilePreView((prevPreviews) => {
-      const newPreviews = [...prevPreviews]; // 이전 미리보기 배열 복사
-      newPreviews.splice(index, 1); // 해당 인덱스의 요소 삭제
-      return newPreviews; // 새로운 미리보기 배열 반환
+      const newPreviews = prevPreviews.filter(
+        (filePreview) => filePreview.key !== fileName,
+      );
+      return newPreviews;
     });
   }
 
@@ -68,8 +77,8 @@ export function ProductUpload() {
     const updatedFiles = [...files, ...fileList]; // 기존 파일에 새 파일 추가
     setFiles(updatedFiles);
 
-    const filePreviewList = updatedFiles.map((file, index) => (
-      <Box key={index} boxSize={"180px"} position="relative">
+    const filePreviewList = updatedFiles.map((file) => (
+      <Box mr={3} key={file.name} boxSize={"180px"} position="relative">
         <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
         <Button
           position="absolute"

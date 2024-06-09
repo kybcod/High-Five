@@ -165,7 +165,12 @@ export function ProductEdit() {
             </FormLabel>
             {/* 기존 이미지 표시 */}
             {existingFilePreviews.map((file) => (
-              <Box boxSize={"180px"} key={file.fileName} position="relative">
+              <Box
+                mr={3}
+                boxSize={"180px"}
+                key={file.fileName}
+                position="relative"
+              >
                 <Image boxSize={"180px"} src={file.filePath} mr={2} />
                 <Button
                   position="absolute"
@@ -180,7 +185,7 @@ export function ProductEdit() {
             ))}
             {/* 새로운 파일 선택 시 미리보기 표시 */}
             {newFilePreviews.map((src, index) => (
-              <Box key={index} position="relative">
+              <Box mr={3} key={index} position="relative">
                 <Image boxSize={"180px"} src={src} mr={2} />
                 <Button
                   position="absolute"

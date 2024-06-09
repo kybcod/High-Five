@@ -57,7 +57,7 @@ export function MainProduct() {
             >
               <CardBody position="relative" h="100%">
                 <Box mt={2} w="100%">
-                  {product.productFileList && (
+                  {product.productFileList && product.productFileList[0] && (
                     <Image
                       src={product.productFileList[0].filePath}
                       borderRadius="lg"
@@ -65,6 +65,7 @@ export function MainProduct() {
                       h="200px"
                     />
                   )}
+
                   <Badge
                     position="absolute"
                     top="1"
