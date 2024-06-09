@@ -1,6 +1,6 @@
-package com.backend.mapper;
+package com.backend.mapper.User;
 
-import com.backend.domain.User;
+import com.backend.domain.User.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

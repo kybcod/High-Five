@@ -1,4 +1,4 @@
-package com.backend.domain;
+package com.backend.domain.User;
 
 import lombok.Data;
 

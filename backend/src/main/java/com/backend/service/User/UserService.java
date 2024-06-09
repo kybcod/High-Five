@@ -1,8 +1,8 @@
-package com.backend.service.user;
+package com.backend.service.User;
 
 import com.backend.component.SmsUtil;
-import com.backend.domain.User;
-import com.backend.mapper.UserMapper;
+import com.backend.domain.User.User;
+import com.backend.mapper.User.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;

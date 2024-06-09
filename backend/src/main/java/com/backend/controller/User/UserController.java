@@ -1,7 +1,7 @@
-package com.backend.controller;
+package com.backend.controller.User;
 
-import com.backend.domain.User;
-import com.backend.service.user.UserService;
+import com.backend.domain.User.User;
+import com.backend.service.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
