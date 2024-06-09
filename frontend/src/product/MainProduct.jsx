@@ -18,7 +18,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function MainProduct() {
   const [productList, setProductList] = useState([]);
@@ -26,13 +26,11 @@ export function MainProduct() {
     like: false,
     count: 0,
   });
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`/api/products?${searchParams}`)
-      .then((res) => setProductList(res.data));
-  }, [searchParams]);
+    axios.get(`/api/products`).then((res) => setProductList(res.data));
+  }, []);
 
   function handleLikeClick() {
     axios
@@ -52,7 +50,11 @@ export function MainProduct() {
       <Grid templateColumns="repeat(5, 1fr)" gap={6}>
         {productList.map((product) => (
           <GridItem key={product.id} w={"100%"}>
-            <Card maxW="sm" h="100%">
+            <Card
+              maxW="sm"
+              h="100%"
+              onClick={() => navigate(`/product/${product.id}`)}
+            >
               <CardBody position="relative" h="100%">
                 <Box mt={2} w="100%">
                   {product.productFileList && (
