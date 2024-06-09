@@ -29,6 +29,46 @@ export function ProductUpload() {
   const navigate = useNavigate();
 
   function handleSaleClick() {
+    if (!title) {
+      toast({
+        status: "error",
+        description: "제목을 입력해주세요.",
+        position: "top-right",
+        duration: 1000,
+      });
+      return;
+    }
+
+    if (!category) {
+      toast({
+        status: "error",
+        description: "카테고리를 선택해주세요.",
+        position: "top-right",
+        duration: 1000,
+      });
+      return;
+    }
+
+    if (!startPrice) {
+      toast({
+        status: "error",
+        description: "입찰 시작가를 입력해주세요.",
+        position: "top-right",
+        duration: 1000,
+      });
+      return;
+    }
+
+    if (!endTime) {
+      toast({
+        status: "error",
+        description: "입찰 마감 시간을 입력해주세요.",
+        position: "top-right",
+        duration: 1000,
+      });
+      return;
+    }
+
     axios
       .postForm("/api/products", {
         title,
@@ -51,7 +91,7 @@ export function ProductUpload() {
         if (err.response.status === 413) {
           toast({
             status: "error",
-            description: `파일이 용량이 큽니다. 다른 파일로 변경해주세요.`,
+            description: `파일이 너무 큽니다. 다른 파일을 선택해주세요.`,
             position: "top-right",
           });
         }
