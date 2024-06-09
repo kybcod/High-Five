@@ -59,30 +59,21 @@ export function ProductList() {
       <Heading my={4}>오늘의 상품</Heading>
       <Grid templateColumns="repeat(5, 1fr)" gap={6}>
         {productList.map((product) => (
-          <GridItem key={product.id}>
-            <Card maxW="sm">
-              <CardBody position="relative">
-                <Box mt={2} w="100%">
-                  {product.productFileList &&
-                  product.productFileList.length > 0 ? (
+          <GridItem key={product.id} w={"100%"}>
+            <Card
+              maxW="sm"
+              h={"100%"}
+              onClick={() => navigate(`/product/${product.id}`)}
+            >
+              <CardBody position="relative" h={"100%"}>
+                <Box mt={2}>
+                  {product.productFileList && (
                     <Image
                       src={product.productFileList[0].filePath}
                       borderRadius="lg"
                       w="100%"
                       h="200px"
                     />
-                  ) : (
-                    <Box
-                      borderRadius="lg"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      w="100%"
-                      h="200px"
-                      border="1px solid gray"
-                    >
-                      <Text>해당 이미지가 없습니다</Text>
-                    </Box>
                   )}
                   <Badge
                     position="absolute"

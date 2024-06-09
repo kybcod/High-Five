@@ -50,17 +50,25 @@ export function ProductUpload() {
   }
 
   function handleRemoveFile(index) {
-    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-    setFilePreView((prevPreviews) =>
-      prevPreviews.filter((_, i) => i !== index),
-    );
+    setFiles((prevFiles) => {
+      const newFiles = [...prevFiles]; // 이전 파일 배열 복사
+      newFiles.splice(index, 1); // 해당 인덱스의 요소 삭제
+      return newFiles; // 새로운 파일 배열 반환
+    });
+
+    setFilePreView((prevPreviews) => {
+      const newPreviews = [...prevPreviews]; // 이전 미리보기 배열 복사
+      newPreviews.splice(index, 1); // 해당 인덱스의 요소 삭제
+      return newPreviews; // 새로운 미리보기 배열 반환
+    });
   }
 
   function handleChangeFiles(e) {
     const fileList = Array.from(e.target.files);
-    setFiles(fileList);
+    const updatedFiles = [...files, ...fileList]; // 기존 파일에 새 파일 추가
+    setFiles(updatedFiles);
 
-    const filePreviewList = fileList.map((file, index) => (
+    const filePreviewList = updatedFiles.map((file, index) => (
       <Box key={index} boxSize={"180px"} position="relative">
         <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
         <Button
@@ -68,7 +76,7 @@ export function ProductUpload() {
           top={1}
           right={2}
           variant="ghost"
-          onClick={() => handleRemoveFile(index)}
+          onClick={() => handleRemoveFile(file.name)}
         >
           <FontAwesomeIcon icon={faCircleXmark} size="lg" />
         </Button>

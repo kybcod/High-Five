@@ -13,7 +13,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   Spinner,
   Textarea,
   useDisclosure,
@@ -38,6 +37,29 @@ export function ProductView() {
   if (product === null) {
     return <Spinner />;
   }
+
+  function translateCategory(category) {
+    switch (category) {
+      case "clothes":
+        return "의류";
+      case "goods":
+        return "잡화";
+      case "food":
+        return "식품";
+      case "digital":
+        return "디지털";
+      case "sport":
+        return "스포츠";
+      case "e-coupon":
+        return "e-쿠폰";
+      default:
+        return "";
+    }
+  }
+
+  const formattedPrice = (money) => {
+    return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   return (
     <Box>
@@ -65,13 +87,13 @@ export function ProductView() {
       <Box>
         <FormControl>
           <FormLabel>카테고리</FormLabel>
-          <Select defaultValue={product.category}></Select>
+          <Input defaultValue={translateCategory(product.category)} />
         </FormControl>
       </Box>
       <Box>
         <FormControl>
           <FormLabel>입찰 시작가</FormLabel>
-          <Input defaultValue={product.startPrice} />
+          <Input defaultValue={formattedPrice(product.startPrice)} />
         </FormControl>
       </Box>
       <Box>

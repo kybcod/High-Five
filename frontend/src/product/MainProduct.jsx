@@ -49,7 +49,7 @@ export function MainProduct() {
       <Heading my={4}>오늘의 상품</Heading>
       <Grid templateColumns="repeat(5, 1fr)" gap={6}>
         {productList.map((product) => (
-          <GridItem key={product.id} w={"100%"}>
+          <GridItem key={product.id}>
             <Card
               maxW="sm"
               h="100%"
