@@ -12,17 +12,14 @@ import {
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
   const [keyword, setKeyword] = useState("");
-  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  function handleSearchClick() {
-    searchParams.set("keyword", keyword);
-    setSearchParams(searchParams);
-    navigate(`?${searchParams}`);
+  function handleSearchClick(keyword) {
+    navigate(`/list?keyword=${keyword}`);
   }
 
   return (
@@ -38,7 +35,10 @@ export function Header() {
               <Box>
                 <InputGroup>
                   <InputLeftAddon>
-                    <Button onClick={handleSearchClick} size={"100%"}>
+                    <Button
+                      onClick={() => handleSearchClick(keyword)}
+                      size={"100%"}
+                    >
                       <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </Button>
                   </InputLeftAddon>
