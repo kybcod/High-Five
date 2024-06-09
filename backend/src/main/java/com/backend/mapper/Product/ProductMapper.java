@@ -60,11 +60,12 @@ public interface ProductMapper {
                     p.content
             FROM product p
             WHERE p.title LIKE #{pattern}
+            AND p.category = #{category}
             ORDER BY p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             </script>
             """)
-    List<Product> selectWithPageable(Pageable pageable, String keyword);
+    List<Product> selectWithPageable(Pageable pageable, String keyword, String category);
 
     @Select("""
             SELECT COUNT(*) FROM product
@@ -86,4 +87,10 @@ public interface ProductMapper {
 
     @Delete("DELETE FROM product_file WHERE product_id=#{productId}")
     int deleteFileByProductId(Integer productId);
+
+    @Delete("DELETE FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
+    int deleteLikeByProductIdAndMemberId(Integer productId, Integer userId);
+
+    @Insert("INSERT INTO product_like (product_id, user_id) VALUES (#{productId}, #{userId})")
+    int insertLikeByProductIdAndMemberId(Integer productId, Integer userId);
 }

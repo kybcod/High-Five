@@ -37,8 +37,10 @@ public class ProductController {
 
     @GetMapping("list")
     public Map<String, Object> getListProduct(@RequestParam(defaultValue = "1") int page,
-                                              @RequestParam(defaultValue = "") String keyword) {
-        return service.getList(PageRequest.of(page - 1, 20), keyword);
+                                              @RequestParam(defaultValue = "") String keyword,
+                                              @RequestParam(defaultValue = "") String category
+    ) {
+        return service.getList(PageRequest.of(page - 1, 20), keyword, category);
     }
 
     @GetMapping("{id}")
@@ -61,5 +63,10 @@ public class ProductController {
     @DeleteMapping("{id}")
     public void deleteProduct(@PathVariable Integer id) {
         service.remove(id);
+    }
+
+    @PutMapping("like")
+    public void likeProduct(@RequestBody Product product) {
+        service.like(product);
     }
 }

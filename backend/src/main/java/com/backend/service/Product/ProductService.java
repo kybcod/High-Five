@@ -74,8 +74,8 @@ public class ProductService {
         return products;
     }
 
-    public Map<String, Object> getList(Pageable pageable, String keyword) {
-        List<Product> content = mapper.selectWithPageable(pageable, keyword);
+    public Map<String, Object> getList(Pageable pageable, String keyword, String category) {
+        List<Product> content = mapper.selectWithPageable(pageable, keyword, category);
 
         // 각 product에 모든 파일을 설정
         for (Product product : content) {
@@ -176,5 +176,14 @@ public class ProductService {
             return false;
         }
         return true;
+    }
+
+    public void like(Product product) {
+        Integer productId = product.getId();
+        Integer userId = 1;
+        int count = mapper.deleteLikeByProductIdAndMemberId(productId, userId);
+        if (count == 0) {
+            mapper.insertLikeByProductIdAndMemberId(productId, userId);
+        }
     }
 }

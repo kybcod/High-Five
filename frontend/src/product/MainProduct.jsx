@@ -15,13 +15,26 @@ import {
 import { Category } from "../component/Category.jsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 
 export function MainProduct() {
   const [productList, setProductList] = useState([]);
+  const [like, setLike] = useState({
+    like: false,
+    count: 0,
+  });
 
   useEffect(() => {
     axios.get("/api/products").then((res) => setProductList(res.data));
   }, []);
+
+  function handleLikeClick() {
+    axios
+      .put("/api/products/like", { productId: productList.id })
+      .then((res) => setLike(res.data));
+  }
 
   return (
     <Box>
@@ -34,30 +47,17 @@ export function MainProduct() {
       <Heading my={4}>오늘의 상품</Heading>
       <Grid templateColumns="repeat(5, 1fr)" gap={6}>
         {productList.map((product) => (
-          <GridItem key={product.id}>
-            <Card maxW="sm">
-              <CardBody position="relative">
+          <GridItem key={product.id} w={"100%"}>
+            <Card maxW="sm" h="100%">
+              <CardBody position="relative" h="100%">
                 <Box mt={2} w="100%">
-                  {product.productFileList &&
-                  product.productFileList.length > 0 ? (
+                  {product.productFileList && (
                     <Image
                       src={product.productFileList[0].filePath}
                       borderRadius="lg"
                       w="100%"
                       h="200px"
                     />
-                  ) : (
-                    <Box
-                      borderRadius="lg"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      w="100%"
-                      h="200px"
-                      border="1px solid gray"
-                    >
-                      <Text>해당 이미지가 없습니다</Text>
-                    </Box>
                   )}
                   <Badge
                     position="absolute"
@@ -69,7 +69,27 @@ export function MainProduct() {
                   </Badge>
                 </Box>
                 <Stack mt="6" spacing="3">
-                  <Heading size="m">{product.title}</Heading>
+                  <Flex justifyContent={"space-between"}>
+                    <Heading size="m">{product.title}</Heading>
+                    <Box onClick={handleLikeClick}>
+                      {like.like && (
+                        <FontAwesomeIcon
+                          icon={fullHeart}
+                          style={{ color: "red" }}
+                          cursor={"pointer"}
+                          size={"xl"}
+                        />
+                      )}
+                      {like.like || (
+                        <FontAwesomeIcon
+                          icon={emptyHeart}
+                          style={{ color: "red" }}
+                          cursor={"pointer"}
+                          size={"xl"}
+                        />
+                      )}
+                    </Box>
+                  </Flex>
                   <Flex justifyContent={"space-between"}>
                     <Text color="blue.600" fontSize="xl">
                       {product.startPrice
