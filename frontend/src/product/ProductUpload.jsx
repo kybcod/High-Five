@@ -23,7 +23,7 @@ export function ProductUpload() {
   const [startPrice, setStartPrice] = useState("");
   const [endTime, setEndTime] = useState(null);
   const [files, setFiles] = useState([]);
-  const [filePreview, setFilePreView] = useState(null);
+  const [filePreview, setFilePreView] = useState([]);
   const [content, setContent] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
@@ -50,19 +50,17 @@ export function ProductUpload() {
   }
 
   function handleRemoveFile(index) {
-    const newFiles = [...files];
-    const newFilePreviews = [...filePreview];
-    files.splice(index, 1);
-    filePreview.splice(index, 1);
-    setFiles(newFiles);
-    setFilePreView(newFilePreviews);
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setFilePreView((prevPreviews) =>
+      prevPreviews.filter((_, i) => i !== index),
+    );
   }
 
   function handleChangeFiles(e) {
-    const fileList = e.target.files;
+    const fileList = Array.from(e.target.files);
     setFiles(fileList);
 
-    const filePreviewList = Array.from(fileList).map((file, index) => (
+    const filePreviewList = fileList.map((file, index) => (
       <Box key={index} boxSize={"180px"} position="relative">
         <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
         <Button
