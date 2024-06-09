@@ -158,4 +158,23 @@ public class ProductService {
 
         mapper.deleteByProductId(id);
     }
+
+    public boolean validate(Product product) {
+        if (product.getTitle() == null || product.getTitle().isBlank()) {
+            return false;
+        }
+        if (product.getContent() == null || product.getContent().isBlank()) {
+            return false;
+        }
+        if (product.getCategory() == null || product.getCategory().isBlank()) {
+            return false;
+        }
+        if (product.getStartPrice() == null || product.getStartPrice().isBlank()) {
+            return false;
+        }
+        if (product.getEndTime() == null) {
+            return false;
+        }
+        return true;
+    }
 }
