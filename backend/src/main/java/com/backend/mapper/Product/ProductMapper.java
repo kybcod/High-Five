@@ -60,7 +60,9 @@ public interface ProductMapper {
                     p.content
             FROM product p
             WHERE p.title LIKE #{pattern}
-            AND p.category = #{category}
+            <if test="category != null and category != ''">
+                AND p.category = #{category}
+            </if>
             ORDER BY p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             </script>

@@ -1,21 +1,22 @@
 import { Box, Center, Flex } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Category() {
-  const [category, setCategory] = useState("");
-  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   function handleCategoryClick(category) {
-    searchParams.set("category", category);
-    setSearchParams(searchParams);
-    navigate(`?${searchParams}`);
+    if (category === "") {
+      navigate(`/list`);
+    } else {
+      navigate(`/list?category=${category}`);
+    }
   }
 
   return (
     <Box bg="gray.200" p={4}>
       <Flex justify="space-around" cursor={"pointer"}>
+        <Center onClick={() => handleCategoryClick("")}>전체</Center>
         <Center onClick={() => handleCategoryClick("clothes")}>의류</Center>
         <Center onClick={() => handleCategoryClick("goods")}>잡화</Center>
         <Center onClick={() => handleCategoryClick("food")}>식품</Center>

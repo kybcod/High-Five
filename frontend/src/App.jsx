@@ -5,6 +5,7 @@ import { ProductList } from "./product/ProductList.jsx";
 import { ProductUpload } from "./product/ProductUpload.jsx";
 import { MainProduct } from "./product/MainProduct.jsx";
 import { ProductEdit } from "./product/ProductEdit.jsx";
+import { ProductView } from "./product/ProductView.jsx";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
       { path: "write", element: <ProductUpload /> },
       { path: "list", element: <ProductList /> },
       { path: "edit/:id", element: <ProductEdit /> },
+      { path: "product/:id", element: <ProductView /> },
     ],
   },
 ]);

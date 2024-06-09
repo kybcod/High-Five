@@ -18,6 +18,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
+import { useSearchParams } from "react-router-dom";
 
 export function MainProduct() {
   const [productList, setProductList] = useState([]);
@@ -25,10 +26,13 @@ export function MainProduct() {
     like: false,
     count: 0,
   });
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    axios.get("/api/products").then((res) => setProductList(res.data));
-  }, []);
+    axios
+      .get(`/api/products?${searchParams}`)
+      .then((res) => setProductList(res.data));
+  }, [searchParams]);
 
   function handleLikeClick() {
     axios

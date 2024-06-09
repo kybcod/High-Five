@@ -9,7 +9,3 @@ ALTER TABLE product
 
 SELECT *
 FROM product_like;
-
-# Default 값 바꾸기
-ALTER TABLE product_like
-    MODIFY user_id INT NOT NULL DEFAULT 1;
