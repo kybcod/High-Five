@@ -1,11 +1,11 @@
-package com.backend;
+package com.backend.domain.Question;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class Qna {
+public class Question {
     private Integer id;
     private Integer userId;
     private String title;
