@@ -97,16 +97,36 @@ public interface ProductMapper {
     @Delete("DELETE FROM product_file WHERE product_id=#{productId}")
     int deleteFileByProductId(Integer productId);
 
-    @Delete("DELETE FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
-    int deleteLikeByProductIdAndMemberId(Integer productId, Integer userId);
-
-    @Insert("INSERT INTO product_like (product_id, user_id) VALUES (#{productId}, #{userId})")
-    int insertLikeByProductIdAndMemberId(Integer productId, Integer userId);
-
     @Update("""
             UPDATE product SET 
             view_count = view_count + 1
             WHERE id=#{id}
             """)
     int updateViewCount(Integer id);
+
+    @Update("""
+            UPDATE product
+            SET product_like = FALSE
+            WHERE id = #{id};
+            """)
+    int updateLikeTrue(Integer id);
+
+    @Update("""
+            UPDATE product
+            SET product_like = True
+            WHERE id = #{id};
+            """)
+    int updateLikeFalse(Integer id);
+
+    @Delete("DELETE FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
+    int deleteLikeByBoardIdAndUserId(Integer productId, Integer userId);
+
+    @Insert("""
+            INSERT INTO product_like (product_id, user_id)
+            VALUES (#{productId}, #{userId})
+            """)
+    int insertLikeByBoardIdAndUserId(Integer productId, Integer userId);
+
+    @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
+    int selectLikeByProductIdAndUserId(Integer productId, String userId);
 }

@@ -6,6 +6,7 @@ import com.backend.service.Product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,8 +66,13 @@ public class ProductController {
         service.remove(id);
     }
 
+    //    @PutMapping("like")
+//    public List<Product> likeProduct(@RequestBody Product product) {
+//        return service.like(product);
+//    }
+
     @PutMapping("like")
-    public void likeProduct(@RequestBody Product product) {
-        service.like(product);
+    public Map<String, Object> likeProduct(@RequestBody Map<String, Object> likeInfo, Authentication authentication) {
+        return service.like(likeInfo, authentication);
     }
 }

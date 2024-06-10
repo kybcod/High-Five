@@ -9,3 +9,17 @@ ALTER TABLE product
 
 SELECT *
 FROM product_like;
+
+DESC product;
+
+ALTER TABLE product
+    ADD COLUMN product_like BOOLEAN NOT NULL DEFAULT false;
+
+SELECT *
+From product_like
+WHERE user_id = 10;
+
+DESC product;
+
+SELECT *
+from user;

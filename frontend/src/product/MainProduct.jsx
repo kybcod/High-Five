@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Badge,
   Box,
@@ -9,33 +11,42 @@ import {
   GridItem,
   Heading,
   Image,
+  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { Category } from "../component/Category.jsx";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 export function MainProduct() {
-  const [productList, setProductList] = useState([]);
-  const [like, setLike] = useState({
-    like: false,
-    count: 0,
-  });
+  const [productList, setProductList] = useState(null); // 초기값을 null로 설정
+  const [like, setLike] = useState({ like: false, count: 0 });
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`/api/products`).then((res) => setProductList(res.data));
+    axios.get(`/api/products`).then((res) => {
+      // console.log(res.data.productList); // 서버 응답을 콘솔에 출력
+      // console.log(res.data.like); // 서버 응답을 콘솔에 출력
+      // setProductList(res.data.productList);
+      // setLike(res.data.like);
+      setProductList(res.data);
+    });
   }, []);
 
-  function handleLikeClick() {
+  function handleLikeClick(productId) {
+    console.log(productId);
     axios
-      .put("/api/products/like", { productId: productList.id })
+      .put("/api/products/like", {
+        productId: productId,
+      })
       .then((res) => setLike(res.data));
+  }
+
+  if (productList === null || productList === undefined) {
+    return <Spinner />;
   }
 
   return (
@@ -74,7 +85,7 @@ export function MainProduct() {
                 <Stack mt="6" spacing="3">
                   <Flex justifyContent={"space-between"}>
                     <Heading size="m">{product.title}</Heading>
-                    <Box onClick={handleLikeClick}>
+                    <Box onClick={() => handleLikeClick(product.id)}>
                       {like.like && (
                         <FontAwesomeIcon
                           icon={fullHeart}

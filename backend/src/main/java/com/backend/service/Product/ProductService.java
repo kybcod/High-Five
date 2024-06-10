@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -179,12 +181,34 @@ public class ProductService {
         return true;
     }
 
-    public void like(Product product) {
-        Integer productId = product.getId();
-        Integer userId = 1;
-        int count = mapper.deleteLikeByProductIdAndMemberId(productId, userId);
+//    public List<Product> like(Product product) {
+//
+//        Boolean currentLikeState = product.getProductLike();
+//
+//        if (currentLikeState) {
+//            mapper.updateLikeTrue(product.getId());
+//        } else {
+//            mapper.updateLikeFalse(product.getId());
+//        }
+//        return mapper.selectAll();
+//    }
+
+    public Map<String, Object> like(Map<String, Object> likeInfo, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("like", false);
+
+        Integer productId = (Integer) likeInfo.get("productId");
+        Integer userId = Integer.valueOf(authentication.getName());
+
+        // 이미 좋아요가 되어 있다면 delete(count=1)
+        int count = mapper.deleteLikeByBoardIdAndUserId(productId, userId);
+
+        // 좋아요 안했으면 insert
         if (count == 0) {
-            mapper.insertLikeByProductIdAndMemberId(productId, userId);
+            mapper.insertLikeByBoardIdAndUserId(productId, userId);
+            result.put("like", true);
         }
+
+        return result;
     }
 }
