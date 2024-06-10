@@ -32,8 +32,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> list(Integer id) {
-        return service.list(id);
+    public List<Product> list() {
+        return service.list();
     }
 
     @GetMapping("list")
@@ -66,13 +66,13 @@ public class ProductController {
         service.remove(id);
     }
 
-    //    @PutMapping("like")
-//    public List<Product> likeProduct(@RequestBody Product product) {
-//        return service.like(product);
-//    }
-
     @PutMapping("like")
     public Map<String, Object> likeProduct(@RequestBody Map<String, Object> likeInfo, Authentication authentication) {
         return service.like(likeInfo, authentication);
+    }
+
+    @GetMapping("like/{userId}")
+    public List<Integer> getLike(@PathVariable Integer userId, Authentication authentication) {
+        return service.getLike(userId, authentication);
     }
 }

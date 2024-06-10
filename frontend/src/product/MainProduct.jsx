@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Badge,
@@ -20,32 +20,45 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null); // 초기값을 null로 설정
-  const [like, setLike] = useState({ like: false, count: 0 });
   const navigate = useNavigate();
+  const [likes, setLikes] = useState({});
+  const account = useContext(LoginContext);
 
   useEffect(() => {
     axios.get(`/api/products`).then((res) => {
-      // console.log(res.data.productList); // 서버 응답을 콘솔에 출력
-      // console.log(res.data.like); // 서버 응답을 콘솔에 출력
-      // setProductList(res.data.productList);
-      // setLike(res.data.like);
       setProductList(res.data);
+      const initialLikes = res.data.reduce((acc, product) => {
+        acc[product.id] = product.like || false;
+        return acc;
+      }, {});
+      axios.get(`/api/products/like/${account.id}`).then((res) =>
+        res.data.forEach((productId) => {
+          initialLikes[productId] = true;
+        }),
+      );
+      console.log(initialLikes);
+      setLikes(initialLikes);
     });
   }, []);
 
   function handleLikeClick(productId) {
-    console.log(productId);
     axios
       .put("/api/products/like", {
         productId: productId,
       })
-      .then((res) => setLike(res.data));
+      .then((res) => {
+        setLikes((prevLikes) => ({
+          ...prevLikes,
+          [productId]: res.data.like,
+        }));
+      });
   }
 
-  if (productList === null || productList === undefined) {
+  if (productList === null) {
     return <Spinner />;
   }
 
@@ -86,22 +99,18 @@ export function MainProduct() {
                   <Flex justifyContent={"space-between"}>
                     <Heading size="m">{product.title}</Heading>
                     <Box onClick={() => handleLikeClick(product.id)}>
-                      {like.like && (
-                        <FontAwesomeIcon
-                          icon={fullHeart}
-                          style={{ color: "red" }}
-                          cursor={"pointer"}
-                          size={"xl"}
-                        />
-                      )}
-                      {like.like || (
-                        <FontAwesomeIcon
-                          icon={emptyHeart}
-                          style={{ color: "red" }}
-                          cursor={"pointer"}
-                          size={"xl"}
-                        />
-                      )}
+                      {(() => {
+                        const isLiked = likes[product.id];
+                        const icon = isLiked ? fullHeart : emptyHeart;
+                        return (
+                          <FontAwesomeIcon
+                            icon={icon}
+                            style={{ color: "red" }}
+                            cursor="pointer"
+                            size="xl"
+                          />
+                        );
+                      })()}
                     </Box>
                   </Flex>
                   <Flex justifyContent={"space-between"}>

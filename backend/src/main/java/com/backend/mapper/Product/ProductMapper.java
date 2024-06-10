@@ -127,6 +127,9 @@ public interface ProductMapper {
             """)
     int insertLikeByBoardIdAndUserId(Integer productId, Integer userId);
 
+    @Select("SELECT product_id FROM product_like WHERE user_id=#{userId}")
+    List<Integer> selectLikeByUserId(Integer userId);
+
     @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
     int selectLikeByProductIdAndUserId(Integer productId, String userId);
 }

@@ -62,7 +62,7 @@ public class ProductService {
     }
 
 
-    public List<Product> list(Integer id) {
+    public List<Product> list() {
         List<Product> products = mapper.selectAll();
 
         // 각 product에 모든 파일을 설정
@@ -181,18 +181,6 @@ public class ProductService {
         return true;
     }
 
-//    public List<Product> like(Product product) {
-//
-//        Boolean currentLikeState = product.getProductLike();
-//
-//        if (currentLikeState) {
-//            mapper.updateLikeTrue(product.getId());
-//        } else {
-//            mapper.updateLikeFalse(product.getId());
-//        }
-//        return mapper.selectAll();
-//    }
-
     public Map<String, Object> like(Map<String, Object> likeInfo, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();
         result.put("like", false);
@@ -208,7 +196,12 @@ public class ProductService {
             mapper.insertLikeByBoardIdAndUserId(productId, userId);
             result.put("like", true);
         }
+        result.put("productId", productId);
 
         return result;
+    }
+
+    public List<Integer> getLike(Integer userId, Authentication authentication) {
+        return mapper.selectLikeByUserId(userId);
     }
 }
