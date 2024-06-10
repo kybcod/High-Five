@@ -1,4 +1,4 @@
-package com.backend.domain.QuestionFile;
+package com.backend.domain.Question;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

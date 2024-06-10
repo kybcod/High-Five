@@ -24,8 +24,8 @@ import { useNavigate } from "react-router-dom";
 export function QuestionWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [userId, setUserId] = useState("");
   const [files, setFiles] = useState([]);
+  const [userId, setUserId] = useState(12);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -36,8 +36,8 @@ export function QuestionWrite() {
       .postForm("/api/question", {
         title,
         content,
-        userId,
         files,
+        userId,
       })
       .then(() => {
         toast({
@@ -133,13 +133,6 @@ export function QuestionWrite() {
             </Card>
           </Box>
         )}
-
-        <Box mt={2}>
-          <FormControl>
-            <FormLabel>작성자</FormLabel>
-            <Input onChange={(e) => setUserId(e.target.value)}></Input>
-          </FormControl>
-        </Box>
 
         <Center>
           <Button

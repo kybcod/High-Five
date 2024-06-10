@@ -17,7 +17,7 @@ public class QuestionController {
     private final QuestionService service;
 
     @PostMapping("")
-    public ResponseEntity add(@RequestBody Question question, @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
+    public ResponseEntity add(Question question, @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
         if (service.validate(question)) {
             service.add(question, files);
             return ResponseEntity.ok().build();

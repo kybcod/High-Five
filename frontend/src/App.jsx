@@ -18,8 +18,8 @@ axios.interceptors.request.use((config) => {
   }
   return config;
 });
-import { QuestionWrite } from "./QuestionWrite.jsx";
-import { QuestionList } from "./QuestionList.jsx";
+import { QuestionWrite } from "./Question/QuestionWrite.jsx";
+import { QuestionList } from "./Question/QuestionList.jsx";
 import { BoardWrite } from "./board/BoardWrite.jsx";
 import { BoardList } from "./board/BoardList.jsx";
 

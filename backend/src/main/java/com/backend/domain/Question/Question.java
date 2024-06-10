@@ -1,6 +1,5 @@
 package com.backend.domain.Question;
 
-import com.backend.domain.QuestionFile.QuestionFile;
 import lombok.Data;
 
 import java.time.LocalDateTime;
