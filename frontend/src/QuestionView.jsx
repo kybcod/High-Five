@@ -59,6 +59,20 @@ export function QuestionView() {
         <Box mt={4}>
           <Textarea value={question.content} readOnly></Textarea>
         </Box>
+
+        <Box>
+          <Box mt={5}>
+            {question.fileList &&
+              question.fileList.map((file) => (
+                <Card m={3} key={file.name}>
+                  <CardBody>
+                    <Image w={"70%"} h="70%" src={file.src} />
+                  </CardBody>
+                </Card>
+              ))}
+          </Box>
+        </Box>
+
         <Box>
           <Flex justify={"flex-end"} mr={10}>
             <Button mt={5} onClick={handleEditClick} colorScheme={"teal"}>

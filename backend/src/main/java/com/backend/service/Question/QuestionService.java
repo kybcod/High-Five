@@ -1,6 +1,7 @@
 package com.backend.service.Question;
 
 import com.backend.domain.Question.Question;
+import com.backend.domain.Question.QuestionFile;
 import com.backend.mapper.Question.QuestionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +64,12 @@ public class QuestionService {
     }
 
     public Question get(Integer id) {
-        return mapper.selectById(id);
+        Question question = mapper.selectById(id);
+        List<String> filesNames = mapper.selectFileByQuestionId(id);
+        List<QuestionFile> files = filesNames.stream()
+                .map(name -> new QuestionFile(name, STR."\{srcPrefix}\{question.getId()}/\{name}"))
+                .toList();
+        question.setFileList(files);
+        return question;
     }
 }

@@ -34,4 +34,9 @@ public interface QuestionMapper {
             SELECT qb.id, qb.title, qb.content, qb.inserted, user.nick_name nickName FROM question_board qb JOIN user ON qb.user_id = user.id WHERE qb.id = #{id}
             """)
     Question selectById(Integer id);
+
+    @Select("""
+            SELECT file_name FROM question_board_file WHERE question_id=#{id}
+            """)
+    List<String> selectFileByQuestionId(Integer id);
 }
