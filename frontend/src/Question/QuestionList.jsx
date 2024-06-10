@@ -20,7 +20,7 @@ export function QuestionList() {
   useEffect(() => {
     axios
       .get(`/api/question/list`)
-      .then((res) => setQuestionList(res.data.questionList));
+      .then((res) => setQuestionList(res.data.content));
   }, []);
   return (
     <Box>
@@ -33,7 +33,7 @@ export function QuestionList() {
             <Tr>
               <Th>No.</Th>
               <Th>제목</Th>
-              {/*<Th>작성자</Th>*/}
+              <Th>작성자</Th>
               <Th>작성시간</Th>
             </Tr>
           </Thead>
@@ -47,8 +47,7 @@ export function QuestionList() {
               >
                 <Td>{question.id}</Td>
                 <Td>{question.title}</Td>
-                {/*nickName은 board 조인*/}
-                {/*<Td>{question.nickName}</Td>*/}
+                <Td>{question.nickName}</Td>
                 <Td>{question.inserted}</Td>
               </Tr>
             ))}
