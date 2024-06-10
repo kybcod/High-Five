@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function QuestionWrite() {
   const [title, setTitle] = useState("");
@@ -27,6 +28,7 @@ export function QuestionWrite() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
   const toast = useToast();
   function handleSaveClick() {
     setLoading(true);
@@ -44,6 +46,7 @@ export function QuestionWrite() {
           position: "bottom",
           duration: 2500,
         });
+        navigate("/question-list");
       })
       .catch((e) => {
         const code = e.response.status;

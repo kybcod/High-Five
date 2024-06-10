@@ -1,4 +1,4 @@
-import {Box, HStack } from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 export function Navbar() {
@@ -8,7 +8,9 @@ export function Navbar() {
     <HStack bgColor={"seashell"}>
       <Box onClick={() => navigate("/")}>HOME</Box>
       <Box onClick={() => navigate("/write")}>upload</Box>
-      <Box onClick={() => navigate("/qna")} cursor="pointer">QnA</Box>
+      <Box onClick={() => navigate("/question")} cursor="pointer">
+        QnA
+      </Box>
     </HStack>
   );
 }
