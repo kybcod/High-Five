@@ -31,5 +31,12 @@ export function Navbar() {
         </Center>
       )}
     </Flex>
+    <HStack bgColor={"seashell"}>
+      <Box onClick={() => navigate("/")}>HOME</Box>
+      <Box onClick={() => navigate("/write")}>upload</Box>
+      <Box onClick={() => navigate("/question")} cursor="pointer">
+        QnA
+      </Box>
+    </HStack>
   );
 }

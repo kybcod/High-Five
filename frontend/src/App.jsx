@@ -18,6 +18,8 @@ axios.interceptors.request.use((config) => {
   }
   return config;
 });
+import { QuestionWrite } from "./QuestionWrite.jsx";
+import { QuestionList } from "./QuestionList.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,8 @@ const router = createBrowserRouter([
       { path: "product/:id", element: <ProductView /> },
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
+      { path: "question", element: <QuestionWrite /> },
+      { path: "question-list", element: <QuestionList /> },
     ],
   },
 ]);
