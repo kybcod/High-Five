@@ -23,6 +23,7 @@ import axios from "axios";
 export function QuestionWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [userId, setUserId] = useState("");
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -33,6 +34,7 @@ export function QuestionWrite() {
       .postForm("/api/question", {
         title,
         content,
+        userId,
         files,
       })
       .then(() => {
@@ -128,6 +130,13 @@ export function QuestionWrite() {
             </Card>
           </Box>
         )}
+
+        <Box mt={2}>
+          <FormControl>
+            <FormLabel>작성자</FormLabel>
+            <Input onChange={(e) => setUserId(e.target.value)}></Input>
+          </FormControl>
+        </Box>
 
         <Center>
           <Button
