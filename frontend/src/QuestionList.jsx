@@ -33,7 +33,7 @@ export function QuestionList() {
             <Tr>
               <Th>No.</Th>
               <Th>제목</Th>
-              <Th>작성자</Th>
+              {/*<Th>작성자</Th>*/}
               <Th>작성시간</Th>
             </Tr>
           </Thead>
@@ -48,7 +48,7 @@ export function QuestionList() {
                 <Td>{question.id}</Td>
                 <Td>{question.title}</Td>
                 {/*nickName은 board 조인*/}
-                <Td>{question.nickName}</Td>
+                {/*<Td>{question.nickName}</Td>*/}
                 <Td>{question.inserted}</Td>
               </Tr>
             ))}

@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -30,9 +31,9 @@ public class QuestionService {
     public void add(Question question, MultipartFile[] files) throws IOException {
         mapper.insert(question);
 
-        if(files!=null){
-            for(MultipartFile file:files){
-                mapper.insertFileName(question.getId(),file.getOriginalFilename());
+        if (files != null) {
+            for (MultipartFile file : files) {
+                mapper.insertFileName(question.getId(), file.getOriginalFilename());
 
                 String key = STR."prj3/\{question.getId()}/\{file.getOriginalFilename()}";
                 PutObjectRequest objectRequest = PutObjectRequest.builder()
@@ -55,5 +56,9 @@ public class QuestionService {
             return false;
         }
         return true;
+    }
+
+    public List<Question> list() {
+        return mapper.getList();
     }
 }

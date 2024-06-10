@@ -4,6 +4,9 @@ import com.backend.domain.Question.Question;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface QuestionMapper {
@@ -19,4 +22,9 @@ public interface QuestionMapper {
             Insert Into question_board_file(question_id, file_name) VALUES (#{questionId},#{fileName})
             """)
     int insertFileName(Integer questionId, String fileName);
+
+    @Select("""
+            SELECT id,title,inserted FROM question_board
+            """)
+    List<Question> getList();
 }
