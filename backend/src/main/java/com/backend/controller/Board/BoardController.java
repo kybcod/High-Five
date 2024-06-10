@@ -1,6 +1,6 @@
 package com.backend.controller.Board;
 
-import com.backend.domain.Board;
+import com.backend.domain.Board.Board;
 import com.backend.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

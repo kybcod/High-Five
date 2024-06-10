@@ -1,6 +1,6 @@
 package com.backend.mapper.Board;
 
-import com.backend.domain.Board;
+import com.backend.domain.Board.Board;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -11,13 +11,13 @@ import java.util.List;
 public interface BoardMapper {
 
     @Insert("""
-            INSERT INTO board (title, content)
-            VALUES (#{title}, #{content})
+            INSERT INTO board (title, content, inserted)
+            VALUES (#{title}, #{content}, #{inserted})
             """)
     public int insert(Board board);
 
     @Select("""
-            SELECT id, title, user_id, content
+            SELECT id, title, user_id, inserted
             FROM board
             ORDER BY id DESC
             """)

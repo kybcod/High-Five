@@ -27,7 +27,7 @@ export function BoardList() {
             <Td>{board.id}</Td>
             <Td>{board.title}</Td>
             <Td>{board.userId}</Td>
-            <Td>{board.content}</Td>
+            <Td>{board.inserted}</Td>
           </Tr>
         ))}
       </Tbody>

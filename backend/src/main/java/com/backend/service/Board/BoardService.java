@@ -1,6 +1,6 @@
 package com.backend.service.Board;
 
-import com.backend.domain.Board;
+import com.backend.domain.Board.Board;
 import com.backend.mapper.Board.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
