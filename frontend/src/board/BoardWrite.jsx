@@ -51,7 +51,7 @@ export function BoardWrite() {
         </FormControl>
       </Box>
       <Box>
-        <Input type={"hidden"} value={inserted}></Input>
+        <Input type={"hidden"} value={inserted} />
       </Box>
       <Box>
         <Button onClick={handleClickButton}>게시글 생성</Button>

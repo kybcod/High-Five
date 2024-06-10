@@ -29,4 +29,9 @@ public class BoardController {
     public List<Board> list() {
         return service.list();
     }
+
+    @GetMapping("{id}")
+    public Board get(@PathVariable Integer id) {
+        return service.selectById(id);
+    }
 }
