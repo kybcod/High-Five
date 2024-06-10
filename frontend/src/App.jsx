@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home } from "./Home.jsx";
 import { ProductList } from "./product/ProductList.jsx";
 import { ProductUpload } from "./product/ProductUpload.jsx";
+import { BoardWrite } from "./board/BoardWrite.jsx";
 
 const router = createBrowserRouter([
   {
@@ -11,9 +12,11 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <ProductList /> },
       { path: "write", element: <ProductUpload /> },
+      { path: "board", element: <BoardWrite /> },
     ],
   },
 ]);
+
 function App() {
   return (
     <ChakraProvider>
