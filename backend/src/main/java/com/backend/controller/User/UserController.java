@@ -2,9 +2,11 @@ package com.backend.controller.User;
 
 import com.backend.domain.User.User;
 import com.backend.service.User.UserService;
+import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -65,5 +67,24 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users/auth")
+    public ResponseEntity getAuth(Authentication authentication, SecurityContext securityContext) {
+//        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        System.out.println("securityContext = " + securityContext);
+//
+//        String id = principal.getId();
+//        String email = principal.getUsername();
+//        String nickName = principal.getName();
+//        String password = principal.getPassword();
+//        boolean isLocked = principal.isAccountNonLocked();
+//        System.out.println("id = " + id);
+//        System.out.println("email = " + email);
+//        System.out.println("nickName = " + nickName);
+//        System.out.println("password = " + password);
+//        System.out.println("isLocked = " + isLocked);
+        System.out.println("실행중");
+        return null;
     }
 }
