@@ -75,6 +75,13 @@ export function SignUp() {
 
   let isDisabled = false;
   const isCheckedPassword = password === passwordCheck;
+  const passwordPattern =
+    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
+
+  let isValidPassword = false;
+  if (passwordPattern.test(password)) {
+    isValidPassword = true;
+  }
 
   if (
     !(
@@ -99,6 +106,10 @@ export function SignUp() {
   }
 
   if (!isCheckedNickName) {
+    isDisabled = true;
+  }
+
+  if (!isValidPassword) {
     isDisabled = true;
   }
 
@@ -135,7 +146,21 @@ export function SignUp() {
       </FormControl>
       <FormControl>
         <FormLabel>비밀번호</FormLabel>
-        <Input type="password" onChange={(e) => setPassword(e.target.value)} />
+        <Input
+          type="password"
+          onChange={(e) => {
+            setPassword(e.target.value);
+            isValidPassword = false;
+          }}
+          isInvalid={isValidPassword ? false : true}
+          errorBorderColor={"red.300"}
+        />
+        {isValidPassword || (
+          <FormHelperText>
+            비밀번호는 8자 이상으로, 영문 대소문자와 숫자, 특수기호를 포함하여야
+            합니다
+          </FormHelperText>
+        )}
       </FormControl>
       <FormControl>
         <FormLabel>비밀번호 확인</FormLabel>

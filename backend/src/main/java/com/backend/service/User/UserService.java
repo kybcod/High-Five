@@ -106,6 +106,11 @@ public class UserService {
             return false;
         }
 
+        String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
+        if (!user.getPassword().trim().matches(passwordPattern)) {
+            return false;
+        }
+
         return true;
     }
 }
