@@ -6,6 +6,18 @@ import { ProductUpload } from "./product/ProductUpload.jsx";
 import { MainProduct } from "./product/MainProduct.jsx";
 import { ProductEdit } from "./product/ProductEdit.jsx";
 import { ProductView } from "./product/ProductView.jsx";
+import { SignUp } from "./user/SignUp.jsx";
+import { Login } from "./Login.jsx";
+import { LoginProvider } from "./component/LoginProvider.jsx";
+import axios from "axios";
+
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 const router = createBrowserRouter([
   {
@@ -17,14 +29,19 @@ const router = createBrowserRouter([
       { path: "list", element: <ProductList /> },
       { path: "edit/:id", element: <ProductEdit /> },
       { path: "product/:id", element: <ProductView /> },
+      { path: "signup", element: <SignUp /> },
+      { path: "login", element: <Login /> },
     ],
   },
 ]);
+
 function App() {
   return (
-    <ChakraProvider>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <LoginProvider>
+      <ChakraProvider>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </LoginProvider>
   );
 }
 
