@@ -17,8 +17,12 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("users")
-    public void addUser(@RequestBody User user) {
-        service.addUser(user);
+    public ResponseEntity addUser(@RequestBody User user) {
+        if (service.signUpVerification(user)) {
+            service.addUser(user);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     // TODO. 나중에 활성화

@@ -80,4 +80,32 @@ public class UserService {
     public User getUserByNickName(String nickName) {
         return mapper.selectUserByNickName(nickName);
     }
+
+    public boolean signUpVerification(User user) {
+
+        if (user.getEmail().trim().length() == 0 && user.getEmail().length() > 30) {
+            return false;
+        }
+        if (user.getPassword().trim().length() == 0) {
+            return false;
+        }
+        if (user.getNickName().trim().length() == 0 && user.getNickName().length() > 10) {
+            return false;
+        }
+        if (user.getPhoneNumber().trim().length() != 11) {
+            return false;
+        }
+
+        String emailPattern = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
+        if (!user.getEmail().trim().matches(emailPattern)) {
+            return false;
+        }
+
+        String phoneNumberPattern = "^(010)[0-9]{8}$";
+        if (!user.getPhoneNumber().trim().matches(phoneNumberPattern)) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -110,6 +110,7 @@ export function SignUp() {
         <InputGroup>
           <Input
             type={"email"}
+            maxLength="30"
             onChange={(e) => {
               setEmail(e.target.value);
               setIsValidEmail(!e.target.validity.typeMismatch);
