@@ -49,9 +49,13 @@ export function SignUp() {
     axios
       .get(`/api/users/emails?email=${email}`)
       .then(() => errorToast("이미 존재하는 이메일입니다"))
-      .catch(() => {
+      .catch((err) => {
         setIsCheckedEmail(true);
-        successToast("사용가능한 이메일입니다");
+        if (err.response.status === 404) {
+          successToast("사용가능한 이메일입니다");
+        } else {
+          errorToast("이메일 조회 중 에러가 발생했습니다");
+        }
       });
   }
 
@@ -59,9 +63,13 @@ export function SignUp() {
     axios
       .get(`/api/users/nickNames?nickName=${nickName}`)
       .then(() => errorToast("이미 존재하는 닉네임입니다"))
-      .catch(() => {
+      .catch((err) => {
         setIsCheckedNickName(true);
-        successToast("사용가능한 닉네임입니다");
+        if (err.response.status === 404) {
+          successToast("사용가능한 닉네임입니다");
+        } else {
+          errorToast("닉네임 조회 중 에러가 발생했습니다");
+        }
       });
   }
 
