@@ -1,13 +1,42 @@
 import { Center, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { LoginContext } from "./LoginProvider.jsx";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Navbar() {
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
 
   return (
-    <Flex bgColor={"lightgreen"}>
+    <Flex gap={2} bgColor={"lightgreen"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
-      <Center onClick={() => navigate("/write")}>upload</Center>
+      {account.isLoggedIn() && (
+        <Center onClick={() => navigate("/write")}>upload</Center>
+      )}
+      {account.isLoggedIn() || (
+        <Center onClick={() => navigate("/signup")}>signup</Center>
+      )}
+      {account.isLoggedIn() || (
+        <Center onClick={() => navigate("/login")}>login</Center>
+      )}
+      {account.isLoggedIn() && (
+        <Center onClick={() => account.logout()}>logout</Center>
+      )}
+      {account.isLoggedIn() && (
+        <Center>
+          <FontAwesomeIcon icon={faUser} />
+          {account.nickName} 님
+        </Center>
+      )}
     </Flex>
+    <HStack bgColor={"seashell"}>
+      <Box onClick={() => navigate("/")}>HOME</Box>
+      <Box onClick={() => navigate("/write")}>upload</Box>
+      <Box onClick={() => navigate("/question")} cursor="pointer">
+        QnA
+      </Box>
+    </HStack>
   );
 }
