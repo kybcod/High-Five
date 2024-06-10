@@ -102,4 +102,11 @@ public interface ProductMapper {
 
     @Insert("INSERT INTO product_like (product_id, user_id) VALUES (#{productId}, #{userId})")
     int insertLikeByProductIdAndMemberId(Integer productId, Integer userId);
+
+    @Update("""
+            UPDATE product SET 
+            view_count = view_count + 1
+            WHERE id=#{id}
+            """)
+    int updateViewCount(Integer id);
 }
