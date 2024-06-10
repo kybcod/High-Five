@@ -70,9 +70,16 @@ public interface ProductMapper {
     List<Product> selectWithPageable(Pageable pageable, String keyword, String category);
 
     @Select("""
-            SELECT COUNT(*) FROM product
+            <script>
+            <bind name="pattern" value="'%' + keyword + '%'" />
+            SELECT COUNT(*) FROM product p
+            WHERE p.title LIKE #{pattern}
+            <if test="category != null and category != ''">
+                AND p.category = #{category}
+            </if>
+            </script>
             """)
-    int selectTotalCount();
+    int selectTotalCount(String keyword, String category);
 
     @Delete("DELETE FROM product_file WHERE product_id=#{productId} AND file_name=#{fileName}")
     int deleteFileByProductIdAndFileName(Integer productId, String fileName);

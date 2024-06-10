@@ -86,7 +86,7 @@ public class ProductService {
             product.setProductFileList(files);
         }
 
-        int total = mapper.selectTotalCount();
+        int total = mapper.selectTotalCount(keyword, category);
         Page<Product> page = new PageImpl<>(content, pageable, total);
         PageInfo pageInfo = new PageInfo().setting(page);
         return Map.of("content", content, "pageInfo", pageInfo);
