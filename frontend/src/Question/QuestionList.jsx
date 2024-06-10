@@ -1,6 +1,5 @@
 import {
   Box,
-  Center,
   Heading,
   Table,
   Tbody,
@@ -14,13 +13,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export function QuestionList() {
-  const [questionList, setQuestionList] = useState();
+  const [questionList, setQuestionList] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`/api/question/list`)
-      .then((res) => setQuestionList(res.data.content));
+    axios.get(`/api/question/list`).then((res) => setQuestionList(res.data));
   }, []);
   return (
     <Box>

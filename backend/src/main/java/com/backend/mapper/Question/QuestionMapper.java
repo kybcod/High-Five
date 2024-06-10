@@ -17,17 +17,16 @@ public interface QuestionMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Question question);
 
-
     @Insert("""
             Insert Into question_board_file(question_id, file_name) VALUES (#{questionId},#{fileName})
             """)
     int insertFileName(Integer questionId, String fileName);
 
     @Select("""
-            SELECT qb.id, qb.title, qb.inserted, user.nick_name
+            SELECT qb.id, qb.title,user.nick_name as nickName, qb.inserted
             FROM question_board qb
                      JOIN user
-            WHERE qb.user_id = user.id;
+            ON qb.user_id = user.id;
             """)
     List<Question> getList();
 }
