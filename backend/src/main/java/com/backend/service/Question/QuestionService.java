@@ -61,4 +61,8 @@ public class QuestionService {
     public List<Question> list() {
         return mapper.getList();
     }
+
+    public Question get(Integer id) {
+        return mapper.selectById(id);
+    }
 }

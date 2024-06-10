@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  Flex,
   Heading,
   Table,
   Tbody,
@@ -24,7 +26,7 @@ export function QuestionList() {
       <Box mt={5} mb={5}>
         <Heading>문의 게시판</Heading>
       </Box>
-      <Box mb={10}>
+      <Box mb={7}>
         <Table>
           <Thead>
             <Tr>
@@ -50,6 +52,13 @@ export function QuestionList() {
             ))}
           </Tbody>
         </Table>
+      </Box>
+      <Box>
+        <Flex justify={"flex-end"} mr={10}>
+          <Button colorScheme={"blue"} onClick={() => navigate("/question")}>
+            글 작성
+          </Button>
+        </Flex>
       </Box>
     </Box>
   );

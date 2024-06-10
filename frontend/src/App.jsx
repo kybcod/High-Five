@@ -10,6 +10,11 @@ import { SignUp } from "./user/SignUp.jsx";
 import { Login } from "./Login.jsx";
 import { LoginProvider } from "./component/LoginProvider.jsx";
 import axios from "axios";
+import { QuestionWrite } from "./Question/QuestionWrite.jsx";
+import { QuestionList } from "./Question/QuestionList.jsx";
+import { BoardWrite } from "./board/BoardWrite.jsx";
+import { BoardList } from "./board/BoardList.jsx";
+import { QuestionView } from "./QuestionView.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -18,10 +23,6 @@ axios.interceptors.request.use((config) => {
   }
   return config;
 });
-import { QuestionWrite } from "./Question/QuestionWrite.jsx";
-import { QuestionList } from "./Question/QuestionList.jsx";
-import { BoardWrite } from "./board/BoardWrite.jsx";
-import { BoardList } from "./board/BoardList.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "question", element: <QuestionWrite /> },
       { path: "questionList", element: <QuestionList /> },
+      { path: "question/:id", element: <QuestionView /> },
       { path: "board", element: <BoardWrite /> },
       { path: "board/list", element: <BoardList /> },
     ],

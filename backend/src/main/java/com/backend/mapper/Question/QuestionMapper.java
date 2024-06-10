@@ -29,4 +29,9 @@ public interface QuestionMapper {
             ON qb.user_id = user.id;
             """)
     List<Question> getList();
+
+    @Select("""
+            SELECT qb.id, qb.title, qb.content, qb.inserted, user.nick_name nickName FROM question_board qb JOIN user ON qb.user_id = user.id WHERE qb.id = #{id}
+            """)
+    Question selectById(Integer id);
 }

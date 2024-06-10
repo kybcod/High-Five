@@ -27,7 +27,12 @@ public class QuestionController {
     }
 
     @GetMapping("list")
-    public List<Question> list() {
+    public List<Question> list(@RequestParam(defaultValue = "1") Integer page) {
         return service.list();
+    }
+
+    @GetMapping("{id}")
+    public Question getQuestion(@PathVariable Integer id) {
+        return service.get(id);
     }
 }
