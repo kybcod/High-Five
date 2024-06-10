@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
@@ -25,5 +27,9 @@ public class BoardService {
 
     public int add(Board board) {
         return mapper.insert(board);
+    }
+
+    public List<Board> list() {
+        return mapper.selectAll();
     }
 }

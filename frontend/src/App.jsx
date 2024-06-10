@@ -4,6 +4,7 @@ import { Home } from "./Home.jsx";
 import { ProductList } from "./product/ProductList.jsx";
 import { ProductUpload } from "./product/ProductUpload.jsx";
 import { BoardWrite } from "./board/BoardWrite.jsx";
+import { BoardList } from "./board/BoardList.jsx";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
       { index: true, element: <ProductList /> },
       { path: "write", element: <ProductUpload /> },
       { path: "board", element: <BoardWrite /> },
+      { path: "board/list", element: <BoardList /> },
     ],
   },
 ]);
