@@ -48,7 +48,9 @@ export function SignUp() {
   function handleCheckEmail() {
     axios
       .get(`/api/users/emails?email=${email}`)
-      .then(() => errorToast("이미 존재하는 이메일입니다"))
+      .then(() =>
+        errorToast("이미 존재하는 이메일이거나 이메일 형식이 아닙니다"),
+      )
       .catch((err) => {
         setIsCheckedEmail(true);
         if (err.response.status === 404) {

@@ -46,7 +46,7 @@ public class UserService {
 
         Map<String, Object> result = null;
 
-        User db = mapper.getUserByEmail(user.getEmail());
+        User db = mapper.selectUserByEmail(user.getEmail());
 
         if (db != null) {
             if (passwordEncoder.matches(user.getPassword(), db.getPassword())) {
@@ -82,6 +82,17 @@ public class UserService {
     }
 
     public boolean signUpVerification(User user) {
+
+        User emailDB = mapper.selectUserByEmail(user.getEmail());
+        User nickNameDB = mapper.selectUserByNickName(user.getNickName());
+
+        if (emailDB != null) {
+            return false;
+        }
+
+        if (nickNameDB != null) {
+            return false;
+        }
 
         if (user.getEmail().trim().length() == 0 && user.getEmail().length() > 30) {
             return false;

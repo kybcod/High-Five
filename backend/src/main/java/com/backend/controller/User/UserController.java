@@ -46,7 +46,11 @@ public class UserController {
     @GetMapping("/users/emails")
     public ResponseEntity emails(String email) {
         User user = service.getUserByEmail(email);
+        String emailPattern = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
 
+        if (!email.trim().matches(emailPattern)) {
+            return ResponseEntity.ok().build();
+        }
         if (user == null) {
             return ResponseEntity.notFound().build();
         }

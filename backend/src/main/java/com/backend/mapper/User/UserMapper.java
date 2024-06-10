@@ -16,12 +16,6 @@ public interface UserMapper {
     int insertUser(User user);
 
     @Select("""
-            SELECT * FROM user
-            WHERE email = #{email}
-            """)
-    User getUserByEmail(String email);
-
-    @Select("""
                 SELECT * 
                 FROM user
                 WHERE email = #{email}
