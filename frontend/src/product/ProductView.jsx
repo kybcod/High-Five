@@ -1,13 +1,11 @@
 import {
   Box,
   Button,
-  Center,
   Divider,
   Flex,
   FormControl,
   FormLabel,
   Heading,
-  Image,
   Modal,
   ModalBody,
   ModalContent,
@@ -24,6 +22,9 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SimpleSlider from "./SimpleSlider.jsx";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 export function ProductView() {
   const { id } = useParams();
@@ -73,22 +74,7 @@ export function ProductView() {
           <FormLabel>상품 이미지</FormLabel>
         </FormControl>
         <Flex>
-          <Center>
-            {product.productFileList && product.productFileList[0] && (
-              <Image
-                src={product.productFileList[0].filePath}
-                borderRadius="lg"
-                w="100%"
-                h="200px"
-              />
-            )}
-            {/*/!* 기존 이미지 표시 *!/*/}
-            {/*{existingFilePreviews.map((file, index) => (*/}
-            {/*  <Box boxSize={"180px"} key={index} position="relative">*/}
-            {/*    <Image boxSize={"180px"} src={file.filePath} mr={2} />*/}
-            {/*  </Box>*/}
-            {/*))}*/}
-          </Center>
+          <SimpleSlider images={existingFilePreviews} />
           <Box>
             <Box>
               <Heading fontSize={"xl"}> {product.title} </Heading>

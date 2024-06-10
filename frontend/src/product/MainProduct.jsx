@@ -50,22 +50,18 @@ export function MainProduct() {
       <Grid templateColumns="repeat(5, 1fr)" gap={6}>
         {productList.map((product) => (
           <GridItem key={product.id}>
-            <Card
-              maxW="sm"
-              h="100%"
-              onClick={() => navigate(`/product/${product.id}`)}
-            >
+            <Card maxW="sm" h="100%">
               <CardBody position="relative" h="100%">
                 <Box mt={2} w="100%">
                   {product.productFileList && product.productFileList[0] && (
                     <Image
+                      onClick={() => navigate(`/product/${product.id}`)}
                       src={product.productFileList[0].filePath}
                       borderRadius="lg"
                       w="100%"
                       h="200px"
                     />
                   )}
-
                   <Badge
                     position="absolute"
                     top="1"
