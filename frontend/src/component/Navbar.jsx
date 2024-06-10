@@ -30,13 +30,11 @@ export function Navbar() {
           {account.nickName} 님
         </Center>
       )}
+      {account.isLoggedIn() || (
+        <Center onClick={() => navigate("/question")} cursor="pointer">
+          QnA
+        </Center>
+      )}
     </Flex>
-    <HStack bgColor={"seashell"}>
-      <Box onClick={() => navigate("/")}>HOME</Box>
-      <Box onClick={() => navigate("/write")}>upload</Box>
-      <Box onClick={() => navigate("/question")} cursor="pointer">
-        QnA
-      </Box>
-    </HStack>
   );
 }
