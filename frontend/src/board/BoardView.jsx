@@ -4,9 +4,9 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 export function BoardView() {
-  const { board_id } = useParams();
   const [board, setBoard] = useState("");
   const navigate = useNavigate();
+  const { board_id } = useParams();
 
   useEffect(() => {
     axios.get(`/api/board/${board_id}`).then((res) => setBoard(res.data));
@@ -27,7 +27,9 @@ export function BoardView() {
         </Box>
         <Spacer />
         <Box>
-          <Text onClick={() => navigate(`/board/${board.id}`)}>수정</Text>
+          <Text onClick={() => navigate(`/board/modify/${board_id}`)}>
+            수정
+          </Text>
         </Box>
         <Box>
           <Text>삭제</Text>

@@ -31,12 +31,18 @@ public class BoardController {
     }
 
     @GetMapping("{id}")
-    public Board get(@PathVariable Integer id) {
+    public Board view(@PathVariable Integer id) {
         return service.selectById(id);
     }
 
+
     @PutMapping("modify")
-    public void update(@PathVariable Integer id, @RequestBody Board board) {
-        service.updateById(id, board);
+    public ResponseEntity update(@RequestBody Board board) {
+        if (service.validate(board)) {
+            service.modify(board);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

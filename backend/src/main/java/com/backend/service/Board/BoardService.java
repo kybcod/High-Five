@@ -37,7 +37,7 @@ public class BoardService {
         return mapper.selectById(id);
     }
 
-    public void updateById(Integer id, Board board) {
-        mapper.update(id, board);
+    public void modify(Board board) {
+        mapper.update(board);
     }
 }

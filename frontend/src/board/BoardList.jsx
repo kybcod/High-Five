@@ -10,9 +10,10 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function BoardList() {
+  const { board_id } = useParams();
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
 
@@ -39,12 +40,7 @@ export function BoardList() {
           </Thead>
           <Tbody>
             {boardList.map((board) => (
-              <Tr
-                onClick={() => {
-                  navigate(`/board/${board.id}`);
-                }}
-                key={board.id}
-              >
+              <Tr onClick={() => navigate(`/board/${board.id}`)} key={board.id}>
                 <Td>{board.id}</Td>
                 <Td>{board.title}</Td>
                 <Td>{board.userId}</Td>

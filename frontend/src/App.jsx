@@ -42,7 +42,7 @@ const router = createBrowserRouter([
       { path: "board", element: <BoardWrite /> },
       { path: "board/list", element: <BoardList /> },
       { path: "board/:board_id", element: <BoardView /> },
-      { path: "board/:board_id", element: <BoardModify /> },
+      { path: "board/modify/:board_id", element: <BoardModify /> },
     ],
   },
 ]);

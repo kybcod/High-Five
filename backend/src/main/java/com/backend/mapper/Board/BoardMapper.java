@@ -36,5 +36,5 @@ public interface BoardMapper {
             SET title = #{title}, content = #{content}, inserted = #{inserted}
             WHERE id = #{id}
             """)
-    int update(Integer id, Board board);
+    int update(Board board);
 }
