@@ -1,10 +1,7 @@
 package com.backend.mapper.Board;
 
 import com.backend.domain.Board.Board;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -37,4 +34,10 @@ public interface BoardMapper {
             WHERE id = #{id}
             """)
     int update(Board board);
+
+    @Delete("""
+            DELETE FROM board
+            WHERE id = #{id}
+            """)
+    int deleteById(Integer id);
 }

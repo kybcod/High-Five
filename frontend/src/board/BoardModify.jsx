@@ -10,12 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function BoardModify() {
   const [board, setBoard] = useState({ title: "", content: "", inserted: "" });
   const toast = useToast();
   const { board_id } = useParams();
+  const navigate = useNavigate();
   const offset = 1000 * 60 * 60 * 9;
 
   useEffect(() => {
@@ -49,6 +50,28 @@ export function BoardModify() {
       });
   }
 
+  function handleClickDeleteButton() {
+    axios
+      .delete(`/api/board/${board_id}`)
+      .then(() => {
+        toast({
+          status: "info",
+          description: `${board_id}번 게시물이 삭제되었습니다`,
+          position: "top",
+        });
+        navigate("/board/list");
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          toast({
+            status: "error",
+            description: `게시물이 삭제되지 않았습니다. 다시 시도해주세요`,
+            position: "top",
+          });
+        }
+      });
+  }
+
   return (
     <Box>
       <Heading>자유게시판 글 수정</Heading>
@@ -75,6 +98,9 @@ export function BoardModify() {
       </Box>
       <Box>
         <Button onClick={handleClickSaveButton}>게시글 수정</Button>
+      </Box>
+      <Box>
+        <Button onClick={handleClickDeleteButton}>게시글 삭제</Button>
       </Box>
     </Box>
   );

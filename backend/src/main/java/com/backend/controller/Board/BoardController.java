@@ -45,4 +45,9 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @DeleteMapping("{id}")
+    public int delete(@PathVariable Integer id) {
+        return service.deleteById(id);
+    }
 }
