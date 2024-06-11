@@ -28,36 +28,30 @@ import {
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [searchType, setSearchType] = useState("titleNickName");
-  const navigate = useNavigate();
+  const [searchType, setSearchType] = useState("titleNick");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`/api/question/list`).then((res) => {
-      setQuestionList(res.data.questionList);
+    axios.get(`/api/question/list?${searchParams}`).then((res) => {
+      setQuestionList(res.data.content);
       setPageInfo(res.data.pageInfo);
     });
-    setSearchType("titleNickName");
-    setSearchKeyword("");
-
-    const typeParam = searchParams.get("type");
-    const keywordParam = searchParams.get("keyword");
-    if (typeParam) {
-      setSearchType(typeParam);
-    }
-    if (keywordParam) {
-      setSearchKeyword(keywordParam);
-    }
   }, [searchParams]);
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
     pageNumbers.push(i);
   }
+
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
-    setSearchParams(searchParams);
+    navigate(`/questionList?${searchParams}`);
+  }
+
+  function handleParamClick() {
+    navigate(`/question/?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   return (
@@ -100,7 +94,7 @@ export function QuestionList() {
               value={searchType}
               onChange={(e) => setSearchType(e.target.value)}
             >
-              <option value={"titleNickName"}>제목+작성자</option>
+              <option value={"titleNick"}>제목+작성자</option>
               <option value={"title"}>제목</option>
               <option value={"nickName"}>작성자</option>
             </Select>
@@ -113,7 +107,7 @@ export function QuestionList() {
             />
           </Box>
           <Box>
-            <Button onClick={handlePageButtonClick}>
+            <Button onClick={handleParamClick}>
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </Button>
           </Box>
@@ -121,7 +115,7 @@ export function QuestionList() {
       </Center>
 
       <Center>
-        <Box mt={3}>
+        <Box>
           {pageInfo.prevPageNumber && (
             <>
               <Button mr={"10px"} onClick={() => handlePageButtonClick(1)}>
@@ -136,34 +130,34 @@ export function QuestionList() {
             </>
           )}
         </Box>
+
+        {pageNumbers.map((pageNumber) => {
+          <Button
+            onClick={handlePageButtonClick(pageNumber)}
+            colorScheme={
+              pageNumber - 1 === pageInfo.currentPageNumber ? "teal" : "gray"
+            }
+            key={pageNumber}
+          >
+            {pageNumber}
+          </Button>;
+        })}
+
+        {pageInfo.nextPageNumber && (
+          <>
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAngleRight} />
+            </Button>
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAnglesRight} />
+            </Button>
+          </>
+        )}
       </Center>
-
-      {pageNumbers.map((pageNumber) => {
-        <Button
-          onClick={handlePageButtonClick(pageNumber)}
-          colorScheme={
-            pageNumber == pageInfo.currentPageNumber ? "teal" : "gray"
-          }
-          key={pageNumber}
-        >
-          {pageNumber}
-        </Button>;
-      })}
-
-      {pageInfo.nextPageNumber && (
-        <>
-          <Button
-            onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-          >
-            <FontAwesomeIcon icon={faAngleRight} />
-          </Button>
-          <Button
-            onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-          >
-            <FontAwesomeIcon icon={faAnglesRight} />
-          </Button>
-        </>
-      )}
 
       <Box>
         <Flex justify={"flex-end"} mr={10}>

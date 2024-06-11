@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -45,46 +46,40 @@ public interface QuestionMapper {
                 SELECT qb.id, qb.title, user.nick_name as nickName, qb.inserted
                 FROM question_board qb
                 JOIN user ON qb.user_id = user.id
-                <where>
-                    <if test="searchType != null and keyword != null and keyword != ''">
-                        <bind name="pattern" value="'%' + keyword + '%'" />
-                        <if test="searchType == 'titleNickName'">
-                            (qb.title LIKE #{pattern} OR user.nick_name LIKE #{pattern})
+                    <trim prefix="WHERE" prefixOverrides="OR">
+                        <if test="searchType != null">
+                            <bind name="pattern" value="'%' + keyword + '%'" />
+                            <if test="searchType == 'titleNick' || searchType == 'title'">
+                                OR qb.title LIKE #{pattern}
+                            </if>
+                            <if test="searchType == 'titleNick' || searchType == 'nickName'">
+                                OR user.nick_name LIKE #{pattern}
+                            </if>
                         </if>
-                        <if test="searchType == 'title'">
-                            qb.title LIKE #{pattern}
-                        </if>
-                        <if test="searchType == 'nickName'">
-                            user.nick_name LIKE #{pattern}
-                        </if>
-                    </if>
-                </where>
+                    </trim>
                 ORDER BY qb.id DESC
-                LIMIT 10 OFFSET #{offset}
+                LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             </script>
             """)
-    List<Question> selectAllPaging(Integer offset, String searchType, String keyword);
+    List<Question> selectUsingPageable(Pageable pageable, String searchType, String keyword);
 
     @Select("""
             <script>
                 SELECT COUNT(qb.id)
                 FROM question_board qb
                 JOIN user ON qb.user_id = user.id
-                <where>
-                    <if test="searchType != null and keyword != null and keyword != ''">
-                        <bind name="pattern" value="'%' + keyword + '%'" />
-                        <if test="searchType == 'titleNickName'">
-                            (qb.title LIKE #{pattern} OR user.nick_name LIKE #{pattern})
+                    <trim prefix="WHERE" prefixOverrides="OR">
+                        <if test="searchType != null">
+                            <bind name="pattern" value="'%' + keyword + '%'" />
+                            <if test="searchType == 'titleNick' || searchType == 'title'">
+                                OR qb.title LIKE #{pattern}
+                            </if>
+                            <if test="searchType == 'titleNick' || searchType == 'nickName'">
+                                OR user.nick_name LIKE #{pattern}
+                            </if>
                         </if>
-                        <if test="searchType == 'title'">
-                            qb.title LIKE #{pattern}
-                        </if>
-                        <if test="searchType == 'nickName'">
-                            user.nick_name LIKE #{pattern})
-                        </if>
-                    </if>
-                </where>
+                    </trim>
             </script>
                 """)
-    Integer countAllWithSearch(String searchType, String keyword);
+    int countAllWithSearch(String searchType, String keyword);
 }
