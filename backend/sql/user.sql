@@ -9,3 +9,10 @@ ALTER TABLE user
     MODIFY COLUMN phone_number VARCHAR(11) NOT NULL UNIQUE;
 
 DESC user;
+
+INSERT INTO authority
+    (user_id, name)
+VALUES (14, 'admin');
+
+SELECT *
+FROM authority;
