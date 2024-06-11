@@ -16,3 +16,7 @@ VALUES (14, 'admin');
 
 SELECT *
 FROM authority;
+
+SELECT name
+FROM authority
+WHERE user_id = 14;

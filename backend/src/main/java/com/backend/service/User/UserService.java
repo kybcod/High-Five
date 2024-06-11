@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -54,14 +56,18 @@ public class UserService {
                 String token = "";
                 Instant now = Instant.now();
 
-                // TODO. db에서 권한 정보 가져오기, token에 권한 추가
+                List<String> authorities = mapper.selectAuthoritiesByUserId(db.getId());
+                String authorityString = authorities.stream()
+                        .collect(Collectors.joining(" "));
 
                 JwtClaimsSet claims = JwtClaimsSet.builder()
                         .issuer("LiveAuction")
                         .issuedAt(now)
                         .expiresAt(now.plusSeconds(60 * 60 * 24))
-                        .subject(db.getId().toString()) // 토큰에서 사용자에 대한 식별 값
+                        .subject(db.getEmail())
                         .claim("nickName", db.getNickName())
+                        .claim("authority", authorityString)
+                        .claim("id", db.getId().toString())
                         .build();
 
                 token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
