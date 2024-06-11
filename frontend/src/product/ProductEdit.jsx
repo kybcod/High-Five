@@ -4,9 +4,12 @@ import {
   Center,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Image,
   Input,
+  InputGroup,
+  InputRightAddon,
   Modal,
   ModalBody,
   ModalContent,
@@ -39,7 +42,7 @@ export function ProductEdit() {
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
-      setProduct(res.data);
+      setProduct(res.data.product);
       setExistingFilePreviews(res.data.productFileList || []);
     });
   }, []);
@@ -56,14 +59,15 @@ export function ProductEdit() {
         removedFileList,
         newFileList,
       })
-      .then(() =>
+      .then(() => {
         toast({
           status: "success",
           description: "해당 상품 정보가 수정되었습니다.",
           position: "top-right",
           duration: 1000,
-        }),
-      )
+        });
+        navigate("/");
+      })
       .catch((err) => {
         toast({
           status: "error",
@@ -133,6 +137,14 @@ export function ProductEdit() {
   const formattedPrice = (money) => {
     return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
+
+  function handleFormattedNumber(e) {
+    const inputValue = e.target.value.replaceAll(",", "");
+    // 입력 값이 숫자인지 확인
+    if (/^\d+$/.test(inputValue)) {
+      setProduct({ ...product, startPrice: inputValue });
+    }
+  }
 
   return (
     <Box>
@@ -232,15 +244,16 @@ export function ProductEdit() {
       <Box>
         <FormControl>
           <FormLabel>입찰 시작가</FormLabel>
-          <Input
-            value={formattedPrice(product.startPrice)}
-            onChange={(e) =>
-              setProduct({
-                ...product,
-                startPrice: e.target.value.replaceAll(",", ""),
-              })
-            }
-          />
+          <InputGroup>
+            <Input
+              value={formattedPrice(product.startPrice)}
+              onChange={(e) => {
+                handleFormattedNumber(e);
+              }}
+            />
+            <InputRightAddon>원</InputRightAddon>
+          </InputGroup>
+          <FormHelperText>숫자만 입력해주세요.</FormHelperText>
         </FormControl>
       </Box>
       <Box>

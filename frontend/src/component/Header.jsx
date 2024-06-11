@@ -6,7 +6,7 @@ import {
   Heading,
   Input,
   InputGroup,
-  InputLeftAddon,
+  InputRightAddon,
   Spacer,
 } from "@chakra-ui/react";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -34,19 +34,19 @@ export function Header() {
             <Flex>
               <Box>
                 <InputGroup>
-                  <InputLeftAddon>
+                  <Input
+                    w={"300px"}
+                    placeholder={"검색어를 입력하세요."}
+                    onChange={(e) => setKeyword(e.target.value)}
+                  />
+                  <InputRightAddon>
                     <Button
                       onClick={() => handleSearchClick(keyword)}
                       size={"100%"}
                     >
                       <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </Button>
-                  </InputLeftAddon>
-                  <Input
-                    w={"300px"}
-                    placeholder={"검색어를 입력하세요."}
-                    onChange={(e) => setKeyword(e.target.value)}
-                  />
+                  </InputRightAddon>
                 </InputGroup>
               </Box>
               <Box gap={1}></Box>
