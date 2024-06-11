@@ -18,8 +18,8 @@ public interface UserMapper {
     int insertUser(User user);
 
     @Select("""
-                SELECT * 
-                FROM user
+                SELECT u.id, u.email, u.password, u.nick_name, u.phone_number, u.black_count, u.inserted, a.name authority
+                FROM user u JOIN authority a ON u.id = a.user_id
                 WHERE email = #{email}
             """)
     User selectUserByEmail(String email);

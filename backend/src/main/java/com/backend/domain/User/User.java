@@ -3,6 +3,8 @@ package com.backend.domain.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class User {
@@ -13,4 +15,11 @@ public class User {
     private String phoneNumber;
     private Integer blackCount;
     private LocalDateTime inserted;
+    private List<String> authority;
+
+    public String getAuth() {
+        String auth = authority.stream()
+                .collect(Collectors.joining(" "));
+        return auth;
+    }
 }

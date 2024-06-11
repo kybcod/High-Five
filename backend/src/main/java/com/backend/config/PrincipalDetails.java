@@ -2,12 +2,14 @@ package com.backend.config;
 
 import com.backend.domain.User.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class PrincipalDetails implements UserDetails, OAuth2User {
     private User user;
@@ -28,9 +30,13 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         return String.valueOf(user.getId());
     }
 
+    public String getNickName() {
+        return user.getNickName();
+    }
+
     @Override
     public String getName() {
-        return user.getNickName();
+        return user.getEmail();
     }
 
     @Override
@@ -40,7 +46,11 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        Set<GrantedAuthority> roles = new HashSet<>();
+        for (String role : user.getAuth().split(",")) {
+            roles.add(new SimpleGrantedAuthority(role));
+        }
+        return roles;
     }
 
     @Override
