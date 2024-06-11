@@ -15,6 +15,7 @@ import { QuestionList } from "./QuestionList.jsx";
 import { BoardWrite } from "./board/BoardWrite.jsx";
 import { BoardList } from "./board/BoardList.jsx";
 import { BoardView } from "./board/BoardView.jsx";
+import { BoardModify } from "./board/BoardModify.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: "board", element: <BoardWrite /> },
       { path: "board/list", element: <BoardList /> },
       { path: "board/:board_id", element: <BoardView /> },
+      { path: "board/:board_id", element: <BoardModify /> },
     ],
   },
 ]);

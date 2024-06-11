@@ -34,4 +34,9 @@ public class BoardController {
     public Board get(@PathVariable Integer id) {
         return service.selectById(id);
     }
+
+    @PutMapping("modify")
+    public void update(@PathVariable Integer id, @RequestBody Board board) {
+        service.updateById(id, board);
+    }
 }

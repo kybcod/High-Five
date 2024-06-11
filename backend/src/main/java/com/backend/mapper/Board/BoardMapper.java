@@ -4,6 +4,7 @@ import com.backend.domain.Board.Board;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -29,4 +30,11 @@ public interface BoardMapper {
             WHERE id = #{id}
             """)
     Board selectById(Integer id);
+
+    @Update("""
+            UPDATE board
+            SET title = #{title}, content = #{content}, inserted = #{inserted}
+            WHERE id = #{id}
+            """)
+    int update(Integer id, Board board);
 }
