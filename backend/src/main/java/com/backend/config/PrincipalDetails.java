@@ -6,10 +6,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class PrincipalDetails implements UserDetails, OAuth2User {
     private User user;
@@ -46,7 +46,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> roles = new HashSet<>();
+        List<GrantedAuthority> roles = new ArrayList<>();
         for (String role : user.getAuth().split(",")) {
             roles.add(new SimpleGrantedAuthority(role));
         }

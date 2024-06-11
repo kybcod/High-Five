@@ -35,7 +35,7 @@ public class UserController {
 //        service.checkVerificationCode(verificationCode, "");
     }
 
-    @PostMapping("users/login")
+    //    @PostMapping("users/login")
     public ResponseEntity login(@RequestBody User user) {
         Map<String, Object> token = service.issueToken(user);
 
