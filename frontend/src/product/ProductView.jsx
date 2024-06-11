@@ -7,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -18,7 +19,7 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { faEye, faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
@@ -28,12 +29,15 @@ import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Category } from "../component/Category.jsx";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function ProductView() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [existingFilePreviews, setExistingFilePreviews] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
+  const [bidPrice, setBidPrice] = useState(0);
+  const account = useContext(LoginContext);
   const navigate = useNavigate();
   const { onOpen, onClose, isOpen } = useDisclosure();
 
@@ -76,6 +80,18 @@ export function ProductView() {
     axios.put("/api/products/like", { productId: product.id }).then((res) => {
       setLike(res.data);
     });
+  }
+
+  function handleJoinClick() {
+    axios
+      .post("/api/products/join", {
+        productId: id,
+        userId: account.id,
+        bidPrice: bidPrice,
+      })
+      .then((res) => {
+        console.log(product.id, id, account.id, bidPrice);
+      });
   }
 
   return (
@@ -171,9 +187,17 @@ export function ProductView() {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader></ModalHeader>
-          <ModalBody>정말로 참여하시겠습니까?</ModalBody>
+          <ModalBody>
+            <FormControl>
+              <FormLabel>입찰 금액</FormLabel>
+              <Input
+                type="number"
+                onChange={(e) => setBidPrice(e.target.value)}
+              />
+            </FormControl>
+          </ModalBody>
           <ModalFooter>
-            <Button>확인</Button>
+            <Button onClick={handleJoinClick}>확인</Button>
             <Button onClick={onClose}>취소</Button>
           </ModalFooter>
         </ModalContent>

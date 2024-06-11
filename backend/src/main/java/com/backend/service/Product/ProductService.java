@@ -2,6 +2,7 @@ package com.backend.service.Product;
 
 import com.backend.domain.Product.Product;
 import com.backend.domain.Product.ProductFile;
+import com.backend.domain.Product.auctionDomain;
 import com.backend.mapper.Product.ProductMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -174,28 +175,9 @@ public class ProductService {
             s3Client.deleteObject(deleteObjectRequest);
         }
 
+        mapper.deleteLikeByBoardId(id);
         mapper.deleteFileByProductId(id);
-
         mapper.deleteByProductId(id);
-    }
-
-    public boolean validate(Product product) {
-        if (product.getTitle() == null || product.getTitle().isBlank()) {
-            return false;
-        }
-        if (product.getContent() == null || product.getContent().isBlank()) {
-            return false;
-        }
-        if (product.getCategory() == null || product.getCategory().isBlank()) {
-            return false;
-        }
-        if (product.getStartPrice() == null || product.getStartPrice().isBlank()) {
-            return false;
-        }
-        if (product.getEndTime() == null) {
-            return false;
-        }
-        return true;
     }
 
     public Map<String, Object> like(Map<String, Object> likeInfo, Authentication authentication) {
@@ -220,5 +202,32 @@ public class ProductService {
 
     public List<Integer> getLike(Integer userId, Authentication authentication) {
         return mapper.selectLikeByUserId(userId);
+    }
+
+    public void insertBidPrice(auctionDomain auction) {
+        mapper.insertBidPrice(auction);
+    }
+
+
+    public boolean validate(Product product) {
+        if (product.getTitle() == null || product.getTitle().isBlank()) {
+            return false;
+        }
+        if (product.getCategory() == null || product.getCategory().isBlank()) {
+            return false;
+        }
+        if (product.getStartPrice() == null || product.getStartPrice().isBlank()) {
+            return false;
+        }
+        if (product.getEndTime() == null) {
+            return false;
+        }
+        return true;
+    }
+
+    //userId 받고 있는지 확인하기 위해 즉 로그인 했는지
+    public boolean hasAccess(Integer id, Authentication authentication) {
+        Product product = mapper.selectById(id);
+        return product.getUserId().equals(Integer.valueOf(authentication.getName()));
     }
 }

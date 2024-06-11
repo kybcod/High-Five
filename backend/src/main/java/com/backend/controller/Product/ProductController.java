@@ -2,9 +2,11 @@ package com.backend.controller.Product;
 
 
 import com.backend.domain.Product.Product;
+import com.backend.domain.Product.auctionDomain;
 import com.backend.service.Product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -55,10 +57,16 @@ public class ProductController {
     }
 
     @PutMapping
-    public ResponseEntity updateProduct(Product product,
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity updateProduct(Product product, Authentication authentication,
                                         @RequestParam(value = "removedFileList[]", required = false) List<String> removedFileList,
                                         @RequestParam(value = "newFileList[]", required = false) MultipartFile[] newFileList
     ) throws IOException {
+
+        if (!service.hasAccess(product.getId(), authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         if (service.validate(product)) {
             service.edit(product, removedFileList, newFileList);
             return ResponseEntity.ok().build();
@@ -67,10 +75,17 @@ public class ProductController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteProduct(@PathVariable Integer id) {
-        service.remove(id);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity deleteProduct(@PathVariable Integer id, Authentication authentication) {
+        if (service.hasAccess(id, authentication)) {
+            service.remove(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
+
+    // 좋아요 Controller
     @PutMapping("like")
     @PreAuthorize("isAuthenticated()")
     public Map<String, Object> likeProduct(@RequestBody Map<String, Object> likeInfo, Authentication authentication) {
@@ -80,5 +95,17 @@ public class ProductController {
     @GetMapping("like/{userId}")
     public List<Integer> getLike(@PathVariable Integer userId, Authentication authentication) {
         return service.getLike(userId, authentication);
+    }
+
+    // 참여하기 Controller
+    @PostMapping("join")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity joinProduct(@RequestBody auctionDomain auction, Authentication authentication) {
+        if (service.hasAccess(auction.getProductId(), authentication)) {
+            service.insertBidPrice(auction);
+            return ResponseEntity.ok().build();
+
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

@@ -29,23 +29,24 @@ export function MainProduct() {
   const account = useContext(LoginContext);
 
   useEffect(() => {
-    if (account?.id) {
-      axios.get(`/api/products`).then((res) => {
-        const products = res.data;
-        const initialLikes = products.reduce((acc, product) => {
-          acc[product.id] = product.like || false;
-          return acc;
-        }, {});
+    axios.get(`/api/products`).then((res) => {
+      const products = res.data;
+      const initialLikes = products.reduce((acc, product) => {
+        acc[product.id] = product.like || false;
+        return acc;
+      }, {});
 
+      if (account?.id) {
         axios.get(`/api/products/like/${account.id}`).then((res) => {
           res.data.forEach((productId) => {
             initialLikes[productId] = true;
           });
-          setProductList(products);
           setLikes(initialLikes);
         });
-      });
-    }
+      }
+
+      setProductList(products);
+    });
   }, [account]);
 
   function handleLikeClick(productId) {

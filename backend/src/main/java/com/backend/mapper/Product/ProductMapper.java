@@ -1,6 +1,7 @@
 package com.backend.mapper.Product;
 
 import com.backend.domain.Product.Product;
+import com.backend.domain.Product.auctionDomain;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Pageable;
 
@@ -123,4 +124,13 @@ public interface ProductMapper {
 
     @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId}")
     int selectCountLikeByProductId(Integer id);
+
+    @Insert("""
+            INSERT INTO bid_list (product_id, user_id, bid_price)
+            VALUES (#{productId}, #{userId}, #{bidPrice})
+            """)
+    void insertBidPrice(auctionDomain auction);
+
+    @Delete("DELETE FROM product_like WHERE product_id=#{productId}")
+    int deleteLikeByBoardId(Integer productId);
 }

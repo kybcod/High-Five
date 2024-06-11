@@ -10,5 +10,11 @@ ALTER TABLE product
 SELECT *
 FROM product_like;
 
+SELECT *
+FROM bid_list;
+
+SELECT *
+FROM product;
+
 DESC product;
 
