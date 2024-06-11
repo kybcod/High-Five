@@ -29,21 +29,24 @@ export function MainProduct() {
   const account = useContext(LoginContext);
 
   useEffect(() => {
-    axios.get(`/api/products`).then((res) => {
-      setProductList(res.data);
-      const initialLikes = res.data.reduce((acc, product) => {
-        acc[product.id] = product.like || false;
-        return acc;
-      }, {});
-      axios.get(`/api/products/like/${account.id}`).then((res) =>
-        res.data.forEach((productId) => {
-          initialLikes[productId] = true;
-        }),
-      );
-      console.log(initialLikes);
-      setLikes(initialLikes);
-    });
-  }, []);
+    if (account?.id) {
+      axios.get(`/api/products`).then((res) => {
+        const products = res.data;
+        const initialLikes = products.reduce((acc, product) => {
+          acc[product.id] = product.like || false;
+          return acc;
+        }, {});
+
+        axios.get(`/api/products/like/${account.id}`).then((res) => {
+          res.data.forEach((productId) => {
+            initialLikes[productId] = true;
+          });
+          setProductList(products);
+          setLikes(initialLikes);
+        });
+      });
+    }
+  }, [account]);
 
   function handleLikeClick(productId) {
     axios
@@ -55,6 +58,9 @@ export function MainProduct() {
           ...prevLikes,
           [productId]: res.data.like,
         }));
+      })
+      .catch((error) => {
+        console.error("Failed to update like status", error);
       });
   }
 
