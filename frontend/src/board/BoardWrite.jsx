@@ -10,11 +10,13 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [inserted, setInserted] = useState("");
+  const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
   const offset = 1000 * 60 * 60 * 9;
 
@@ -31,7 +33,13 @@ export function BoardWrite() {
         inserted,
       })
       .then(() => {
+        successToast("게시물 작성이 완료되었습니다");
         navigate("/board/list");
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          errorToast("게시물 작성에 실패했습니다. 다시 작성해주세요");
+        }
       });
   }
 

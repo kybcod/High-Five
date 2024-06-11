@@ -6,15 +6,15 @@ import {
   Heading,
   Input,
   Textarea,
-  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function BoardModify() {
   const [board, setBoard] = useState({ title: "", content: "", inserted: "" });
-  const toast = useToast();
+  const { successToast, errorToast } = CustomToast();
   const { board_id } = useParams();
   const navigate = useNavigate();
   const offset = 1000 * 60 * 60 * 9;
@@ -33,19 +33,11 @@ export function BoardModify() {
     axios
       .put(`/api/board/modify`, board)
       .then(() => {
-        toast({
-          status: "success",
-          description: `${board_id}번 게시물이 수정되었습니다`,
-          position: "top",
-        });
+        successToast("게시물 수정이 완료되었습니다");
       })
       .catch((err) => {
         if (err.response.status === 400) {
-          toast({
-            status: "error",
-            description: `게시물이 수정되지 않았습니다. 작성 내용을 확인해주세요`,
-            position: "top",
-          });
+          errorToast("게시물 수정에 실패했습니다. 다시 수정해주세요");
         }
       });
   }
@@ -54,20 +46,12 @@ export function BoardModify() {
     axios
       .delete(`/api/board/${board_id}`)
       .then(() => {
-        toast({
-          status: "info",
-          description: `${board_id}번 게시물이 삭제되었습니다`,
-          position: "top",
-        });
+        successToast("게시물이 삭제되었습니다");
         navigate("/board/list");
       })
       .catch((err) => {
         if (err.response.status === 400) {
-          toast({
-            status: "error",
-            description: `게시물이 삭제되지 않았습니다. 다시 시도해주세요`,
-            position: "top",
-          });
+          errorToast("게시물 삭제에 실패했습니다. 다시 삭제해주세요");
         }
       });
   }
