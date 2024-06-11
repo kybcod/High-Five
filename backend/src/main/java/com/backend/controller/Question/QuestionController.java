@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +27,11 @@ public class QuestionController {
     }
 
     @GetMapping("list")
-    public List<Question> list(@RequestParam(defaultValue = "1") Integer page) {
-        return service.list();
+    public Map<String, Object> list(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(value = "type", required = false) String searchType,
+            @RequestParam(value = "keyword", defaultValue = "") String keyword) {
+        return service.list(page, searchType, keyword);
     }
 
     @GetMapping("{id}")
