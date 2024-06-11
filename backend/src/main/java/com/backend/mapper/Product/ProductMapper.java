@@ -51,6 +51,7 @@ public interface ProductMapper {
                    p.start_time,
                    p.end_time,
                    p.content,
+                   p.view_count,
                    COUNT(DISTINCT bl.user_id) AS numberOfJoin,
                    u.nick_name       AS userNickName
             FROM product p
@@ -147,7 +148,7 @@ public interface ProductMapper {
     int deleteLikeByBoardId(Integer productId);
 
     @Select("""
-            SELECT COUNT(*) > 0
+            SELECT COUNT(*)
             FROM bid_list
             WHERE product_id = #{productId}
             AND user_id = #{userId}

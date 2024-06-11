@@ -9,9 +9,11 @@ FROM product_like;
 SELECT *
 FROM bid_list;
 
+SELECT *
+FROM user;
+
 DESC product;
 
-SELECT COUNT(*) > 0
+SELECT COUNT(*)
 FROM bid_list
-WHERE product_id = 8
-  AND user_id = 10;
+WHERE product_id = 8;

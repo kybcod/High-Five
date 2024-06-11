@@ -5,6 +5,7 @@ import {
   Divider,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -39,11 +40,13 @@ export function ProductView() {
   const [product, setProduct] = useState(null);
   const [existingFilePreviews, setExistingFilePreviews] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
-  const [bidPrice, setBidPrice] = useState(0);
+  const [bidPrice, setBidPrice] = useState("");
   const account = useContext(LoginContext);
   const navigate = useNavigate();
-  const { onOpen, onClose, isOpen } = useDisclosure();
-  const { successToast } = CustomToast();
+  const { onOpen, onClose, isOpen } = useDisclosure({
+    onClose: () => setBidPrice(""),
+  });
+  const { errorToast, successToast } = CustomToast();
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
@@ -61,17 +64,25 @@ export function ProductView() {
   }
 
   function handleJoinClick() {
-    axios
-      .post("/api/products/join", {
-        productId: id,
-        userId: product.userId,
-        bidPrice: bidPrice,
-      })
-      .then(() => {
-        setProduct({ ...product, numberOfJoin: product.numberOfJoin + 1 });
-        successToast("경매 참여 성공");
-      })
-      .finally(() => onClose());
+    if (parseInt(bidPrice) > product.startPrice) {
+      axios
+        .post("/api/products/join", {
+          productId: id,
+          userId: account.id,
+          bidPrice: bidPrice,
+        })
+        .then(() => {
+          successToast("경매 참여 성공하였습니다.");
+        })
+        .catch(() => {
+          errorToast("경매 참여 실패하였습니다.");
+        })
+        .finally(() => {
+          onClose();
+        });
+    } else {
+      errorToast("입찰 금액이 시작 가격보다 작습니다.");
+    }
   }
 
   function translateCategory(category) {
@@ -94,7 +105,7 @@ export function ProductView() {
   }
 
   const formattedPrice = (money) => {
-    return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   function handleIntegerNumber(e) {
@@ -221,9 +232,20 @@ export function ProductView() {
             <FormControl>
               <FormLabel>입찰 금액</FormLabel>
               <InputGroup>
-                <Input onChange={(e) => handleIntegerNumber(e)} />
+                <Input
+                  value={formattedPrice(bidPrice)}
+                  onChange={(e) => handleIntegerNumber(e)}
+                />
+
                 <InputRightAddon>원</InputRightAddon>
               </InputGroup>
+              <Box>
+                {parseInt(bidPrice) < product.startPrice && (
+                  <FormHelperText color={"red"}>
+                    입찰 금액이 시작 가격보다 작습니다.
+                  </FormHelperText>
+                )}
+              </Box>
             </FormControl>
           </ModalBody>
           <ModalFooter>
