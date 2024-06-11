@@ -19,9 +19,13 @@ export function BoardModify() {
   const offset = 1000 * 60 * 60 * 9;
 
   useEffect(() => {
-    const LocalDateTime = new Date(Date.now() + offset).toISOString();
-    setBoard((prevBoard) => ({ ...prevBoard, inserted: LocalDateTime }));
-    axios.get(`/api/board/${board_id}`).then((res) => setBoard(res.data));
+    axios.get(`/api/board/${board_id}`).then((res) => {
+      const boardData = {
+        ...res.data,
+        inserted: new Date(Date.now() + offset).toISOString(),
+      };
+      setBoard(boardData);
+    });
   }, []);
 
   function handleClickSaveButton() {
