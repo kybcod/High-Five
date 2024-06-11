@@ -97,26 +97,14 @@ public interface ProductMapper {
     @Delete("DELETE FROM product_file WHERE product_id=#{productId}")
     int deleteFileByProductId(Integer productId);
 
+
+    //    view_count = view_count + 1
     @Update("""
             UPDATE product SET 
-            view_count = view_count + 1
+            view_count = 0
             WHERE id=#{id}
             """)
     int updateViewCount(Integer id);
-
-    @Update("""
-            UPDATE product
-            SET product_like = FALSE
-            WHERE id = #{id};
-            """)
-    int updateLikeTrue(Integer id);
-
-    @Update("""
-            UPDATE product
-            SET product_like = True
-            WHERE id = #{id};
-            """)
-    int updateLikeFalse(Integer id);
 
     @Delete("DELETE FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
     int deleteLikeByBoardIdAndUserId(Integer productId, Integer userId);
@@ -132,4 +120,7 @@ public interface ProductMapper {
 
     @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
     int selectLikeByProductIdAndUserId(Integer productId, String userId);
+
+    @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId}")
+    int selectCountLikeByProductId(Integer id);
 }

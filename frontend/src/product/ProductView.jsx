@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Center,
   Divider,
   Flex,
   FormControl,
@@ -20,23 +21,27 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SimpleSlider from "./SimpleSlider.jsx";
+import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Category } from "../component/Category.jsx";
 
 export function ProductView() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [existingFilePreviews, setExistingFilePreviews] = useState([]);
+  const [like, setLike] = useState({ like: false, count: 0 });
   const navigate = useNavigate();
   const { onOpen, onClose, isOpen } = useDisclosure();
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
-      setProduct(res.data);
+      setProduct(res.data.product);
       setExistingFilePreviews(res.data.productFileList || []);
+      setLike(res.data.like);
     });
   }, []);
 
@@ -67,8 +72,15 @@ export function ProductView() {
     return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  function handleLikeClick() {
+    axios.put("/api/products/like", { productId: product.id }).then((res) => {
+      setLike(res.data);
+    });
+  }
+
   return (
     <Box>
+      <Category />
       <Box>
         <FormControl>
           <FormLabel>상품 이미지</FormLabel>
@@ -93,23 +105,50 @@ export function ProductView() {
             </Flex>
             <Divider />
             <Flex justifyContent={"space-between"}>
-              <Button>찜</Button>
-              <Box>
-                <FontAwesomeIcon icon={faEye} />
-                {product.viewCount}
-              </Box>
+              <Flex>
+                <Center>
+                  <Box mr={2}>찜</Box>
+                  <Box onClick={handleLikeClick}>
+                    {like.like && (
+                      <FontAwesomeIcon
+                        icon={fullHeart}
+                        size={"lg"}
+                        color={"red"}
+                        cursor={"pointer"}
+                      />
+                    )}
+                    {like.like || (
+                      <FontAwesomeIcon
+                        icon={emptyHeart}
+                        size={"lg"}
+                        color={"red"}
+                        cursor={"pointer"}
+                      />
+                    )}
+                  </Box>
+                  <Box>{like.count}</Box>
+                </Center>
+              </Flex>
+              <Flex>
+                <Center>
+                  <Box mr={2}>
+                    <FontAwesomeIcon icon={faEye} />
+                  </Box>
+                  <Box>{product.viewCount}</Box>
+                </Center>
+              </Flex>
               <Button>문의하기</Button>
               <Button>신고하기</Button>
             </Flex>
 
             <Box>
-              <Heading> {product.endTimeFormat} </Heading>
+              <Heading> {product.endTimeDetailsFormat} </Heading>
             </Box>
             <Box>
               <Heading>현재 참여 인원 N명</Heading>
             </Box>
             <Box>
-              <Button>참여하기</Button>
+              <Button onClick={onOpen}>참여하기</Button>
             </Box>
             <Box>
               <Button onClick={() => navigate(`/edit/${product.id}`)}>

@@ -94,15 +94,32 @@ public class ProductService {
         return Map.of("content", content, "pageInfo", pageInfo);
     }
 
-    public Product get(Integer id) {
+    public Map<String, Object> get(Integer id, Authentication authentication) {
         mapper.updateViewCount(id);
+
+        Map<String, Object> result = new HashMap<>();
         Product product = mapper.selectById(id);
+
         List<String> productFiles = mapper.selectFileByProductId(product.getId());
         List<ProductFile> files = productFiles.stream()
                 .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
                 .toList();
         product.setProductFileList(files);
-        return product;
+
+        //좋아요
+        Map<String, Object> like = new HashMap<>();
+        if (authentication == null) {
+            like.put("like", false);
+        } else {
+            int i = mapper.selectLikeByProductIdAndUserId(id, authentication.getName());
+            like.put("like", i == 1);
+        }
+        like.put("count", mapper.selectCountLikeByProductId(id));
+
+        result.put("product", product);
+        result.put("like", like);
+        result.put("productFileList", product.getProductFileList());
+        return result;
     }
 
     public void edit(Product product, List<String> removedFileList, MultipartFile[] newFileList) throws IOException {
@@ -196,7 +213,7 @@ public class ProductService {
             mapper.insertLikeByBoardIdAndUserId(productId, userId);
             result.put("like", true);
         }
-        result.put("productId", productId);
+        result.put("count", mapper.selectCountLikeByProductId(productId));
 
         return result;
     }

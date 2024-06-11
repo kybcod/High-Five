@@ -27,6 +27,11 @@ public class Product {
         return endTime.format(formatter);
     }
 
+    public String getEndTimeDetailsFormat() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 까지");
+        return endTime.format(formatter);
+    }
+
     public String getStartTimeFormat() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         return startTime.format(formatter);

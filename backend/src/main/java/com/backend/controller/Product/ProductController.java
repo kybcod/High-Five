@@ -6,6 +6,7 @@ import com.backend.service.Product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,8 +46,12 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public Product getProduct(@PathVariable Integer id) {
-        return service.get(id);
+    public ResponseEntity getProduct(@PathVariable Integer id, Authentication authentication) {
+        Map<String, Object> result = service.get(id, authentication);
+        if (result.get("product") == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(result);
     }
 
     @PutMapping
@@ -67,6 +72,7 @@ public class ProductController {
     }
 
     @PutMapping("like")
+    @PreAuthorize("isAuthenticated()")
     public Map<String, Object> likeProduct(@RequestBody Map<String, Object> likeInfo, Authentication authentication) {
         return service.like(likeInfo, authentication);
     }
