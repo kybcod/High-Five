@@ -1,6 +1,7 @@
 package com.backend.mapper.Product;
 
 import com.backend.domain.Product.Product;
+import com.backend.domain.Product.auctionDomain;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Pageable;
 
@@ -97,11 +98,6 @@ public interface ProductMapper {
     @Delete("DELETE FROM product_file WHERE product_id=#{productId}")
     int deleteFileByProductId(Integer productId);
 
-    @Delete("DELETE FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
-    int deleteLikeByProductIdAndMemberId(Integer productId, Integer userId);
-
-    @Insert("INSERT INTO product_like (product_id, user_id) VALUES (#{productId}, #{userId})")
-    int insertLikeByProductIdAndMemberId(Integer productId, Integer userId);
 
     @Update("""
             UPDATE product SET 
@@ -109,4 +105,31 @@ public interface ProductMapper {
             WHERE id=#{id}
             """)
     int updateViewCount(Integer id);
+
+    @Delete("DELETE FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
+    int deleteLikeByBoardIdAndUserId(Integer productId, Integer userId);
+
+    @Insert("""
+            INSERT INTO product_like (product_id, user_id)
+            VALUES (#{productId}, #{userId})
+            """)
+    int insertLikeByBoardIdAndUserId(Integer productId, Integer userId);
+
+    @Select("SELECT product_id FROM product_like WHERE user_id=#{userId}")
+    List<Integer> selectLikeByUserId(Integer userId);
+
+    @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
+    int selectLikeByProductIdAndUserId(Integer productId, String userId);
+
+    @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId}")
+    int selectCountLikeByProductId(Integer id);
+
+    @Insert("""
+            INSERT INTO bid_list (product_id, user_id, bid_price)
+            VALUES (#{productId}, #{userId}, #{bidPrice})
+            """)
+    void insertBidPrice(auctionDomain auction);
+
+    @Delete("DELETE FROM product_like WHERE product_id=#{productId}")
+    int deleteLikeByBoardId(Integer productId);
 }
