@@ -62,8 +62,10 @@ export function ProductView() {
       });
   }
 
-  if (product === null) {
-    return <Spinner />;
+  function handleLikeClick() {
+    axios.put("/api/products/like", { productId: product.id }).then((res) => {
+      setLike(res.data);
+    });
   }
 
   function translateCategory(category) {
@@ -89,10 +91,8 @@ export function ProductView() {
     return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  function handleLikeClick() {
-    axios.put("/api/products/like", { productId: product.id }).then((res) => {
-      setLike(res.data);
-    });
+  if (product === null) {
+    return <Spinner />;
   }
 
   return (
