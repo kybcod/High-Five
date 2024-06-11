@@ -14,8 +14,6 @@ public class JwtFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         filterChain.doFilter(request, response);
-        System.out.println(
-                "지나갑니다"
-        );
+        System.out.println("지나갑니다");
     }
 }
