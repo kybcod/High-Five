@@ -19,15 +19,11 @@ public class PrincipalService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("username = " + username);
         User findUser = mapper.selectUserByEmail(username);
-        return new PrincipalDetails(findUser);
-
-//        System.out.println("username = " + username);
-//        // username = email
-//        User findUser = mapper.selectUserByEmail(username);
-//        if (findUser != null) {
-//            return new PrincipalDetails(findUser);
-//        } else {
-//            throw new UsernameNotFoundException(username + " not found");
-//        }
+ 
+        if (findUser != null) {
+            return new PrincipalDetails(findUser);
+        } else {
+            throw new UsernameNotFoundException(username + " not found");
+        }
     }
 }
