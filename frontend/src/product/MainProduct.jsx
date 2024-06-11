@@ -105,20 +105,22 @@ export function MainProduct() {
                 <Stack mt="6" spacing="3">
                   <Flex justifyContent={"space-between"}>
                     <Heading size="m">{product.title}</Heading>
-                    <Box onClick={() => handleLikeClick(product.id)}>
-                      {(() => {
-                        const isLiked = likes[product.id];
-                        const icon = isLiked ? fullHeart : emptyHeart;
-                        return (
-                          <FontAwesomeIcon
-                            icon={icon}
-                            style={{ color: "red" }}
-                            cursor="pointer"
-                            size="xl"
-                          />
-                        );
-                      })()}
-                    </Box>
+                    {account.isLoggedIn() && (
+                      <Box onClick={() => handleLikeClick(product.id)}>
+                        {(() => {
+                          const isLiked = likes[product.id];
+                          const icon = isLiked ? fullHeart : emptyHeart;
+                          return (
+                            <FontAwesomeIcon
+                              icon={icon}
+                              style={{ color: "red" }}
+                              cursor="pointer"
+                              size="xl"
+                            />
+                          );
+                        })()}
+                      </Box>
+                    )}
                   </Flex>
                   <Flex justifyContent={"space-between"}>
                     <Text color="blue.600" fontSize="xl">

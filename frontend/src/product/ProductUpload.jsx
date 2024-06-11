@@ -7,6 +7,8 @@ import {
   FormLabel,
   Image,
   Input,
+  InputGroup,
+  InputRightAddon,
   Select,
   Textarea,
   useToast,
@@ -148,6 +150,13 @@ export function ProductUpload() {
     return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  function handleIntegerNumber(e) {
+    const formattedValue = e.target.value.replaceAll(",", "");
+    if (!isNaN(formattedValue)) {
+      setStartPrice(formattedValue);
+    }
+  }
+
   return (
     <Box>
       <Box>
@@ -207,10 +216,13 @@ export function ProductUpload() {
       <Box>
         <FormControl>
           <FormLabel>입찰 시작가</FormLabel>
-          <Input
-            value={formattedPrice(startPrice)}
-            onChange={(e) => setStartPrice(e.target.value.replaceAll(",", ""))} //콤마 제거}
-          />
+          <InputGroup>
+            <Input
+              value={formattedPrice(startPrice)}
+              onChange={(e) => handleIntegerNumber(e)}
+            />
+            <InputRightAddon>원</InputRightAddon>
+          </InputGroup>
         </FormControl>
       </Box>
       <Box>

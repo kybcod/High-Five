@@ -124,24 +124,26 @@ export function ProductView() {
               <Flex>
                 <Center>
                   <Box mr={2}>찜</Box>
-                  <Box onClick={handleLikeClick}>
-                    {like.like && (
-                      <FontAwesomeIcon
-                        icon={fullHeart}
-                        size={"lg"}
-                        color={"red"}
-                        cursor={"pointer"}
-                      />
-                    )}
-                    {like.like || (
-                      <FontAwesomeIcon
-                        icon={emptyHeart}
-                        size={"lg"}
-                        color={"red"}
-                        cursor={"pointer"}
-                      />
-                    )}
-                  </Box>
+                  {account.isLoggedIn() && (
+                    <Box onClick={handleLikeClick}>
+                      {like.like && (
+                        <FontAwesomeIcon
+                          icon={fullHeart}
+                          size={"lg"}
+                          color={"red"}
+                          cursor={"pointer"}
+                        />
+                      )}
+                      {like.like || (
+                        <FontAwesomeIcon
+                          icon={emptyHeart}
+                          size={"lg"}
+                          color={"red"}
+                          cursor={"pointer"}
+                        />
+                      )}
+                    </Box>
+                  )}
                   <Box>{like.count}</Box>
                 </Center>
               </Flex>
@@ -156,7 +158,6 @@ export function ProductView() {
               <Button>문의하기</Button>
               <Button>신고하기</Button>
             </Flex>
-
             <Box>
               <Heading> {product.endTimeDetailsFormat} </Heading>
             </Box>
@@ -164,12 +165,18 @@ export function ProductView() {
               <Heading>현재 참여 인원 N명</Heading>
             </Box>
             <Box>
-              <Button onClick={onOpen}>참여하기</Button>
-            </Box>
-            <Box>
-              <Button onClick={() => navigate(`/edit/${product.id}`)}>
-                상품수정
-              </Button>
+              {!account.isLoggedIn() || account.hasAccess(product.userId) || (
+                <Box>
+                  <Button onClick={onOpen}>참여하기</Button>
+                </Box>
+              )}
+              {account.hasAccess(product.userId) && (
+                <Box>
+                  <Button onClick={() => navigate(`/edit/${product.id}`)}>
+                    상품수정
+                  </Button>
+                </Box>
+              )}
             </Box>
           </Box>
         </Flex>
