@@ -30,7 +30,7 @@ export function Navbar() {
           {account.nickName} 님
         </Center>
       )}
-      <Center onClick={() => navigate("/questionList")} cursor="pointer">
+      <Center onClick={() => navigate("/question/list")} cursor="pointer">
         QnA
       </Center>
     </Flex>

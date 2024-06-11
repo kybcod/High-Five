@@ -30,7 +30,7 @@ export function QuestionList() {
   const [pageInfo, setPageInfo] = useState({});
   const [searchType, setSearchType] = useState("titleNick");
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export function QuestionList() {
       setQuestionList(res.data.content);
       setPageInfo(res.data.pageInfo);
     });
-  }, [searchParams]);
+  }, []);
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
@@ -47,7 +47,7 @@ export function QuestionList() {
 
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
-    navigate(`/questionList?${searchParams}`);
+    setSearchParams(searchParams);
   }
 
   function handleParamClick() {
