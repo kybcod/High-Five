@@ -21,6 +21,7 @@ public class Product {
     private Boolean reviewStatus;
     private List<ProductFile> productFileList;
     private Boolean productLike;
+    private Integer numberOfJoin;
 
     public String getEndTimeFormat() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH시 mm분 까지");

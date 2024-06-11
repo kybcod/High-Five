@@ -43,11 +43,24 @@ export function ProductView() {
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
+      console.log(res.data);
       setProduct(res.data.product);
       setExistingFilePreviews(res.data.productFileList || []);
       setLike(res.data.like);
     });
   }, []);
+
+  function handleJoinClick() {
+    axios
+      .post("/api/products/join", {
+        productId: id,
+        userId: account.id,
+        bidPrice: bidPrice,
+      })
+      .then((res) => {
+        console.log(product.id, id, account.id, bidPrice);
+      });
+  }
 
   if (product === null) {
     return <Spinner />;
@@ -80,18 +93,6 @@ export function ProductView() {
     axios.put("/api/products/like", { productId: product.id }).then((res) => {
       setLike(res.data);
     });
-  }
-
-  function handleJoinClick() {
-    axios
-      .post("/api/products/join", {
-        productId: id,
-        userId: account.id,
-        bidPrice: bidPrice,
-      })
-      .then((res) => {
-        console.log(product.id, id, account.id, bidPrice);
-      });
   }
 
   return (
@@ -163,7 +164,9 @@ export function ProductView() {
               </Heading>
             </Box>
             <Box mb={2}>
-              <Heading color={"skyblue"}>현재 참여 인원 N명</Heading>
+              <Heading color={"skyblue"}>
+                현재 참여 인원 {product.numberOfJoin}명
+              </Heading>
             </Box>
             <Box mb={2}>
               {!account.isLoggedIn() || account.hasAccess(product.userId) || (

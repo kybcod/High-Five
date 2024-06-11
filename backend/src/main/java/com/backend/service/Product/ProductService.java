@@ -100,6 +100,7 @@ public class ProductService {
         mapper.updateViewCount(id);
 
         Product product = mapper.selectById(id);
+        System.out.println("product = " + product);
 
         List<String> productFiles = mapper.selectFileByProductId(product.getId());
         List<ProductFile> files = productFiles.stream()
