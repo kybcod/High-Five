@@ -96,9 +96,9 @@ public class ProductService {
     }
 
     public Map<String, Object> get(Integer id, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
         mapper.updateViewCount(id);
 
-        Map<String, Object> result = new HashMap<>();
         Product product = mapper.selectById(id);
 
         List<String> productFiles = mapper.selectFileByProductId(product.getId());

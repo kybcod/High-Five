@@ -95,19 +95,17 @@ export function ProductView() {
   }
 
   return (
-    <Box>
+    <Box mr={20} ml={20}>
       <Category />
-      <Box>
-        <FormControl>
-          <FormLabel>상품 이미지</FormLabel>
-        </FormControl>
-        <Flex>
+      <Box mt={3}>
+        <Heading color={"blue"}>{account.nickName}</Heading>
+        <Flex justifyContent={"space-evenly"}>
           <SimpleSlider images={existingFilePreviews} />
-          <Box>
-            <Box>
+          <Box ml={10}>
+            <Box mb={2}>
               <Heading fontSize={"xl"}> {product.title} </Heading>
             </Box>
-            <Flex justifyContent={"space-between"}>
+            <Flex mb={2} justifyContent={"space-between"}>
               <Box>
                 <Text fontSize={"xl"}>
                   {formattedPrice(product.startPrice)}원
@@ -119,11 +117,11 @@ export function ProductView() {
                 </Text>
               </Box>
             </Flex>
-            <Divider />
+            <Divider orientation="horizontal" mb={2} />
             <Flex justifyContent={"space-between"}>
               <Flex>
                 <Center>
-                  <Box mr={2}>찜</Box>
+                  <Box mr={1}>찜</Box>
                   {account.isLoggedIn() && (
                     <Box onClick={handleLikeClick}>
                       {like.like && (
@@ -147,7 +145,7 @@ export function ProductView() {
                   <Box>{like.count}</Box>
                 </Center>
               </Flex>
-              <Flex>
+              <Flex mb={2}>
                 <Center>
                   <Box mr={2}>
                     <FontAwesomeIcon icon={faEye} />
@@ -158,13 +156,16 @@ export function ProductView() {
               <Button>문의하기</Button>
               <Button>신고하기</Button>
             </Flex>
-            <Box>
-              <Heading> {product.endTimeDetailsFormat} </Heading>
+            <Box mb={2}>
+              <Heading fontSize={"2xl"}>
+                {" "}
+                {product.endTimeDetailsFormat}{" "}
+              </Heading>
             </Box>
-            <Box>
-              <Heading>현재 참여 인원 N명</Heading>
+            <Box mb={2}>
+              <Heading color={"skyblue"}>현재 참여 인원 N명</Heading>
             </Box>
-            <Box>
+            <Box mb={2}>
               {!account.isLoggedIn() || account.hasAccess(product.userId) || (
                 <Box>
                   <Button onClick={onOpen}>참여하기</Button>
@@ -182,11 +183,18 @@ export function ProductView() {
         </Flex>
       </Box>
 
-      <Divider />
+      <Divider mb={2} />
+
       <Box>
         <FormControl>
-          <FormLabel>상품 정보</FormLabel>
-          <Textarea defaultValue={product.content} whiteSpace={"pre-wrap"} />
+          <FormLabel>
+            <Heading fontSize={"2xl"}>상품 정보</Heading>
+          </FormLabel>
+          {product.content !== null && product.content !== "" ? (
+            <Textarea defaultValue={product.content} whiteSpace={"pre-wrap"} />
+          ) : (
+            <Text>상품 설명이 없습니다.</Text>
+          )}
         </FormControl>
       </Box>
 

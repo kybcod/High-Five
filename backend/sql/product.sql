@@ -16,5 +16,7 @@ FROM bid_list;
 SELECT *
 FROM product;
 
+
+
 DESC product;
 

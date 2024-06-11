@@ -99,10 +99,9 @@ public interface ProductMapper {
     int deleteFileByProductId(Integer productId);
 
 
-    //    view_count = view_count + 1
     @Update("""
             UPDATE product SET 
-            view_count = 0
+            view_count = view_count + 1
             WHERE id=#{id}
             """)
     int updateViewCount(Integer id);
