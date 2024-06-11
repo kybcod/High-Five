@@ -10,6 +10,12 @@ import { SignUp } from "./user/SignUp.jsx";
 import { Login } from "./Login.jsx";
 import { LoginProvider } from "./component/LoginProvider.jsx";
 import axios from "axios";
+import { QuestionWrite } from "./QuestionWrite.jsx";
+import { QuestionList } from "./QuestionList.jsx";
+import { BoardWrite } from "./board/BoardWrite.jsx";
+import { BoardList } from "./board/BoardList.jsx";
+import { BoardView } from "./board/BoardView.jsx";
+import { BoardModify } from "./board/BoardModify.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { QuestionWrite } from "./QuestionWrite.jsx";
@@ -41,6 +47,8 @@ const router = createBrowserRouter([
       { path: "question-list", element: <QuestionList /> },
       { path: "board", element: <BoardWrite /> },
       { path: "board/list", element: <BoardList /> },
+      { path: "board/:board_id", element: <BoardView /> },
+      { path: "board/modify/:board_id", element: <BoardModify /> },
     ],
   },
 ]);
