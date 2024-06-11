@@ -1,7 +1,7 @@
 package com.backend.mapper.Product;
 
+import com.backend.domain.Product.BidList;
 import com.backend.domain.Product.Product;
-import com.backend.domain.Product.auctionDomain;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Pageable;
 
@@ -51,10 +51,12 @@ public interface ProductMapper {
                    p.start_time,
                    p.end_time,
                    p.content,
-                   COUNT(bl.user_id) AS numberOfJoin
+                   COUNT(DISTINCT bl.user_id) AS numberOfJoin,
+                   u.nick_name       AS userNickName
             FROM product p
                      LEFT JOIN bid_list bl
-                          ON p.id = bl.product_id
+                               ON p.id = bl.product_id
+                     JOIN user u ON u.id = p.user_id
             WHERE p.id = #{id};
             """)
     Product selectById(Integer id);
@@ -139,8 +141,24 @@ public interface ProductMapper {
             INSERT INTO bid_list (product_id, user_id, bid_price)
             VALUES (#{productId}, #{userId}, #{bidPrice})
             """)
-    void insertBidPrice(auctionDomain auction);
+    void insertBidPrice(BidList bid);
 
     @Delete("DELETE FROM product_like WHERE product_id=#{productId}")
     int deleteLikeByBoardId(Integer productId);
+
+    @Select("""
+            SELECT COUNT(*) > 0
+            FROM bid_list
+            WHERE product_id = #{productId}
+            AND user_id = #{userId}
+            """)
+    boolean existsBid(Integer productId, Integer userId);
+
+    @Update("""
+            UPDATE bid_list
+            SET bid_price = #{bidPrice}
+            WHERE product_id = #{productId}
+            AND user_id = #{userId}
+            """)
+    int updateBidPrice(BidList bid);
 }

@@ -1,8 +1,8 @@
 package com.backend.controller.Product;
 
 
+import com.backend.domain.Product.BidList;
 import com.backend.domain.Product.Product;
-import com.backend.domain.Product.auctionDomain;
 import com.backend.service.Product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -100,12 +100,12 @@ public class ProductController {
     // 참여하기 Controller
     @PostMapping("join")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity joinProduct(@RequestBody auctionDomain auction, Authentication authentication) {
-        if (service.hasAccess(auction.getProductId(), authentication)) {
-            service.insertBidPrice(auction);
+    public ResponseEntity joinProduct(@RequestBody BidList bid, Authentication authentication) {
+        if (service.hasAccess(bid.getProductId(), authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            service.upsertBidPrice(bid);
             return ResponseEntity.ok().build();
-
         }
-        return ResponseEntity.badRequest().build();
     }
 }

@@ -30,6 +30,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Category } from "../component/Category.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function ProductView() {
   const { id } = useParams();
@@ -40,6 +41,7 @@ export function ProductView() {
   const account = useContext(LoginContext);
   const navigate = useNavigate();
   const { onOpen, onClose, isOpen } = useDisclosure();
+  const { successToast } = CustomToast();
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
@@ -50,22 +52,23 @@ export function ProductView() {
     });
   }, []);
 
-  function handleJoinClick() {
-    axios
-      .post("/api/products/join", {
-        productId: id,
-        userId: account.id,
-        bidPrice: bidPrice,
-      })
-      .then((res) => {
-        console.log(product.id, id, account.id, bidPrice);
-      });
-  }
-
   function handleLikeClick() {
     axios.put("/api/products/like", { productId: product.id }).then((res) => {
       setLike(res.data);
     });
+  }
+
+  function handleJoinClick() {
+    axios
+      .post("/api/products/join", {
+        productId: id,
+        userId: product.userId,
+        bidPrice: bidPrice,
+      })
+      .then(() => {
+        successToast("경매 참여 성공");
+      })
+      .finally(() => onClose());
   }
 
   function translateCategory(category) {
@@ -99,7 +102,7 @@ export function ProductView() {
     <Box mr={20} ml={20}>
       <Category />
       <Box mt={3}>
-        <Heading color={"blue"}>{account.nickName}</Heading>
+        <Heading color={"blue"}>{product.userNickName}</Heading>
         <Flex justifyContent={"space-evenly"}>
           <SimpleSlider images={existingFilePreviews} />
           <Box ml={10}>
@@ -159,7 +162,6 @@ export function ProductView() {
             </Flex>
             <Box mb={2}>
               <Heading fontSize={"2xl"}>
-                {" "}
                 {product.endTimeDetailsFormat}{" "}
               </Heading>
             </Box>

@@ -1,8 +1,8 @@
 package com.backend.service.Product;
 
+import com.backend.domain.Product.BidList;
 import com.backend.domain.Product.Product;
 import com.backend.domain.Product.ProductFile;
-import com.backend.domain.Product.auctionDomain;
 import com.backend.mapper.Product.ProductMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -205,8 +205,12 @@ public class ProductService {
         return mapper.selectLikeByUserId(userId);
     }
 
-    public void insertBidPrice(auctionDomain auction) {
-        mapper.insertBidPrice(auction);
+    public void upsertBidPrice(BidList bid) {
+        if (mapper.existsBid(bid.getProductId(), bid.getUserId())) {
+            mapper.updateBidPrice(bid);
+        } else {
+            mapper.insertBidPrice(bid);
+        }
     }
 
 
@@ -232,3 +236,6 @@ public class ProductService {
         return product.getUserId().equals(Integer.valueOf(authentication.getName()));
     }
 }
+
+
+

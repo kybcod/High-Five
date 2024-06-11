@@ -22,6 +22,7 @@ public class Product {
     private List<ProductFile> productFileList;
     private Boolean productLike;
     private Integer numberOfJoin;
+    private String userNickName;
 
     public String getEndTimeFormat() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH시 mm분 까지");
