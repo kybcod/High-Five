@@ -8,6 +8,8 @@ import {
   FormLabel,
   Heading,
   Input,
+  InputGroup,
+  InputRightAddon,
   Modal,
   ModalBody,
   ModalContent,
@@ -66,6 +68,7 @@ export function ProductView() {
         bidPrice: bidPrice,
       })
       .then(() => {
+        setProduct({ ...product, numberOfJoin: product.numberOfJoin + 1 });
         successToast("경매 참여 성공");
       })
       .finally(() => onClose());
@@ -93,6 +96,13 @@ export function ProductView() {
   const formattedPrice = (money) => {
     return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
+
+  function handleIntegerNumber(e) {
+    const formattedValue = e.target.value.replaceAll(",", "");
+    if (!isNaN(formattedValue)) {
+      setBidPrice(formattedValue);
+    }
+  }
 
   if (product === null) {
     return <Spinner />;
@@ -210,10 +220,10 @@ export function ProductView() {
           <ModalBody>
             <FormControl>
               <FormLabel>입찰 금액</FormLabel>
-              <Input
-                type="number"
-                onChange={(e) => setBidPrice(e.target.value)}
-              />
+              <InputGroup>
+                <Input onChange={(e) => handleIntegerNumber(e)} />
+                <InputRightAddon>원</InputRightAddon>
+              </InputGroup>
             </FormControl>
           </ModalBody>
           <ModalFooter>
