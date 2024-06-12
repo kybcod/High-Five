@@ -19,9 +19,13 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*")
+//                .setAllowedOrigins("http://localhost:5173")
+                .setAllowedOrigins("*")
                 .withSockJS();
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*");
+                .setAllowedOriginPatterns("*")
+//                .setAllowedOrigins("http://localhost:5173");
+                .setAllowedOrigins("*");
         System.out.println("registry = " + registry);
     }
 
@@ -29,7 +33,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.setApplicationDestinationPrefixes("/app");
         // SimpleBroker 위치는 SpringBoot 서버 내부 메모리에 존재
-        config.enableSimpleBroker("/topic", "/queue")
+        config.enableSimpleBroker("/queue")
                 .setHeartbeatValue(new long[]{HEART_BEAT, HEART_BEAT})
                 .setTaskScheduler(heartBeatScheduler());
     }
