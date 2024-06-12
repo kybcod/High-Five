@@ -11,10 +11,17 @@ import {
   Heading,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   StackDivider,
   Text,
   Textarea,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -26,6 +33,7 @@ export function QuestionView() {
   const [question, setQuestion] = useState([]);
   const navigate = useNavigate();
   const toast = useToast();
+  const { onOpen, onClose, isOpen } = useDisclosure();
 
   useEffect(() => {
     axios.get(`/api/question/${id}`).then((res) => setQuestion(res.data));
@@ -100,7 +108,7 @@ export function QuestionView() {
             <Button mt={5} mr={2} onClick={handleEditClick}>
               수정
             </Button>
-            <Button mt={5} onClick={handleRemoveClick} colorScheme={"red"}>
+            <Button mt={5} onClick={onOpen} colorScheme={"red"}>
               삭제
             </Button>
           </Flex>
@@ -115,6 +123,22 @@ export function QuestionView() {
           </Button>
         </Center>
       </Box>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader></ModalHeader>
+          <ModalBody>삭제하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Flex gap={2}>
+              <Button onClick={onClose}>취소</Button>
+              <Button onClick={handleRemoveClick} colorScheme={"red"}>
+                확인
+              </Button>
+            </Flex>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
