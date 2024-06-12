@@ -38,9 +38,20 @@ export function QuestionList() {
       setQuestionList(res.data.content);
       setPageInfo(res.data.pageInfo);
     });
+    setSearchType("titleNick");
+    setSearchKeyword("");
+
+    const typeParam = searchParams.get("type");
+    const keywordParam = searchParams.get("keyword");
+    if (typeParam) {
+      setSearchType(typeParam);
+    }
+    if (keywordParam) {
+      setSearchKeyword(keywordParam);
+    }
   }, [searchParams]);
 
-  // console.log("page", searchParams.get("page"));
+  console.log("page", searchParams.get("page"));
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
@@ -117,48 +128,61 @@ export function QuestionList() {
       </Center>
 
       <Center>
-        <Box>
-          {pageInfo.prevPageNumber && (
-            <>
-              <Button mr={"10px"} onClick={() => handlePageButtonClick(1)}>
-                <FontAwesomeIcon icon={faAnglesLeft} />
-              </Button>
-              <Button
-                mr={"10px"}
-                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleLeft} />
-              </Button>
-            </>
-          )}
-
-          {pageNumbers.map((pageNumber) => {
+        <Flex gap={1}>
+          {/*{pageInfo.prevPageNumber && (*/}
+          <>
+            <Button mr={"10px"} onClick={() => handlePageButtonClick(1)}>
+              <FontAwesomeIcon icon={faAnglesLeft} />
+            </Button>
             <Button
-              onClick={handlePageButtonClick(pageNumber)}
-              colorScheme={
-                pageNumber - 1 == pageInfo.currentPageNumber ? "teal" : "gray"
-              }
+              mr={"10px"}
+              onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </Button>
+          </>
+          {/*)}*/}
+
+          {/*{pageNumbers.map((pageNumber) => {*/}
+          {/*  <Button*/}
+          {/*    mr={"10px"}*/}
+          {/*    onClick={handlePageButtonClick(pageNumber)}*/}
+          {/*    colorScheme={*/}
+          {/*      pageNumber === pageInfo.currentPageNumber ? "teal" : "gray"*/}
+          {/*    }*/}
+          {/*    key={pageNumber}*/}
+          {/*  >*/}
+          {/*    {pageNumber}*/}
+          {/*  </Button>;*/}
+          {/*})}*/}
+
+          {pageNumbers.map((pageNumber) => (
+            <Button
+              onClick={() => handlePageButtonClick(pageNumber)}
               key={pageNumber}
+              colorScheme={
+                pageNumber === pageInfo.currentPageNumber ? "blue" : "gray"
+              }
             >
               {pageNumber}
-            </Button>;
-          })}
+            </Button>
+          ))}
 
-          {pageInfo.nextPageNumber && (
-            <>
-              <Button
-                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleRight} />
-              </Button>
-              <Button
-                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAnglesRight} />
-              </Button>
-            </>
-          )}
-        </Box>
+          {/*{pageInfo.nextPageNumber && (*/}
+          <>
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAngleRight} />
+            </Button>
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAnglesRight} />
+            </Button>
+          </>
+          {/*)}*/}
+        </Flex>
       </Center>
 
       <Box>

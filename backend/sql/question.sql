@@ -13,3 +13,9 @@ FROM question_board_file
 WHERE question_id = 2;
 
 use prj3;
+
+desc question_board;
+desc question_board_file;
+
+ALTER TABLE question_board_file
+    MODIFY COLUMN file_name varchar(200) NOT NULL;

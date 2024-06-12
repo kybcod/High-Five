@@ -46,7 +46,7 @@ export function QuestionWrite() {
           position: "bottom",
           duration: 2500,
         });
-        navigate("/questionList");
+        navigate("/question/list");
       })
       .catch((e) => {
         const code = e.response.status;

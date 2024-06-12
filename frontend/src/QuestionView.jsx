@@ -15,6 +15,7 @@ import {
   StackDivider,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -24,13 +25,34 @@ export function QuestionView() {
   const { id } = useParams();
   const [question, setQuestion] = useState([]);
   const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
     axios.get(`/api/question/${id}`).then((res) => setQuestion(res.data));
   }, []);
 
-  function handleEditClick() {
-    return null;
+  function handleEditClick() {}
+
+  function handleRemoveClick() {
+    axios
+      .delete(`/api/question/${id}`)
+      .then(() => {
+        toast({
+          status: "success",
+          description: `${id}번 게시물이 삭제되었습니다.`,
+          position: "top",
+          duration: 2500,
+        });
+        navigate("/question/list");
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          description: `${id}번 게시물 삭제 중 오류가 발생하였습니다.`,
+          position: "top",
+          duration: 2500,
+        });
+      });
   }
 
   return (
@@ -78,7 +100,7 @@ export function QuestionView() {
             <Button mt={5} mr={2} onClick={handleEditClick}>
               수정
             </Button>
-            <Button mt={5} onClick={handleEditClick}>
+            <Button mt={5} onClick={handleRemoveClick} colorScheme={"red"}>
               삭제
             </Button>
           </Flex>
@@ -87,7 +109,7 @@ export function QuestionView() {
           <Button
             colorScheme={"teal"}
             w={"200px"}
-            onClick={() => navigate("/questionList")}
+            onClick={() => navigate("/question/list")}
           >
             글 목록
           </Button>

@@ -1,11 +1,7 @@
 package com.backend.mapper.Question;
 
 import com.backend.domain.Question.Question;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.springframework.data.domain.Pageable;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -57,11 +53,12 @@ public interface QuestionMapper {
                             </if>
                         </if>
                     </trim>
+                GROUP BY qb.id
                 ORDER BY qb.id DESC
-                LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+                LIMIT #{offset},5
             </script>
             """)
-    List<Question> selectUsingPageable(Pageable pageable, String searchType, String keyword);
+    List<Question> selectUsingPageable(int offset, String searchType, String keyword);
 
     @Select("""
             <script>
@@ -82,4 +79,14 @@ public interface QuestionMapper {
             </script>
             """)
     int countAllWithSearch(String searchType, String keyword);
+
+    @Delete("""
+            DELETE FROM question_board WHERE id=#{id}
+            """)
+    void deleteById(Integer id);
+
+    @Delete("""
+            DELETE FROM question_board_file WHERE question_id=#{id}
+            """)
+    void deleteByIdFile(Integer id);
 }
