@@ -102,20 +102,20 @@ export function QuestionView() {
           </Box>
         </Box>
         <Box>
-          <Flex justify={"flex-end"} mr={10}>
+          <Flex justify={"flex-end"} mr={10} mt={5} gap={4}>
             <Button
-              mt={5}
-              mr={2}
+              w={"70px"}
+              colorScheme={"purple"}
               onClick={() => navigate(`/question/edit/${id}`)}
             >
               수정
             </Button>
-            <Button mt={5} onClick={onOpen} colorScheme={"red"}>
+            <Button w={"70px"} onClick={onOpen} colorScheme={"red"}>
               삭제
             </Button>
           </Flex>
         </Box>
-        <Center>
+        <Center m={10}>
           <Button
             colorScheme={"teal"}
             w={"200px"}

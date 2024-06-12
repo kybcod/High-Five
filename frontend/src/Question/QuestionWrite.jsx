@@ -44,7 +44,7 @@ export function QuestionWrite() {
           description: "새 글이 등록되었습니다.",
           status: "success",
           position: "bottom",
-          duration: 2500,
+          duration: 2000,
         });
         navigate("/question/list");
       })

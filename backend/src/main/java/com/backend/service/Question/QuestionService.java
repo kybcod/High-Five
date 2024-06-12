@@ -113,4 +113,8 @@ public class QuestionService {
         mapper.deleteByIdFile(id);
         mapper.deleteById(id);
     }
+
+    public void edit(Question question) {
+        mapper.updateById(question);
+    }
 }

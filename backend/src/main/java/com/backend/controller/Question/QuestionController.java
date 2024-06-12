@@ -45,5 +45,9 @@ public class QuestionController {
         service.delete(id);
     }
 
-    
+    @PutMapping("{id}")
+    public void update(@PathVariable Integer id, Question question) {
+        service.edit(question);
+    }
+
 }
