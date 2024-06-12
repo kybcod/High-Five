@@ -3,11 +3,12 @@ package com.backend.controller.User;
 import com.backend.config.PrincipalDetails;
 import com.backend.domain.User.User;
 import com.backend.service.user.UserService;
-import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -70,13 +71,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/users/auth")
-    public ResponseEntity getAuth(Authentication authentication, SecurityContext securityContext) {
-        System.out.println("authentication = " + authentication);
+    @PreAuthorize("@CustomAuth.isSelf(#id)")
+    @GetMapping("/users/auth:{id}")
+    public ResponseEntity getAuth(@PathVariable String id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("securityContext = " + securityContext);
 
-        String id = principal.getId();
         String email = principal.getUsername();
         String nickName = principal.getName();
         String password = principal.getPassword();

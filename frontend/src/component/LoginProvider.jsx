@@ -5,6 +5,7 @@ export const LoginContext = createContext(null);
 
 export function LoginProvider({ children }) {
   const [id, setId] = useState("");
+  const [email, setEmail] = useState("");
   const [nickName, setNickName] = useState("");
   const [expired, setExpired] = useState(0);
   const [authority, setAuthority] = useState([]);
@@ -36,9 +37,9 @@ export function LoginProvider({ children }) {
     console.log(token);
     const payload = jwtDecode(token);
     setExpired(payload.exp);
-    setId(payload.sub);
+    setEmail(payload.sub);
+    setId(payload.id);
     setNickName(payload.nickName);
-    // TODO. authority 추가되면 활성화
     setAuthority(payload.scope.split(" "));
   }
 
@@ -55,6 +56,7 @@ export function LoginProvider({ children }) {
       value={{
         id: id,
         nickName: nickName,
+        email: email,
         login: login,
         logout: logout,
         isLoggedIn: isLoggedIn,
