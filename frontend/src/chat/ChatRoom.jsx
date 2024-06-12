@@ -29,7 +29,8 @@ export function ChatRoom() {
       heartbeatOutgoing: 30000,
       onConnect: function () {
         console.log("Connected to WebSocket");
-        client.subscribe(`/queue/chat/${roomId}`, callback, { ack: "client" });
+        client.subscribe(`/user/queue/chat`, callback, { ack: "client" });
+        client.subscribe(`/topic/chat/${roomId}`, callback, { ack: "client" });
       },
       onStompError: (frame) => {
         console.error("STOMP error: ", frame);
@@ -44,7 +45,7 @@ export function ChatRoom() {
         disConnect();
       }
     };
-  }, []);
+  }, [roomId]);
 
   const callback = (message) => {
     console.log("message: " + message.body);
@@ -55,14 +56,16 @@ export function ChatRoom() {
 
   const sendMessage = () => {
     let chatMessage = {
-      roomId: 1,
+      roomId: roomId,
       userId: 1,
       message: message,
     };
+
     stompClient.publish({
       destination: `/app/chat`,
       body: JSON.stringify(chatMessage),
     });
+
     console.log("Sent message: ", chatMessage);
     // -- 내가 보낸 거
     // let formattedMessage = chatMessage;
@@ -73,7 +76,7 @@ export function ChatRoom() {
 
   // -- 비활성화
   const disConnect = () => {
-    // stompClient.deactivate();
+    stompClient.deactivate();
     console.log("Disconnected");
   };
 
