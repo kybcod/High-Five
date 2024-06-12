@@ -50,6 +50,9 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         for (String role : user.getAuth().split(",")) {
             roles.add(new SimpleGrantedAuthority(role));
         }
+        if (user.getAuth().equals("")) {
+            roles.add(new SimpleGrantedAuthority("user"));
+        }
         return roles;
     }
 

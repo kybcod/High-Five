@@ -18,8 +18,13 @@ public class User {
     private List<String> authority;
 
     public String getAuth() {
-        String auth = authority.stream()
-                .collect(Collectors.joining(" "));
+        String auth = "";
+        if (authority != null) {
+            auth = authority.stream()
+                    .collect(Collectors.joining(" "));
+        }
+        System.out.println("auth = " + auth);
+        System.out.println("authority = " + authority);
         return auth;
     }
 }
