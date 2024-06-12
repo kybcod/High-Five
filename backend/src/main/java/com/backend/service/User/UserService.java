@@ -66,7 +66,7 @@ public class UserService {
                         .expiresAt(now.plusSeconds(60 * 60 * 24))
                         .subject(db.getEmail())
                         .claim("nickName", db.getNickName())
-                        .claim("authority", authorityString)
+                        .claim("scope", authorityString)
                         .claim("id", db.getId().toString())
                         .build();
 
