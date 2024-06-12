@@ -33,9 +33,10 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.setApplicationDestinationPrefixes("/app");
         // SimpleBroker 위치는 SpringBoot 서버 내부 메모리에 존재
-        config.enableSimpleBroker("/queue")
+        config.enableSimpleBroker("/topic", "/queue")
                 .setHeartbeatValue(new long[]{HEART_BEAT, HEART_BEAT})
                 .setTaskScheduler(heartBeatScheduler());
+        config.setUserDestinationPrefix("/user");
     }
 
     @Bean
