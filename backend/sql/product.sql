@@ -30,11 +30,10 @@ ORDER BY p.end_time;
 
 
 SELECT *
-FROM product
-ORDER BY start_time DESC;
+FROM bid_list;
 
 SELECT *
-From product
-ORDER BY end_time;
+FROM user;
 
-DESC product;
+SELECT *
+FROM product;
