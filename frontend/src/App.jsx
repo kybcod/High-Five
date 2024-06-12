@@ -14,6 +14,7 @@ import { QuestionList } from "./QuestionList.jsx";
 import { BoardWrite } from "./board/BoardWrite.jsx";
 import { BoardList } from "./board/BoardList.jsx";
 import axios from "axios";
+import { UserAuth } from "./UserAuth.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       { path: "question-list", element: <QuestionList /> },
       { path: "board", element: <BoardWrite /> },
       { path: "board/list", element: <BoardList /> },
+      { path: "user/auth", element: <UserAuth /> },
     ],
   },
 ]);

@@ -1,4 +1,4 @@
-package com.backend.service.User;
+package com.backend.service.user;
 
 import com.backend.component.SmsUtil;
 import com.backend.domain.User.User;

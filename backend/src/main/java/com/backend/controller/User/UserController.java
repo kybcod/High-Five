@@ -1,7 +1,8 @@
 package com.backend.controller.User;
 
+import com.backend.config.PrincipalDetails;
 import com.backend.domain.User.User;
-import com.backend.service.User.UserService;
+import com.backend.service.user.UserService;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -71,19 +72,20 @@ public class UserController {
 
     @GetMapping("/users/auth")
     public ResponseEntity getAuth(Authentication authentication, SecurityContext securityContext) {
-//        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        System.out.println("authentication = " + authentication);
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         System.out.println("securityContext = " + securityContext);
-//
-//        String id = principal.getId();
-//        String email = principal.getUsername();
-//        String nickName = principal.getName();
-//        String password = principal.getPassword();
-//        boolean isLocked = principal.isAccountNonLocked();
-//        System.out.println("id = " + id);
-//        System.out.println("email = " + email);
-//        System.out.println("nickName = " + nickName);
-//        System.out.println("password = " + password);
-//        System.out.println("isLocked = " + isLocked);
+
+        String id = principal.getId();
+        String email = principal.getUsername();
+        String nickName = principal.getName();
+        String password = principal.getPassword();
+        boolean isLocked = principal.isAccountNonLocked();
+        System.out.println("id = " + id);
+        System.out.println("email = " + email);
+        System.out.println("nickName = " + nickName);
+        System.out.println("password = " + password);
+        System.out.println("isLocked = " + isLocked);
         System.out.println("실행중");
         return null;
     }
