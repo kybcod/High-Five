@@ -11,8 +11,8 @@ import java.util.List;
 public interface ProductMapper {
 
     @Insert("""
-            INSERT INTO product (title, category, start_price, end_time, content)
-            VALUES (#{title}, #{category}, #{startPrice}, #{endTime}, #{content})
+            INSERT INTO product (title, category, start_price, end_time, content, user_id)
+            VALUES (#{title}, #{category}, #{startPrice}, #{endTime}, #{content}, #{userId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Product product);
@@ -162,4 +162,28 @@ public interface ProductMapper {
             AND user_id = #{userId}
             """)
     int updateBidPrice(BidList bid);
+
+    @Select("""
+            SELECT p.id,
+                   p.title,
+                   p.category,
+                   p.start_price,
+                   p.status,
+                   p.content,
+                   p.start_time,
+                   p.end_time,
+                   bl.status
+            FROM product p
+                     LEFT JOIN bid_list bl
+                               ON p.id = bl.product_id
+            ORDER BY p.end_time;
+            """)
+    List<Product> selectProductAndBidList();
+
+    @Update("""
+            UPDATE product
+            SET status=#{status}
+            WHERE id=#{id}
+            """)
+    int updateStatus(Product product);
 }

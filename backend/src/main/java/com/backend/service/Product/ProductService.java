@@ -21,6 +21,7 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,8 @@ public class ProductService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
-    public void upload(Product product, MultipartFile[] files) throws IOException {
+    public void upload(Product product, MultipartFile[] files, Authentication authentication) throws IOException {
+        product.setUserId(Integer.valueOf(authentication.getName()));
         mapper.insert(product);
 
         //파일 추가
@@ -100,7 +102,6 @@ public class ProductService {
         mapper.updateViewCount(id);
 
         Product product = mapper.selectById(id);
-        System.out.println("product = " + product);
 
         List<String> productFiles = mapper.selectFileByProductId(product.getId());
         List<ProductFile> files = productFiles.stream()
@@ -234,6 +235,27 @@ public class ProductService {
     public boolean hasAccess(Integer id, Authentication authentication) {
         Product product = mapper.selectById(id);
         return product.getUserId().equals(Integer.valueOf(authentication.getName()));
+    }
+
+    public void updateProductState() {
+        //현재 시간과 상품의 endTime을 비교해서
+        // 만약에 같다면 판매 상태(TRUE)로 바꾸고
+        // bid_list에서 status 상태(False)로 바꾸어야 합니다.
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<Product> productList = mapper.selectProductAndBidList();
+        // TODO : selectAll 말고 다른 거 (상품 및 입찰 내역 관한 정보 가져오기)
+
+        for (Product product : productList) {
+            if (product.getEndTime().isBefore(currentTime) && product.getStatus()) {
+                product.setStatus(false);
+                mapper.updateStatus(product);
+            }
+            System.out.println("product.getEndTime() = " + product.getEndTime());
+            System.out.println("currentTime = " + currentTime);
+            System.out.println("product = " + product.getTitle());
+            System.out.println("product.getStatus() = " + product.getStatus());
+        }
     }
 }
 

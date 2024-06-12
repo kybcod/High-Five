@@ -25,10 +25,11 @@ public class ProductController {
     private final ProductService service;
 
     @PostMapping
-    public ResponseEntity upload(Product product,
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity upload(Product product, Authentication authentication,
                                  @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
         if (service.validate(product)) {
-            service.upload(product, files);
+            service.upload(product, files, authentication);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -109,4 +110,11 @@ public class ProductController {
             return ResponseEntity.ok().build();
         }
     }
+
+//    // 스케줄링 : 5분마다 실행됨
+//    // TODO :  (fixedRate = 5분)
+////    @Scheduled(fixedRate = 60000) //1분
+//    public void checkEndTimeAndProductState() {
+//        service.updateProductState();
+//    }
 }

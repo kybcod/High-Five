@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 public class Product {
     private Integer id;
-    private String title;
     private Integer userId;
+    private String title;
     private String category;
     private String startPrice;
     private Boolean status; //상품 판매 상태
