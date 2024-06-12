@@ -41,6 +41,7 @@ export function ProductView() {
   const [existingFilePreviews, setExistingFilePreviews] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
   const [bidPrice, setBidPrice] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
   const account = useContext(LoginContext);
   const navigate = useNavigate();
   const { onOpen, onClose, isOpen } = useDisclosure({
@@ -55,7 +56,7 @@ export function ProductView() {
       setExistingFilePreviews(res.data.productFileList || []);
       setLike(res.data.like);
     });
-  }, []);
+  }, [isProcessing]);
 
   function handleLikeClick() {
     axios.put("/api/products/like", { productId: product.id }).then((res) => {
@@ -65,6 +66,7 @@ export function ProductView() {
 
   function handleJoinClick() {
     if (parseInt(bidPrice) > product.startPrice) {
+      setIsProcessing(true);
       axios
         .post("/api/products/join", {
           productId: id,
@@ -79,6 +81,7 @@ export function ProductView() {
         })
         .finally(() => {
           onClose();
+          setIsProcessing(false);
         });
     } else {
       errorToast("입찰 금액이 시작 가격보다 작습니다.");
@@ -249,7 +252,9 @@ export function ProductView() {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={handleJoinClick}>확인</Button>
+            <Button isProcessing={isProcessing} onClick={handleJoinClick}>
+              확인
+            </Button>
             <Button onClick={onClose}>취소</Button>
           </ModalFooter>
         </ModalContent>

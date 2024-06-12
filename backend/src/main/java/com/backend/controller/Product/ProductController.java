@@ -101,6 +101,7 @@ public class ProductController {
     @PostMapping("join")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity joinProduct(@RequestBody BidList bid, Authentication authentication) {
+        //클라이언트로 부터 받은 userId(상품의 주인)와 토큰을 가지고 있는 userId가 같다면 참여 못함
         if (service.hasAccess(bid.getProductId(), authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {

@@ -13,7 +13,7 @@ public class Product {
     private Integer userId;
     private String category;
     private String startPrice;
-    private Boolean status;
+    private Boolean status; //상품 판매 상태
     private String content;
     private LocalDateTime startTime; //게시글 등록 시간
     private LocalDateTime endTime;
