@@ -132,11 +132,11 @@ export function ProductView() {
             images={existingFilePreviews}
             isBrightness={!product.status}
           />
-          <Box ml={10}>
-            <Box mb={2}>
+          <Box ml={10} mb={5}>
+            <Box mb={5}>
               <Heading fontSize={"xl"}> {product.title} </Heading>
             </Box>
-            <Flex mb={2} justifyContent={"space-between"}>
+            <Flex mb={5} justifyContent={"space-between"}>
               <Box>
                 <Text fontSize={"xl"}>
                   {formattedPrice(product.startPrice)}원
@@ -149,7 +149,7 @@ export function ProductView() {
               </Box>
             </Flex>
             <Divider orientation="horizontal" mb={2} />
-            <Flex justifyContent={"space-between"}>
+            <Flex mb={5} justifyContent={"space-between"}>
               <Flex>
                 <Center>
                   <Box mr={1}>찜</Box>
@@ -187,26 +187,42 @@ export function ProductView() {
               <Button>문의하기</Button>
               <Button>신고하기</Button>
             </Flex>
-            <Box mb={2}>
+            <Box
+              mb={5}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
               <Heading fontSize={"2xl"}>
                 {product.endTimeDetailsFormat}{" "}
               </Heading>
             </Box>
-            <Box mb={2}>
+            <Box
+              mb={5}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
               <Heading color={"skyblue"}>
                 현재 참여 인원 {product.numberOfJoin}명
               </Heading>
             </Box>
             {product.status && (
-              <Box mb={2}>
+              <Box mb={5}>
                 {!account.isLoggedIn() || account.hasAccess(product.userId) || (
                   <Box>
-                    <Button onClick={onOpen}>참여하기</Button>
+                    <Button colorScheme={"green"} w={"100%"} onClick={onOpen}>
+                      참여하기
+                    </Button>
                   </Box>
                 )}
                 {account.hasAccess(product.userId) && (
                   <Box>
-                    <Button onClick={() => navigate(`/edit/${product.id}`)}>
+                    <Button
+                      colorScheme={"green"}
+                      w={"100%"}
+                      onClick={() => navigate(`/edit/${product.id}`)}
+                    >
                       상품수정
                     </Button>
                   </Box>

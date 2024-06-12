@@ -23,10 +23,10 @@ export function ProductUpload() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [startPrice, setStartPrice] = useState("");
-  const [endTime, setEndTime] = useState(null);
   const [files, setFiles] = useState([]);
   const [filePreview, setFilePreView] = useState([]);
   const [content, setContent] = useState("");
+  const [endTime, setEndTime] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -157,6 +157,20 @@ export function ProductUpload() {
     }
   }
 
+  const handleDateTimeChange = (e) => {
+    const value = e.target.value;
+
+    //분해
+    const [date, time] = value.split("T");
+    const [hour, minute] = time.split(":");
+    //계산
+    const roundedMinute = Math.floor(parseInt(minute) / 5) * 5;
+    //다시 붙이기
+    const newTime = `${hour}:${roundedMinute.toString().padStart(2, "0")}`;
+    const newValue = `${date}T${newTime}`;
+    setEndTime(newValue);
+  };
+
   return (
     <Box>
       <Box>
@@ -229,8 +243,9 @@ export function ProductUpload() {
         <FormControl>
           <FormLabel>입찰 마감 시간</FormLabel>
           <Input
-            type={"datetime-local"}
-            onChange={(e) => setEndTime(e.target.value)}
+            type="datetime-local"
+            value={endTime}
+            onChange={handleDateTimeChange}
           />
         </FormControl>
       </Box>

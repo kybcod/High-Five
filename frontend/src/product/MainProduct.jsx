@@ -141,7 +141,10 @@ export function MainProduct() {
                 </Box>
                 <Stack mt="6" spacing="3">
                   <Flex justifyContent={"space-between"}>
-                    <Heading size="m">{product.title}</Heading>
+                    <Text as={"b"} noOfLines={1} fontSize="lg">
+                      {product.title}
+                    </Text>
+
                     {account.isLoggedIn() && (
                       <Box onClick={() => handleLikeClick(product.id)}>
                         {(() => {
