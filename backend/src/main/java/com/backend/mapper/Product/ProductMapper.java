@@ -30,9 +30,10 @@ public interface ProductMapper {
                    p.start_price,
                    p.start_time,
                    p.end_time,
-                   p.content
+                   p.content,
+                   p.status
             FROM product p
-            ORDER BY p.end_time
+            ORDER BY CASE WHEN p.status = true THEN 0 ELSE 1 END, p.end_time
             """)
     List<Product> selectAll();
 
@@ -186,4 +187,11 @@ public interface ProductMapper {
             WHERE id=#{id}
             """)
     int updateStatus(Product product);
+
+    @Update("""
+            UPDATE bid_list
+            SET status = #{status}
+            WHERE product_id = #{productId}
+            """)
+    int updateBidStatusByProductId(Integer productId, boolean status);
 }

@@ -237,24 +237,24 @@ public class ProductService {
         return product.getUserId().equals(Integer.valueOf(authentication.getName()));
     }
 
+    // TODO : Mapper 정리
     public void updateProductState() {
         //현재 시간과 상품의 endTime을 비교해서
         // 만약에 같다면 판매 상태(TRUE)로 바꾸고
         // bid_list에서 status 상태(False)로 바꾸어야 합니다.
 
+//        (상품 및 입찰 내역 관한 정보 가져오기)
         LocalDateTime currentTime = LocalDateTime.now();
         List<Product> productList = mapper.selectProductAndBidList();
-        // TODO : selectAll 말고 다른 거 (상품 및 입찰 내역 관한 정보 가져오기)
 
         for (Product product : productList) {
             if (product.getEndTime().isBefore(currentTime) && product.getStatus()) {
                 product.setStatus(false);
                 mapper.updateStatus(product);
+                mapper.updateBidStatusByProductId(product.getId(), true);
             }
-            System.out.println("product.getEndTime() = " + product.getEndTime());
-            System.out.println("currentTime = " + currentTime);
-            System.out.println("product = " + product.getTitle());
-            System.out.println("product.getStatus() = " + product.getStatus());
+            System.out.println(STR."\{product.getTitle()} : 끝나는 시간(\{product.getEndTime()}) , 상품 상태 : \{product.getStatus()}");
+
         }
     }
 }
