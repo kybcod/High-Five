@@ -13,15 +13,14 @@ import { QuestionWrite } from "./QuestionWrite.jsx";
 import { QuestionList } from "./QuestionList.jsx";
 import { BoardWrite } from "./board/BoardWrite.jsx";
 import { BoardList } from "./board/BoardList.jsx";
-import axios from "axios";
-
-axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+//
+// axios.interceptors.request.use((config) => {
+//   const token = config.headers.Authorization;
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// });
 
 const router = createBrowserRouter([
   {

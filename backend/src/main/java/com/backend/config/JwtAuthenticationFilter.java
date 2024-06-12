@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = jwtUtil.createJwt(username);
 
-        response.addHeader("token", token);
+        response.addHeader("Authorization", "Bearer " + token);
     }
 
     @Override
