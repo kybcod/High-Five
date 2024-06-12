@@ -11,3 +11,5 @@ WHERE qb.id = 1;
 SELECT file_name
 FROM question_board_file
 WHERE question_id = 2;
+
+use prj3;

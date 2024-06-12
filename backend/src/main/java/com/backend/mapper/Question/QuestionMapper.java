@@ -80,6 +80,6 @@ public interface QuestionMapper {
                         </if>
                     </trim>
             </script>
-                """)
+            """)
     int countAllWithSearch(String searchType, String keyword);
 }

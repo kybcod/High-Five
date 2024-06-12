@@ -38,7 +38,9 @@ export function QuestionList() {
       setQuestionList(res.data.content);
       setPageInfo(res.data.pageInfo);
     });
-  }, []);
+  }, [searchParams]);
+
+  // console.log("page", searchParams.get("page"));
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
@@ -51,7 +53,7 @@ export function QuestionList() {
   }
 
   function handleParamClick() {
-    navigate(`/question/?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(`/question/list?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   return (
@@ -129,39 +131,42 @@ export function QuestionList() {
               </Button>
             </>
           )}
+
+          {pageNumbers.map((pageNumber) => {
+            <Button
+              onClick={handlePageButtonClick(pageNumber)}
+              colorScheme={
+                pageNumber - 1 == pageInfo.currentPageNumber ? "teal" : "gray"
+              }
+              key={pageNumber}
+            >
+              {pageNumber}
+            </Button>;
+          })}
+
+          {pageInfo.nextPageNumber && (
+            <>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAngleRight} />
+              </Button>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAnglesRight} />
+              </Button>
+            </>
+          )}
         </Box>
-
-        {pageNumbers.map((pageNumber) => {
-          <Button
-            onClick={handlePageButtonClick(pageNumber)}
-            colorScheme={
-              pageNumber - 1 === pageInfo.currentPageNumber ? "teal" : "gray"
-            }
-            key={pageNumber}
-          >
-            {pageNumber}
-          </Button>;
-        })}
-
-        {pageInfo.nextPageNumber && (
-          <>
-            <Button
-              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAngleRight} />
-            </Button>
-            <Button
-              onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAnglesRight} />
-            </Button>
-          </>
-        )}
       </Center>
 
       <Box>
         <Flex justify={"flex-end"} mr={10}>
-          <Button colorScheme={"blue"} onClick={() => navigate("/question")}>
+          <Button
+            colorScheme={"blue"}
+            onClick={() => navigate("/question/write")}
+          >
             글쓰기
           </Button>
         </Flex>
