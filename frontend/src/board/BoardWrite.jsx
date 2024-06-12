@@ -7,28 +7,35 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [inserted, setInserted] = useState("");
+  const [userId, setUserId] = useState("");
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
   const offset = 1000 * 60 * 60 * 9;
 
   useEffect(() => {
     const LocalDateTime = new Date(Date.now() + offset).toISOString();
     setInserted(LocalDateTime);
+    if (account && account.id) {
+      setUserId(account.id);
+    }
   }, []);
 
   function handleClickButton() {
     axios
       .post("/api/board/add", {
         title,
+        userId,
         content,
         inserted,
       })
@@ -60,6 +67,9 @@ export function BoardWrite() {
       </Box>
       <Box>
         <Input type={"hidden"} value={inserted} />
+      </Box>
+      <Box>
+        <Input type={"hidden"} value={account.id} />
       </Box>
       <Box>
         <Button onClick={handleClickButton}>게시글 생성</Button>
