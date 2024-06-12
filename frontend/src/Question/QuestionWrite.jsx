@@ -90,71 +90,69 @@ export function QuestionWrite() {
       <Box mt={5}>
         <Heading>문의 글 작성</Heading>
       </Box>
-      <Box>
-        <Box mt={2}>
-          <FormControl>
-            <FormLabel>제목</FormLabel>
-            <Input
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="내용을 입력해주세요"
-            ></Input>
-          </FormControl>
-        </Box>
 
-        <Box mt={5}>
-          <FormControl>
-            <FormLabel>문의 상세내용</FormLabel>
-          </FormControl>
-        </Box>
-        <Box mt={4}>
+      <Box mt={2}>
+        <FormControl>
+          <FormLabel>제목</FormLabel>
+          <Input
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="내용을 입력해주세요"
+          ></Input>
+        </FormControl>
+      </Box>
+
+      <Box mt={5}>
+        <FormControl>
+          <FormLabel>문의 상세내용</FormLabel>
           <Textarea
             onChange={(e) => setContent(e.target.value)}
             placeholder="내용을 입력해주세요"
           ></Textarea>
-        </Box>
-        <Box mb={7}>
-          <FormControl>
-            <FormLabel>파일</FormLabel>
-            <Input
-              multiple
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFiles(e.target.files)}
-            />
-            <FormHelperText>
-              이미지 파일만 업로드할 수 있습니다.
-              <br />총 용량은 10MB이며, 한 파일은 1MB를 초과할 수 없습니다.
-            </FormHelperText>
-          </FormControl>
-        </Box>
-        {fileNameList.length > 0 && (
-          <Box mb={7}>
-            <Card>
-              <CardHeader>
-                <Heading size="md">선택된 파일 목록</Heading>
-              </CardHeader>
-              <CardBody>
-                <Stack divider={<StackDivider />} spacing={4}>
-                  {fileNameList}
-                </Stack>
-              </CardBody>
-            </Card>
-          </Box>
-        )}
-
-        <Center>
-          <Button
-            onClick={handleSaveClick}
-            isLoading={loading}
-            isDisabled={isDisableSaveButton}
-            colorScheme={"blue"}
-            mt={3}
-            w={500}
-          >
-            저장하기
-          </Button>
-        </Center>
+        </FormControl>
       </Box>
+
+      <Box mb={7}>
+        <FormControl>
+          <FormLabel>파일</FormLabel>
+          <Input
+            multiple
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFiles(e.target.files)}
+          />
+          <FormHelperText>
+            이미지 파일만 업로드할 수 있습니다.
+            <br />총 용량은 10MB이며, 한 파일은 1MB를 초과할 수 없습니다.
+          </FormHelperText>
+        </FormControl>
+      </Box>
+      {fileNameList.length > 0 && (
+        <Box mb={7}>
+          <Card>
+            <CardHeader>
+              <Heading size="md">선택된 파일 목록</Heading>
+            </CardHeader>
+            <CardBody>
+              <Stack divider={<StackDivider />} spacing={4}>
+                {fileNameList}
+              </Stack>
+            </CardBody>
+          </Card>
+        </Box>
+      )}
+
+      <Center>
+        <Button
+          onClick={handleSaveClick}
+          isLoading={loading}
+          isDisabled={isDisableSaveButton}
+          colorScheme={"blue"}
+          mt={3}
+          w={500}
+        >
+          저장하기
+        </Button>
+      </Center>
     </Box>
   );
 }

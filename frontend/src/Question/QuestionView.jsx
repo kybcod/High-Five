@@ -39,8 +39,6 @@ export function QuestionView() {
     axios.get(`/api/question/${id}`).then((res) => setQuestion(res.data));
   }, []);
 
-  function handleEditClick() {}
-
   function handleRemoveClick() {
     axios
       .delete(`/api/question/${id}`)
@@ -105,7 +103,11 @@ export function QuestionView() {
         </Box>
         <Box>
           <Flex justify={"flex-end"} mr={10}>
-            <Button mt={5} mr={2} onClick={handleEditClick}>
+            <Button
+              mt={5}
+              mr={2}
+              onClick={() => navigate(`/question/edit/${id}`)}
+            >
               수정
             </Button>
             <Button mt={5} onClick={onOpen} colorScheme={"red"}>
