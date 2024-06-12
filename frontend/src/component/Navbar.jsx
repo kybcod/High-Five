@@ -35,6 +35,9 @@ export function Navbar() {
           QnA
         </Center>
       )}
+      <Center onClick={() => navigate("/chat")} cursor="pointer">
+        Chat
+      </Center>
     </Flex>
   );
 }
