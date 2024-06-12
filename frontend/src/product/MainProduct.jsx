@@ -32,6 +32,7 @@ export function MainProduct() {
     axios.get(`/api/products`).then((res) => {
       console.log(res.data);
       const products = res.data;
+      // 좋아요 초기 false로
       const initialLikes = products.reduce((acc, product) => {
         acc[product.id] = product.like || false;
         return acc;

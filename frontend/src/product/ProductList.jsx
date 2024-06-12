@@ -38,10 +38,24 @@ export function ProductList() {
 
   useEffect(() => {
     axios.get(`/api/products/list?${searchParams}`).then((res) => {
-      setProductList(res.data.content);
+      const products = res.data.content;
+      const initialLikes = products.reduce((acc, product) => {
+        acc[product.id] = product.like || false;
+        return acc;
+      }, {});
+
+      if (account?.id) {
+        axios.get(`/api/products/like/${account.id}`).then((res) => {
+          res.data.forEach((productId) => {
+            initialLikes[productId] = true;
+          });
+          setLikes(initialLikes);
+        });
+      }
+      setProductList(products);
       setPageInfo(res.data.pageInfo);
     });
-  }, [searchParams]);
+  }, [searchParams, account]);
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
@@ -53,7 +67,18 @@ export function ProductList() {
     setSearchParams(searchParams);
   }
 
-  function handleLikeClick(id) {}
+  function handleLikeClick(productId) {
+    axios
+      .put(`/api/products/like`, {
+        productId: productId,
+      })
+      .then((res) => {
+        setLikes((prevLike) => ({
+          ...prevLike,
+          [productId]: res.data.like,
+        }));
+      });
+  }
 
   return (
     <Box>
