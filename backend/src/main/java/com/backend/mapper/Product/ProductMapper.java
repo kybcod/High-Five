@@ -74,13 +74,14 @@ public interface ProductMapper {
                     p.start_price,
                     p.start_time,
                     p.end_time,
-                    p.content
+                    p.content,
+                    p.status
             FROM product p
             WHERE p.title LIKE #{pattern}
             <if test="category != null and category != ''">
                 AND p.category = #{category}
             </if>
-            ORDER BY p.end_time
+            ORDER BY CASE WHEN p.status = true THEN 0 ELSE 1 END, p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             </script>
             """)
