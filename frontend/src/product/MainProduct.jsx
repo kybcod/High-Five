@@ -30,6 +30,7 @@ export function MainProduct() {
 
   useEffect(() => {
     axios.get(`/api/products`).then((res) => {
+      console.log(res.data);
       const products = res.data;
       const initialLikes = products.reduce((acc, product) => {
         acc[product.id] = product.like || false;
@@ -84,23 +85,59 @@ export function MainProduct() {
             <Card maxW="sm" h="100%">
               <CardBody position="relative" h="100%">
                 <Box mt={2} w="100%">
-                  {product.productFileList && product.productFileList[0] && (
-                    <Image
-                      onClick={() => navigate(`/product/${product.id}`)}
-                      src={product.productFileList[0].filePath}
-                      borderRadius="lg"
-                      w="100%"
-                      h="200px"
-                    />
+                  {product.status ? (
+                    <>
+                      {product.productFileList &&
+                        product.productFileList[0] && (
+                          <Image
+                            onClick={() => navigate(`/product/${product.id}`)}
+                            src={product.productFileList[0].filePath}
+                            borderRadius="lg"
+                            w="100%"
+                            h="200px"
+                          />
+                        )}
+                      <Badge
+                        position="absolute"
+                        top="1"
+                        left="1"
+                        colorScheme="teal"
+                      >
+                        {product.endTimeFormat}
+                      </Badge>
+                    </>
+                  ) : (
+                    <Box position={"relative"} w={"100%"} h={"200px"}>
+                      <Image
+                        src={product.productFileList[0].filePath}
+                        borderRadius="lg"
+                        w="100%"
+                        h="200px"
+                        filter="brightness(50%)"
+                        position="absolute"
+                        top="0"
+                        left="0"
+                      />
+                      <Text
+                        onClick={() => navigate(`/product/${product.id}`)}
+                        cursor={"pointer"}
+                        borderRadius="lg"
+                        w="100%"
+                        h="200px"
+                        position="absolute"
+                        top="0"
+                        left="0"
+                        color={"white"}
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        fontSize={"2xl"}
+                        as="b"
+                      >
+                        판매완료
+                      </Text>
+                    </Box>
                   )}
-                  <Badge
-                    position="absolute"
-                    top="1"
-                    left="1"
-                    colorScheme="teal"
-                  >
-                    {product.endTimeFormat}
-                  </Badge>
                 </Box>
                 <Stack mt="6" spacing="3">
                   <Flex justifyContent={"space-between"}>
@@ -129,7 +166,7 @@ export function MainProduct() {
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                       원
                     </Text>
-                    <Text>{product.startTimeFormat}</Text>
+                    <Text>{product.timeFormat}</Text>
                   </Flex>
                 </Stack>
               </CardBody>

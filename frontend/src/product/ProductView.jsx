@@ -22,7 +22,7 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { faEye, faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
@@ -123,12 +123,15 @@ export function ProductView() {
   }
 
   return (
-    <Box mr={20} ml={20}>
+    <Box>
       <Category />
       <Box mt={3}>
         <Heading color={"blue"}>{product.userNickName}</Heading>
         <Flex justifyContent={"space-evenly"}>
-          <SimpleSlider images={existingFilePreviews} />
+          <SimpleSlider
+            images={existingFilePreviews}
+            isBrightness={!product.status}
+          />
           <Box ml={10}>
             <Box mb={2}>
               <Heading fontSize={"xl"}> {product.title} </Heading>
@@ -194,20 +197,22 @@ export function ProductView() {
                 현재 참여 인원 {product.numberOfJoin}명
               </Heading>
             </Box>
-            <Box mb={2}>
-              {!account.isLoggedIn() || account.hasAccess(product.userId) || (
-                <Box>
-                  <Button onClick={onOpen}>참여하기</Button>
-                </Box>
-              )}
-              {account.hasAccess(product.userId) && (
-                <Box>
-                  <Button onClick={() => navigate(`/edit/${product.id}`)}>
-                    상품수정
-                  </Button>
-                </Box>
-              )}
-            </Box>
+            {product.status && (
+              <Box mb={2}>
+                {!account.isLoggedIn() || account.hasAccess(product.userId) || (
+                  <Box>
+                    <Button onClick={onOpen}>참여하기</Button>
+                  </Box>
+                )}
+                {account.hasAccess(product.userId) && (
+                  <Box>
+                    <Button onClick={() => navigate(`/edit/${product.id}`)}>
+                      상품수정
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+            )}
           </Box>
         </Flex>
       </Box>
