@@ -53,6 +53,7 @@ public interface ProductMapper {
                    p.end_time,
                    p.content,
                    p.view_count,
+                   p.status,
                    COUNT(DISTINCT bl.user_id) AS numberOfJoin,
                    u.nick_name       AS userNickName
             FROM product p
