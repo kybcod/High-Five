@@ -16,7 +16,7 @@ export function Login() {
     axios
       .postForm("/login", { username, password })
       .then((res) => {
-        account.login(res.data.token);
+        account.login(res.headers["authorization"]);
         navigate("/");
       })
       .catch((err) => {

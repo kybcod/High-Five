@@ -30,14 +30,16 @@ export function LoginProvider({ children }) {
     return authority.includes("admin");
   }
 
-  function login(token) {
-    // localStorage.setItem("token", token);
+  function login(header) {
+    const token = header.replace("Bearer ", "");
+    localStorage.setItem("token", token);
+    console.log(token);
     const payload = jwtDecode(token);
     setExpired(payload.exp);
     setId(payload.sub);
     setNickName(payload.nickName);
     // TODO. authority 추가되면 활성화
-    // setAuthority(payload.scope.split(" "));
+    setAuthority(payload.scope.split(" "));
   }
 
   function logout() {
