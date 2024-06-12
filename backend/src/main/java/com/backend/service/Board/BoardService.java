@@ -44,9 +44,7 @@ public class BoardService {
 
         if (files != null) {
             for (MultipartFile file : files) {
-                // db에 해당 게시물의 파일 목록 저장
                 mapper.insertFileName(board.getId(), file.getOriginalFilename());
-                // 실제 파일 저장 s3
                 String key = STR."liveaction/\{board.getId()}/\{file.getOriginalFilename()}";
                 PutObjectRequest objectRequest = PutObjectRequest.builder()
                         .bucket(bucketName).key(key)

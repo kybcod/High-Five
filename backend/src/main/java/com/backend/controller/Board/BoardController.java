@@ -18,7 +18,7 @@ public class BoardController {
     private final BoardService service;
 
     @PostMapping("add")
-    public ResponseEntity add(Board board, @RequestBody MultipartFile[] files) throws IOException {
+    public ResponseEntity add(Board board, @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
         if (service.validate(board)) {
             service.add(board, files);
             return ResponseEntity.ok().build();

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class BoardFile {
-    private String boardId;
+    private Integer boardId;
     private String fileName;
 }

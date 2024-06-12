@@ -6,11 +6,10 @@ import {
   FormLabel,
   Heading,
   Input,
-  List,
   Spacer,
   Textarea,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
@@ -18,7 +17,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState({ boardId: "", fileName: "" });
   const [content, setContent] = useState("");
   const [inserted, setInserted] = useState("");
   const [userId, setUserId] = useState("");
@@ -37,12 +36,11 @@ export function BoardWrite() {
 
   function handleClickButton() {
     axios
-      .post("/api/board/add", {
+      .postForm("/api/board/add", {
         title,
         userId,
         content,
         files,
-        inserted,
       })
       .then(() => {
         successToast("게시물 작성이 완료되었습니다");
@@ -53,11 +51,6 @@ export function BoardWrite() {
           errorToast("게시물 작성에 실패했습니다. 다시 작성해주세요");
         }
       });
-  }
-
-  const fileNameList = [];
-  for (let i = 0; i < files.length; i++) {
-    fileNameList.push(<li>{files[i].fileName}</li>);
   }
 
   return (
@@ -80,9 +73,6 @@ export function BoardWrite() {
               accept={"image/*"}
               onChange={(e) => setFiles(e.target.files)}
             />
-            <Box>
-              <List>{fileNameList}</List>
-            </Box>
           </Flex>
           <Textarea onChange={(e) => setContent(e.target.value)} />
         </FormControl>

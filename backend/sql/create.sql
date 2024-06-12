@@ -59,7 +59,7 @@ CREATE TABLE board
 # 자유 게시판 file 테이블
 CREATE TABLE board_file
 (
-    board_id  INT         NOT NULL REFERENCES question_board (id),
+    board_id  INT         NOT NULL REFERENCES board (id),
     file_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (board_id, file_name)
 );

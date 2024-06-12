@@ -9,9 +9,10 @@ import java.util.List;
 public interface BoardMapper {
 
     @Insert("""
-            INSERT INTO board (title, user_id, content, inserted)
-            VALUES (#{title}, #{userId}, #{content}, #{inserted})
+            INSERT INTO board ( title, user_id, content)
+            VALUES (#{title}, #{userId}, #{content})
             """)
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Board board);
 
     @Insert("""
