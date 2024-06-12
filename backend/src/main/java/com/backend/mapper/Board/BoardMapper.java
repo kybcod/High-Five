@@ -12,7 +12,13 @@ public interface BoardMapper {
             INSERT INTO board (title, user_id, content, inserted)
             VALUES (#{title}, #{userId}, #{content}, #{inserted})
             """)
-    public int insert(Board board);
+    int insert(Board board);
+
+    @Insert("""
+            INSERT INTO board_file (board_id, file_name)
+            VALUES (#{boardId}, #{fileName})
+            """)
+    void insertFileName(Integer boardId, String fileName);
 
     @Select("""
             SELECT id, title, user_id, inserted

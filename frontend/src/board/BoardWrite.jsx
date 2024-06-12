@@ -1,10 +1,13 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
   Input,
+  List,
+  Spacer,
   Textarea,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
@@ -15,6 +18,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
+  const [files, setFiles] = useState([]);
   const [content, setContent] = useState("");
   const [inserted, setInserted] = useState("");
   const [userId, setUserId] = useState("");
@@ -26,7 +30,7 @@ export function BoardWrite() {
   useEffect(() => {
     const LocalDateTime = new Date(Date.now() + offset).toISOString();
     setInserted(LocalDateTime);
-    if (account && account.id) {
+    if (account.isLoggedIn(account.id)) {
       setUserId(account.id);
     }
   }, [account]);
@@ -37,6 +41,7 @@ export function BoardWrite() {
         title,
         userId,
         content,
+        files,
         inserted,
       })
       .then(() => {
@@ -50,6 +55,11 @@ export function BoardWrite() {
       });
   }
 
+  const fileNameList = [];
+  for (let i = 0; i < files.length; i++) {
+    fileNameList.push(<li>{files[i].fileName}</li>);
+  }
+
   return (
     <Box>
       <Heading>자유게시판 글 작성</Heading>
@@ -61,7 +71,19 @@ export function BoardWrite() {
       </Box>
       <Box>
         <FormControl>
-          <FormLabel>상품 상세 내용</FormLabel>
+          <Flex>
+            <FormLabel>상품 상세 내용</FormLabel>
+            <Spacer />
+            <Input
+              multiple
+              type={"file"}
+              accept={"image/*"}
+              onChange={(e) => setFiles(e.target.files)}
+            />
+            <Box>
+              <List>{fileNameList}</List>
+            </Box>
+          </Flex>
           <Textarea onChange={(e) => setContent(e.target.value)} />
         </FormControl>
       </Box>
