@@ -35,7 +35,7 @@ import { Category } from "../component/Category.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
 
-export function ProductView() {
+export function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [existingFilePreviews, setExistingFilePreviews] = useState([]);
