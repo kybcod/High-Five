@@ -29,7 +29,7 @@ export function BoardWrite() {
     if (account && account.id) {
       setUserId(account.id);
     }
-  }, []);
+  }, [account]);
 
   function handleClickButton() {
     axios
