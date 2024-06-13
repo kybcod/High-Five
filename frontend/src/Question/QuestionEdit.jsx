@@ -13,6 +13,7 @@ import {
   Heading,
   Image,
   Input,
+  Spinner,
   Stack,
   StackDivider,
   Text,
@@ -51,16 +52,18 @@ export function QuestionEdit() {
         navigate(`/question/list`);
       })
       .catch((err) => {
-        if (err.response.status === 400) {
-          toast({
-            status: "error",
-            description: `게시물이 수정되지 않았습니다. 작성한 내용을 확인해주세요.`,
-            position: "bottom",
-            duration: 2500,
-          });
-        }
+        toast({
+          status: "error",
+          description: `게시물이 수정되지 않았습니다. 작성한 내용을 확인해주세요.`,
+          position: "bottom",
+          duration: 2500,
+        });
       })
       .finally(() => {});
+  }
+
+  if (question === null) {
+    return <Spinner />;
   }
 
   return (

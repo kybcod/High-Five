@@ -36,8 +36,12 @@ public class QuestionController {
     }
 
     @GetMapping("{id}")
-    public Question getQuestion(@PathVariable Integer id) {
-        return service.get(id);
+    public ResponseEntity getQuestion(@PathVariable Integer id) {
+        Question question = service.get(id);
+        if (question != null) {
+            return ResponseEntity.ok().body(question);
+        } else
+            return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("{id}")

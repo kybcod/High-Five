@@ -101,6 +101,9 @@ public class QuestionService {
 
     public Question get(Integer id) {
         Question question = mapper.selectById(id);
+        if (question == null) {
+            return null;
+        }
         List<String> filesNames = mapper.selectFileByQuestionId(id);
         List<QuestionFile> files = filesNames.stream()
                 .map(name -> new QuestionFile(name, STR."\{srcPrefix}\{question.getId()}/\{name}"))

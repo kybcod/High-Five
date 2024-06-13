@@ -17,6 +17,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Stack,
   StackDivider,
   Text,
@@ -36,12 +37,27 @@ export function QuestionView() {
   const { onOpen, onClose, isOpen } = useDisclosure();
 
   useEffect(() => {
-    axios.get(`/api/question/${id}`).then((res) => setQuestion(res.data));
+    axios
+      .get(`/api/question/${id}`)
+      .then((res) => setQuestion(res.data))
+      .catch((err) => {
+        if (err.response.status === 404) {
+          toast({
+            status: "error",
+            description: "해당 게시글이 없습니다",
+            position: "top",
+            duration: 2500,
+          });
+        }
+        navigate("/question/list");
+      });
   }, []);
 
   function handleRemoveClick() {
     axios
-      .delete(`/api/question/${id}`)
+      .delete(`/api/question/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
       .then(() => {
         toast({
           status: "success",
@@ -59,6 +75,10 @@ export function QuestionView() {
           duration: 2500,
         });
       });
+  }
+
+  if (question === null) {
+    return <Spinner />;
   }
 
   return (
