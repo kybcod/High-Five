@@ -10,8 +10,6 @@ import { SignUp } from "./user/SignUp.jsx";
 import { Login } from "./Login.jsx";
 import { LoginProvider } from "./component/LoginProvider.jsx";
 import axios from "axios";
-import { QuestionWrite } from "./QuestionWrite.jsx";
-import { QuestionList } from "./QuestionList.jsx";
 import { BoardWrite } from "./board/BoardWrite.jsx";
 import { BoardList } from "./board/BoardList.jsx";
 import { BoardView } from "./board/BoardView.jsx";
@@ -20,6 +18,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChatRoom } from "./chat/ChatRoom.jsx";
 import { UserAuth } from "./UserAuth.jsx";
+import { QuestionWrite } from "./Question/QuestionWrite.jsx";
+import { QuestionList } from "./Question/QuestionList.jsx";
+import { QuestionView } from "./Question/QuestionView.jsx";
+import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -41,8 +43,10 @@ const router = createBrowserRouter([
       { path: "product/:id", element: <ProductView /> },
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
-      { path: "question", element: <QuestionWrite /> },
-      { path: "question-list", element: <QuestionList /> },
+      { path: "question/write", element: <QuestionWrite /> },
+      { path: "question/list", element: <QuestionList /> },
+      { path: "question/:id", element: <QuestionView /> },
+      { path: "question/edit/:id", element: <QuestionEdit /> },
       { path: "board", element: <BoardWrite /> },
       { path: "board/list", element: <BoardList /> },
       { path: "board/:board_id", element: <BoardView /> },
