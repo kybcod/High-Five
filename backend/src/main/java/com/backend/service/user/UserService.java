@@ -62,8 +62,6 @@ public class UserService {
                     user.setAuthority(authorities);
                     authorityString = user.getAuth();
                 }
-                // TODO. sout 삭제
-                System.out.println("authorityString = " + authorityString);
 
                 JwtClaimsSet claims = JwtClaimsSet.builder()
                         .issuer("LiveAuction")

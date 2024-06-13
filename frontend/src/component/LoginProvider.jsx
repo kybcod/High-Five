@@ -32,16 +32,13 @@ export function LoginProvider({ children }) {
   }
 
   function login(token) {
-    // TODO. console.log 삭제
     localStorage.setItem("token", token);
-    console.log(token);
     const payload = jwtDecode(token);
     setExpired(payload.exp);
     setEmail(payload.email);
     setId(payload.sub);
     setNickName(payload.nickName);
     setAuthority(payload.scope.split(" "));
-    console.log(authority);
   }
 
   function logout() {
