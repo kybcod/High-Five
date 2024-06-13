@@ -1,6 +1,5 @@
 package com.backend.config;
 
-import com.backend.jwt.JwtUtil;
 import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
@@ -21,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final CorsConfig corsConfig;
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final JwtUtil jwtUtil;
     private final UserMapper mapper;
 
     @Bean
@@ -40,10 +37,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilter(corsConfig.corsFilter());
-
-        http.addFilterBefore(new JwtFilter(jwtUtil, mapper), LoginFilter.class);
-
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
                 .anyRequest().permitAll();
