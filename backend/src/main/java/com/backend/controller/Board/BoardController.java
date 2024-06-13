@@ -5,7 +5,9 @@ import com.backend.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -16,9 +18,9 @@ public class BoardController {
     private final BoardService service;
 
     @PostMapping("add")
-    public ResponseEntity add(@RequestBody Board board) {
+    public ResponseEntity add(Board board, @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
         if (service.validate(board)) {
-            service.add(board);
+            service.add(board, files);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

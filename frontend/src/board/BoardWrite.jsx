@@ -1,38 +1,69 @@
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
+  HStack,
   Input,
+  Spacer,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { CustomToast } from "../component/CustomToast.jsx";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
+  const [files, setFiles] = useState([]);
   const [content, setContent] = useState("");
   const [inserted, setInserted] = useState("");
+  const [userId, setUserId] = useState("");
+  const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
   const offset = 1000 * 60 * 60 * 9;
 
   useEffect(() => {
     const LocalDateTime = new Date(Date.now() + offset).toISOString();
     setInserted(LocalDateTime);
-  }, []);
+    if (account.isLoggedIn(account.id)) {
+      setUserId(account.id);
+    }
+  }, [account]);
 
   function handleClickButton() {
     axios
-      .post("/api/board/add", {
+      .postForm("/api/board/add", {
         title,
+        userId,
         content,
-        inserted,
+        files,
       })
       .then(() => {
+        successToast("게시물 작성이 완료되었습니다");
         navigate("/board/list");
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          errorToast("게시물 작성에 실패했습니다. 다시 작성해주세요");
+        }
       });
+  }
+
+  const fileNameList = [];
+  for (let i = 0; i < files.length; i++) {
+    fileNameList.push(
+      <Box>
+        <text fontSize={"mb"}>{files[i].name}</text>
+      </Box>,
+    );
   }
 
   return (
@@ -46,12 +77,36 @@ export function BoardWrite() {
       </Box>
       <Box>
         <FormControl>
-          <FormLabel>상품 상세 내용</FormLabel>
+          <Flex>
+            <FormLabel>상품 상세 내용</FormLabel>
+            <Spacer />
+            <Input
+              multiple
+              type={"file"}
+              accept={"image/*"}
+              onChange={(e) => setFiles(e.target.files)}
+            />
+          </Flex>
+          {fileNameList.length > 0 && (
+            <Box>
+              <Card>
+                <CardHeader>
+                  <Heading>선택된 파일 목록</Heading>
+                </CardHeader>
+                <CardBody>
+                  <HStack spacing={24}>{fileNameList}</HStack>
+                </CardBody>
+              </Card>
+            </Box>
+          )}
           <Textarea onChange={(e) => setContent(e.target.value)} />
         </FormControl>
       </Box>
       <Box>
         <Input type={"hidden"} value={inserted} />
+      </Box>
+      <Box>
+        <Input type={"hidden"} value={account.id} />
       </Box>
       <Box>
         <Button onClick={handleClickButton}>게시글 생성</Button>

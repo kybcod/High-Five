@@ -9,10 +9,17 @@ import java.util.List;
 public interface BoardMapper {
 
     @Insert("""
-            INSERT INTO board (title, content, inserted)
-            VALUES (#{title}, #{content}, #{inserted})
+            INSERT INTO board ( title, user_id, content)
+            VALUES (#{title}, #{userId}, #{content})
             """)
-    public int insert(Board board);
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int insert(Board board);
+
+    @Insert("""
+            INSERT INTO board_file (board_id, file_name)
+            VALUES (#{boardId}, #{fileName})
+            """)
+    void insertFileName(Integer boardId, String fileName);
 
     @Select("""
             SELECT id, title, user_id, inserted
