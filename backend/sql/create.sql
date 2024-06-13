@@ -158,3 +158,9 @@ CREATE TABLE chat_room
     inserted DATETIME NOT NULL DEFAULT NOW(),
     end_time DATETIME NULL
 );
+
+USE prj3;
+
+# 채팅 관련 기존 테이블 삭제
+DROP TABLE message;
+DROP TABLE chat_room;
