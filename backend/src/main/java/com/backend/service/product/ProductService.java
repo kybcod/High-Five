@@ -41,7 +41,8 @@ public class ProductService {
     String srcPrefix;
 
     public void upload(Product product, MultipartFile[] files, Authentication authentication) throws IOException {
-        // TODO. Authentication 값 넣기
+        Integer userId = Integer.valueOf(authentication.getName());
+        product.setUserId(userId);
 
         mapper.insert(product);
 
@@ -99,7 +100,6 @@ public class ProductService {
     }
 
     public Map<String, Object> get(Integer id, Authentication authentication) {
-        // TODO. Authentication 값 넣기
         Map<String, Object> result = new HashMap<>();
 
         mapper.updateViewCount(id);
@@ -117,7 +117,6 @@ public class ProductService {
         if (authentication == null) {
             like.put("like", false);
         } else {
-            // TODO. 오류때문에 임시로 수정
             int i = mapper.selectLikeByProductIdAndUserId(id, authentication.getName());
             like.put("like", i == 1);
         }
@@ -188,8 +187,6 @@ public class ProductService {
 
     public Map<String, Object> like(Map<String, Object> likeInfo, Authentication authentication) {
 
-        // TODO. Authentication 값 넣기
-
         Map<String, Object> result = new HashMap<>();
         result.put("like", false);
 
@@ -243,9 +240,7 @@ public class ProductService {
 
     //userId 받고 있는지 확인하기 위해 즉 로그인 했는지
     public boolean hasAccess(Integer id, Authentication authentication) {
-        // TODO. Authentication 값 넣기
 
-        // TODO. 임시로 수정
         Product product = mapper.selectById(id);
         return product.getUserId().equals(Integer.valueOf(authentication.getName()));
     }
