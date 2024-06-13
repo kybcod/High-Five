@@ -1,10 +1,14 @@
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardHeader,
   Flex,
   FormControl,
   FormLabel,
   Heading,
+  HStack,
   Input,
   Spacer,
   Textarea,
@@ -17,7 +21,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
-  const [files, setFiles] = useState({ boardId: "", fileName: "" });
+  const [files, setFiles] = useState([]);
   const [content, setContent] = useState("");
   const [inserted, setInserted] = useState("");
   const [userId, setUserId] = useState("");
@@ -53,6 +57,15 @@ export function BoardWrite() {
       });
   }
 
+  const fileNameList = [];
+  for (let i = 0; i < files.length; i++) {
+    fileNameList.push(
+      <Box>
+        <text fontSize={"mb"}>{files[i].name}</text>
+      </Box>,
+    );
+  }
+
   return (
     <Box>
       <Heading>자유게시판 글 작성</Heading>
@@ -74,6 +87,18 @@ export function BoardWrite() {
               onChange={(e) => setFiles(e.target.files)}
             />
           </Flex>
+          {fileNameList.length > 0 && (
+            <Box>
+              <Card>
+                <CardHeader>
+                  <Heading>선택된 파일 목록</Heading>
+                </CardHeader>
+                <CardBody>
+                  <HStack spacing={24}>{fileNameList}</HStack>
+                </CardBody>
+              </Card>
+            </Box>
+          )}
           <Textarea onChange={(e) => setContent(e.target.value)} />
         </FormControl>
       </Box>
