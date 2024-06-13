@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.Map;
 
 @RestController
@@ -72,13 +72,23 @@ public class UserController {
     }
 
     @GetMapping("/users/auth:{id}")
-    public ResponseEntity getAuth(@PathVariable String id) {
+    public ResponseEntity getAuth(@PathVariable Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Principal principal = (Principal) authentication.getPrincipal();
-        String tokenId = principal.getName();
+
+        String tokenId = authentication.getName();
+        System.out.println(authentication.getPrincipal());
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String nickName = jwt.getClaim("nickName");
+        System.out.println("nickName = " + nickName);
         System.out.println("tokenId = " + tokenId);
 
-        System.out.println("실행중");
-        return null;
+
+        if (service.hasAccess(id, authentication)) {
+            System.out.println("어드민");
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

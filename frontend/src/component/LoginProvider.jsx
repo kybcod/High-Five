@@ -58,6 +58,7 @@ export function LoginProvider({ children }) {
         id: id,
         nickName: nickName,
         email: email,
+        authority: authority,
         login: login,
         logout: logout,
         isLoggedIn: isLoggedIn,

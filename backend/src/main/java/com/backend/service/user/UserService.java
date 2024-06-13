@@ -4,6 +4,7 @@ import com.backend.component.SmsUtil;
 import com.backend.domain.user.User;
 import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -56,8 +57,11 @@ public class UserService {
                 Instant now = Instant.now();
 
                 List<String> authorities = mapper.selectAuthoritiesByUserId(db.getId());
-                user.setAuthority(authorities);
-                String authorityString = user.getAuth();
+                String authorityString = "user";
+                if (authorities != null) {
+                    user.setAuthority(authorities);
+                    authorityString = user.getAuth();
+                }
                 // TODO. sout 삭제
                 System.out.println("authorityString = " + authorityString);
 
@@ -130,5 +134,15 @@ public class UserService {
         }
 
         return true;
+    }
+
+    public boolean hasAccess(Integer id, Authentication authentication) {
+        boolean self = authentication.getName().equals(id.toString());
+
+        boolean isAdmin = authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("SCOPE_admin"));
+
+        return self || isAdmin;
     }
 }
