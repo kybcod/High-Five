@@ -161,6 +161,7 @@ CREATE TABLE chat_room
 
 USE prj3;
 
-# 채팅 관련 기존 테이블 삭제
+# message 테이블 삭제
 DROP TABLE message;
+# chat_room 테이블 삭제
 DROP TABLE chat_room;
