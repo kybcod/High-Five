@@ -22,7 +22,6 @@ public class Product {
     private int viewCount;
     private Boolean reviewStatus;
     private List<ProductFile> productFileList;
-    private Boolean productLike;
     private Integer numberOfJoin;
     private String userNickName;
 

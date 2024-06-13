@@ -10,7 +10,7 @@ export function Navbar() {
   const account = useContext(LoginContext);
 
   return (
-    <Flex gap={2} bgColor={"lightgreen"}>
+    <Flex gap={2} bgColor={"lightgreen"} cursor={"pointer"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
       {account.isLoggedIn() && (
         <Center onClick={() => navigate("/write")}>upload</Center>
@@ -30,9 +30,15 @@ export function Navbar() {
           {account.nickName} 님
         </Center>
       )}
-      {account.isLoggedIn() || (
-        <Center onClick={() => navigate("/question")} cursor="pointer">
-          QnA
+      <Center onClick={() => navigate("/question")} cursor="pointer">
+        QnA
+      </Center>
+      {account.isLoggedIn() && (
+        <Center
+          onClick={() => navigate(`/shop/${account.id}/products`)}
+          cursor="pointer"
+        >
+          MyPage
         </Center>
       )}
     </Flex>

@@ -196,4 +196,12 @@ public interface ProductMapper {
             WHERE product_id = #{productId}
             """)
     int updateBidStatusByProductId(Integer productId, boolean status);
+
+    @Select("""
+            SELECT * 
+            FROM product p
+            WHERE p.user_id = #{userId}
+            ORDER BY CASE WHEN p.status = true THEN 0 ELSE 1 END, p.end_time
+            """)
+    List<Product> selectProductsByUserId(Integer userId);
 }

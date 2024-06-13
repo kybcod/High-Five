@@ -117,4 +117,10 @@ public class ProductController {
 //    public void checkEndTimeAndProductState() {
 //        service.updateProductState();
 //    }
+
+    // User와 Product 관련 Controller
+    @GetMapping("user/{userId}")
+    public List<Product> getUserProducts(@PathVariable Integer userId) {
+        return service.getProductsByUserId(userId);
+    }
 }

@@ -18,6 +18,8 @@ import { BoardView } from "./board/BoardView.jsx";
 import { BoardModify } from "./board/BoardModify.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { MyPage } from "./myPage/MyPage.jsx";
+import { ProductShop } from "./product/ProductShop.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -45,6 +47,8 @@ const router = createBrowserRouter([
       { path: "board/list", element: <BoardList /> },
       { path: "board/:board_id", element: <BoardView /> },
       { path: "board/modify/:board_id", element: <BoardModify /> },
+      { path: "shop/:user_id/products", element: <MyPage /> },
+      { path: "shop/:userId", element: <ProductShop /> },
     ],
   },
 ]);

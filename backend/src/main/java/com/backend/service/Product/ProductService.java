@@ -257,6 +257,19 @@ public class ProductService {
 
         }
     }
+
+    public List<Product> getProductsByUserId(Integer userId) {
+        List<Product> productList = mapper.selectProductsByUserId(userId);
+
+        for (Product product : productList) {
+            List<String> productFiles = mapper.selectFileByProductId(product.getId());
+            List<ProductFile> files = productFiles.stream()
+                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}/\{product.getId()}/\{fileName}"))
+                    .toList();
+            product.setProductFileList(files);
+        }
+        return productList;
+    }
 }
 
 

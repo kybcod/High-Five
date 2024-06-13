@@ -125,8 +125,15 @@ export function ProductDetails() {
   return (
     <Box>
       <Category />
+      {/*TODO:user 상점 조회 고미*/}
       <Box mt={3}>
-        <Heading color={"blue"}>{product.userNickName}</Heading>
+        <Heading
+          color={"blue"}
+          cursor={"pointer"}
+          onClick={() => navigate(`/shop/${product.userId}`)}
+        >
+          {product.userNickName}
+        </Heading>
         <Flex justifyContent={"space-evenly"}>
           <SimpleSlider
             images={existingFilePreviews}
