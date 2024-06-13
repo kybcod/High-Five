@@ -1,7 +1,7 @@
 package com.backend.component;
 
 import com.backend.config.PrincipalDetails;
-import com.backend.mapper.User.UserMapper;
+import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

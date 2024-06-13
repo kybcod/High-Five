@@ -22,6 +22,8 @@ import { QuestionWrite } from "./Question/QuestionWrite.jsx";
 import { QuestionList } from "./Question/QuestionList.jsx";
 import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
+import { MyPage } from "./myPage/MyPage.jsx";
+import { ProductShop } from "./product/ProductShop.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");

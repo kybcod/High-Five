@@ -1,7 +1,7 @@
 package com.backend.config;
 
 import com.backend.jwt.JwtUtil;
-import com.backend.mapper.User.UserMapper;
+import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

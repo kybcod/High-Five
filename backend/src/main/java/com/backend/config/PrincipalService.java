@@ -1,7 +1,7 @@
 package com.backend.config;
 
-import com.backend.domain.User.User;
-import com.backend.mapper.User.UserMapper;
+import com.backend.domain.user.User;
+import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

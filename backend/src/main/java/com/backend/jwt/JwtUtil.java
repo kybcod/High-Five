@@ -1,7 +1,7 @@
 package com.backend.jwt;
 
-import com.backend.domain.User.User;
-import com.backend.mapper.User.UserMapper;
+import com.backend.domain.user.User;
+import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
