@@ -7,7 +7,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  Image,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -19,25 +19,48 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SimpleSlider from "./SimpleSlider.jsx";
+import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { Category } from "../component/Category.jsx";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function ProductView() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [existingFilePreviews, setExistingFilePreviews] = useState([]);
+  const [like, setLike] = useState({ like: false, count: 0 });
+  const [bidPrice, setBidPrice] = useState(0);
+  const account = useContext(LoginContext);
   const navigate = useNavigate();
   const { onOpen, onClose, isOpen } = useDisclosure();
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
-      setProduct(res.data);
+      console.log(res.data);
+      setProduct(res.data.product);
       setExistingFilePreviews(res.data.productFileList || []);
+      setLike(res.data.like);
     });
   }, []);
+
+  function handleJoinClick() {
+    axios
+      .post("/api/products/join", {
+        productId: id,
+        userId: account.id,
+        bidPrice: bidPrice,
+      })
+      .then((res) => {
+        console.log(product.id, id, account.id, bidPrice);
+      });
+  }
 
   if (product === null) {
     return <Spinner />;
@@ -66,34 +89,24 @@ export function ProductView() {
     return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  function handleLikeClick() {
+    axios.put("/api/products/like", { productId: product.id }).then((res) => {
+      setLike(res.data);
+    });
+  }
+
   return (
-    <Box>
-      <Box>
-        <FormControl>
-          <FormLabel>상품 이미지</FormLabel>
-        </FormControl>
-        <Flex>
-          <Center>
-            {product.productFileList && product.productFileList[0] && (
-              <Image
-                src={product.productFileList[0].filePath}
-                borderRadius="lg"
-                w="100%"
-                h="200px"
-              />
-            )}
-            {/*/!* 기존 이미지 표시 *!/*/}
-            {/*{existingFilePreviews.map((file, index) => (*/}
-            {/*  <Box boxSize={"180px"} key={index} position="relative">*/}
-            {/*    <Image boxSize={"180px"} src={file.filePath} mr={2} />*/}
-            {/*  </Box>*/}
-            {/*))}*/}
-          </Center>
-          <Box>
-            <Box>
+    <Box mr={20} ml={20}>
+      <Category />
+      <Box mt={3}>
+        <Heading color={"blue"}>{account.nickName}</Heading>
+        <Flex justifyContent={"space-evenly"}>
+          <SimpleSlider images={existingFilePreviews} />
+          <Box ml={10}>
+            <Box mb={2}>
               <Heading fontSize={"xl"}> {product.title} </Heading>
             </Box>
-            <Flex justifyContent={"space-between"}>
+            <Flex mb={2} justifyContent={"space-between"}>
               <Box>
                 <Text fontSize={"xl"}>
                   {formattedPrice(product.startPrice)}원
@@ -105,40 +118,86 @@ export function ProductView() {
                 </Text>
               </Box>
             </Flex>
-            <Divider />
+            <Divider orientation="horizontal" mb={2} />
             <Flex justifyContent={"space-between"}>
-              <Button>찜</Button>
-              <Box>
-                <FontAwesomeIcon icon={faEye} />
-                {product.viewCount}
-              </Box>
+              <Flex>
+                <Center>
+                  <Box mr={1}>찜</Box>
+                  {account.isLoggedIn() && (
+                    <Box onClick={handleLikeClick}>
+                      {like.like && (
+                        <FontAwesomeIcon
+                          icon={fullHeart}
+                          size={"lg"}
+                          color={"red"}
+                          cursor={"pointer"}
+                        />
+                      )}
+                      {like.like || (
+                        <FontAwesomeIcon
+                          icon={emptyHeart}
+                          size={"lg"}
+                          color={"red"}
+                          cursor={"pointer"}
+                        />
+                      )}
+                    </Box>
+                  )}
+                  <Box>{like.count}</Box>
+                </Center>
+              </Flex>
+              <Flex mb={2}>
+                <Center>
+                  <Box mr={2}>
+                    <FontAwesomeIcon icon={faEye} />
+                  </Box>
+                  <Box>{product.viewCount}</Box>
+                </Center>
+              </Flex>
               <Button>문의하기</Button>
               <Button>신고하기</Button>
             </Flex>
-
-            <Box>
-              <Heading> {product.endTimeFormat} </Heading>
+            <Box mb={2}>
+              <Heading fontSize={"2xl"}>
+                {" "}
+                {product.endTimeDetailsFormat}{" "}
+              </Heading>
             </Box>
-            <Box>
-              <Heading>현재 참여 인원 N명</Heading>
+            <Box mb={2}>
+              <Heading color={"skyblue"}>
+                현재 참여 인원 {product.numberOfJoin}명
+              </Heading>
             </Box>
-            <Box>
-              <Button>참여하기</Button>
-            </Box>
-            <Box>
-              <Button onClick={() => navigate(`/edit/${product.id}`)}>
-                상품수정
-              </Button>
+            <Box mb={2}>
+              {!account.isLoggedIn() || account.hasAccess(product.userId) || (
+                <Box>
+                  <Button onClick={onOpen}>참여하기</Button>
+                </Box>
+              )}
+              {account.hasAccess(product.userId) && (
+                <Box>
+                  <Button onClick={() => navigate(`/edit/${product.id}`)}>
+                    상품수정
+                  </Button>
+                </Box>
+              )}
             </Box>
           </Box>
         </Flex>
       </Box>
 
-      <Divider />
+      <Divider mb={2} />
+
       <Box>
         <FormControl>
-          <FormLabel>상품 정보</FormLabel>
-          <Textarea defaultValue={product.content} whiteSpace={"pre-wrap"} />
+          <FormLabel>
+            <Heading fontSize={"2xl"}>상품 정보</Heading>
+          </FormLabel>
+          {product.content !== null && product.content !== "" ? (
+            <Textarea defaultValue={product.content} whiteSpace={"pre-wrap"} />
+          ) : (
+            <Text>상품 설명이 없습니다.</Text>
+          )}
         </FormControl>
       </Box>
 
@@ -146,9 +205,17 @@ export function ProductView() {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader></ModalHeader>
-          <ModalBody>정말로 참여하시겠습니까?</ModalBody>
+          <ModalBody>
+            <FormControl>
+              <FormLabel>입찰 금액</FormLabel>
+              <Input
+                type="number"
+                onChange={(e) => setBidPrice(e.target.value)}
+              />
+            </FormControl>
+          </ModalBody>
           <ModalFooter>
-            <Button>확인</Button>
+            <Button onClick={handleJoinClick}>확인</Button>
             <Button onClick={onClose}>취소</Button>
           </ModalFooter>
         </ModalContent>

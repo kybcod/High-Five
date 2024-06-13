@@ -7,6 +7,8 @@ import {
   FormLabel,
   Image,
   Input,
+  InputGroup,
+  InputRightAddon,
   Select,
   Textarea,
   useToast,
@@ -29,9 +31,19 @@ export function ProductUpload() {
   const navigate = useNavigate();
 
   function handleSaleClick() {
+    if (files.length === 0) {
+      toast({
+        status: "warning",
+        description: "파일을 업로드 해주세요.",
+        position: "top-right",
+        duration: 1000,
+      });
+      return;
+    }
+
     if (!title) {
       toast({
-        status: "error",
+        status: "warning",
         description: "제목을 입력해주세요.",
         position: "top-right",
         duration: 1000,
@@ -41,7 +53,7 @@ export function ProductUpload() {
 
     if (!category) {
       toast({
-        status: "error",
+        status: "warning",
         description: "카테고리를 선택해주세요.",
         position: "top-right",
         duration: 1000,
@@ -51,7 +63,7 @@ export function ProductUpload() {
 
     if (!startPrice) {
       toast({
-        status: "error",
+        status: "warning",
         description: "입찰 시작가를 입력해주세요.",
         position: "top-right",
         duration: 1000,
@@ -61,7 +73,7 @@ export function ProductUpload() {
 
     if (!endTime) {
       toast({
-        status: "error",
+        status: "warning",
         description: "입찰 마감 시간을 입력해주세요.",
         position: "top-right",
         duration: 1000,
@@ -138,6 +150,13 @@ export function ProductUpload() {
     return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  function handleIntegerNumber(e) {
+    const formattedValue = e.target.value.replaceAll(",", "");
+    if (!isNaN(formattedValue)) {
+      setStartPrice(formattedValue);
+    }
+  }
+
   return (
     <Box>
       <Box>
@@ -197,10 +216,13 @@ export function ProductUpload() {
       <Box>
         <FormControl>
           <FormLabel>입찰 시작가</FormLabel>
-          <Input
-            value={formattedPrice(startPrice)}
-            onChange={(e) => setStartPrice(e.target.value.replaceAll(",", ""))} //콤마 제거}
-          />
+          <InputGroup>
+            <Input
+              value={formattedPrice(startPrice)}
+              onChange={(e) => handleIntegerNumber(e)}
+            />
+            <InputRightAddon>원</InputRightAddon>
+          </InputGroup>
         </FormControl>
       </Box>
       <Box>

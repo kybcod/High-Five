@@ -20,9 +20,16 @@ public class Product {
     private int viewCount;
     private Boolean reviewStatus;
     private List<ProductFile> productFileList;
+    private Boolean productLike;
+    private Integer numberOfJoin;
 
     public String getEndTimeFormat() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH시 mm분 까지");
+        return endTime.format(formatter);
+    }
+
+    public String getEndTimeDetailsFormat() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 까지");
         return endTime.format(formatter);
     }
 

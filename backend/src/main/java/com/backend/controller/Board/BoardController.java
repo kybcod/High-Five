@@ -1,6 +1,6 @@
 package com.backend.controller.Board;
 
-import com.backend.domain.Board;
+import com.backend.domain.Board.Board;
 import com.backend.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +28,26 @@ public class BoardController {
     @GetMapping("list")
     public List<Board> list() {
         return service.list();
+    }
+
+    @GetMapping("{id}")
+    public Board view(@PathVariable Integer id) {
+        return service.selectById(id);
+    }
+
+
+    @PutMapping("modify")
+    public ResponseEntity update(@RequestBody Board board) {
+        if (service.validate(board)) {
+            service.modify(board);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public int delete(@PathVariable Integer id) {
+        return service.deleteById(id);
     }
 }

@@ -14,20 +14,23 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Category } from "../component/Category.jsx";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   faAngleLeft,
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
+  faHeart as fullHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 
 export function ProductList() {
   const [productList, setProductList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
+  const [likes, setLikes] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -48,6 +51,8 @@ export function ProductList() {
     setSearchParams(searchParams);
   }
 
+  function handleLikeClick(id) {}
+
   return (
     <Box>
       <Category />
@@ -60,15 +65,12 @@ export function ProductList() {
       <Grid templateColumns="repeat(5, 1fr)" gap={6}>
         {productList.map((product) => (
           <GridItem key={product.id} w={"100%"}>
-            <Card
-              maxW="sm"
-              h={"100%"}
-              onClick={() => navigate(`/product/${product.id}`)}
-            >
+            <Card maxW="sm" h={"100%"}>
               <CardBody position="relative" h={"100%"}>
                 <Box mt={2}>
                   {product.productFileList && (
                     <Image
+                      onClick={() => navigate(`/product/${product.id}`)}
                       src={product.productFileList[0].filePath}
                       borderRadius="lg"
                       w="100%"
@@ -85,7 +87,23 @@ export function ProductList() {
                   </Badge>
                 </Box>
                 <Stack mt="6" spacing="3">
-                  <Heading size="m">{product.title}</Heading>
+                  <Flex justifyContent={"space-between"}>
+                    <Heading size="m">{product.title}</Heading>
+                    <Box onClick={() => handleLikeClick(product.id)}>
+                      {(() => {
+                        const isLiked = likes[product.id];
+                        const icon = isLiked ? fullHeart : emptyHeart;
+                        return (
+                          <FontAwesomeIcon
+                            icon={icon}
+                            style={{ color: "red" }}
+                            cursor="pointer"
+                            size="xl"
+                          />
+                        );
+                      })()}
+                    </Box>
+                  </Flex>
                   <Flex justifyContent={"space-between"}>
                     <Text color="blue.600" fontSize="xl">
                       {product.startPrice
