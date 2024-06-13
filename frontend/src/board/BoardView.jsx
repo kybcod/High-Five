@@ -72,8 +72,8 @@ export function BoardView() {
         )}
       </Flex>
       <Box mt={3}>
-        {board.fileList &&
-          board.fileList.map((file) => (
+        {board.boardFileList &&
+          board.boardFileList.map((file) => (
             <Card m={3} key={file.name}>
               <CardBody>
                 <Image src={file.src} />

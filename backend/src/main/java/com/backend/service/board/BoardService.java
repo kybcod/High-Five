@@ -1,6 +1,7 @@
 package com.backend.service.board;
 
 import com.backend.domain.board.Board;
+import com.backend.domain.board.BoardFile;
 import com.backend.mapper.board.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,8 @@ public class BoardService {
         if (files != null) {
             for (MultipartFile file : files) {
                 mapper.insertFileName(board.getId(), file.getOriginalFilename());
-                String key = STR."liveaction/\{board.getId()}/\{file.getOriginalFilename()}";
+                String key = STR."prj3/\{board.getId()}/\{file.getOriginalFilename()}";
+                System.out.println(key);
                 PutObjectRequest objectRequest = PutObjectRequest.builder()
                         .bucket(bucketName).key(key)
                         .acl(ObjectCannedACL.PUBLIC_READ).build();
@@ -54,12 +56,22 @@ public class BoardService {
         }
     }
 
+
     public List<Board> list() {
         return mapper.selectAll();
     }
 
     public Board selectById(Integer id) {
-        return mapper.selectById(id);
+        Board board = mapper.selectById(id);
+        List<String> fileNames = mapper.selectFileNameByBoardId(board.getId());
+        List<BoardFile> files = fileNames.stream()
+                .map(fileName -> new BoardFile(fileName, STR."\{srcPrefix}\{board.getId()}/\{fileName}"))
+                .toList();
+
+        board.setBoardFileList(files);
+
+        return board;
+
     }
 
     public void modify(Board board) {

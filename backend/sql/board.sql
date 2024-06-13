@@ -17,4 +17,11 @@ FROM board_file;
 INSERT INTO board (id, user_id, title, content, inserted)
     VALUE (11, 18, 'aaa', 'aaa', '2024.06.12T10:36:11');
 
+SELECT *
+FROM user;
+
+INSERT INTO authority (user_id, name)
+    VALUE (36, 'user');
+
+
 
