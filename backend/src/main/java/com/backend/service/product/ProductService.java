@@ -101,7 +101,6 @@ public class ProductService {
 
     public Map<String, Object> get(Integer id, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
         mapper.updateViewCount(id);
 
@@ -114,10 +113,12 @@ public class ProductService {
         product.setProductFileList(files);
 
         //좋아요
+        PrincipalDetails principalDetails;
         Map<String, Object> like = new HashMap<>();
         if (authentication == null) {
             like.put("like", false);
         } else {
+            principalDetails = (PrincipalDetails) authentication.getPrincipal();
             int i = mapper.selectLikeByProductIdAndUserId(id, principalDetails.getId());
             like.put("like", i == 1);
         }
