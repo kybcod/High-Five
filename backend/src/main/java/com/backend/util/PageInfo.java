@@ -14,13 +14,14 @@ public class PageInfo {
     private int prevPageNumber;
 
     public PageInfo setting(Page page) {
-        int currentPageNumber = page.getNumber(); // 페이지 1부터
-        int lastPageNumber = page.getTotalPages(); //  총 페이지 수 = 마지막 페이지 번호
+        int currentPageNumber = page.getNumber(); // 현재 페이지 번호(0부터 시작)
+        int lastPageNumber = page.getTotalPages(); //  총 페이지 수
 
-        int leftPageNumber = ((currentPageNumber - 1) / 10) * 10 + 1;
-        int rightPageNumber = Math.min(leftPageNumber + 9, lastPageNumber);
-        int nextPageNumber = Math.min(rightPageNumber + 1, lastPageNumber);
-        int prevPageNumber = Math.max(leftPageNumber - 1, 1);
+        int leftPageNumber = ((currentPageNumber) / 10) * 10 + 1;
+        int prevPageNumber = Math.max(leftPageNumber - 10, 1);
+
+        int rightPageNumber = Math.min(leftPageNumber + 10, lastPageNumber);
+        int nextPageNumber = rightPageNumber;
 
 
         this.currentPageNumber = currentPageNumber;

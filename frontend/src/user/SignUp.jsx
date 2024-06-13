@@ -48,10 +48,16 @@ export function SignUp() {
   function handleCheckEmail() {
     axios
       .get(`/api/users/emails?email=${email}`)
-      .then(() => errorToast("이미 존재하는 이메일입니다"))
-      .catch(() => {
+      .then(() =>
+        errorToast("이미 존재하는 이메일이거나 이메일 형식이 아닙니다"),
+      )
+      .catch((err) => {
         setIsCheckedEmail(true);
-        successToast("사용가능한 이메일입니다");
+        if (err.response.status === 404) {
+          successToast("사용가능한 이메일입니다");
+        } else {
+          errorToast("이메일 조회 중 에러가 발생했습니다");
+        }
       });
   }
 
@@ -59,14 +65,25 @@ export function SignUp() {
     axios
       .get(`/api/users/nickNames?nickName=${nickName}`)
       .then(() => errorToast("이미 존재하는 닉네임입니다"))
-      .catch(() => {
+      .catch((err) => {
         setIsCheckedNickName(true);
-        successToast("사용가능한 닉네임입니다");
+        if (err.response.status === 404) {
+          successToast("사용가능한 닉네임입니다");
+        } else {
+          errorToast("닉네임 조회 중 에러가 발생했습니다");
+        }
       });
   }
 
   let isDisabled = false;
   const isCheckedPassword = password === passwordCheck;
+  const passwordPattern =
+    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
+
+  let isValidPassword = false;
+  if (passwordPattern.test(password)) {
+    isValidPassword = true;
+  }
 
   if (
     !(
@@ -94,6 +111,10 @@ export function SignUp() {
     isDisabled = true;
   }
 
+  if (!isValidPassword) {
+    isDisabled = true;
+  }
+
   return (
     <Box>
       <Box>회원 가입</Box>
@@ -102,6 +123,7 @@ export function SignUp() {
         <InputGroup>
           <Input
             type={"email"}
+            maxLength="30"
             onChange={(e) => {
               setEmail(e.target.value);
               setIsValidEmail(!e.target.validity.typeMismatch);
@@ -126,7 +148,21 @@ export function SignUp() {
       </FormControl>
       <FormControl>
         <FormLabel>비밀번호</FormLabel>
-        <Input type="password" onChange={(e) => setPassword(e.target.value)} />
+        <Input
+          type="password"
+          onChange={(e) => {
+            setPassword(e.target.value);
+            isValidPassword = false;
+          }}
+          isInvalid={isValidPassword ? false : true}
+          errorBorderColor={"red.300"}
+        />
+        {isValidPassword || (
+          <FormHelperText>
+            비밀번호는 8자 이상으로, 영문 대소문자와 숫자, 특수기호를 포함하여야
+            합니다
+          </FormHelperText>
+        )}
       </FormControl>
       <FormControl>
         <FormLabel>비밀번호 확인</FormLabel>

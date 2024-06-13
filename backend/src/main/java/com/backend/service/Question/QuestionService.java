@@ -1,6 +1,7 @@
 package com.backend.service.Question;
 
 import com.backend.domain.Question.Question;
+import com.backend.domain.Question.QuestionFile;
 import com.backend.mapper.Question.QuestionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,9 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -58,7 +61,63 @@ public class QuestionService {
         return true;
     }
 
-    public List<Question> list() {
-        return mapper.getList();
+//    public Map<String, Object> list(Pageable pageable, String searchType, String keyword) {
+//        int total = mapper.countAllWithSearch(searchType, keyword);
+//        List<Question> content = mapper.selectUsingPageable(pageable, searchType, keyword);
+//        Page<Question> page = new PageImpl<>(content, pageable, total);
+//        PageInfo pageInfo = new PageInfo().setting(page);
+//        return Map.of("content", content, "pageInfo", pageInfo);
+//    }
+
+    public Map<String, Object> list(Integer page, String searchType, String keyword) {
+        Map pageInfo = new HashMap();
+        Integer countAll = mapper.countAllWithSearch(searchType, keyword);
+
+        Integer offset = (page - 1) * 5;
+        Integer lastPageNumber = (countAll - 1) / 5 + 1;
+        Integer leftPageNumber = (page - 1) / 3 * 3 + 1;
+        Integer rightPageNumber = leftPageNumber + 2;
+        rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
+        leftPageNumber = rightPageNumber - 2;
+        leftPageNumber = Math.max(leftPageNumber, 1);
+        Integer prevPageNumber = leftPageNumber - 1;
+        Integer nextPageNumber = rightPageNumber + 1;
+
+        //  이전,처음,다음,맨끝 버튼 만들기
+        if (prevPageNumber > 0) {
+            pageInfo.put("prevPageNumber", prevPageNumber);
+        }
+        if (nextPageNumber <= lastPageNumber) {
+            pageInfo.put("nextPageNumber", nextPageNumber);
+        }
+        pageInfo.put("currentPageNumber", page);
+        pageInfo.put("lastPageNumber", lastPageNumber);
+        pageInfo.put("leftPageNumber", leftPageNumber);
+        pageInfo.put("rightPageNumber", rightPageNumber);
+
+        return Map.of("pageInfo", pageInfo,
+                "content", mapper.selectUsingPageable(offset, searchType, keyword));
+    }
+
+    public Question get(Integer id) {
+        Question question = mapper.selectById(id);
+        if (question == null) {
+            return null;
+        }
+        List<String> filesNames = mapper.selectFileByQuestionId(id);
+        List<QuestionFile> files = filesNames.stream()
+                .map(name -> new QuestionFile(name, STR."\{srcPrefix}\{question.getId()}/\{name}"))
+                .toList();
+        question.setFileList(files);
+        return question;
+    }
+
+    public void delete(Integer id) {
+        mapper.deleteByIdFile(id);
+        mapper.deleteById(id);
+    }
+
+    public void edit(Question question) {
+        mapper.updateById(question);
     }
 }

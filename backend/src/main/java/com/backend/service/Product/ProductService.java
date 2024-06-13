@@ -1,8 +1,8 @@
 package com.backend.service.Product;
 
+import com.backend.domain.Product.BidList;
 import com.backend.domain.Product.Product;
 import com.backend.domain.Product.ProductFile;
-import com.backend.domain.Product.auctionDomain;
 import com.backend.mapper.Product.ProductMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,7 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,8 @@ public class ProductService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
-    public void upload(Product product, MultipartFile[] files) throws IOException {
+    public void upload(Product product, MultipartFile[] files, Authentication authentication) throws IOException {
+        product.setUserId(Integer.valueOf(authentication.getName()));
         mapper.insert(product);
 
         //파일 추가
@@ -100,7 +102,6 @@ public class ProductService {
         mapper.updateViewCount(id);
 
         Product product = mapper.selectById(id);
-        System.out.println("product = " + product);
 
         List<String> productFiles = mapper.selectFileByProductId(product.getId());
         List<ProductFile> files = productFiles.stream()
@@ -205,8 +206,12 @@ public class ProductService {
         return mapper.selectLikeByUserId(userId);
     }
 
-    public void insertBidPrice(auctionDomain auction) {
-        mapper.insertBidPrice(auction);
+    public void upsertBidPrice(BidList bid) {
+        if (mapper.existsBid(bid.getProductId(), bid.getUserId())) {
+            mapper.updateBidPrice(bid);
+        } else {
+            mapper.insertBidPrice(bid);
+        }
     }
 
 
@@ -231,4 +236,41 @@ public class ProductService {
         Product product = mapper.selectById(id);
         return product.getUserId().equals(Integer.valueOf(authentication.getName()));
     }
+
+    // TODO : Mapper 정리
+    public void updateProductState() {
+        //현재 시간과 상품의 endTime을 비교해서
+        // 만약에 같다면 판매 상태(TRUE)로 바꾸고
+        // bid_list에서 status 상태(False)로 바꾸어야 합니다.
+
+//        (상품 및 입찰 내역 관한 정보 가져오기)
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<Product> productList = mapper.selectProductAndBidList();
+
+        for (Product product : productList) {
+            if (product.getEndTime().isBefore(currentTime) && product.getStatus()) {
+                product.setStatus(false);
+                mapper.updateStatus(product);
+                mapper.updateBidStatusByProductId(product.getId(), true);
+            }
+            System.out.println(STR."\{product.getTitle()} : 끝나는 시간(\{product.getEndTime()}) , 상품 상태 : \{product.getStatus()}");
+
+        }
+    }
+
+    public List<Product> getProductsByUserId(Integer userId) {
+        List<Product> productList = mapper.selectProductsByUserId(userId);
+
+        for (Product product : productList) {
+            List<String> productFiles = mapper.selectFileByProductId(product.getId());
+            List<ProductFile> files = productFiles.stream()
+                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}/\{product.getId()}/\{fileName}"))
+                    .toList();
+            product.setProductFileList(files);
+        }
+        return productList;
+    }
 }
+
+
+
