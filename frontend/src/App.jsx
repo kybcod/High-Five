@@ -55,7 +55,7 @@ const router = createBrowserRouter([
       { path: "board/modify/:board_id", element: <BoardModify /> },
       { path: "shop/:user_id/products", element: <MyPage /> },
       { path: "shop/:userId", element: <ProductShop /> },
-      { path: "chat", element: <ChatRoom /> },
+      { path: "chat/:product_id", element: <ChatRoom /> },
       { path: "user/auth", element: <UserAuth /> },
     ],
   },
