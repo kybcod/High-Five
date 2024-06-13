@@ -122,6 +122,16 @@ export function ProductDetails() {
     return <Spinner />;
   }
 
+  // 채팅방 연결
+  const handleEnterChatRoom = () => {
+    if (account.isLoggedIn()) {
+      navigate(`/chat/${product.id}`);
+    } else {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/login");
+    }
+  };
+
   return (
     <Box>
       <Category />
@@ -191,9 +201,7 @@ export function ProductDetails() {
                   <Box>{product.viewCount}</Box>
                 </Center>
               </Flex>
-              <Button onClick={() => navigate(`/chat/${product.id}`)}>
-                문의하기
-              </Button>
+              <Button onClick={handleEnterChatRoom}>문의하기</Button>
               <Button>신고하기</Button>
             </Flex>
             <Box
