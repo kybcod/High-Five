@@ -4,8 +4,6 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
-  Center,
   Flex,
   FormControl,
   FormHelperText,
@@ -14,8 +12,6 @@ import {
   Image,
   Input,
   Spinner,
-  Stack,
-  StackDivider,
   Text,
   Textarea,
   useToast,
@@ -27,14 +23,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export function QuestionEdit() {
-  const [question, setQuestion] = useState([]);
+  const [question, setQuestion] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
 
   useEffect(() => {
     axios.get(`/api/question/${id}`).then((res) => setQuestion(res.data));
-  }, []);
+  }, [id]);
 
   function handleEditClick() {
     axios
@@ -51,7 +47,7 @@ export function QuestionEdit() {
         });
         navigate(`/question/list`);
       })
-      .catch((err) => {
+      .catch(() => {
         toast({
           status: "error",
           description: `게시물이 수정되지 않았습니다. 작성한 내용을 확인해주세요.`,
@@ -106,7 +102,7 @@ export function QuestionEdit() {
         </Box>
 
         <Box m={7}>
-          {question.fileList &&
+          {Array.isArray(question.fileList) &&
             question.fileList.map((file) => (
               <Card m={1} key={file.name}>
                 <CardFooter>

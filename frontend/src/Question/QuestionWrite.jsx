@@ -10,7 +10,6 @@ import {
   FormLabel,
   Heading,
   Input,
-  InputGroup,
   Stack,
   StackDivider,
   Text,

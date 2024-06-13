@@ -28,7 +28,7 @@ public interface QuestionMapper {
     List<Question> getList(Integer page);
 
     @Select("""
-            SELECT qb.id, qb.title, qb.content, qb.inserted, user.nick_name, qb.user_id nickName FROM question_board qb JOIN user ON qb.user_id = user.id WHERE qb.id = #{id}
+            SELECT qb.id, qb.title, qb.content, qb.inserted, user.nick_name nickName, qb.user_id FROM question_board qb JOIN user ON qb.user_id = user.id WHERE qb.id = #{id}
             """)
     Question selectById(Integer id);
 
