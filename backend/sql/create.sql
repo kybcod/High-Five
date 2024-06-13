@@ -143,22 +143,22 @@ CREATE TABLE bid_list
 
 # -- 변경 전
 # 채팅 메시지 테이블
-CREATE TABLE message
-(
-    id           INT PRIMARY KEY AUTO_INCREMENT,
-    chat_room_id INT          NOT NULL REFERENCES chat_room (id),
-    user_id      INT          NOT NULL REFERENCES user (id),
-    content      VARCHAR(100) NOT NULL,
-    inserted     DATETIME     NOT NULL DEFAULT NOW()
-);
+# CREATE TABLE message
+# (
+#     id           INT PRIMARY KEY AUTO_INCREMENT,
+#     chat_room_id INT          NOT NULL REFERENCES chat_room (id),
+#     user_id      INT          NOT NULL REFERENCES user (id),
+#     content      VARCHAR(100) NOT NULL,
+#     inserted     DATETIME     NOT NULL DEFAULT NOW()
+# );
 
 # 채팅방 테이블
-CREATE TABLE chat_room
-(
-    id       INT PRIMARY KEY AUTO_INCREMENT,
-    inserted DATETIME NOT NULL DEFAULT NOW(),
-    end_time DATETIME NULL
-);
+# CREATE TABLE chat_room
+# (
+#     id       INT PRIMARY KEY AUTO_INCREMENT,
+#     inserted DATETIME NOT NULL DEFAULT NOW(),
+#     end_time DATETIME NULL
+# );
 
 # message 테이블 삭제
 DROP TABLE message;
