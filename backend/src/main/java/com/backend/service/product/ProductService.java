@@ -273,7 +273,7 @@ public class ProductService {
         for (Product product : productList) {
             List<String> productFiles = mapper.selectFileByProductId(product.getId());
             List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}/\{product.getId()}/\{fileName}"))
+                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
                     .toList();
             product.setProductFileList(files);
         }
