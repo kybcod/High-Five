@@ -160,8 +160,6 @@ CREATE TABLE chat_room
     end_time DATETIME NULL
 );
 
-USE prj3;
-
 # message 테이블 삭제
 DROP TABLE message;
 # chat_room 테이블 삭제
