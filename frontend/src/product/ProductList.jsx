@@ -184,18 +184,21 @@ export function ProductList() {
       {/*페이지네이션*/}
       <Center>
         <Box mt={"30px"}>
-          {pageInfo.prevPageNumber && (
-            <>
-              <Button mr={"10px"} onClick={() => handlePageButtonClick(1)}>
-                <FontAwesomeIcon icon={faAnglesLeft} />
-              </Button>
-              <Button
-                mr={"10px"}
-                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleLeft} />
-              </Button>
-            </>
+          {pageInfo.currentPageNumber == 0 || (
+            <Button
+              mr={"10px"}
+              onClick={() => handlePageButtonClick(pageInfo.firstPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAnglesLeft} />
+            </Button>
+          )}
+          {pageInfo.leftPageNumber > 10 && (
+            <Button
+              mr={"10px"}
+              onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </Button>
           )}
 
           {pageNumbers.map((pageNumber) => (
@@ -211,20 +214,20 @@ export function ProductList() {
             </Button>
           ))}
 
-          {pageInfo.nextPageNumber && (
-            <>
-              <Button
-                mr={"10px"}
-                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleRight} />
-              </Button>
-              <Button
-                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAnglesRight} />
-              </Button>
-            </>
+          {pageInfo.nextPageNumber < pageInfo.lastPageNumber && (
+            <Button
+              mr={"10px"}
+              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAngleRight} />
+            </Button>
+          )}
+          {pageInfo.currentPageNumber === pageInfo.lastPageNumber - 1 || (
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAnglesRight} />
+            </Button>
           )}
         </Box>
       </Center>
