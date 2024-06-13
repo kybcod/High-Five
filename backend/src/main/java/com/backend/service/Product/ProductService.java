@@ -2,6 +2,7 @@ package com.backend.service.Product;
 
 import com.backend.domain.Product.Product;
 import com.backend.domain.Product.ProductFile;
+import com.backend.domain.Product.auctionDomain;
 import com.backend.mapper.Product.ProductMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +63,7 @@ public class ProductService {
     }
 
 
-    public List<Product> list(Integer id) {
+    public List<Product> list() {
         List<Product> products = mapper.selectAll();
 
         // 각 product에 모든 파일을 설정
@@ -92,15 +95,33 @@ public class ProductService {
         return Map.of("content", content, "pageInfo", pageInfo);
     }
 
-    public Product get(Integer id) {
+    public Map<String, Object> get(Integer id, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
         mapper.updateViewCount(id);
+
         Product product = mapper.selectById(id);
+        System.out.println("product = " + product);
+
         List<String> productFiles = mapper.selectFileByProductId(product.getId());
         List<ProductFile> files = productFiles.stream()
                 .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
                 .toList();
         product.setProductFileList(files);
-        return product;
+
+        //좋아요
+        Map<String, Object> like = new HashMap<>();
+        if (authentication == null) {
+            like.put("like", false);
+        } else {
+            int i = mapper.selectLikeByProductIdAndUserId(id, authentication.getName());
+            like.put("like", i == 1);
+        }
+        like.put("count", mapper.selectCountLikeByProductId(id));
+
+        result.put("product", product);
+        result.put("like", like);
+        result.put("productFileList", product.getProductFileList());
+        return result;
     }
 
     public void edit(Product product, List<String> removedFileList, MultipartFile[] newFileList) throws IOException {
@@ -155,16 +176,42 @@ public class ProductService {
             s3Client.deleteObject(deleteObjectRequest);
         }
 
+        mapper.deleteLikeByBoardId(id);
         mapper.deleteFileByProductId(id);
-
         mapper.deleteByProductId(id);
     }
 
+    public Map<String, Object> like(Map<String, Object> likeInfo, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("like", false);
+
+        Integer productId = (Integer) likeInfo.get("productId");
+        Integer userId = Integer.valueOf(authentication.getName());
+
+        // 이미 좋아요가 되어 있다면 delete(count=1)
+        int count = mapper.deleteLikeByBoardIdAndUserId(productId, userId);
+
+        // 좋아요 안했으면 insert
+        if (count == 0) {
+            mapper.insertLikeByBoardIdAndUserId(productId, userId);
+            result.put("like", true);
+        }
+        result.put("count", mapper.selectCountLikeByProductId(productId));
+
+        return result;
+    }
+
+    public List<Integer> getLike(Integer userId, Authentication authentication) {
+        return mapper.selectLikeByUserId(userId);
+    }
+
+    public void insertBidPrice(auctionDomain auction) {
+        mapper.insertBidPrice(auction);
+    }
+
+
     public boolean validate(Product product) {
         if (product.getTitle() == null || product.getTitle().isBlank()) {
-            return false;
-        }
-        if (product.getContent() == null || product.getContent().isBlank()) {
             return false;
         }
         if (product.getCategory() == null || product.getCategory().isBlank()) {
@@ -179,12 +226,9 @@ public class ProductService {
         return true;
     }
 
-    public void like(Product product) {
-        Integer productId = product.getId();
-        Integer userId = 1;
-        int count = mapper.deleteLikeByProductIdAndMemberId(productId, userId);
-        if (count == 0) {
-            mapper.insertLikeByProductIdAndMemberId(productId, userId);
-        }
+    //userId 받고 있는지 확인하기 위해 즉 로그인 했는지
+    public boolean hasAccess(Integer id, Authentication authentication) {
+        Product product = mapper.selectById(id);
+        return product.getUserId().equals(Integer.valueOf(authentication.getName()));
     }
 }

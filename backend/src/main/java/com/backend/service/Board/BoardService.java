@@ -1,6 +1,6 @@
 package com.backend.service.Board;
 
-import com.backend.domain.Board;
+import com.backend.domain.Board.Board;
 import com.backend.mapper.Board.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,5 +31,17 @@ public class BoardService {
 
     public List<Board> list() {
         return mapper.selectAll();
+    }
+
+    public Board selectById(Integer id) {
+        return mapper.selectById(id);
+    }
+
+    public void modify(Board board) {
+        mapper.update(board);
+    }
+
+    public int deleteById(Integer id) {
+        return mapper.deleteById(id);
     }
 }

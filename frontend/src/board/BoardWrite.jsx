@@ -7,18 +7,32 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [inserted, setInserted] = useState("");
+  const navigate = useNavigate();
+  const offset = 1000 * 60 * 60 * 9;
+
+  useEffect(() => {
+    const LocalDateTime = new Date(Date.now() + offset).toISOString();
+    setInserted(LocalDateTime);
+  }, []);
 
   function handleClickButton() {
-    axios.post("/api/board/add", {
-      title,
-      content,
-    });
+    axios
+      .post("/api/board/add", {
+        title,
+        content,
+        inserted,
+      })
+      .then(() => {
+        navigate("/board/list");
+      });
   }
 
   return (
@@ -35,6 +49,9 @@ export function BoardWrite() {
           <FormLabel>상품 상세 내용</FormLabel>
           <Textarea onChange={(e) => setContent(e.target.value)} />
         </FormControl>
+      </Box>
+      <Box>
+        <Input type={"hidden"} value={inserted} />
       </Box>
       <Box>
         <Button onClick={handleClickButton}>게시글 생성</Button>

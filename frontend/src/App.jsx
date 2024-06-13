@@ -10,10 +10,16 @@ import { SignUp } from "./user/SignUp.jsx";
 import { Login } from "./Login.jsx";
 import { LoginProvider } from "./component/LoginProvider.jsx";
 import axios from "axios";
-import { QuestionWrite } from "./Question/QuestionWrite.jsx";
-import { QuestionList } from "./Question/QuestionList.jsx";
 import { BoardWrite } from "./board/BoardWrite.jsx";
 import { BoardList } from "./board/BoardList.jsx";
+import { BoardView } from "./board/BoardView.jsx";
+import { BoardModify } from "./board/BoardModify.jsx";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { ChatRoom } from "./chat/ChatRoom.jsx";
+import { UserAuth } from "./UserAuth.jsx";
+import { QuestionWrite } from "./Question/QuestionWrite.jsx";
+import { QuestionList } from "./Question/QuestionList.jsx";
 import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 
@@ -43,6 +49,10 @@ const router = createBrowserRouter([
       { path: "question/edit/:id", element: <QuestionEdit /> },
       { path: "board", element: <BoardWrite /> },
       { path: "board/list", element: <BoardList /> },
+      { path: "board/:board_id", element: <BoardView /> },
+      { path: "board/modify/:board_id", element: <BoardModify /> },
+      { path: "chat", element: <ChatRoom /> },
+      { path: "user/auth", element: <UserAuth /> },
     ],
   },
 ]);
