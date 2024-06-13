@@ -30,7 +30,7 @@ export function Navbar() {
           {account.nickName} 님
         </Center>
       )}
-      <Center onClick={() => navigate("/question")} cursor="pointer">
+      <Center onClick={() => navigate("/question/list")} cursor="pointer">
         QnA
       </Center>
       {account.isLoggedIn() && (
@@ -41,14 +41,6 @@ export function Navbar() {
           MyPage
         </Center>
       )}
-      {account.isLoggedIn() || (
-        <Center onClick={() => navigate("/question/list")} cursor="pointer">
-          QnA
-        </Center>
-      )}
-      <Center onClick={() => navigate("/chat")} cursor="pointer">
-        Chat
-      </Center>
       <Center onClick={() => navigate("/user/auth")}>권한 확인</Center>
     </Flex>
   );
