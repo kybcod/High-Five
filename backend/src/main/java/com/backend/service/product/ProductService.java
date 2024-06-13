@@ -1,5 +1,6 @@
 package com.backend.service.product;
 
+import com.backend.config.PrincipalDetails;
 import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
@@ -41,7 +42,8 @@ public class ProductService {
     String srcPrefix;
 
     public void upload(Product product, MultipartFile[] files, Authentication authentication) throws IOException {
-        product.setUserId(Integer.valueOf(authentication.getName()));
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        product.setUserId(Integer.valueOf(principalDetails.getId()));
         mapper.insert(product);
 
         //파일 추가
@@ -99,6 +101,8 @@ public class ProductService {
 
     public Map<String, Object> get(Integer id, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+
         mapper.updateViewCount(id);
 
         Product product = mapper.selectById(id);
@@ -114,7 +118,7 @@ public class ProductService {
         if (authentication == null) {
             like.put("like", false);
         } else {
-            int i = mapper.selectLikeByProductIdAndUserId(id, authentication.getName());
+            int i = mapper.selectLikeByProductIdAndUserId(id, principalDetails.getId());
             like.put("like", i == 1);
         }
         like.put("count", mapper.selectCountLikeByProductId(id));
@@ -183,11 +187,13 @@ public class ProductService {
     }
 
     public Map<String, Object> like(Map<String, Object> likeInfo, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+
         Map<String, Object> result = new HashMap<>();
         result.put("like", false);
 
         Integer productId = (Integer) likeInfo.get("productId");
-        Integer userId = Integer.valueOf(authentication.getName());
+        Integer userId = Integer.valueOf(principalDetails.getId());
 
         // 이미 좋아요가 되어 있다면 delete(count=1)
         int count = mapper.deleteLikeByBoardIdAndUserId(productId, userId);
@@ -233,8 +239,10 @@ public class ProductService {
 
     //userId 받고 있는지 확인하기 위해 즉 로그인 했는지
     public boolean hasAccess(Integer id, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+
         Product product = mapper.selectById(id);
-        return product.getUserId().equals(Integer.valueOf(authentication.getName()));
+        return product.getUserId().equals(Integer.valueOf(principalDetails.getId()));
     }
 
     // TODO : Mapper 정리
