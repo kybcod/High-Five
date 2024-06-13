@@ -15,7 +15,6 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -57,17 +56,19 @@ public class UserService {
                 Instant now = Instant.now();
 
                 List<String> authorities = mapper.selectAuthoritiesByUserId(db.getId());
-                String authorityString = authorities.stream()
-                        .collect(Collectors.joining(" "));
+                user.setAuthority(authorities);
+                String authorityString = user.getAuth();
+                // TODO. sout 삭제
+                System.out.println("authorityString = " + authorityString);
 
                 JwtClaimsSet claims = JwtClaimsSet.builder()
                         .issuer("LiveAuction")
                         .issuedAt(now)
-                        .expiresAt(now.plusSeconds(60 * 60 * 24))
-                        .subject(db.getEmail())
+                        .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
+                        .subject(db.getId().toString())
                         .claim("nickName", db.getNickName())
                         .claim("scope", authorityString)
-                        .claim("id", db.getId().toString())
+                        .claim("email", db.getEmail())
                         .build();
 
                 token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

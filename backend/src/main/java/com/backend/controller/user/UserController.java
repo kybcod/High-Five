@@ -1,16 +1,15 @@
 package com.backend.controller.user;
 
-import com.backend.config.PrincipalDetails;
 import com.backend.domain.user.User;
 import com.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Map;
 
 @RestController
@@ -44,6 +43,7 @@ public class UserController {
         if (token == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
         return ResponseEntity.ok(token);
     }
 
@@ -71,21 +71,13 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("@CustomAuth.isSelf(#id)")
     @GetMapping("/users/auth:{id}")
     public ResponseEntity getAuth(@PathVariable String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        Principal principal = (Principal) authentication.getPrincipal();
+        String tokenId = principal.getName();
+        System.out.println("tokenId = " + tokenId);
 
-        String email = principal.getUsername();
-        String nickName = principal.getName();
-        String password = principal.getPassword();
-        boolean isLocked = principal.isAccountNonLocked();
-        System.out.println("id = " + id);
-        System.out.println("email = " + email);
-        System.out.println("nickName = " + nickName);
-        System.out.println("password = " + password);
-        System.out.println("isLocked = " + isLocked);
         System.out.println("실행중");
         return null;
     }
