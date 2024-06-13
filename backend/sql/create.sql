@@ -141,6 +141,7 @@ CREATE TABLE bid_list
     status     BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+# -- 변경 전
 # 채팅 메시지 테이블
 CREATE TABLE message
 (
@@ -165,3 +166,24 @@ USE prj3;
 DROP TABLE message;
 # chat_room 테이블 삭제
 DROP TABLE chat_room;
+
+# -- 변경 후
+# 채팅방 테이블
+CREATE TABLE chat_room
+(
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT      NOT NULL REFERENCES product (id),
+    seller_id  INT      NOT NULL REFERENCES product (user_id),
+    user_id    INT      NOT NULL REFERENCES user (id),
+    inserted   DATETIME NOT NULL DEFAULT NOW()
+);
+
+# 채팅 메시지 테이블
+CREATE TABLE chat
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    chat_room_id INT          NOT NULL REFERENCES chat_room (id),
+    user_id      INT          NOT NULL REFERENCES user (id),
+    message      VARCHAR(100) NOT NULL,
+    inserted     DATETIME     NOT NULL DEFAULT NOW()
+);
