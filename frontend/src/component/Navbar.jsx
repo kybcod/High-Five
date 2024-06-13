@@ -35,6 +35,9 @@ export function Navbar() {
           QnA
         </Center>
       )}
+      <Center onClick={() => navigate("/chat")} cursor="pointer">
+        Chat
+      </Center>
       <Center onClick={() => navigate("/user/auth")}>권한 확인</Center>
     </Flex>
   );
