@@ -271,9 +271,9 @@ export function ProductDetails() {
                 <InputRightAddon>원</InputRightAddon>
               </InputGroup>
               <Box>
-                {parseInt(bidPrice) < product.startPrice && (
+                {parseInt(bidPrice) <= product.startPrice && (
                   <FormHelperText color={"red"}>
-                    입찰 금액이 시작 가격보다 작습니다.
+                    입찰 금액이 시작가보다 작습니다.
                   </FormHelperText>
                 )}
               </Box>
