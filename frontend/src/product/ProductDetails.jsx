@@ -191,7 +191,9 @@ export function ProductDetails() {
                   <Box>{product.viewCount}</Box>
                 </Center>
               </Flex>
-              <Button>문의하기</Button>
+              <Button onClick={() => navigate(`/chat/${product.id}`)}>
+                문의하기
+              </Button>
               <Button>신고하기</Button>
             </Flex>
             <Box
