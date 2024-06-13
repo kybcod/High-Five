@@ -1,4 +1,14 @@
-import { Box, Flex, Heading, Spacer, Text, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  CardBody,
+  Flex,
+  Heading,
+  Image,
+  Spacer,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -61,6 +71,16 @@ export function BoardView() {
           </Flex>
         )}
       </Flex>
+      <Box mt={3}>
+        {board.fileList &&
+          board.fileList.map((file) => (
+            <Card m={3} key={file.name}>
+              <CardBody>
+                <Image src={file.src} />
+              </CardBody>
+            </Card>
+          ))}
+      </Box>
       <Box>
         <Textarea value={board.content} readOnly />
       </Box>
