@@ -47,4 +47,11 @@ public interface BoardMapper {
             WHERE id = #{id}
             """)
     int deleteById(Integer id);
+
+    @Select("""
+            SELECT file_name FROM board_file
+            WHERE board_id = #{boardId}
+            """)
+    List<String> selectFileNameByBoardId(Integer boardId);
+
 }

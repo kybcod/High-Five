@@ -37,7 +37,6 @@ public class BoardController {
         return service.selectById(id);
     }
 
-
     @PutMapping("modify")
     public ResponseEntity update(@RequestBody Board board) {
         if (service.validate(board)) {
