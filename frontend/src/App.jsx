@@ -19,6 +19,7 @@ import { BoardModify } from "./board/BoardModify.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChatRoom } from "./chat/ChatRoom.jsx";
+import { UserAuth } from "./UserAuth.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
       { path: "board/:board_id", element: <BoardView /> },
       { path: "board/modify/:board_id", element: <BoardModify /> },
       { path: "chat", element: <ChatRoom /> },
+      { path: "user/auth", element: <UserAuth /> },
     ],
   },
 ]);
