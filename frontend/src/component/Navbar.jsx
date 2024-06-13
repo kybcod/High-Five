@@ -39,6 +39,8 @@ export function Navbar() {
           cursor="pointer"
         >
           MyPage
+        </Center>
+      )}
       {account.isLoggedIn() || (
         <Center onClick={() => navigate("/question/list")} cursor="pointer">
           QnA
