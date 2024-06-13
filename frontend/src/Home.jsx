@@ -9,11 +9,19 @@ export function Home() {
       <Box>
         <Navbar />
       </Box>
-      <Box>
-        <Header />
-      </Box>
-      <Box>
-        <Outlet />
+      <Box
+        mx={{
+          base: 0,
+          lg: 200,
+        }}
+        mt={10}
+      >
+        <Box>
+          <Header />
+        </Box>
+        <Box>
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

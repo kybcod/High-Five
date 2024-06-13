@@ -1,7 +1,7 @@
 package com.backend.mapper.Product;
 
+import com.backend.domain.Product.BidList;
 import com.backend.domain.Product.Product;
-import com.backend.domain.Product.auctionDomain;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Pageable;
 
@@ -11,8 +11,8 @@ import java.util.List;
 public interface ProductMapper {
 
     @Insert("""
-            INSERT INTO product (title, category, start_price, end_time, content)
-            VALUES (#{title}, #{category}, #{startPrice}, #{endTime}, #{content})
+            INSERT INTO product (title, category, start_price, end_time, content, user_id)
+            VALUES (#{title}, #{category}, #{startPrice}, #{endTime}, #{content}, #{userId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Product product);
@@ -30,9 +30,10 @@ public interface ProductMapper {
                    p.start_price,
                    p.start_time,
                    p.end_time,
-                   p.content
+                   p.content,
+                   p.status
             FROM product p
-            ORDER BY p.end_time
+            ORDER BY CASE WHEN p.status = true THEN 0 ELSE 1 END, p.end_time
             """)
     List<Product> selectAll();
 
@@ -43,8 +44,23 @@ public interface ProductMapper {
     List<String> selectFileByProductId(Integer productId);
 
     @Select("""
-            SELECT * FROM product
-            WHERE id = #{id}
+            SELECT p.id,
+                   p.user_id,
+                   p.title,
+                   p.category,
+                   p.start_price,
+                   p.start_time,
+                   p.end_time,
+                   p.content,
+                   p.view_count,
+                   p.status,
+                   COUNT(DISTINCT bl.user_id) AS numberOfJoin,
+                   u.nick_name       AS userNickName
+            FROM product p
+                     LEFT JOIN bid_list bl
+                               ON p.id = bl.product_id
+                     JOIN user u ON u.id = p.user_id
+            WHERE p.id = #{id};
             """)
     Product selectById(Integer id);
 
@@ -58,13 +74,14 @@ public interface ProductMapper {
                     p.start_price,
                     p.start_time,
                     p.end_time,
-                    p.content
+                    p.content,
+                    p.status
             FROM product p
             WHERE p.title LIKE #{pattern}
             <if test="category != null and category != ''">
                 AND p.category = #{category}
             </if>
-            ORDER BY p.end_time
+            ORDER BY CASE WHEN p.status = true THEN 0 ELSE 1 END, p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             </script>
             """)
@@ -128,8 +145,63 @@ public interface ProductMapper {
             INSERT INTO bid_list (product_id, user_id, bid_price)
             VALUES (#{productId}, #{userId}, #{bidPrice})
             """)
-    void insertBidPrice(auctionDomain auction);
+    void insertBidPrice(BidList bid);
 
     @Delete("DELETE FROM product_like WHERE product_id=#{productId}")
     int deleteLikeByBoardId(Integer productId);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM bid_list
+            WHERE product_id = #{productId}
+            AND user_id = #{userId}
+            """)
+    boolean existsBid(Integer productId, Integer userId);
+
+    @Update("""
+            UPDATE bid_list
+            SET bid_price = #{bidPrice}
+            WHERE product_id = #{productId}
+            AND user_id = #{userId}
+            """)
+    int updateBidPrice(BidList bid);
+
+    @Select("""
+            SELECT p.id,
+                   p.title,
+                   p.category,
+                   p.start_price,
+                   p.status,
+                   p.content,
+                   p.start_time,
+                   p.end_time,
+                   bl.status
+            FROM product p
+                     LEFT JOIN bid_list bl
+                               ON p.id = bl.product_id
+            ORDER BY p.end_time;
+            """)
+    List<Product> selectProductAndBidList();
+
+    @Update("""
+            UPDATE product
+            SET status=#{status}
+            WHERE id=#{id}
+            """)
+    int updateStatus(Product product);
+
+    @Update("""
+            UPDATE bid_list
+            SET status = #{status}
+            WHERE product_id = #{productId}
+            """)
+    int updateBidStatusByProductId(Integer productId, boolean status);
+
+    @Select("""
+            SELECT * 
+            FROM product p
+            WHERE p.user_id = #{userId}
+            ORDER BY CASE WHEN p.status = true THEN 0 ELSE 1 END, p.end_time
+            """)
+    List<Product> selectProductsByUserId(Integer userId);
 }

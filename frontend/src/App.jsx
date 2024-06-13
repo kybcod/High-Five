@@ -5,7 +5,7 @@ import { ProductList } from "./product/ProductList.jsx";
 import { ProductUpload } from "./product/ProductUpload.jsx";
 import { MainProduct } from "./product/MainProduct.jsx";
 import { ProductEdit } from "./product/ProductEdit.jsx";
-import { ProductView } from "./product/ProductView.jsx";
+import { ProductDetails } from "./product/ProductDetails.jsx";
 import { SignUp } from "./user/SignUp.jsx";
 import { Login } from "./Login.jsx";
 import { LoginProvider } from "./component/LoginProvider.jsx";
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
       { path: "write", element: <ProductUpload /> },
       { path: "list", element: <ProductList /> },
       { path: "edit/:id", element: <ProductEdit /> },
-      { path: "product/:id", element: <ProductView /> },
+      { path: "product/:id", element: <ProductDetails /> },
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
       { path: "question/write", element: <QuestionWrite /> },
@@ -51,6 +51,8 @@ const router = createBrowserRouter([
       { path: "board/list", element: <BoardList /> },
       { path: "board/:board_id", element: <BoardView /> },
       { path: "board/modify/:board_id", element: <BoardModify /> },
+      { path: "shop/:user_id/products", element: <MyPage /> },
+      { path: "shop/:userId", element: <ProductShop /> },
       { path: "chat", element: <ChatRoom /> },
       { path: "user/auth", element: <UserAuth /> },
     ],

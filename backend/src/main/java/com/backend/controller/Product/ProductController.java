@@ -1,8 +1,8 @@
 package com.backend.controller.Product;
 
 
+import com.backend.domain.Product.BidList;
 import com.backend.domain.Product.Product;
-import com.backend.domain.Product.auctionDomain;
 import com.backend.service.Product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +25,11 @@ public class ProductController {
     private final ProductService service;
 
     @PostMapping
-    public ResponseEntity upload(Product product,
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity upload(Product product, Authentication authentication,
                                  @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
         if (service.validate(product)) {
-            service.upload(product, files);
+            service.upload(product, files, authentication);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -100,12 +101,26 @@ public class ProductController {
     // 참여하기 Controller
     @PostMapping("join")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity joinProduct(@RequestBody auctionDomain auction, Authentication authentication) {
-        if (service.hasAccess(auction.getProductId(), authentication)) {
-            service.insertBidPrice(auction);
+    public ResponseEntity joinProduct(@RequestBody BidList bid, Authentication authentication) {
+        //클라이언트로 부터 받은 userId(상품의 주인)와 토큰을 가지고 있는 userId가 같다면 참여 못함
+        if (service.hasAccess(bid.getProductId(), authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            service.upsertBidPrice(bid);
             return ResponseEntity.ok().build();
-
         }
-        return ResponseEntity.badRequest().build();
+    }
+
+//    // 스케줄링 : 5분마다 실행됨
+//    // TODO :  (fixedRate = 5분)
+////    @Scheduled(fixedRate = 60000) //1분
+//    public void checkEndTimeAndProductState() {
+//        service.updateProductState();
+//    }
+
+    // User와 Product 관련 Controller
+    @GetMapping("user/{userId}")
+    public List<Product> getUserProducts(@PathVariable Integer userId) {
+        return service.getProductsByUserId(userId);
     }
 }

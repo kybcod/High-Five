@@ -3,10 +3,6 @@ USE prj3;
 SELECT *
 FROM product;
 
-# user_id NOT NULL로 바꿔야 함
-ALTER TABLE product
-    MODIFY user_id INT NULL;
-
 SELECT *
 FROM product_like;
 
@@ -14,26 +10,30 @@ SELECT *
 FROM bid_list;
 
 SELECT *
-FROM product;
+FROM user;
+
+DESC product;
 
 SELECT p.id,
        p.title,
        p.category,
        p.start_price,
+       p.status,
+       p.content,
        p.start_time,
        p.end_time,
-       p.content,
-       COUNT(bl.user_id)
+       bl.status
 FROM product p
-         JOIN bid_list bl
-              ON p.id = bl.product_id
-GROUP BY product_id;
+         LEFT JOIN bid_list bl
+                   ON p.id = bl.product_id
+ORDER BY p.end_time;
+
 
 SELECT *
-FROM bid_list
-WHERE product_id;
+FROM bid_list;
 
+SELECT *
+FROM user;
 
-
-DESC product;
-
+SELECT *
+FROM product;
