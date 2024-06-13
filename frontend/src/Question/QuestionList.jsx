@@ -11,9 +11,10 @@ import {
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
 } from "@chakra-ui/react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -70,7 +71,9 @@ export function QuestionList() {
   return (
     <Box>
       <Box mt={5} mb={5}>
-        <Heading>문의 게시판</Heading>
+        <Heading onClick={() => navigate("/question/list")} cursor={"pointer"}>
+          문의 게시판
+        </Heading>
       </Box>
       <Box mb={7}>
         <Table>
@@ -129,32 +132,20 @@ export function QuestionList() {
 
       <Center>
         <Flex gap={1}>
-          {/*{pageInfo.prevPageNumber && (*/}
-          <>
-            <Button mr={"10px"} onClick={() => handlePageButtonClick(1)}>
+          <Tooltip label="맨 앞 페이지" placement="bottom">
+            <Button onClick={() => handlePageButtonClick(1)}>
               <FontAwesomeIcon icon={faAnglesLeft} />
             </Button>
-            <Button
-              mr={"10px"}
-              onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAngleLeft} />
-            </Button>
-          </>
-          {/*)}*/}
-
-          {/*{pageNumbers.map((pageNumber) => {*/}
-          {/*  <Button*/}
-          {/*    mr={"10px"}*/}
-          {/*    onClick={handlePageButtonClick(pageNumber)}*/}
-          {/*    colorScheme={*/}
-          {/*      pageNumber === pageInfo.currentPageNumber ? "teal" : "gray"*/}
-          {/*    }*/}
-          {/*    key={pageNumber}*/}
-          {/*  >*/}
-          {/*    {pageNumber}*/}
-          {/*  </Button>;*/}
-          {/*})}*/}
+          </Tooltip>
+          {pageInfo.prevPageNumber && (
+            <>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAngleLeft} />
+              </Button>
+            </>
+          )}
 
           {pageNumbers.map((pageNumber) => (
             <Button
@@ -168,20 +159,22 @@ export function QuestionList() {
             </Button>
           ))}
 
-          {/*{pageInfo.nextPageNumber && (*/}
-          <>
-            <Button
-              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAngleRight} />
-            </Button>
+          {pageInfo.nextPageNumber && (
+            <>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAngleRight} />
+              </Button>
+            </>
+          )}
+          <Tooltip label="맨 끝 페이지" placement="bottom">
             <Button
               onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
             >
               <FontAwesomeIcon icon={faAnglesRight} />
             </Button>
-          </>
-          {/*)}*/}
+          </Tooltip>
         </Flex>
       </Center>
 

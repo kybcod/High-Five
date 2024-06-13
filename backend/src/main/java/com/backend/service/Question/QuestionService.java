@@ -74,11 +74,11 @@ public class QuestionService {
         Integer countAll = mapper.countAllWithSearch(searchType, keyword);
 
         Integer offset = (page - 1) * 5;
-        Integer lastPageNumber = (countAll - 1) / 10 + 1;
-        Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
-        Integer rightPageNumber = leftPageNumber + 9;
+        Integer lastPageNumber = (countAll - 1) / 5 + 1;
+        Integer leftPageNumber = (page - 1) / 3 * 3 + 1;
+        Integer rightPageNumber = leftPageNumber + 2;
         rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
-        leftPageNumber = rightPageNumber - 9;
+        leftPageNumber = rightPageNumber - 2;
         leftPageNumber = Math.max(leftPageNumber, 1);
         Integer prevPageNumber = leftPageNumber - 1;
         Integer nextPageNumber = rightPageNumber + 1;
