@@ -19,11 +19,11 @@ public class WebSocketController {
     @MessageMapping("/chat") // /app/chatroom
     public void receiveMessage(ChatMessage chatMessage) throws Exception {
         String roomId = String.valueOf(chatMessage.getRoomId());
-        System.out.println("chatMessage = " + chatMessage);
         // 메세지를 보낸 사용자에게 응답을 보냄(채팅 전송)
         template.convertAndSendToUser(roomId, "/queue/chat", chatMessage);
         // 메시지를 채팅방의 다른 사용자에게 보냄(채팅방 조회)
         template.convertAndSend("/topic/chat/" + roomId, chatMessage);
+        // ChatMessage save
     }
 
     @MessageExceptionHandler
