@@ -11,8 +11,9 @@ export function ChatRoom() {
   // -- GPT
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
   const roomId = 1;
+  const userId = 1;
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const client = new StompJs.Client({
@@ -29,8 +30,8 @@ export function ChatRoom() {
       heartbeatOutgoing: 30000,
       onConnect: function () {
         console.log("Connected to WebSocket");
-        client.subscribe(`/user/queue/chat`, callback, { ack: "client" });
-        client.subscribe(`/topic/chat/${roomId}`, callback, { ack: "client" });
+        client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
+        client.subscribe(`/topic/chat/${roomId}`, callback, { ack: "client" }); // 본인
       },
       onStompError: (frame) => {
         console.error("STOMP error: ", frame);
@@ -40,33 +41,32 @@ export function ChatRoom() {
     client.activate(); // 활성화
     setStompClient(client);
 
-    return () => {
-      if (client) {
-        disConnect();
-      }
-    };
+    // return () => {
+    //   if (client) {
+    //     disConnect();
+    //   }
+    // };
   }, [roomId]);
 
   const callback = (message) => {
-    console.log("message: " + message.body);
-    console.log("Received message: ", message.body);
-    setMessages((prevMessages) => [...prevMessages, message.body]);
+    const receivedMessage = JSON.parse(message.body);
+    console.log("receivedMessage : ", receivedMessage);
+    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
     message.ack();
   };
 
   const sendMessage = () => {
     let chatMessage = {
-      roomId: roomId,
-      userId: 1,
+      roomId,
+      userId,
       message: message,
     };
-
+    console.log("send Message!");
     stompClient.publish({
       destination: `/app/chat`,
       body: JSON.stringify(chatMessage),
     });
 
-    console.log("Sent message: ", chatMessage);
     // -- 내가 보낸 거
     // let formattedMessage = chatMessage;
     // console.log("formattedMessage", formattedMessage);
@@ -85,17 +85,21 @@ export function ChatRoom() {
       <Box>
         <Box>
           <Heading>Chat Room: {roomId}</Heading>
+          <Box>
+            {messages.map((msg, index) => (
+              <Box key={index}>
+                <li>
+                  [{msg.roomId}] {msg.userId}: {msg.message}
+                </li>
+              </Box>
+            ))}
+          </Box>
           <Input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
           <Button onClick={sendMessage}>Send</Button>
-          <Box>
-            {messages.map((msg, index) => (
-              <li key={index}>{msg}</li>
-            ))}
-          </Box>
         </Box>
       </Box>
     </Box>
