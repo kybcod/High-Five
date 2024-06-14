@@ -1,36 +1,18 @@
-import { Box, Button, Flex, Input, Spinner } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Spinner, Text } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
+import { ProductStateComp } from "./chatComponent/ProductStateComp.jsx";
 
-const ProductStateComp = ({ productInfo, userId }) => {
-  let productStateText = "";
-  if (productInfo.status == 0 && productInfo.buyerId == userId) {
-    // 후기 작성 모달 떠야함
-    productStateText = "거래완료";
-  } else if (productInfo.status == 1) {
-    // 상품 디테일 페이지로 이동
-    productStateText = "입찰가능";
-  } else {
-    // 버튼 readOnly
-    productStateText = "판매종료";
-  }
-  return (
-    <>
-      <Button colorScheme={"yellow"}>{productStateText}</Button>
-    </>
-  );
-};
-
-function ChatRoomDeleteComp() {
+const ChatRoomDeleteComp = () => {
   return (
     <>
       <Button colorScheme={"yellow"}>채팅삭제</Button>
     </>
   );
-}
+};
 
 export function ChatRoom() {
   const { productId } = useParams();
@@ -55,10 +37,14 @@ export function ChatRoom() {
         setRoomInfo(res.data.chatRoom);
         setProductInfo(res.data.chatProduct);
         setRoomId(res.data.chatRoom.id);
+        if (!res.data.firstChat) {
+          setMessages(res.data.messageList);
+        }
       })
       .catch()
       .finally();
-  }, [roomId]);
+  }, []);
+
   // -- stomp
   useEffect(() => {
     const client = new StompJs.Client({
@@ -144,7 +130,7 @@ export function ChatRoom() {
             <Link to={`/product/${productInfo.id}`}>{productInfo.title}</Link>
           </Box>
           <Button
-            to={`/shop/${roomId.sellerId}/products`}
+            onClick={() => navigate(`/shop/${roomInfo.sellerId}/products`)}
             colorScheme={"yellow"}
           >
             {/* 경로 수정 예정 : 내 정보 확인 -> 닉네임 상점 */}
@@ -164,22 +150,30 @@ export function ChatRoom() {
           <Box>
             {messages.map((msg, index) => (
               <Box key={index}>
-                <li>
-                  [{msg.chatRoomId}]{" "}
-                  {msg.userId == account.id
-                    ? roomInfo.userName
-                    : roomInfo.sellerName}
-                  : {msg.message}
-                </li>
+                <Flex>
+                  <Text>
+                    {msg.userId == account.id ? (
+                      <>{roomInfo.userName}</>
+                    ) : (
+                      <>{roomInfo.sellerName}</>
+                    )}
+                  </Text>
+                  <Text> : {msg.message}</Text>
+                </Flex>
+                <Text fontSize={"xs"}>{msg.inserted}</Text>
               </Box>
             ))}
           </Box>
-          <Input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <Button onClick={sendMessage}>send</Button>
+          <Box>
+            <Flex>
+              <Input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <Button onClick={sendMessage}>send</Button>
+            </Flex>
+          </Box>
         </Box>
       </Box>
     </Box>
