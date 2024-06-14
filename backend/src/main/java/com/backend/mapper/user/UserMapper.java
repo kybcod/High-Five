@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -49,9 +48,9 @@ public interface UserMapper {
 
     // -- ChatService
     @Select("""
-            SELECT id, nick_name
+            SELECT nick_name
             FROM user
-            WHERE id = #{userId} OR id = #{sellerId}
+            WHERE id = #{sellerId}
             """)
-    List<Map<String, Object>> selectChatName(ChatRoom chatRoom);
+    String selectSellerName(ChatRoom chatRoom);
 }
