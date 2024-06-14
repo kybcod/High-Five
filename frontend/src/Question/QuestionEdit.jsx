@@ -22,11 +22,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 export function QuestionEdit() {
   const [question, setQuestion] = useState({});
   const [removeFileList, setRemoveFileList] = useState([]);
+  const [newFilePreviews, setNewFilePreviews] = useState([]);
   const [addFileList, setAddFileList] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -68,6 +68,16 @@ export function QuestionEdit() {
     return <Spinner />;
   }
 
+  // setQuestion({ ...question, fileList: e.target.files }
+  function handleChangeFiles(e) {
+    const newSelectedFiles = Array.from(e.target.files);
+    setAddFileList([...addFileList, ...newSelectedFiles]);
+    const newPreviews = newSelectedFiles.map((file) =>
+      URL.createObjectURL(file),
+    );
+    setNewFilePreviews([...newFilePreviews, ...newPreviews]);
+  }
+
   function handleRemoveSwitch(name, checked) {
     if (checked) {
       setRemoveFileList([...removeFileList, name]);
@@ -76,17 +86,17 @@ export function QuestionEdit() {
     }
   }
 
-  const fileNameList = [];
-  for (let addFile of addFileList) {
-    fileNameList.push(
-      <Flex>
-        <Text fontSize={"md"} mr={3}>
-          {addFile.name}
-        </Text>
-        <Box></Box>
-      </Flex>,
-    );
-  }
+  // const fileNameList = [];
+  // for (let addFile of addFileList) {
+  //   fileNameList.push(
+  //     <Flex>
+  //       <Text fontSize={"md"} mr={3}>
+  //         {addFile.name}
+  //       </Text>
+  //       <Box></Box>
+  //     </Flex>,
+  //   );
+  // }
 
   return (
     <Box>
@@ -161,15 +171,29 @@ export function QuestionEdit() {
               </Card>
             ))}
         </Box>
+
+        <Box m={7}>
+          {newFilePreviews.map((src, index) => (
+            <Card m={1} key={index}>
+              <CardFooter>
+                <Flex gap={3}>
+                  <Text>{addFileList[index].name}</Text>
+                </Flex>
+              </CardFooter>
+              <CardBody>
+                <Image src={src} w={"600px"} />
+              </CardBody>
+            </Card>
+          ))}
+        </Box>
+
         <Box m={7}>
           <FormControl>
             <Input
               type={"file"}
               accept={"image/*"}
               multiple
-              onChange={(e) =>
-                setQuestion({ ...question, fileList: e.target.files })
-              }
+              onChange={handleChangeFiles}
             />
             <FormHelperText>
               이미지 파일만 업로드할 수 있습니다.
