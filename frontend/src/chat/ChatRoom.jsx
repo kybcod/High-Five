@@ -4,8 +4,8 @@ import * as StompJs from "@stomp/stompjs";
 import { useParams } from "react-router-dom";
 
 export function ChatRoom() {
-  const param = useParams(); // 채널을 구분하는 식별자
-  const chatroomId = param.chatroomId;
+  const { product_id } = useParams();
+  // const chatroomId = param.chatroomId;
   const [chatList, setChatList] = useState([]); // 채팅 리스트
   const [chat, setChat] = useState(""); // 입력된 채팅 내용
   // -- GPT
