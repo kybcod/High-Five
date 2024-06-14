@@ -1,5 +1,6 @@
 package com.backend.service.chat;
 
+import com.backend.domain.chat.ChatProduct;
 import com.backend.domain.chat.ChatRoom;
 import com.backend.mapper.chat.ChatMapper;
 import com.backend.mapper.product.ProductMapper;
@@ -10,6 +11,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
@@ -19,7 +23,7 @@ public class ChatService {
     private final ProductMapper productMapper;
     private final UserMapper userMapper;
 
-    public ChatRoom selectChatRoomId(Integer productId, Authentication authentication) {
+    public Map<String, Object> selectChatRoomId(Integer productId, Authentication authentication) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         Integer userId = Integer.valueOf(authentication.getName());
 
@@ -51,6 +55,18 @@ public class ChatService {
         String sellerName = userMapper.selectSellerName(chatRoom);
         chatRoom.setSellerName(sellerName);
 
-        return chatRoom;
+        // -- chat product info
+        // ChatProduct status = 1: 판매중, 0: 판매완료
+        ChatProduct chatProduct = productMapper.selectChatProductInfo(productId);
+        if (chatProduct.getStatus() != 1) {
+            Integer buyerId = productMapper.selectBuyerId(productId);
+            chatProduct.setBuyerId(buyerId);
+        }
+
+        // -- result 에 담기
+        Map<String, Object> result = new HashMap<>();
+        result.put("chatRoom", chatRoom);
+        result.put("chatProduct", chatProduct);
+        return result;
     }
 }
