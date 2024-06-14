@@ -31,14 +31,12 @@ export function LoginProvider({ children }) {
     return authority.includes("admin");
   }
 
-  function login(header) {
-    const token = header.replace("Bearer ", "");
+  function login(token) {
     localStorage.setItem("token", token);
-    console.log(token);
     const payload = jwtDecode(token);
     setExpired(payload.exp);
-    setEmail(payload.sub);
-    setId(payload.id);
+    setEmail(payload.email);
+    setId(payload.sub);
     setNickName(payload.nickName);
     setAuthority(payload.scope.split(" "));
   }
@@ -57,6 +55,7 @@ export function LoginProvider({ children }) {
         id: id,
         nickName: nickName,
         email: email,
+        authority: authority,
         login: login,
         logout: logout,
         isLoggedIn: isLoggedIn,

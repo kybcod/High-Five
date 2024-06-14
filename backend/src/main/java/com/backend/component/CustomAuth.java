@@ -1,11 +1,11 @@
 package com.backend.component;
 
-import com.backend.config.PrincipalDetails;
 import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -16,11 +16,16 @@ public class CustomAuth {
 
     public boolean isSelf(String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        String authId = principalDetails.getId();
+        String tokenEmail = "";
+        String tokenId = "";
+        if (!authentication.getName().equals("anonymousUser")) {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            tokenEmail = jwt.getClaim("email");
+            tokenId = jwt.getClaim("sub");
+        }
+
         String email = mapper.selectEmailById(Integer.valueOf(id));
 
-        System.out.println("어노테이션 체크 = " + principalDetails.getUsername().equals(email));
-        return principalDetails.getUsername().equals(email);
+        return tokenId.equals(id) && tokenEmail.equals(email);
     }
 }

@@ -17,7 +17,6 @@ import { BoardModify } from "./board/BoardModify.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChatRoom } from "./chat/ChatRoom.jsx";
-import { UserAuth } from "./UserAuth.jsx";
 import { QuestionWrite } from "./Question/QuestionWrite.jsx";
 import { QuestionList } from "./Question/QuestionList.jsx";
 import { QuestionView } from "./Question/QuestionView.jsx";

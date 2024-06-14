@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { CustomToast } from "./component/CustomToast.jsx";
 
 export function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const account = useContext(LoginContext);
   const navigate = useNavigate();
@@ -14,9 +14,9 @@ export function Login() {
 
   function handleLogin() {
     axios
-      .postForm("/login", { username, password })
+      .post("api/users/login", { email, password })
       .then((res) => {
-        account.login(res.headers["authorization"]);
+        account.login(res.data.token);
         navigate("/");
       })
       .catch((err) => {
@@ -33,7 +33,7 @@ export function Login() {
       <Box>로그인</Box>
       <FormControl>
         <FormLabel>이메일</FormLabel>
-        <Input onChange={(e) => setUsername(e.target.value)} />
+        <Input onChange={(e) => setEmail(e.target.value)} />
       </FormControl>
       <FormControl>
         <FormLabel>비밀번호</FormLabel>
