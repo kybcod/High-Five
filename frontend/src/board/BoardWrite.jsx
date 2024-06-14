@@ -24,16 +24,12 @@ export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [files, setFiles] = useState([]);
   const [content, setContent] = useState("");
-  const [inserted, setInserted] = useState("");
   const [userId, setUserId] = useState("");
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const offset = 1000 * 60 * 60 * 9;
 
   useEffect(() => {
-    const LocalDateTime = new Date(Date.now() + offset).toISOString();
-    setInserted(LocalDateTime);
     if (account.isLoggedIn(account.id)) {
       setUserId(account.id);
     }
@@ -108,9 +104,6 @@ export function BoardWrite() {
       <FormControl>
         <Textarea onChange={(e) => setContent(e.target.value)} />
       </FormControl>
-      <Box>
-        <Input type={"hidden"} value={inserted} />
-      </Box>
       <Box>
         <Input type={"hidden"} value={account.id} />
       </Box>

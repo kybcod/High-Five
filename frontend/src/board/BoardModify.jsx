@@ -31,15 +31,10 @@ export function BoardModify() {
   const { successToast, errorToast } = CustomToast();
   const { board_id } = useParams();
   const navigate = useNavigate();
-  const offset = 1000 * 60 * 60 * 9;
 
   useEffect(() => {
     axios.get(`/api/board/${board_id}`).then((res) => {
-      const boardData = {
-        ...res.data,
-        inserted: new Date(Date.now() + offset).toISOString(),
-      };
-      setBoard(boardData);
+      setBoard(res.data);
     });
   }, []);
 
@@ -134,9 +129,6 @@ export function BoardModify() {
             value={board.content}
           />
         </FormControl>
-      </Box>
-      <Box>
-        <Input type={"hidden"} value={board.inserted} />
       </Box>
       <Box>
         <Button onClick={handleClickSaveButton}>게시글 수정</Button>
