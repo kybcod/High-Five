@@ -1,6 +1,5 @@
 package com.backend.controller.chat;
 
-import com.backend.domain.chat.ChatRoom;
 import com.backend.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +24,8 @@ public class ChatController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity getChatRoomInfo(
             @PathVariable Integer productId, Authentication authentication) {
-        ChatRoom chatRoom = service.selectChatRoomId(productId, authentication);
-        return ResponseEntity.ok().body(chatRoom);
+        Map<String, Object> result = service.selectChatRoomId(productId, authentication);
+        System.out.println("result = " + result);
+        return ResponseEntity.ok().body(result);
     }
 }
