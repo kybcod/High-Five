@@ -25,7 +25,6 @@ public class ChatController {
     public ResponseEntity getChatRoomInfo(
             @PathVariable Integer productId, Authentication authentication) {
         Map<String, Object> result = service.selectChatRoomId(productId, authentication);
-        System.out.println("result = " + result);
         return ResponseEntity.ok().body(result);
     }
 }
