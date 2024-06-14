@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+import java.util.Map;
+
 @Mapper
 public interface ChatMapper {
 
@@ -34,4 +37,13 @@ public interface ChatMapper {
             VALUES (#{chatRoomId}, #{userId}, #{message})
             """)
     int insertMessage(ChatMessage chatMessage);
+
+    @Select("""
+            SELECT *
+            FROM chat
+            WHERE chat_room_id = #{roomId}
+            ORDER BY id DESC
+            LIMIT 20
+            """)
+    List<Map<String, Object>> selectMessage(Integer roomId);
 }
