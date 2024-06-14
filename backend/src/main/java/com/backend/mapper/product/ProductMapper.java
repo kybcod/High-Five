@@ -212,4 +212,20 @@ public interface ProductMapper {
             WHERE user_id = #{userId}
             """)
     int selectTotalCountByUserId(Integer userId);
+
+    @Select("""
+            SELECT p.id,
+                   p.title,
+                   p.category,
+                   p.start_price,
+                   p.start_time,
+                   p.end_time,
+                   p.content,
+                   p.status,
+                   p.user_id
+            FROM product p
+                     JOIN product_like pl ON p.id = pl.product_id
+            WHERE pl.user_id = #{userId};
+            """)
+    List<Product> selectLikeSelectByUserId(Integer userId);
 }

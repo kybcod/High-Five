@@ -94,8 +94,8 @@ public class ProductController {
     }
 
     @GetMapping("like/{userId}")
-    public List<Integer> getLike(@PathVariable Integer userId, Authentication authentication) {
-        return service.getLike(userId, authentication);
+    public List<Integer> getLike(@PathVariable Integer userId) {
+        return service.getLike(userId);
     }
 
     // 참여하기 Controller
@@ -123,5 +123,11 @@ public class ProductController {
     public Map<String, Object> getUserProducts(@PathVariable Integer userId,
                                                @RequestParam(defaultValue = "1") int page) {
         return service.getProductsByUserId(PageRequest.of(page - 1, 9), userId);
+    }
+
+    // MyPage
+    @GetMapping("user/{userId}/like")
+    public List<Product> getUserProductsLike(@PathVariable Integer userId) {
+        return service.getProductsLikeByUserId(userId);
     }
 }

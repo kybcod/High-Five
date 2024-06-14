@@ -207,9 +207,7 @@ public class ProductService {
         return result;
     }
 
-    public List<Integer> getLike(Integer userId, Authentication authentication) {
-        // TODO. Authentication 값 넣기
-
+    public List<Integer> getLike(Integer userId) {
         return mapper.selectLikeByUserId(userId);
     }
 
@@ -268,8 +266,7 @@ public class ProductService {
 
     public Map<String, Object> getProductsByUserId(PageRequest pageable, Integer userId) {
         int pageSize = pageable.getPageSize();
-        ;
-        int offset = (pageable.getPageNumber()) * pageSize;
+        int offset = (pageable.getPageNumber() + 1) * pageSize;
         List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageSize, offset);
 
         for (Product product : productList) {
@@ -280,11 +277,31 @@ public class ProductService {
             product.setProductFileList(files);
         }
 
+        // 더보기 : 페이지
         int total = mapper.selectTotalCountByUserId(userId);
         Page<Product> page = new PageImpl<>(productList, pageable, total);
         PageInfo pageInfo = new PageInfo().setting(page);
-        return Map.of("productList", productList, "pageInfo", pageInfo);
 
+        // 좋아요
+        List<Product> like = mapper.selectLikeSelectByUserId(userId);
+
+        return Map.of("productList", productList, "pageInfo", pageInfo, "like", like);
+
+    }
+
+    public List<Product> getProductsLikeByUserId(Integer userId) {
+        // 좋아요
+        List<Product> likeProductList = mapper.selectLikeSelectByUserId(userId);
+
+        for (Product product : likeProductList) {
+            List<String> productFiles = mapper.selectFileByProductId(product.getId());
+            List<ProductFile> files = productFiles.stream()
+                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+                    .toList();
+            product.setProductFileList(files);
+        }
+
+        return likeProductList;
     }
 }
 
