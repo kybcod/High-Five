@@ -42,8 +42,8 @@ public class UserController {
     @PutMapping("users/{id}")
     public ResponseEntity updateUser(@RequestBody User user, Authentication authentication) {
         if (service.identification(user.getId(), authentication)) {
-            service.updateUser(user);
-            return ResponseEntity.ok().build();
+            Map<String, Object> token = service.updateUser(user, authentication);
+            return ResponseEntity.ok(token);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

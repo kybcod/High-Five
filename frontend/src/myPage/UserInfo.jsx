@@ -31,7 +31,14 @@ export function UserInfo() {
   }, []);
 
   function handleUserUpdate() {
-    axios.put(`/api/users/${account.id}`, user).then().catch();
+    axios
+      .put(`/api/users/${account.id}`, user)
+      .then((res) => {
+        account.logout;
+        account.login(res.data.token);
+        successToast("회원 정보가 수정되었습니다");
+      })
+      .catch();
   }
 
   function handleUserDelete() {

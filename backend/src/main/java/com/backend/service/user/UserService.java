@@ -6,6 +6,7 @@ import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -153,7 +154,7 @@ public class UserService {
         mapper.deleteUserById(id);
     }
 
-    public void updateUser(User user) {
+    public Map<String, Object> updateUser(User user, Authentication authentication) {
         if (user.getPassword() != null && user.getPassword().length() > 0) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         } else {
@@ -161,5 +162,18 @@ public class UserService {
             user.setPassword(db.getPassword());
         }
         mapper.updateUser(user);
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        Instant now = Instant.now();
+
+        Map<String, Object> claims = jwt.getClaims();
+        JwtClaimsSet.Builder jwtClaimsSetBuilder = JwtClaimsSet.builder();
+        claims.forEach(jwtClaimsSetBuilder::claim);
+        jwtClaimsSetBuilder.claim("nickName", user.getNickName());
+
+        JwtClaimsSet jwtClaimsSet = jwtClaimsSetBuilder.build();
+
+        String token = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
+        return Map.of("token", token);
     }
 }
