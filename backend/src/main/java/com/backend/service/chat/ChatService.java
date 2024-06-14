@@ -12,7 +12,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -23,8 +25,10 @@ public class ChatService {
     private final ChatMapper mapper;
     private final ProductMapper productMapper;
     private final UserMapper userMapper;
+    private final ChatMapper chatMapper;
 
     public Map<String, Object> selectChatRoomId(Integer productId, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         Integer userId = Integer.valueOf(authentication.getName());
 
@@ -45,8 +49,15 @@ public class ChatService {
             } else {
                 System.out.println("chatRoom get fail");
             }
+            // -- 신규 메세지
+            result.put("firstChat", "채팅방 입장을 환영합니다.");
+        } else {
+            // -- 이전 ChatData
+            List<Map<String, Object>> messageList = mapper.selectMessage(roomId);
+            Collections.reverse(messageList);
+            result.put("messageList", messageList);
         }
-        // chat_room DB 정보 조회
+        // -- chat_room info
         ChatRoom chatRoom = mapper.selectChatRoomInfo(roomId);
 
         // userName 추가
@@ -65,9 +76,9 @@ public class ChatService {
         }
 
         // -- result 에 담기
-        Map<String, Object> result = new HashMap<>();
         result.put("chatRoom", chatRoom);
         result.put("chatProduct", chatProduct);
+        System.out.println("result = " + result);
         return result;
     }
 
