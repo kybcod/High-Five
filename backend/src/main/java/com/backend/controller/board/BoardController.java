@@ -38,9 +38,9 @@ public class BoardController {
     }
 
     @PutMapping("modify")
-    public ResponseEntity update(@RequestBody Board board) {
+    public ResponseEntity update(Board board, @RequestParam(value = "removeFileList[]", required = false) List<String> removeFileList) {
         if (service.validate(board)) {
-            service.modify(board);
+            service.modify(board, removeFileList);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

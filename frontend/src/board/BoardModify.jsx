@@ -1,19 +1,33 @@
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
+  Image,
   Input,
+  Switch,
+  Text,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export function BoardModify() {
-  const [board, setBoard] = useState({ title: "", content: "", inserted: "" });
+  const [board, setBoard] = useState({
+    id: "",
+    title: "",
+    content: "",
+  });
+  const [removeFileList, setRemoveFileList] = useState([]);
   const { successToast, errorToast } = CustomToast();
   const { board_id } = useParams();
   const navigate = useNavigate();
@@ -31,9 +45,15 @@ export function BoardModify() {
 
   function handleClickSaveButton() {
     axios
-      .put(`/api/board/modify`, board)
+      .putForm(`/api/board/modify`, {
+        id: board.id,
+        title: board.title,
+        content: board.content,
+        removeFileList,
+      })
       .then(() => {
         successToast("게시물 수정이 완료되었습니다");
+        navigate("/board/list");
       })
       .catch((err) => {
         if (err.response.status === 400) {
@@ -56,6 +76,14 @@ export function BoardModify() {
       });
   }
 
+  function handleRemoveSwitchChange(fileName, checked) {
+    if (checked) {
+      setRemoveFileList([...removeFileList, fileName]);
+    } else {
+      setRemoveFileList(removeFileList.filter((item) => item !== fileName));
+    }
+  }
+
   return (
     <Box>
       <Heading>자유게시판 글 수정</Heading>
@@ -68,6 +96,36 @@ export function BoardModify() {
           />
         </FormControl>
       </Box>
+      <Flex>
+        {board.boardFileList &&
+          board.boardFileList.map((file, index) => (
+            <Card m={3} key={index} w={"400px"}>
+              <CardBody>
+                <Image src={file.filePath} sizes={"100%"} />
+              </CardBody>
+              <CardFooter>
+                <Flex>
+                  <Box mr={3}>
+                    <FontAwesomeIcon icon={faTrashCan} />
+                  </Box>
+                  <Box mr={1}>
+                    <Switch
+                      onChange={(e) =>
+                        handleRemoveSwitchChange(
+                          file.fileName,
+                          e.target.checked,
+                        )
+                      }
+                    />
+                  </Box>
+                  <Box>
+                    <Text>{file.fileName}</Text>
+                  </Box>
+                </Flex>
+              </CardFooter>
+            </Card>
+          ))}
+      </Flex>
       <Box>
         <FormControl>
           <FormLabel>상품 상세 내용</FormLabel>

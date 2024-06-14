@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -74,7 +75,18 @@ public class BoardService {
 
     }
 
-    public void modify(Board board) {
+    public void modify(Board board, List<String> removeFileList) {
+        if (removeFileList != null && !removeFileList.isEmpty()) {
+            for (String fileName : removeFileList) {
+                String key = STR."prj3/\{board.getId()}/\{fileName}";
+                DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key).build();
+                s3Client.deleteObject(objectRequest);
+                mapper.deleteFileByBoardIdAndName(board.getId(), fileName);
+            }
+        }
+
         mapper.update(board);
     }
 

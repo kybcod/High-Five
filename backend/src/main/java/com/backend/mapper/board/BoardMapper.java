@@ -37,7 +37,7 @@ public interface BoardMapper {
 
     @Update("""
             UPDATE board
-            SET title = #{title}, content = #{content}, inserted = #{inserted}
+            SET id = #{id}, title = #{title}, content = #{content}
             WHERE id = #{id}
             """)
     int update(Board board);
@@ -54,4 +54,10 @@ public interface BoardMapper {
             """)
     List<String> selectFileNameByBoardId(Integer boardId);
 
+    @Delete("""
+            DELETE FROM board_file
+            WHERE board_id = #{boardId}
+            AND file_name = #{fileName}
+            """)
+    void deleteFileByBoardIdAndName(Integer boardId, String fileName);
 }
