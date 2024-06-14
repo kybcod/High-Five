@@ -94,4 +94,9 @@ public interface QuestionMapper {
             UPDATE question_board SET title=#{title}, content=#{content} WHERE id=#{id}
             """)
     void updateById(Question question);
+
+    @Delete("""
+            DELETE FROM question_board_file WHERE question_id=#{id} AND file_name=#{name}
+            """)
+    void deleteFileByIdAndFileName(Integer id, String name);
 }

@@ -22,6 +22,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 export function QuestionEdit() {
   const [question, setQuestion] = useState({});
@@ -50,7 +51,7 @@ export function QuestionEdit() {
           position: "bottom",
           duration: 2000,
         });
-        navigate(`/question/list`);
+        navigate(`/question/${id}`);
       })
       .catch(() => {
         toast({
@@ -73,6 +74,18 @@ export function QuestionEdit() {
     } else {
       setRemoveFileList(removeFileList.filter((item) => item !== name));
     }
+  }
+
+  const fileNameList = [];
+  for (let addFile of addFileList) {
+    fileNameList.push(
+      <Flex>
+        <Text fontSize={"md"} mr={3}>
+          {addFile.name}
+        </Text>
+        <Box></Box>
+      </Flex>,
+    );
   }
 
   return (
@@ -123,12 +136,14 @@ export function QuestionEdit() {
                     <Box>
                       <FontAwesomeIcon color={"red"} icon={faTrashCan} />
                     </Box>
-                    <Switch
-                      colorScheme={"pink"}
-                      onChange={(e) =>
-                        handleRemoveSwitch(file.name, e.target.checked)
-                      }
-                    />
+                    <Box>
+                      <Switch
+                        colorScheme={"pink"}
+                        onChange={(e) =>
+                          handleRemoveSwitch(file.name, e.target.checked)
+                        }
+                      />
+                    </Box>
                     <Text>{file.name}</Text>
                   </Flex>
                 </CardFooter>
@@ -140,6 +155,7 @@ export function QuestionEdit() {
                         ? { filter: "blur(8px)" }
                         : {}
                     }
+                    w={"600px"}
                   />
                 </CardBody>
               </Card>
