@@ -5,6 +5,8 @@ import com.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -15,6 +17,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService service;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
     // user_id 멤버 상세
     @GetMapping("users/{id}")
@@ -37,15 +40,22 @@ public class UserController {
 
     // user 수정
     @PutMapping("users/{id}")
-    public void updateUser(@RequestBody User user) {
-
-        service.updateUser(user);
+    public ResponseEntity updateUser(@RequestBody User user, Authentication authentication) {
+        if (service.identification(user.getId(), authentication)) {
+            service.updateUser(user);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     // user 삭제
     @DeleteMapping("users/{id}")
-    public void removeUser(@PathVariable Integer id) {
-        service.removeUserById(id);
+    public ResponseEntity removeUser(@PathVariable Integer id, Authentication authentication) {
+        if (service.identification(id, authentication)) {
+            service.removeUserById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     // 회원가입 시 인증코드 받기
