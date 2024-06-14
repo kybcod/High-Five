@@ -44,4 +44,11 @@ public interface UserMapper {
                 WHERE id = #{userId}
             """)
     String selectEmailById(Integer userId);
+
+    @Select("""
+                SELECT *
+                FROM user
+                WHERE id = #{userId}
+            """)
+    User selectUserById(Integer id);
 }

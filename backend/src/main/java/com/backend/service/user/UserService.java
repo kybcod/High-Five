@@ -133,7 +133,7 @@ public class UserService {
 
         return true;
     }
-    
+
     public boolean hasAccess(Integer id, Authentication authentication) {
         boolean self = authentication.getName().equals(id.toString());
 
@@ -142,5 +142,9 @@ public class UserService {
                 .anyMatch(a -> a.getAuthority().equals("SCOPE_admin"));
 
         return self || isAdmin;
+    }
+
+    public User getUserByUserId(Integer id) {
+        return mapper.selectUserById(id);
     }
 }

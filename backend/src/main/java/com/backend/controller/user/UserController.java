@@ -16,6 +16,14 @@ public class UserController {
 
     private final UserService service;
 
+    // user_id 멤버 상세
+    @GetMapping("users/{id}")
+    public ResponseEntity getUser(@PathVariable Integer id) {
+        User db = service.getUserByUserId(id);
+        db.setPassword("");
+        return ResponseEntity.ok(db);
+    }
+
     // user 회원 가입
     @PostMapping("users")
     public ResponseEntity addUser(@RequestBody User user) {
