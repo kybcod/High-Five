@@ -53,8 +53,9 @@ public class ChatService {
             result.put("firstChat", "채팅방 입장을 환영합니다.");
         } else {
             // -- 이전 ChatData
-            List<Map<String, Object>> messageList = mapper.selectMessage(roomId);
+            List<ChatMessage> messageList = mapper.selectMessage(roomId);
             Collections.reverse(messageList);
+            System.out.println("messageList = " + messageList);
             result.put("messageList", messageList);
         }
         // -- chat_room info
@@ -78,12 +79,10 @@ public class ChatService {
         // -- result 에 담기
         result.put("chatRoom", chatRoom);
         result.put("chatProduct", chatProduct);
-        System.out.println("result = " + result);
         return result;
     }
 
     public void insertMessage(ChatMessage chatMessage) {
         int success = mapper.insertMessage(chatMessage);
-        System.out.println("success = " + success);
     }
 }
