@@ -1,5 +1,6 @@
 package com.backend.service.product;
 
+import com.backend.config.PrincipalDetails;
 import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
@@ -190,7 +191,6 @@ public class ProductService {
         Map<String, Object> result = new HashMap<>();
         result.put("like", false);
 
-        // TODO. 임시로 수정
         Integer productId = (Integer) likeInfo.get("productId");
         Integer userId = Integer.valueOf(authentication.getName());
 
@@ -272,7 +272,7 @@ public class ProductService {
         for (Product product : productList) {
             List<String> productFiles = mapper.selectFileByProductId(product.getId());
             List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}/\{product.getId()}/\{fileName}"))
+                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
                     .toList();
             product.setProductFileList(files);
         }

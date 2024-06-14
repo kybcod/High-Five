@@ -88,16 +88,15 @@ export function MainProduct() {
                 <Box mt={2} w="100%">
                   {product.status ? (
                     <>
-                      {product.productFileList &&
-                        product.productFileList[0] && (
-                          <Image
-                            onClick={() => navigate(`/product/${product.id}`)}
-                            src={product.productFileList[0].filePath}
-                            borderRadius="lg"
-                            w="100%"
-                            h="200px"
-                          />
-                        )}
+                      {product.productFileList && (
+                        <Image
+                          onClick={() => navigate(`/product/${product.id}`)}
+                          src={product.productFileList[0].filePath}
+                          borderRadius="lg"
+                          w="100%"
+                          h="200px"
+                        />
+                      )}
                       <Badge
                         position="absolute"
                         top="1"

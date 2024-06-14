@@ -201,7 +201,7 @@ public interface ProductMapper {
             SELECT * 
             FROM product p
             WHERE p.user_id = #{userId}
-            ORDER BY CASE WHEN p.status = true THEN 0 ELSE 1 END, p.end_time
+            ORDER BY p.end_time
             """)
     List<Product> selectProductsByUserId(Integer userId);
 }
