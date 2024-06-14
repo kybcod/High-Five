@@ -11,30 +11,32 @@ import {
   ModalHeader,
   Spinner,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "./component/LoginProvider.jsx";
+import { CustomToast } from "./component/CustomToast.jsx";
 
 export function UserInfo() {
   const account = useContext(LoginContext);
   const [user, setUser] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { successToast, errorToast } = useToast();
+  const [oldPassword, setOldPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`/api/users/${account.id}`).then((res) => {
       setUser(res.data);
-      console.log(res.data);
     });
   }, []);
 
   function handleUserDelete() {
+    setIsLoading(true);
     axios
-      .delete(`/api/users/${account.id}`, { data: { user } })
+      .delete(`/api/users/${account.id}`, { data: { ...user, oldPassword } })
       .then(() => {
         successToast("회원 탈퇴되었습니다");
         account.logout();
@@ -46,6 +48,11 @@ export function UserInfo() {
         } else {
           errorToast("회원 탈퇴 중 문제가 발생했습니다");
         }
+      })
+      .finally(() => {
+        onClose();
+        setOldPassword("");
+        setIsLoading(false);
       });
   }
 
@@ -66,7 +73,7 @@ export function UserInfo() {
         </FormControl>
         <FormControl>
           <FormLabel>가입일시</FormLabel>
-          <Input readOnly defaultValue={user.inserted} />
+          <Input readOnly value={user.inserted} />
         </FormControl>
         <Link onClick={onOpen}>회원 탈퇴</Link>
       </Box>
@@ -75,11 +82,11 @@ export function UserInfo() {
           <ModalHeader>삭제하시겠습니까?</ModalHeader>
           <ModalBody>비밀번호를 입력해주세요</ModalBody>
           <ModalFooter>
-            <Input
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
-            />
+            <Input onChange={(e) => setOldPassword(e.target.value)} />
             <Button onClick={onClose}>취소</Button>
-            <Button onClick={handleUserDelete}>삭제</Button>
+            <Button onClick={handleUserDelete} isLoading={isLoading}>
+              삭제
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

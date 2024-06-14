@@ -210,4 +210,16 @@ public class UserService {
         User db = mapper.selectUserById(user.getId());
         return passwordEncoder.matches(user.getOldPassword(), db.getPassword());
     }
+
+    public boolean identificationToDelete(User user, Authentication authentication) {
+        User db = mapper.selectUserById(Integer.valueOf(authentication.getName()));
+        if (user.getId() != db.getId()) {
+            return false;
+        }
+        if (!passwordEncoder.matches(user.getOldPassword(), db.getPassword())) {
+            return false;
+        }
+
+        return true;
+    }
 }

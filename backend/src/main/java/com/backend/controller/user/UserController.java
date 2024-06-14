@@ -29,7 +29,6 @@ public class UserController {
         if (db != null) {
             db.setPassword("");
         }
-        System.out.println("db = " + db);
         return ResponseEntity.ok(db);
     }
 
@@ -58,9 +57,9 @@ public class UserController {
     // user 삭제
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("users/{id}")
-    public ResponseEntity removeUser(@PathVariable Integer id, Authentication authentication) {
-        if (service.identification(id, authentication)) {
-            service.removeUserById(id);
+    public ResponseEntity removeUser(@RequestBody User user, Authentication authentication) {
+        if (service.identificationToDelete(user, authentication)) {
+            service.removeUserById(user.getId());
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
