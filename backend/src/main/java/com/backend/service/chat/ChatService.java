@@ -1,5 +1,6 @@
 package com.backend.service.chat;
 
+import com.backend.domain.chat.ChatMessage;
 import com.backend.domain.chat.ChatProduct;
 import com.backend.domain.chat.ChatRoom;
 import com.backend.mapper.chat.ChatMapper;
@@ -68,5 +69,10 @@ public class ChatService {
         result.put("chatRoom", chatRoom);
         result.put("chatProduct", chatProduct);
         return result;
+    }
+
+    public void insertMessage(ChatMessage chatMessage) {
+        int success = mapper.insertMessage(chatMessage);
+        System.out.println("success = " + success);
     }
 }
