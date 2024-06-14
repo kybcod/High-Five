@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   FormLabel,
   Input,
   InputGroup,
@@ -18,6 +19,8 @@ export function UserInfo() {
   const account = useContext(LoginContext);
   const [user, setUser] = useState(null);
   const [oldNickName, setOldNickName] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [isCheckedNickName, setIsCheckedNickName] = useState(false);
   const [passwordCheck, setPasswordCheck] = useState("");
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
@@ -38,7 +41,8 @@ export function UserInfo() {
         account.login(res.data.token);
         successToast("회원 정보가 수정되었습니다");
       })
-      .catch();
+      .catch()
+      .finally(() => setOldPassword(""));
   }
 
   function handleUserDelete() {
@@ -52,22 +56,44 @@ export function UserInfo() {
       .catch(() => errorToast("회원 탈퇴 중 문제가 발생했습니다"));
   }
 
+  function handleDuplicated() {
+    axios
+      .get(`/api/users/nickNames?nickName=${user.nickName}`)
+      .then(() => {
+        errorToast("이미 존재하는 닉네임입니다");
+      })
+      .catch(() => {
+        successToast("사용 가능한 닉네임입니다");
+        setIsCheckedNickName(true);
+      });
+  }
+
   if (user === null) {
     return <Spinner />;
   }
 
-  let isModifyNickName = user.nickName !== oldNickName;
+  let disabledNickNameCheckButton = true;
   let disabled = false;
+  let isPasswordCheck = user.password === passwordCheck;
 
-  if (!isModifyNickName) {
+  if (user.nickName === oldNickName) {
+    disabledNickNameCheckButton = false;
+  }
+
+  if (user.nickName.length === 0) {
+    disabledNickNameCheckButton = false;
+  }
+
+  if (!isCheckedNickName) {
     disabled = true;
   }
 
-  function handleDuplicated() {
-    axios
-      .get(`/api/users/nickNames?nickName=${user.nickName}`)
-      .then(() => errorToast("이미 존재하는 닉네임입니다"))
-      .catch(() => successToast("사용 가능한 닉네임입니다"));
+  if (!isPasswordCheck) {
+    disabled = true;
+  }
+
+  if (!disabledNickNameCheckButton) {
+    disabled = true;
   }
 
   return (
@@ -87,6 +113,9 @@ export function UserInfo() {
         <FormControl>
           <FormLabel>비밀번호 확인</FormLabel>
           <Input onChange={(e) => setPasswordCheck(e.target.value)} />
+          {isPasswordCheck || (
+            <FormHelperText>비밀번호가 일치하지 않습니다</FormHelperText>
+          )}
         </FormControl>
         <FormControl>
           <FormLabel>닉네임</FormLabel>
@@ -94,14 +123,22 @@ export function UserInfo() {
             <Input
               placeholer={"닉네임 중복 확인 필수"}
               value={user.nickName}
-              onChange={(e) => setUser({ ...user, nickName: e.target.value })}
+              onChange={(e) => {
+                setUser({ ...user, nickName: e.target.value });
+                setIsCheckedNickName(false);
+              }}
             />
             <InputRightElement>
-              <Button onClick={handleDuplicated}>중복확인</Button>
+              <Button
+                onClick={handleDuplicated}
+                isDisabled={!disabledNickNameCheckButton}
+              >
+                중복확인
+              </Button>
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button onClick={handleUserUpdate} disabled={disabled}>
+        <Button onClick={handleUserUpdate} isDisabled={disabled}>
           수정
         </Button>
         <Link onClick={handleUserDelete}>회원 탈퇴</Link>
