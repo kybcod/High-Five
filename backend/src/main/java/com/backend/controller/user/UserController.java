@@ -43,9 +43,9 @@ public class UserController {
     }
 
     // user 삭제
-    @DeleteMapping("user/{id}")
+    @DeleteMapping("users/{id}")
     public void removeUser(@PathVariable Integer id) {
-
+        service.removeUserById(id);
     }
 
     // 회원가입 시 인증코드 받기

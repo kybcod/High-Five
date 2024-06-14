@@ -147,4 +147,8 @@ public class UserService {
     public User getUserByUserId(Integer id) {
         return mapper.selectUserById(id);
     }
+
+    public void removeUserById(Integer id) {
+        mapper.deleteUserById(id);
+    }
 }

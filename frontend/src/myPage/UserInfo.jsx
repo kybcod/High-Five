@@ -11,15 +11,18 @@ import {
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { CustomToast } from "../component/CustomToast.jsx";
+import { Link, useNavigate } from "react-router-dom";
 
 export function UserInfo() {
   const account = useContext(LoginContext);
   const [user, setUser] = useState(null);
   const [oldNickName, setOldNickName] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const { successToast, errorToast } = CustomToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(account.id);
     axios.get(`/api/users/${account.id}`).then((res) => {
       const dbUser = res.data;
       setUser({ ...dbUser });
@@ -31,11 +34,20 @@ export function UserInfo() {
     axios.put(`/api/users/${account.id}`, user).then().catch();
   }
 
+  function handleUserDelete() {
+    axios
+      .delete(`/api/users/${account.id}`)
+      .then(() => {
+        successToast("회원 탈퇴되었습니다");
+        account.logout();
+        navigate("/");
+      })
+      .catch(() => errorToast("회원 탈퇴 중 문제가 발생했습니다"));
+  }
+
   if (user === null) {
     return <Spinner />;
   }
-
-  console.log(user);
 
   return (
     <Box>
@@ -47,6 +59,7 @@ export function UserInfo() {
         <FormControl>
           <FormLabel>비밀번호</FormLabel>
           <Input
+            placeholder={"변경 시에만 입력해주세요"}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
           />
         </FormControl>
@@ -68,7 +81,7 @@ export function UserInfo() {
           </InputGroup>
         </FormControl>
         <Button onClick={handleUserUpdate}>수정</Button>
-        <a>회원 탈퇴</a>
+        <Link onClick={handleUserDelete}>회원 탈퇴</Link>
       </Box>
     </Box>
   );
