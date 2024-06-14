@@ -3,7 +3,13 @@ package com.backend.controller.chat;
 import com.backend.domain.chat.ChatRoom;
 import com.backend.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -12,13 +18,12 @@ public class ChatController {
     private final ChatService service;
 
     ///api/chat/${productId}?userId=${account.id}
-    @GetMapping(value = "{productId}", params = "userId")
-//    @PreAuthorize("isAuthenticated()")
-    public void getChatRoomId(
-            @PathVariable Integer productId,
-            @RequestParam("userId") Integer userId) {
-        System.out.println("productId = " + productId);
-        System.out.println("userId = " + userId);
-        ChatRoom chatRoom = service.selectChatRoomId(productId, userId);
+    // 채팅방 첫 입장 시 룸 정보 조회
+    @GetMapping("{productId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity getChatRoomInfo(
+            @PathVariable Integer productId, Authentication authentication) {
+        ChatRoom chatRoom = service.selectChatRoomId(productId, authentication);
+        return ResponseEntity.ok().body(chatRoom);
     }
 }
