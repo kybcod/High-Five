@@ -1,5 +1,6 @@
 package com.backend.mapper.product;
 
+import com.backend.domain.chat.ChatProduct;
 import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
 import org.apache.ibatis.annotations.*;
@@ -212,4 +213,19 @@ public interface ProductMapper {
             WHERE id = #{productId}
             """)
     Integer selectProductSellerId(Integer productId);
+
+    @Select("""
+            SELECT id, title, status
+            FROM product
+            WHERE id =#{productId}
+            """)
+    ChatProduct selectChatProductInfo(Integer productId);
+
+    @Select("""
+            SELECT b.user_id buyerId
+            FROM product p
+                     LEFT JOIN bid_list b ON p.id = b.product_id
+            WHERE b.product_id = #{productId};
+            """)
+    Integer selectBuyerId(Integer productId);
 }
