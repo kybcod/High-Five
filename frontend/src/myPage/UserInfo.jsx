@@ -15,8 +15,8 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { LoginContext } from "./component/LoginProvider.jsx";
-import { CustomToast } from "./component/CustomToast.jsx";
+import { LoginContext } from "../component/LoginProvider.jsx";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function UserInfo() {
   const account = useContext(LoginContext);
@@ -73,7 +73,7 @@ export function UserInfo() {
         </FormControl>
         <FormControl>
           <FormLabel>가입일시</FormLabel>
-          <Input readOnly value={user.inserted} />
+          <Input readOnly value={user.signupDateAndTime} />
         </FormControl>
         <Link onClick={onOpen}>회원 탈퇴</Link>
       </Box>

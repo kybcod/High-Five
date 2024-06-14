@@ -69,9 +69,9 @@ public class UserController {
     // TODO. 나중에 활성화
     @GetMapping("users/codes")
     public void sendCode(String phoneNumber) {
-//        String verificationCode = service.sendMessage(phoneNumber);
-        // TODO. 인증 확인 API 분리
-//        service.checkVerificationCode(verificationCode, "");
+        String verificationCode = service.sendMessage(phoneNumber);
+//         TODO. 인증 확인 API 분리
+        service.checkVerificationCode(verificationCode, "");
     }
 
     // user 로그인
