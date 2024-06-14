@@ -38,6 +38,7 @@ public class UserController {
     // user 수정
     @PutMapping("users/{id}")
     public void updateUser(@RequestBody User user) {
+
         service.updateUser(user);
     }
 

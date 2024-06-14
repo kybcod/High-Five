@@ -49,6 +49,13 @@ export function UserInfo() {
     return <Spinner />;
   }
 
+  let isModifyNickName = user.nickName !== oldNickName;
+  let disabled = false;
+
+  if (!isModifyNickName) {
+    disabled = true;
+  }
+
   function handleDuplicated() {
     axios
       .get(`/api/users/nickNames?nickName=${user.nickName}`)
@@ -87,7 +94,9 @@ export function UserInfo() {
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button onClick={handleUserUpdate}>수정</Button>
+        <Button onClick={handleUserUpdate} disabled={disabled}>
+          수정
+        </Button>
         <Link onClick={handleUserDelete}>회원 탈퇴</Link>
       </Box>
     </Box>
