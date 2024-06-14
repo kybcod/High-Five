@@ -12,9 +12,7 @@ export function Navbar() {
   return (
     <Flex gap={2} bgColor={"lightgreen"} cursor={"pointer"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
-      {account.isLoggedIn() && (
-        <Center onClick={() => navigate("/write")}>upload</Center>
-      )}
+
       {account.isLoggedIn() || (
         <Center onClick={() => navigate("/signup")}>signup</Center>
       )}
@@ -41,7 +39,6 @@ export function Navbar() {
           MyPage
         </Center>
       )}
-      <Center onClick={() => navigate("/user/auth")}>권한 확인</Center>
     </Flex>
   );
 }

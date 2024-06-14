@@ -23,8 +23,6 @@ public class User {
             auth = authority.stream()
                     .collect(Collectors.joining(" "));
         }
-        System.out.println("auth = " + auth);
-        System.out.println("authority = " + authority);
         return auth;
     }
 }

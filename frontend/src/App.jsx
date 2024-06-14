@@ -17,7 +17,6 @@ import { BoardModify } from "./board/BoardModify.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChatRoom } from "./chat/ChatRoom.jsx";
-import { UserAuth } from "./UserAuth.jsx";
 import { QuestionWrite } from "./Question/QuestionWrite.jsx";
 import { QuestionList } from "./Question/QuestionList.jsx";
 import { QuestionView } from "./Question/QuestionView.jsx";
@@ -38,25 +37,35 @@ const router = createBrowserRouter([
     path: "/",
     element: <Home />,
     children: [
+      //   product
       { index: true, element: <MainProduct /> },
       { path: "write", element: <ProductUpload /> },
       { path: "list", element: <ProductList /> },
       { path: "edit/:id", element: <ProductEdit /> },
       { path: "product/:id", element: <ProductDetails /> },
+      { path: "shop/:userId", element: <ProductShop /> },
+
+      // user
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
+
+      //question
       { path: "question/write", element: <QuestionWrite /> },
       { path: "question/list", element: <QuestionList /> },
       { path: "question/:id", element: <QuestionView /> },
       { path: "question/edit/:id", element: <QuestionEdit /> },
+
+      //board
       { path: "board", element: <BoardWrite /> },
       { path: "board/list", element: <BoardList /> },
       { path: "board/:board_id", element: <BoardView /> },
       { path: "board/modify/:board_id", element: <BoardModify /> },
-      { path: "shop/:user_id/products", element: <MyPage /> },
-      { path: "shop/:userId", element: <ProductShop /> },
+
+      //my page
+      { path: "shop/:userId/products", element: <MyPage /> },
+
+      //채팅방
       { path: "chat/:product_id", element: <ChatRoom /> },
-      { path: "user/auth", element: <UserAuth /> },
     ],
   },
 ]);
