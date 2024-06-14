@@ -140,7 +140,7 @@ export function ProductDetails() {
         <Heading
           color={"blue"}
           cursor={"pointer"}
-          onClick={() => navigate(`/shop/${product.userId}`)}
+          // onClick={() => navigate(`/shop/${product.userId}`)}
         >
           {product.userNickName}
         </Heading>

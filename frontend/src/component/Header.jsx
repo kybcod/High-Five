@@ -11,12 +11,14 @@ import {
 } from "@chakra-ui/react";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "./LoginProvider.jsx";
 
 export function Header() {
   const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
 
   function handleSearchClick(keyword) {
     navigate(`/list?keyword=${keyword}`);
@@ -55,7 +57,13 @@ export function Header() {
         </Center>
         <Spacer />
         <Center>
-          <Box>판매하기</Box>
+          <Box>
+            {account.isLoggedIn() && (
+              <Center onClick={() => navigate("/write")} cursor={"pointer"}>
+                판매하기
+              </Center>
+            )}
+          </Box>
         </Center>
         <Center>
           <Box>채팅방</Box>
