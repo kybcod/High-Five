@@ -151,4 +151,14 @@ public class UserService {
     public void removeUserById(Integer id) {
         mapper.deleteUserById(id);
     }
+
+    public void updateUser(User user) {
+        if (user.getPassword() != null && user.getPassword().length() > 0) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            User db = mapper.selectUserById(user.getId());
+            user.setPassword(db.getPassword());
+        }
+        mapper.updateUser(user);
+    }
 }

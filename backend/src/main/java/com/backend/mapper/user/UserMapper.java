@@ -1,10 +1,7 @@
 package com.backend.mapper.user;
 
 import com.backend.domain.user.User;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -60,4 +57,12 @@ public interface UserMapper {
                     """
     )
     int deleteUserById(Integer id);
+
+    @Update("""
+                UPDATE user
+                SET password = #{password},
+                    nick_name = #{nickName}
+                WHERE id = #{id}
+            """)
+    int updateUser(User user);
 }

@@ -38,8 +38,7 @@ public class UserController {
     // user 수정
     @PutMapping("users/{id}")
     public void updateUser(@RequestBody User user) {
-        System.out.println("user.getPassword() = " + user);
-        System.out.println("user.getNickName() = " + user.getNickName());
+        service.updateUser(user);
     }
 
     // user 삭제
