@@ -107,18 +107,27 @@ export function UserEdit() {
       <Box>
         <FormControl>
           <FormLabel>이메일 주소</FormLabel>
-          <Input placeholer={"변경 불가"} readOnly value={user.email} />
+          <Input
+            variant="flushed"
+            placeholer={"변경 불가"}
+            readOnly
+            value={user.email}
+          />
         </FormControl>
         <FormControl>
           <FormLabel>비밀번호</FormLabel>
           <Input
+            variant="flushed"
             placeholder={"변경 시에만 입력해주세요"}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
           />
         </FormControl>
         <FormControl>
           <FormLabel>비밀번호 확인</FormLabel>
-          <Input onChange={(e) => setPasswordCheck(e.target.value)} />
+          <Input
+            variant="flushed"
+            onChange={(e) => setPasswordCheck(e.target.value)}
+          />
           {isPasswordCheck || (
             <FormHelperText>비밀번호가 일치하지 않습니다</FormHelperText>
           )}
@@ -127,6 +136,7 @@ export function UserEdit() {
           <FormLabel>닉네임</FormLabel>
           <InputGroup>
             <Input
+              variant="flushed"
               placeholer={"닉네임 중복 확인 필수"}
               value={user.nickName}
               onChange={(e) => {
@@ -153,7 +163,10 @@ export function UserEdit() {
           <ModalHeader>수정하시겠습니까?</ModalHeader>
           <ModalBody>비밀번호를 입력해주세요</ModalBody>
           <ModalFooter>
-            <Input onChange={(e) => setOldPassword(e.target.value)} />
+            <Input
+              variant="flushed"
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
             <Button onClick={onClose}>취소</Button>
             <Button onClick={handleUserUpdate} isLoading={isLoading}>
               수정

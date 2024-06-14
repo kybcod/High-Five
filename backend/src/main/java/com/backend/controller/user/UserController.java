@@ -24,7 +24,6 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("users/{id}")
     public ResponseEntity getUser(@PathVariable Integer id) {
-        System.out.println("id = " + id);
         User db = service.getUserByUserId(id);
         if (db != null) {
             db.setPassword("");

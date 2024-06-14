@@ -7,7 +7,7 @@ import { MainProduct } from "./product/MainProduct.jsx";
 import { ProductEdit } from "./product/ProductEdit.jsx";
 import { ProductDetails } from "./product/ProductDetails.jsx";
 import { SignUp } from "./user/SignUp.jsx";
-import { Login } from "./Login.jsx";
+import { Login } from "./user/Login.jsx";
 import { LoginProvider } from "./component/LoginProvider.jsx";
 import axios from "axios";
 import { BoardWrite } from "./board/BoardWrite.jsx";

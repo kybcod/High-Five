@@ -65,15 +65,20 @@ export function UserInfo() {
       <Box>
         <FormControl>
           <FormLabel>이메일 주소</FormLabel>
-          <Input placeholer={"변경 불가"} readOnly value={user.email || ""} />
+          <Input
+            variant="flushed"
+            placeholer={"변경 불가"}
+            readOnly
+            value={user.email || ""}
+          />
         </FormControl>
         <FormControl>
           <FormLabel>닉네임</FormLabel>
-          <Input readOnly value={user.nickName || ""} />
+          <Input variant="flushed" readOnly value={user.nickName || ""} />
         </FormControl>
         <FormControl>
           <FormLabel>가입일시</FormLabel>
-          <Input readOnly value={user.signupDateAndTime} />
+          <Input variant="flushed" readOnly value={user.signupDateAndTime} />
         </FormControl>
         <Link onClick={onOpen}>회원 탈퇴</Link>
       </Box>
@@ -82,7 +87,10 @@ export function UserInfo() {
           <ModalHeader>삭제하시겠습니까?</ModalHeader>
           <ModalBody>비밀번호를 입력해주세요</ModalBody>
           <ModalFooter>
-            <Input onChange={(e) => setOldPassword(e.target.value)} />
+            <Input
+              variant="flushed"
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
             <Button onClick={onClose}>취소</Button>
             <Button onClick={handleUserDelete} isLoading={isLoading}>
               삭제
