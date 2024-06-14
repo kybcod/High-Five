@@ -1,6 +1,5 @@
 package com.backend.service.product;
 
-import com.backend.config.PrincipalDetails;
 import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
