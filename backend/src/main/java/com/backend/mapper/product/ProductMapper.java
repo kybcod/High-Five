@@ -211,5 +211,5 @@ public interface ProductMapper {
             FROM product
             WHERE id = #{productId}
             """)
-    Integer selectProductUserId(Integer productId);
+    Integer selectProductSellerId(Integer productId);
 }
