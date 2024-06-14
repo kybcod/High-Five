@@ -204,4 +204,12 @@ public interface ProductMapper {
             ORDER BY p.end_time
             """)
     List<Product> selectProductsByUserId(Integer userId);
+
+    // -- ChatService
+    @Select("""
+            SELECT user_id
+            FROM product
+            WHERE id = #{productId}
+            """)
+    Integer selectProductUserId(Integer productId);
 }
