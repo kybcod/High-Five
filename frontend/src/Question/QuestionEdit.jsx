@@ -53,13 +53,25 @@ export function QuestionEdit() {
         });
         navigate(`/question/${id}`);
       })
-      .catch(() => {
-        toast({
-          status: "error",
-          description: `게시물이 수정되지 않았습니다. 작성한 내용을 확인해주세요.`,
-          position: "bottom",
-          duration: 2500,
-        });
+      .catch((e) => {
+        const code = e.response.status;
+
+        if (code === 400) {
+          toast({
+            description: "등록되지 않았습니다. 내용을 확인해 주세요.",
+            status: "error",
+            position: "bottom",
+            duration: 2500,
+          });
+        }
+        if (code === 413) {
+          toast({
+            description: "파일 크기가 허용된 용량을 초과하였습니다.",
+            status: "error",
+            position: "top",
+            duration: 3000,
+          });
+        }
       })
       .finally(() => {});
   }

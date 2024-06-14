@@ -16,6 +16,7 @@ use prj3;
 
 desc question_board;
 desc question_board_file;
+desc question_board_comment;
 
 ALTER TABLE question_board_file
     MODIFY COLUMN file_name varchar(200) NOT NULL;

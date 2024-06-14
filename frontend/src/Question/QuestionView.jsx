@@ -20,9 +20,10 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function QuestionView() {
   const { id } = useParams();
@@ -30,6 +31,7 @@ export function QuestionView() {
   const navigate = useNavigate();
   const toast = useToast();
   const { onOpen, onClose, isOpen } = useDisclosure();
+  const account = useContext(LoginContext);
 
   useEffect(() => {
     axios
@@ -116,20 +118,26 @@ export function QuestionView() {
               ))}
           </Box>
         </Box>
-        <Box>
-          <Flex justify={"flex-end"} mr={10} mt={5} gap={4}>
-            <Button
-              w={"70px"}
-              colorScheme={"purple"}
-              onClick={() => navigate(`/question/edit/${id}`)}
-            >
-              수정
-            </Button>
-            <Button w={"70px"} onClick={onOpen} colorScheme={"red"}>
-              삭제
-            </Button>
-          </Flex>
-        </Box>
+
+        <Box></Box>
+
+        {account.hasAccess(question.userId) && (
+          <Box>
+            <Flex justify={"flex-end"} mr={10} mt={5} gap={4}>
+              <Button
+                w={"70px"}
+                colorScheme={"purple"}
+                onClick={() => navigate(`/question/edit/${id}`)}
+              >
+                수정
+              </Button>
+              <Button w={"70px"} onClick={onOpen} colorScheme={"red"}>
+                삭제
+              </Button>
+            </Flex>
+          </Box>
+        )}
+
         <Center m={10}>
           <Button
             colorScheme={"teal"}
