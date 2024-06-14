@@ -151,6 +151,35 @@ public class UserService {
     }
 
     public void removeUserById(Integer id) {
+        // TODO. 지울것이 산더미,,
+
+        // 권한 지우기
+        mapper.deleteAuthorityById(id);
+
+        // chatMapper
+        // 채팅룸 지우기
+        // 메시지 지우기
+        // 경매내역 지우기
+
+        // boardMapper
+        // 자유 게시물 파일 지우기
+        // 자유 게시물 좋아요 지우기
+        // 자유 게시물 댓글 지우기
+        // 자유 게시물 지우기
+
+        // questionMapper
+        // QnA 게시물 파일 지우기
+        // QnA 게시물 좋아요 지우기
+        // QnA 게시물 댓글 지우기
+        // QnA 게시물 지우기
+
+        // productMapper
+        // 상품 좋아요 지우기
+        // 상품 파일 지우기
+        // 상품 리뷰 지우기
+        // 상품 게시물 지우기
+
+        // 회원 지우기
         mapper.deleteUserById(id);
     }
 
@@ -175,5 +204,10 @@ public class UserService {
 
         String token = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
         return Map.of("token", token);
+    }
+
+    public boolean identificationToModify(User user) {
+        User db = mapper.selectUserById(user.getId());
+        return passwordEncoder.matches(user.getOldPassword(), db.getPassword());
     }
 }

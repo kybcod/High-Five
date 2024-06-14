@@ -22,7 +22,14 @@ export function Navbar() {
         <Center onClick={() => navigate("/login")}>login</Center>
       )}
       {account.isLoggedIn() && (
-        <Center onClick={() => account.logout()}>logout</Center>
+        <Center
+          onClick={() => {
+            account.logout();
+            navigate("/");
+          }}
+        >
+          logout
+        </Center>
       )}
       {account.isLoggedIn() && (
         <Center>

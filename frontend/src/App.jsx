@@ -23,7 +23,8 @@ import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
 import { ProductShop } from "./product/ProductShop.jsx";
-import { UserInfo } from "./myPage/UserInfo.jsx";
+import { UserEdit } from "./myPage/UserEdit.jsx";
+import { UserInfo } from "./UserInfo.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -65,6 +66,7 @@ const router = createBrowserRouter([
       //my page
       { path: "shop/:userId/products", element: <MyPage /> },
       { path: "shop/:userId/userInfo", element: <UserInfo /> },
+      { path: "shop/:userId/userEdit", element: <UserEdit /> },
 
       //채팅방
       { path: "chat/:product_id", element: <ChatRoom /> },

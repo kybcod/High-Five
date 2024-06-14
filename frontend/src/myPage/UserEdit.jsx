@@ -7,23 +7,29 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Spinner,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
-import { Link, useNavigate } from "react-router-dom";
 
-export function UserInfo() {
+export function UserEdit() {
   const account = useContext(LoginContext);
   const [user, setUser] = useState(null);
   const [oldNickName, setOldNickName] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [isCheckedNickName, setIsCheckedNickName] = useState(false);
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
-  const navigate = useNavigate();
+  const { onClose, isOpen, onOpen } = useDisclosure();
 
   useEffect(() => {
     axios.get(`/api/users/${account.id}`).then((res) => {
@@ -34,26 +40,26 @@ export function UserInfo() {
   }, []);
 
   function handleUserUpdate() {
+    setIsLoading(true);
     axios
-      .put(`/api/users/${account.id}`, user)
+      .put(`/api/users/${account.id}`, { ...user, oldPassword })
       .then((res) => {
         account.logout;
         account.login(res.data.token);
         successToast("회원 정보가 수정되었습니다");
       })
-      .catch()
-      .finally(() => setOldPassword(""));
-  }
-
-  function handleUserDelete() {
-    axios
-      .delete(`/api/users/${account.id}`)
-      .then(() => {
-        successToast("회원 탈퇴되었습니다");
-        account.logout();
-        navigate("/");
+      .catch((err) => {
+        if (err.response.status === 401) {
+          errorToast("비밀번호가 다릅니다");
+        } else {
+          errorToast("회원 정보 수정 중 문제가 발생했습니다");
+        }
       })
-      .catch(() => errorToast("회원 탈퇴 중 문제가 발생했습니다"));
+      .finally(() => {
+        setOldPassword("");
+        onClose();
+        setIsLoading(false);
+      });
   }
 
   function handleDuplicated() {
@@ -138,11 +144,23 @@ export function UserInfo() {
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button onClick={handleUserUpdate} isDisabled={disabled}>
+        <Button onClick={onOpen} isDisabled={disabled}>
           수정
         </Button>
-        <Link onClick={handleUserDelete}>회원 탈퇴</Link>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader>수정하시겠습니까?</ModalHeader>
+          <ModalBody>비밀번호를 입력해주세요</ModalBody>
+          <ModalFooter>
+            <Input onChange={(e) => setOldPassword(e.target.value)} />
+            <Button onClick={onClose}>취소</Button>
+            <Button onClick={handleUserUpdate} isLoading={isLoading}>
+              수정
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

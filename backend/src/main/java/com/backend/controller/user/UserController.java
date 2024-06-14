@@ -5,6 +5,7 @@ import com.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,15 @@ public class UserController {
     private final AuthenticationConfiguration authenticationConfiguration;
 
     // user_id 멤버 상세
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("users/{id}")
     public ResponseEntity getUser(@PathVariable Integer id) {
+        System.out.println("id = " + id);
         User db = service.getUserByUserId(id);
-        db.setPassword("");
+        if (db != null) {
+            db.setPassword("");
+        }
+        System.out.println("db = " + db);
         return ResponseEntity.ok(db);
     }
 
@@ -39,9 +45,10 @@ public class UserController {
     }
 
     // user 수정
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("users/{id}")
     public ResponseEntity updateUser(@RequestBody User user, Authentication authentication) {
-        if (service.identification(user.getId(), authentication)) {
+        if (service.identificationToModify(user)) {
             Map<String, Object> token = service.updateUser(user, authentication);
             return ResponseEntity.ok(token);
         }
@@ -49,6 +56,7 @@ public class UserController {
     }
 
     // user 삭제
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("users/{id}")
     public ResponseEntity removeUser(@PathVariable Integer id, Authentication authentication) {
         if (service.identification(id, authentication)) {

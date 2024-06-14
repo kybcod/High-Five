@@ -65,4 +65,10 @@ public interface UserMapper {
                 WHERE id = #{id}
             """)
     int updateUser(User user);
+
+    @Delete("""
+                DELETE FROM authority
+                WHERE user_id = #{userId}
+            """)
+    int deleteAuthorityById(Integer userId);
 }
