@@ -49,6 +49,13 @@ export function UserInfo() {
     return <Spinner />;
   }
 
+  function handleDuplicated() {
+    axios
+      .get(`/api/users/nickNames?nickName=${user.nickName}`)
+      .then(() => errorToast("이미 존재하는 닉네임입니다"))
+      .catch(() => successToast("사용 가능한 닉네임입니다"));
+  }
+
   return (
     <Box>
       <Box>
@@ -76,7 +83,7 @@ export function UserInfo() {
               onChange={(e) => setUser({ ...user, nickName: e.target.value })}
             />
             <InputRightElement>
-              <Button>중복확인</Button>
+              <Button onClick={handleDuplicated}>중복확인</Button>
             </InputRightElement>
           </InputGroup>
         </FormControl>
