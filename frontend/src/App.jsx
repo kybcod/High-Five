@@ -65,7 +65,7 @@ const router = createBrowserRouter([
       { path: "shop/:userId/products", element: <MyPage /> },
 
       //채팅방
-      { path: "chat/:product_id", element: <ChatRoom /> },
+      { path: "chat/:productId", element: <ChatRoom /> },
     ],
   },
 ]);
