@@ -28,10 +28,7 @@ export function UserInfo() {
   }, []);
 
   function handleUserUpdate() {
-    // axios
-    //   .put(`/api/users/${account.id}`)
-    //   .then()
-    //   .catch();
+    axios.put(`/api/users/${account.id}`, user).then().catch();
   }
 
   if (user === null) {
@@ -50,7 +47,7 @@ export function UserInfo() {
         <FormControl>
           <FormLabel>비밀번호</FormLabel>
           <Input
-            onChange={(e) => setUser({ ...user, setPassword: e.target.value })}
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
           />
         </FormControl>
         <FormControl>

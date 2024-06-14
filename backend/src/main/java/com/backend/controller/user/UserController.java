@@ -35,6 +35,19 @@ public class UserController {
 //        return ResponseEntity.badRequest().build();
     }
 
+    // user 수정
+    @PutMapping("users/{id}")
+    public void updateUser(@RequestBody User user) {
+        System.out.println("user.getPassword() = " + user);
+        System.out.println("user.getNickName() = " + user.getNickName());
+    }
+
+    // user 삭제
+    @DeleteMapping("user/{id}")
+    public void removeUser(@PathVariable Integer id) {
+
+    }
+
     // 회원가입 시 인증코드 받기
     // TODO. 나중에 활성화
     @GetMapping("users/codes")
