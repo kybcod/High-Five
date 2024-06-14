@@ -25,7 +25,8 @@ export function MyShop() {
   useEffect(() => {
     axios.get(`/api/products/user/${account.id}`).then((res) => {
       console.log(res.data);
-      setProductList(res.data);
+      setProductList(res.data.productList);
+      setPageInfo(res.data.pageInfo);
     });
   }, []);
 

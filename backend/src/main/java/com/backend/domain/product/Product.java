@@ -35,7 +35,7 @@ public class Product {
             return duration.toMinutes() + "분 전";
         } else if (duration.toHours() < 24) {
             return duration.toHours() + "시간 전";
-        } else if (duration.toDays() < 7) {
+        } else if (duration.toDays() < 32) {
             return duration.toDays() + "일 전";
         } else {
             Period period = Period.between(startTime.toLocalDate(), now.toLocalDate());

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -265,8 +266,11 @@ public class ProductService {
         }
     }
 
-    public List<Product> getProductsByUserId(Integer userId) {
-        List<Product> productList = mapper.selectProductsByUserId(userId);
+    public Map<String, Object> getProductsByUserId(PageRequest pageable, Integer userId) {
+        int pageSize = pageable.getPageSize();
+        ;
+        int offset = (pageable.getPageNumber()) * pageSize;
+        List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageSize, offset);
 
         for (Product product : productList) {
             List<String> productFiles = mapper.selectFileByProductId(product.getId());
@@ -275,7 +279,12 @@ public class ProductService {
                     .toList();
             product.setProductFileList(files);
         }
-        return productList;
+
+        int total = mapper.selectTotalCountByUserId(userId);
+        Page<Product> page = new PageImpl<>(productList, pageable, total);
+        PageInfo pageInfo = new PageInfo().setting(page);
+        return Map.of("productList", productList, "pageInfo", pageInfo);
+
     }
 }
 

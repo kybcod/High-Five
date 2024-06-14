@@ -202,6 +202,14 @@ public interface ProductMapper {
             FROM product p
             WHERE p.user_id = #{userId}
             ORDER BY p.end_time
+            LIMIT #{pageSize} OFFSET #{offset}
             """)
-    List<Product> selectProductsByUserId(Integer userId);
+    List<Product> selectProductsByUserIdWithPagination(Integer userId, Integer pageSize, Integer offset);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM product
+            WHERE user_id = #{userId}
+            """)
+    int selectTotalCountByUserId(Integer userId);
 }

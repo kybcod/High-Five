@@ -120,7 +120,8 @@ public class ProductController {
 
     // User와 Product 관련 Controller
     @GetMapping("user/{userId}")
-    public List<Product> getUserProducts(@PathVariable Integer userId) {
-        return service.getProductsByUserId(userId);
+    public Map<String, Object> getUserProducts(@PathVariable Integer userId,
+                                               @RequestParam(defaultValue = "1") int page) {
+        return service.getProductsByUserId(PageRequest.of(page - 1, 9), userId);
     }
 }

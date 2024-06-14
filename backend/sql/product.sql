@@ -35,5 +35,6 @@ FROM bid_list;
 SELECT *
 FROM user;
 
-SELECT *
-FROM product;
+SELECT COUNT(*)
+FROM product
+WHERE user_id = 10;
