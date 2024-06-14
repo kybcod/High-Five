@@ -39,6 +39,7 @@ export function Navbar() {
           MyPage
         </Center>
       )}
+      <Center onClick={() => navigate("/board/list")}>자유게시판</Center>
     </Flex>
   );
 }
