@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface ChatMapper {
@@ -45,5 +44,5 @@ public interface ChatMapper {
             ORDER BY id DESC
             LIMIT 20
             """)
-    List<Map<String, Object>> selectMessage(Integer roomId);
+    List<ChatMessage> selectMessage(Integer roomId);
 }
