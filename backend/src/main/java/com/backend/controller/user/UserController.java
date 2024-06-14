@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -109,5 +110,12 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    // user 리스트 조회
+    @GetMapping("/users/list")
+    public ResponseEntity list() {
+        List<User> list = service.getUserList();
+        return ResponseEntity.ok(list);
     }
 }

@@ -222,4 +222,8 @@ public class UserService {
 
         return true;
     }
+
+    public List<User> getUserList() {
+        return mapper.selectUserList();
+    }
 }

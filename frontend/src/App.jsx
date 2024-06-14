@@ -25,6 +25,7 @@ import { MyPage } from "./myPage/MyPage.jsx";
 import { ProductShop } from "./product/ProductShop.jsx";
 import { UserEdit } from "./myPage/UserEdit.jsx";
 import { UserInfo } from "./myPage/UserInfo.jsx";
+import { UserList } from "./user/UserList.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
       // user
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
+      { path: "user/list", element: <UserList /> },
 
       //question
       { path: "question/write", element: <QuestionWrite /> },

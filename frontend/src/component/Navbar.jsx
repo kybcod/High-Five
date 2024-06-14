@@ -51,6 +51,7 @@ export function Navbar() {
       <Center onClick={() => navigate(`/shop/${account.id}/userInfo`)}>
         userInfo
       </Center>
+      <Center onClick={() => navigate("/user/list")}>UserList</Center>
     </Flex>
   );
 }

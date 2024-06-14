@@ -71,4 +71,10 @@ public interface UserMapper {
                 WHERE user_id = #{userId}
             """)
     int deleteAuthorityById(Integer userId);
+
+    @Select("""
+                SELECT id, email, nick_name, inserted
+                FROM user
+            """)
+    List<User> selectUserList();
 }
