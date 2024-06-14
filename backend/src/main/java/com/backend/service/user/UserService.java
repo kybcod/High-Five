@@ -133,7 +133,7 @@ public class UserService {
 
         return true;
     }
-
+    
     public boolean hasAccess(Integer id, Authentication authentication) {
         boolean self = authentication.getName().equals(id.toString());
 

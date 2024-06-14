@@ -11,6 +11,7 @@ public class User {
     private Integer id;
     private String email;
     private String password;
+    private String oldPassword;
     private String nickName;
     private String phoneNumber;
     private Integer blackCount;

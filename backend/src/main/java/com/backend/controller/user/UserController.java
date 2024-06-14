@@ -16,6 +16,7 @@ public class UserController {
 
     private final UserService service;
 
+    // user 회원 가입
     @PostMapping("users")
     public ResponseEntity addUser(@RequestBody User user) {
         //TODO:나중에 주석 풀기
@@ -26,6 +27,7 @@ public class UserController {
 //        return ResponseEntity.badRequest().build();
     }
 
+    // 회원가입 시 인증코드 받기
     // TODO. 나중에 활성화
     @GetMapping("users/codes")
     public void sendCode(String phoneNumber) {
@@ -34,6 +36,7 @@ public class UserController {
 //        service.checkVerificationCode(verificationCode, "");
     }
 
+    // user 로그인
     @PostMapping("users/login")
     public ResponseEntity login(@RequestBody User user) {
         Map<String, Object> token = service.issueToken(user);
@@ -45,6 +48,7 @@ public class UserController {
         return ResponseEntity.ok(token);
     }
 
+    // 회원가입 시 email 중복 확인
     @GetMapping("/users/emails")
     public ResponseEntity emails(String email) {
         User user = service.getUserByEmail(email);
@@ -59,6 +63,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    // 회원가입 시 닉네임 중복 확인
     @GetMapping("/users/nickNames")
     public ResponseEntity nickNames(String nickName) {
         User user = service.getUserByNickName(nickName);
