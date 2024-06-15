@@ -38,9 +38,11 @@ public class BoardController {
     }
 
     @PutMapping("modify")
-    public ResponseEntity update(Board board, @RequestParam(value = "removeFileList[]", required = false) List<String> removeFileList) {
+    public ResponseEntity update(Board board,
+                                 @RequestParam(value = "removeFileList[]", required = false) List<String> removeFileList,
+                                 @RequestParam(value = "addFileList[]", required = false) MultipartFile[] addFileList) throws IOException {
         if (service.validate(board)) {
-            service.modify(board, removeFileList);
+            service.modify(board, removeFileList, addFileList);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

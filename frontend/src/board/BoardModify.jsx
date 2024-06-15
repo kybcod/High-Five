@@ -8,8 +8,12 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  IconButton,
   Image,
   Input,
+  List,
+  ListItem,
+  Spacer,
   Switch,
   Text,
   Textarea,
@@ -20,6 +24,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 export function BoardModify() {
   const [board, setBoard] = useState({
@@ -28,6 +33,8 @@ export function BoardModify() {
     content: "",
   });
   const [removeFileList, setRemoveFileList] = useState([]);
+  const [addFileList, setAddFileList] = useState([]);
+  const [addFiles, setAddFiles] = useState([]);
   const { successToast, errorToast } = CustomToast();
   const { board_id } = useParams();
   const navigate = useNavigate();
@@ -45,6 +52,7 @@ export function BoardModify() {
         title: board.title,
         content: board.content,
         removeFileList,
+        addFileList,
       })
       .then(() => {
         successToast("게시물 수정이 완료되었습니다");
@@ -77,6 +85,26 @@ export function BoardModify() {
     } else {
       setRemoveFileList(removeFileList.filter((item) => item !== fileName));
     }
+  }
+
+  const addFileNameList = [];
+  for (let i = 0; i < addFiles.length; i++) {
+    addFileNameList.push(
+      <Box key={i}>
+        <ListItem display="flex" alignItems="center">
+          <Text flex="1">{addFiles[i].name}</Text>
+        </ListItem>
+        <IconButton
+          aria-label="Remove"
+          icon={<DeleteIcon />}
+          onClick={() => {
+            const newFiles = Array.from(addFiles);
+            newFiles.splice(i, 1);
+            setAddFiles(newFiles);
+          }}
+        />
+      </Box>,
+    );
   }
 
   return (
@@ -123,7 +151,26 @@ export function BoardModify() {
       </Flex>
       <Box>
         <FormControl>
-          <FormLabel>상품 상세 내용</FormLabel>
+          <Flex>
+            <FormLabel>상품 상세 내용</FormLabel>
+            <Spacer />
+            <Input
+              multiple
+              type={"file"}
+              accept={"image/*"}
+              onChange={(e) => {
+                setAddFileList(e.target.files);
+              }}
+            />
+          </Flex>
+          {addFileList.length > 0 && (
+            <Box mt={2}>
+              <Heading size="md" mb={2}>
+                선택된 파일 목록
+              </Heading>
+              <List spacing={2}>{addFileNameList}</List>
+            </Box>
+          )}
           <Textarea
             onChange={(e) => setBoard({ ...board, content: e.target.value })}
             value={board.content}
