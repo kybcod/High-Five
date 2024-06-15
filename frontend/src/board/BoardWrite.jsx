@@ -94,12 +94,14 @@ export function BoardWrite() {
             onChange={(e) => setFiles(Array.from(e.target.files))}
           />
         </Flex>
-        <Box mt={2}>
-          <Heading size="md" mb={2}>
-            선택된 파일 목록
-          </Heading>
-          <List spacing={2}>{fileNameList}</List>
-        </Box>
+        {fileNameList.length > 0 && (
+          <Box mt={2}>
+            <Heading size="md" mb={2}>
+              선택된 파일 목록
+            </Heading>
+            <List spacing={2}>{fileNameList}</List>
+          </Box>
+        )}
       </FormControl>
       <FormControl>
         <Textarea onChange={(e) => setContent(e.target.value)} />

@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -88,10 +89,18 @@ export function BoardModify() {
 
   const fileNameList = [];
   for (let i = 0; i < addFileList.length; i++) {
+    let duplicate = false;
+    for (let file of board.boardFileList) {
+      if (file.name === addFileList.name) {
+        duplicate = true;
+        break;
+      }
+    }
     fileNameList.push(
-      <Box key={i}>
+      <Flex key={i}>
         <ListItem display="flex" alignItems="center">
           <Text flex="1">{addFileList[i].name}</Text>
+          {duplicate && <Badge colorScheme={"yellow"}>중복된 파일</Badge>}
         </ListItem>
         <IconButton
           aria-label="Remove"
@@ -102,7 +111,7 @@ export function BoardModify() {
             setAddFileList(newFiles);
           }}
         />
-      </Box>,
+      </Flex>,
     );
   }
 
