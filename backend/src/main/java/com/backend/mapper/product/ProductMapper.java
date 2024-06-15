@@ -202,9 +202,9 @@ public interface ProductMapper {
             FROM product p
             WHERE p.user_id = #{userId}
             ORDER BY p.end_time
-            LIMIT #{pageSize} OFFSET #{offset}
+            LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
-    List<Product> selectProductsByUserIdWithPagination(Integer userId, Integer pageSize, Integer offset);
+    List<Product> selectProductsByUserIdWithPagination(Integer userId, Pageable pageable);
 
     @Select("""
             SELECT COUNT(*)
@@ -228,4 +228,5 @@ public interface ProductMapper {
             WHERE pl.user_id = #{userId};
             """)
     List<Product> selectLikeSelectByUserId(Integer userId);
+
 }

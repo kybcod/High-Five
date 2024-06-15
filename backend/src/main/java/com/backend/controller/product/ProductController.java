@@ -122,7 +122,7 @@ public class ProductController {
     @GetMapping("user/{userId}")
     public Map<String, Object> getUserProducts(@PathVariable Integer userId,
                                                @RequestParam(defaultValue = "1") int page) {
-        return service.getProductsByUserId(PageRequest.of(page - 1, 9), userId);
+        return service.getProductsByUserId(userId, PageRequest.of(page - 1, 9));
     }
 
     // MyPage

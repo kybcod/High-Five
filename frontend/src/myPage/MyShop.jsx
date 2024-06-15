@@ -14,24 +14,60 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export function MyShop() {
-  const [productList, setProductList] = useState(null);
+  const [productList, setProductList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [hasNextPage, setHasNextPage] = useState(true);
   const account = useContext(LoginContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`/api/products/user/${account.id}`).then((res) => {
-      console.log(res.data);
-      setProductList(res.data.productList);
-      setPageInfo(res.data.pageInfo);
-    });
-  }, []);
+    const currentPage = parseInt(searchParams.get("page") || "1");
+    axios
+      .get(`/api/products/user/${account.id}?page=${currentPage}`)
+      .then((res) => {
+        if (currentPage === 1) {
+          // 첫 번째 페이지 로드 시 리스트 초기화
+          setProductList(res.data.productList);
+        } else {
+          // 이후 페이지 로드 시 기존 리스트에 추가
+          setProductList((prevList) => [...prevList, ...res.data.productList]);
+        }
+        setPageInfo(res.data.pageInfo);
+        setHasNextPage(res.data.hasNextPage);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch products", error);
+      });
+  }, [searchParams]);
 
-  if (productList === null) {
+  const handleMoreClick = () => {
+    if (!hasNextPage) return;
+
+    setSearchParams((prevParams) => {
+      const currentPage = parseInt(searchParams.get("page") || "1");
+      const nextPage = currentPage + 1;
+
+      const newParams = new URLSearchParams(prevParams);
+      newParams.set("page", nextPage);
+      return newParams;
+    });
+  };
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  if (productList.length === 0) {
     return <Spinner />;
+  }
+
+  function handleFoldClick() {
+    searchParams.set("page", 1);
+    setSearchParams(searchParams);
   }
 
   return (
@@ -119,6 +155,20 @@ export function MyShop() {
           </GridItem>
         ))}
       </Grid>
+      {hasNextPage ? (
+        <Button mt={4} onClick={handleMoreClick}>
+          더보기
+        </Button>
+      ) : (
+        <Box>
+          <Button mt={4} onClick={handleScrollToTop}>
+            맨 위로
+          </Button>
+          <Button mt={4} onClick={handleFoldClick}>
+            접기
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 }

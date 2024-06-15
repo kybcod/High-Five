@@ -35,15 +35,7 @@ FROM bid_list;
 SELECT *
 FROM user;
 
-SELECT p.id,
-       p.title,
-       p.category,
-       p.start_price,
-       p.start_time,
-       p.end_time,
-       p.content,
-       p.status,
-       p.user_id
+SELECT *
 FROM product p
-         JOIN product_like pl ON p.id = pl.product_id
-WHERE pl.user_id = 10;
+WHERE p.user_id = 10
+ORDER BY p.end_time;

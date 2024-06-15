@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -264,10 +263,8 @@ public class ProductService {
         }
     }
 
-    public Map<String, Object> getProductsByUserId(PageRequest pageable, Integer userId) {
-        int pageSize = pageable.getPageSize();
-        int offset = (pageable.getPageNumber() + 1) * pageSize;
-        List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageSize, offset);
+    public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
+        List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
 
         for (Product product : productList) {
             List<String> productFiles = mapper.selectFileByProductId(product.getId());
@@ -281,11 +278,13 @@ public class ProductService {
         int total = mapper.selectTotalCountByUserId(userId);
         Page<Product> page = new PageImpl<>(productList, pageable, total);
         PageInfo pageInfo = new PageInfo().setting(page);
+        boolean hasNextPage = pageable.getPageNumber() + 1 < page.getTotalPages();
 
         // 좋아요
         List<Product> like = mapper.selectLikeSelectByUserId(userId);
 
-        return Map.of("productList", productList, "pageInfo", pageInfo, "like", like);
+
+        return Map.of("productList", productList, "like", like, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
 
     }
 
@@ -303,6 +302,7 @@ public class ProductService {
 
         return likeProductList;
     }
+
 }
 
 
