@@ -30,6 +30,11 @@ export function LikeList() {
   useEffect(() => {
     axios.get(`/api/products/user/${account.id}/like`).then((res) => {
       setLikeProductList(res.data);
+      const initialLikes = {};
+      res.data.forEach((product) => {
+        initialLikes[product.id] = true;
+      });
+      setLikes(initialLikes);
     });
   }, []);
 
@@ -37,7 +42,21 @@ export function LikeList() {
     return <Spinner />;
   }
 
-  function handleLikeClick(id) {}
+  function handleLikeClick(productId) {
+    axios
+      .put("/api/products/like", {
+        productId: productId,
+      })
+      .then((res) => {
+        setLikes((prevLikes) => ({
+          ...prevLikes,
+          [productId]: res.data.like,
+        }));
+      })
+      .catch((error) => {
+        console.error("Failed to update like status", error);
+      });
+  }
 
   return (
     <Box>
