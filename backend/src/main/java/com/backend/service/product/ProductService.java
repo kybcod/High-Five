@@ -280,17 +280,14 @@ public class ProductService {
         PageInfo pageInfo = new PageInfo().setting(page);
         boolean hasNextPage = pageable.getPageNumber() + 1 < page.getTotalPages();
 
-        // 좋아요
-        List<Product> like = mapper.selectLikeSelectByUserId(userId);
 
-
-        return Map.of("productList", productList, "like", like, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
+        return Map.of("productList", productList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
 
     }
 
-    public List<Product> getProductsLikeByUserId(Integer userId) {
+    public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable) {
         // 좋아요
-        List<Product> likeProductList = mapper.selectLikeSelectByUserId(userId);
+        List<Product> likeProductList = mapper.selectLikeSelectByUserId(userId, pageable);
 
         for (Product product : likeProductList) {
             List<String> productFiles = mapper.selectFileByProductId(product.getId());
@@ -300,7 +297,14 @@ public class ProductService {
             product.setProductFileList(files);
         }
 
-        return likeProductList;
+        int total = mapper.selectCountLikeByUserId(userId);
+
+        // 더보기 : 페이지
+        PageImpl<Product> page = new PageImpl<>(likeProductList, pageable, total);
+        PageInfo pageInfo = new PageInfo().setting(page);
+        boolean hasNextPage = pageable.getPageNumber() + 1 < page.getTotalPages();
+
+        return Map.of("likeProductList", likeProductList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
     }
 
 }

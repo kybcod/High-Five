@@ -35,7 +35,6 @@ FROM bid_list;
 SELECT *
 FROM user;
 
-SELECT *
-FROM product p
-WHERE p.user_id = 10
-ORDER BY p.end_time;
+SELECT COUNT(*)
+FROM product_like
+WHERE user_id = 10;

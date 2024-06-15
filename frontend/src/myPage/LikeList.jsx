@@ -15,28 +15,49 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function LikeList() {
   const [likeProductList, setLikeProductList] = useState(null);
-  const [pageInfo, setPageInfo] = useState({});
   const [likes, setLikes] = useState({});
+  const [pageInfo, setPageInfo] = useState({});
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
   const account = useContext(LoginContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`/api/products/user/${account.id}/like`).then((res) => {
-      setLikeProductList(res.data);
-      const initialLikes = {};
-      res.data.forEach((product) => {
-        initialLikes[product.id] = true;
+    const currentPage = parseInt(searchParams.get("page") || "1");
+    axios
+      .get(`/api/products/user/${account.id}/like?page=${currentPage}`)
+      .then((res) => {
+        if (currentPage === 1) {
+          setLikeProductList(res.data.likeProductList);
+        } else {
+          setLikeProductList((prevList) => [
+            ...prevList,
+            ...res.data.likeProductList,
+          ]);
+        }
+        // 좋아요 상태 업데이트
+        setLikes((prevLikes) => {
+          const updatedLikes = { ...prevLikes };
+          res.data.likeProductList.forEach((product) => {
+            if (prevLikes[product.id] !== undefined) {
+              updatedLikes[product.id] = prevLikes[product.id];
+            } else {
+              updatedLikes[product.id] = true; // 기본값은 true로 설정
+            }
+          });
+          return updatedLikes;
+        });
+        setPageInfo(res.data.pageInfo);
+        setHasNextPage(res.data.hasNextPage);
       });
-      setLikes(initialLikes);
-    });
-  }, []);
+  }, [searchParams]);
 
   if (likeProductList === null) {
     return <Spinner />;
@@ -56,6 +77,23 @@ export function LikeList() {
       .catch((error) => {
         console.error("Failed to update like status", error);
       });
+  }
+
+  function handleMoreClick() {
+    if (!hasNextPage) return;
+
+    const currentPage = parseInt(searchParams.get("page") || "1");
+    searchParams.set("page", currentPage + 1);
+    setSearchParams(searchParams);
+  }
+
+  function handleScrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleFoldClick() {
+    searchParams.set("page", 1);
+    setSearchParams(searchParams);
   }
 
   return (
@@ -164,6 +202,36 @@ export function LikeList() {
           </GridItem>
         ))}
       </Grid>
+      <Box display={"flex"} justifyContent={"center"}>
+        {hasNextPage ? (
+          <Button
+            w={"30%"}
+            colorScheme={"blue"}
+            mt={4}
+            onClick={handleMoreClick}
+          >
+            더보기
+          </Button>
+        ) : likeProductList.length > 9 ? (
+          <Button
+            w={"30%"}
+            colorScheme={"blue"}
+            mt={4}
+            onClick={handleFoldClick}
+          >
+            접기
+          </Button>
+        ) : (
+          <Button
+            w={"30%"}
+            colorScheme={"blue"}
+            mt={4}
+            onClick={handleScrollToTop}
+          >
+            맨 위로
+          </Button>
+        )}
+      </Box>
     </Box>
   );
 }

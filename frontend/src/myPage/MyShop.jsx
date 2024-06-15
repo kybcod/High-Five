@@ -30,10 +30,10 @@ export function MyShop() {
       .get(`/api/products/user/${account.id}?page=${currentPage}`)
       .then((res) => {
         if (currentPage === 1) {
-          // 첫 번째 페이지 로드 시 리스트 초기화
+          // 첫 번째 페이지
           setProductList(res.data.productList);
         } else {
-          // 이후 페이지 로드 시 기존 리스트에 추가
+          // 이후 페이지 : 기존 리스트에 추가
           setProductList((prevList) => [...prevList, ...res.data.productList]);
         }
         setPageInfo(res.data.pageInfo);
@@ -44,30 +44,25 @@ export function MyShop() {
       });
   }, [searchParams]);
 
-  const handleMoreClick = () => {
+  function handleMoreClick() {
     if (!hasNextPage) return;
 
-    setSearchParams((prevParams) => {
-      const currentPage = parseInt(searchParams.get("page") || "1");
-      const nextPage = currentPage + 1;
-
-      const newParams = new URLSearchParams(prevParams);
-      newParams.set("page", nextPage);
-      return newParams;
-    });
-  };
-
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  if (productList.length === 0) {
-    return <Spinner />;
+    const currentPage = parseInt(searchParams.get("page") || "1");
+    searchParams.set("page", currentPage + 1);
+    setSearchParams(searchParams);
   }
 
   function handleFoldClick() {
     searchParams.set("page", 1);
     setSearchParams(searchParams);
+  }
+
+  if (productList.length === 0) {
+    return <Spinner />;
+  }
+
+  function handleScrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
@@ -155,20 +150,36 @@ export function MyShop() {
           </GridItem>
         ))}
       </Grid>
-      {hasNextPage ? (
-        <Button mt={4} onClick={handleMoreClick}>
-          더보기
-        </Button>
-      ) : (
-        <Box>
-          <Button mt={4} onClick={handleScrollToTop}>
-            맨 위로
+      <Box display={"flex"} justifyContent={"center"}>
+        {hasNextPage ? (
+          <Button
+            w={"30%"}
+            colorScheme={"blue"}
+            mt={4}
+            onClick={handleMoreClick}
+          >
+            더보기
           </Button>
-          <Button mt={4} onClick={handleFoldClick}>
+        ) : likeProductList.length > 9 ? (
+          <Button
+            w={"30%"}
+            colorScheme={"blue"}
+            mt={4}
+            onClick={handleFoldClick}
+          >
             접기
           </Button>
-        </Box>
-      )}
+        ) : (
+          <Button
+            w={"30%"}
+            colorScheme={"blue"}
+            mt={4}
+            onClick={handleScrollToTop}
+          >
+            맨 위로
+          </Button>
+        )}
+      </Box>
     </Box>
   );
 }

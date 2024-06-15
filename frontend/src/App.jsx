@@ -22,7 +22,8 @@ import { QuestionList } from "./Question/QuestionList.jsx";
 import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
-import { ProductShop } from "./product/ProductShop.jsx";
+import { LikeList } from "./myPage/LikeList.jsx";
+import { MyShop } from "./myPage/MyShop.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
       { path: "list", element: <ProductList /> },
       { path: "edit/:id", element: <ProductEdit /> },
       { path: "product/:id", element: <ProductDetails /> },
-      { path: "shop/:userId", element: <ProductShop /> },
+      // { path: "shop/:userId", element: <ProductShop /> },
 
       // user
       { path: "signup", element: <SignUp /> },
@@ -62,7 +63,9 @@ const router = createBrowserRouter([
       { path: "board/modify/:board_id", element: <BoardModify /> },
 
       //my page
-      { path: "shop/:userId/products", element: <MyPage /> },
+      { path: "shop/:userId", element: <MyPage /> },
+      { path: "shop/:userId/products/like", element: <LikeList /> },
+      { path: "shop/:userId/products", element: <MyShop /> },
 
       //채팅방
       { path: "chat/:product_id", element: <ChatRoom /> },

@@ -127,7 +127,7 @@ public class ProductController {
 
     // MyPage
     @GetMapping("user/{userId}/like")
-    public List<Product> getUserProductsLike(@PathVariable Integer userId) {
-        return service.getProductsLikeByUserId(userId);
+    public Map<String, Object> getUserProductsLike(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page) {
+        return service.getProductsLikeByUserId(userId, PageRequest.of(page - 1, 9));
     }
 }

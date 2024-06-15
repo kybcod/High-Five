@@ -225,8 +225,15 @@ public interface ProductMapper {
                    p.user_id
             FROM product p
                      JOIN product_like pl ON p.id = pl.product_id
-            WHERE pl.user_id = #{userId};
+            WHERE pl.user_id = #{userId}
+            LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
-    List<Product> selectLikeSelectByUserId(Integer userId);
+    List<Product> selectLikeSelectByUserId(Integer userId, Pageable pageable);
 
+    @Select("""
+            SELECT COUNT(*)
+            FROM product_like
+            WHERE user_id = #{userId};
+            """)
+    int selectCountLikeByUserId(Integer userId);
 }
