@@ -34,7 +34,6 @@ export function BoardModify() {
   });
   const [removeFileList, setRemoveFileList] = useState([]);
   const [addFileList, setAddFileList] = useState([]);
-  const [addFiles, setAddFiles] = useState([]);
   const { successToast, errorToast } = CustomToast();
   const { board_id } = useParams();
   const navigate = useNavigate();
@@ -87,20 +86,20 @@ export function BoardModify() {
     }
   }
 
-  const addFileNameList = [];
-  for (let i = 0; i < addFiles.length; i++) {
-    addFileNameList.push(
+  const fileNameList = [];
+  for (let i = 0; i < addFileList.length; i++) {
+    fileNameList.push(
       <Box key={i}>
         <ListItem display="flex" alignItems="center">
-          <Text flex="1">{addFiles[i].name}</Text>
+          <Text flex="1">{addFileList[i].name}</Text>
         </ListItem>
         <IconButton
           aria-label="Remove"
           icon={<DeleteIcon />}
           onClick={() => {
-            const newFiles = Array.from(addFiles);
+            const newFiles = Array.from(addFileList);
             newFiles.splice(i, 1);
-            setAddFiles(newFiles);
+            setAddFileList(newFiles);
           }}
         />
       </Box>,
@@ -168,7 +167,7 @@ export function BoardModify() {
               <Heading size="md" mb={2}>
                 선택된 파일 목록
               </Heading>
-              <List spacing={2}>{addFileNameList}</List>
+              <List spacing={2}>{fileNameList}</List>
             </Box>
           )}
           <Textarea
