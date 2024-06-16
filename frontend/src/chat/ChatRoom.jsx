@@ -18,14 +18,6 @@ import {
   faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons";
 
-const ChatRoomDeleteComp = () => {
-  return (
-    <>
-      <Button colorScheme={"yellow"}>채팅삭제</Button>
-    </>
-  );
-};
-
 export function ChatRoom() {
   const { productId } = useParams();
   const account = useContext(LoginContext);
