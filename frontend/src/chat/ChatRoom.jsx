@@ -2,14 +2,23 @@ import {
   Box,
   Button,
   Center,
+  Checkbox,
   Flex,
   Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
@@ -37,6 +46,8 @@ export function ChatRoom() {
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState(""); // 입력된 채팅 내용
   const [messages, setMessages] = useState([]); // 채팅 리스트
+  const [reviewList, setReviewList] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   // -- axios.get
   useEffect(() => {
@@ -122,6 +133,17 @@ export function ChatRoom() {
     console.log("Disconnected");
   };
 
+  // -- 모달 클릭 시 리뷰 리스트 가져와서 뿌리기
+  const handleReviewButtonClick = () => {
+    axios
+      .get(`/api/reviews/list`)
+      .then((res) => {
+        setReviewList(res.data);
+      })
+      .catch()
+      .finally();
+  };
+
   // spinner
   if (roomInfo == null) {
     return <Spinner />;
@@ -130,6 +152,15 @@ export function ChatRoom() {
   return (
     <Box w={"70%"}>
       <Box>
+        <Button
+          onClick={() => {
+            onOpen();
+            handleReviewButtonClick();
+          }}
+        >
+          거래완료
+        </Button>
+
         <Flex>
           {/* 뒤로 가기 */}
           <Box w={"10%"}>
@@ -196,7 +227,7 @@ export function ChatRoom() {
             {productInfo.status === 0 &&
             productInfo.buyerId === Number(account.id) ? (
               // 후기 작성 모달 떠야함
-              <Button>거래완료</Button>
+              <Button onClick={isOpen}>거래완료</Button>
             ) : productInfo.status === 1 ? (
               // 상품 디테일 페이지로 이동
               <Button onClick={() => navigate(`/product/${productInfo.id}`)}>
@@ -246,6 +277,22 @@ export function ChatRoom() {
           </Box>
         </Box>
       </Box>
+      {/* 후기 작성 모달 */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>후기 작성</ModalHeader>
+          <ModalBody>
+            {reviewList.map((review, index) => (
+              <Checkbox key={index}>{review.content}</Checkbox>
+            ))}
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>후기 보내기</Button>
+          </ModalFooter>
+          <ModalCloseButton />
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
