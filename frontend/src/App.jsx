@@ -23,6 +23,7 @@ import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
 import { ProductShop } from "./product/ProductShop.jsx";
+import { ChatRoomList } from "./chat/ChatRoomList.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -64,8 +65,9 @@ const router = createBrowserRouter([
       //my page
       { path: "shop/:userId/products", element: <MyPage /> },
 
-      //채팅방
+      // chat
       { path: "chat/:productId", element: <ChatRoom /> },
+      { path: "chat/list", element: <ChatRoomList /> },
     ],
   },
 ]);
