@@ -5,6 +5,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { ProductStateComp } from "./chatComponent/ProductStateComp.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 const ChatRoomDeleteComp = () => {
   return (
@@ -18,16 +20,15 @@ export function ChatRoom() {
   const { productId } = useParams();
   const account = useContext(LoginContext);
   // const chatroomId = param.chatroomId;
-  const [chatList, setChatList] = useState([]); // 채팅 리스트
+  // const [chatList, setChatList] = useState([]); // 채팅 리스트
   const [roomInfo, setRoomInfo] = useState(null);
   const [productInfo, setProductInfo] = useState(null);
   const [roomId, setRoomId] = useState(null);
-  const [chat, setChat] = useState(""); // 입력된 채팅 내용
+  // const [chat, setChat] = useState(""); // 입력된 채팅 내용
   // -- GPT
   const [stompClient, setStompClient] = useState(null);
-  const [message, setMessage] = useState("");
-  const userId = 1;
-  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState(""); // 입력된 채팅 내용
+  const [messages, setMessages] = useState([]); // 채팅 리스트
   const navigate = useNavigate();
   // -- axios.get
   useEffect(() => {
@@ -45,8 +46,11 @@ export function ChatRoom() {
       .finally();
   }, []);
 
+  console.log("roomId : ", roomId);
+
   // -- stomp
   useEffect(() => {
+    console.log("roomId2 : ", roomId);
     const client = new StompJs.Client({
       brokerURL: "ws://localhost:8080/ws",
       // connectHeaders: {
@@ -62,7 +66,7 @@ export function ChatRoom() {
       onConnect: function () {
         console.log("Connected to WebSocket");
         client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
-        client.subscribe(`/topic/chat/${roomInfo.id}`, callback, {
+        client.subscribe(`/topic/chat/${roomId}`, callback, {
           ack: "client",
         }); // 본인
       },
@@ -74,16 +78,15 @@ export function ChatRoom() {
     client.activate(); // 활성화
     setStompClient(client);
 
-    // return () => {
-    //   if (client) {
-    //     disConnect();
-    //   }
-    // };
-  }, []); // 로딩 속도 붙길래 걸어버림
+    return () => {
+      if (stompClient) {
+        disConnect();
+      }
+    };
+  }, [roomId]);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
-    console.log("receivedMessage : ", receivedMessage);
     setMessages((prevMessages) => [...prevMessages, receivedMessage]);
     message.ack();
   };
@@ -94,7 +97,6 @@ export function ChatRoom() {
       userId: account.id,
       message: message,
     };
-    console.log("send Message!");
     stompClient.publish({
       destination: `/app/chat`,
       body: JSON.stringify(chatMessage),
@@ -102,7 +104,6 @@ export function ChatRoom() {
 
     // -- 내가 보낸 거
     let formattedMessage = chatMessage;
-    console.log("formattedMessage", formattedMessage);
     setMessages((prevMessages) => [...prevMessages, formattedMessage]);
     setMessage("");
   };
@@ -112,16 +113,24 @@ export function ChatRoom() {
     stompClient.deactivate();
     console.log("Disconnected");
   };
+
+  // spinner
   if (roomInfo == null) {
     return <Spinner />;
   }
 
+  // 뒤로 이동
+  const handleBackButtonClick = () => {
+    disConnect();
+    navigate(-1);
+  };
+
   return (
     <Box>
       <Box>
-        <Button colorScheme={"yellow"}>
-          {/* 경로 수정 : 채팅 목록*/}
-          ChatList
+        <Button onClick={handleBackButtonClick}>
+          {/* 뒤로 가기 */}
+          <FontAwesomeIcon icon={faAngleLeft} />
         </Button>
       </Box>
       <Box>
@@ -152,7 +161,8 @@ export function ChatRoom() {
               <Box key={index}>
                 <Flex>
                   <Text>
-                    {msg.userId == account.id ? (
+                    {/* 변수의 형식까지 비교하기 위해 account.id 문자열을 숫자로 변경 */}
+                    {msg.userId === Number(account.id) ? (
                       <>{roomInfo.userName}</>
                     ) : (
                       <>{roomInfo.sellerName}</>
@@ -171,7 +181,12 @@ export function ChatRoom() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
-              <Button onClick={sendMessage}>send</Button>
+              <Button
+                isDisabled={message.trim().length === 0}
+                onClick={sendMessage}
+              >
+                send
+              </Button>
             </Flex>
           </Box>
         </Box>
