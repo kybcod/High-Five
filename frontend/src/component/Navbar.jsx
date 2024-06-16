@@ -33,7 +33,7 @@ export function Navbar() {
       </Center>
       {account.isLoggedIn() && (
         <Center
-          onClick={() => navigate(`/shop/${account.id}`)}
+          onClick={() => navigate(`/myPage/${account.id}`)}
           cursor="pointer"
         >
           MyPage

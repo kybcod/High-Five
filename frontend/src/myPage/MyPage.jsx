@@ -42,12 +42,12 @@ export function MyPage({ tab }) {
   useEffect(() => {
     const tabName = location.pathname.split("/").pop();
     if (!Object.keys(tabIndex).includes(tabName)) {
-      navigate(`/shop/${userId}`);
+      navigate(`/myPage/${userId}`);
     }
   }, []);
 
   const handleTabsChange = (index) => {
-    navigate(`/shop/${userId}/${indexTab[index]}`);
+    navigate(`/myPage/${userId}/${indexTab[index]}`);
   };
 
   return (

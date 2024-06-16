@@ -24,6 +24,7 @@ public class Product {
     private List<ProductFile> productFileList;
     private Integer numberOfJoin;
     private String userNickName;
+    private String maxBidPrice;
 
     public String getTimeFormat() {
         LocalDateTime now = LocalDateTime.now();

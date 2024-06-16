@@ -55,7 +55,8 @@ public interface ProductMapper {
                    p.view_count,
                    p.status,
                    COUNT(DISTINCT bl.user_id) AS numberOfJoin,
-                   u.nick_name       AS userNickName
+                   u.nick_name       AS userNickName,
+                   MAX(bl.bid_price) AS maxBidPrice
             FROM product p
                      LEFT JOIN bid_list bl
                                ON p.id = bl.product_id

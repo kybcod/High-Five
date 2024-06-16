@@ -15,12 +15,13 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function LikeList() {
+  const { userId } = useParams();
   const [likeProductList, setLikeProductList] = useState(null);
   const [likes, setLikes] = useState({});
   const [pageInfo, setPageInfo] = useState({});
@@ -32,7 +33,7 @@ export function LikeList() {
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("page") || "1");
     axios
-      .get(`/api/products/user/${account.id}/like?page=${currentPage}`)
+      .get(`/api/products/user/${userId}/like?page=${currentPage}`)
       .then((res) => {
         if (currentPage === 1) {
           setLikeProductList(res.data.likeProductList);
@@ -92,9 +93,12 @@ export function LikeList() {
   }
 
   function handleFoldClick() {
+    const scrollDuration = 500;
+    setTimeout(() => {
+      searchParams.set("page", 1);
+      setSearchParams(searchParams);
+    }, scrollDuration);
     window.scrollTo({ top: 0, behavior: "smooth" });
-    searchParams.set("page", 1);
-    setSearchParams(searchParams);
   }
 
   return (

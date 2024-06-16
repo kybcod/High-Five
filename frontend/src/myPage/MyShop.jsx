@@ -14,9 +14,10 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 export function MyShop() {
+  const { userId } = useParams();
   const [productList, setProductList] = useState(null);
   const [pageInfo, setPageInfo] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,7 +28,7 @@ export function MyShop() {
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("page") || "1");
     axios
-      .get(`/api/products/user/${account.id}?page=${currentPage}`)
+      .get(`/api/products/user/${userId}?page=${currentPage}`)
       .then((res) => {
         if (currentPage === 1) {
           // 첫 번째 페이지
@@ -53,13 +54,13 @@ export function MyShop() {
   }
 
   function handleFoldClick() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
     const scrollDuration = 500;
     setTimeout(() => {
       searchParams.set("page", 1);
       setSearchParams(searchParams);
     }, scrollDuration);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleScrollToTop() {

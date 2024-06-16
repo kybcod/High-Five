@@ -65,12 +65,12 @@ const router = createBrowserRouter([
       { path: "board/modify/:board_id", element: <BoardModify /> },
 
       //my page
-      { path: "shop/:userId", element: <Navigate to="info" /> },
-      { path: "shop/:userId/info", element: <MyPage tab="info" /> },
-      { path: "shop/:userId/like", element: <MyPage tab="like" /> },
-      { path: "shop/:userId/shop", element: <MyPage tab="shop" /> },
-      { path: "shop/:userId/bids", element: <MyPage tab="bids" /> },
-      { path: "shop/:userId/reviews", element: <MyPage tab="reviews" /> },
+      { path: "myPage/:userId", element: <Navigate to="info" /> },
+      { path: "myPage/:userId/info", element: <MyPage tab="info" /> },
+      { path: "myPage/:userId/like", element: <MyPage tab="like" /> },
+      { path: "myPage/:userId/shop", element: <MyPage tab="shop" /> },
+      { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },
+      { path: "myPage/:userId/reviews", element: <MyPage tab="reviews" /> },
 
       //채팅방
       { path: "chat/:product_id", element: <ChatRoom /> },
