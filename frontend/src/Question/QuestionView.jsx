@@ -24,6 +24,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
+import { CommentComponent } from "./CommentComponent.jsx";
 
 export function QuestionView() {
   const { id } = useParams();
@@ -119,24 +120,24 @@ export function QuestionView() {
           </Box>
         </Box>
 
-        <Box></Box>
+        {/*{account.hasAccess(question.userId) && (*/}
+        <Box>
+          <Flex justify={"flex-end"} mr={10} mt={5} gap={4}>
+            <Button
+              w={"70px"}
+              colorScheme={"purple"}
+              onClick={() => navigate(`/question/edit/${id}`)}
+            >
+              수정
+            </Button>
+            <Button w={"70px"} onClick={onOpen} colorScheme={"red"}>
+              삭제
+            </Button>
+          </Flex>
+        </Box>
+        {/*)}*/}
 
-        {account.hasAccess(question.userId) && (
-          <Box>
-            <Flex justify={"flex-end"} mr={10} mt={5} gap={4}>
-              <Button
-                w={"70px"}
-                colorScheme={"purple"}
-                onClick={() => navigate(`/question/edit/${id}`)}
-              >
-                수정
-              </Button>
-              <Button w={"70px"} onClick={onOpen} colorScheme={"red"}>
-                삭제
-              </Button>
-            </Flex>
-          </Box>
-        )}
+        <CommentComponent questionId={question.id} />
 
         <Center m={10}>
           <Button

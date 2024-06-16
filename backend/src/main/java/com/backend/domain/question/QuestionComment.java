@@ -6,10 +6,9 @@ import java.time.LocalDateTime;
 
 @Data
 public class QuestionComment {
-    private String id;
-    private String question_id;
-    private String user_id;
+    private Integer id;
+    private Integer questionId;
+    private Integer userId;
     private String content;
     private LocalDateTime inserted;
-
 }
