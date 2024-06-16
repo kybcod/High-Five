@@ -19,6 +19,7 @@ import {
   Spinner,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
@@ -50,6 +51,9 @@ export function ChatRoom() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [reviewList, setReviewList] = useState([]);
   const [reviewId, setReviewId] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const toast = useToast();
   const navigate = useNavigate();
   // -- axios.get
   useEffect(() => {
@@ -93,7 +97,7 @@ export function ChatRoom() {
       },
     });
 
-    client.activate(); // 활성화
+    // client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
@@ -154,6 +158,37 @@ export function ChatRoom() {
     } else {
       setReviewId([reviewId.filter((reviewId) => reviewId !== id)]);
     }
+  };
+
+  const handleReviewSaveButtonClick = (event) => {
+    event.preventDefault();
+    setLoading(true);
+    axios
+      .post(`/api/reviews/${roomInfo.productId}`, {
+        productId: roomInfo.productId,
+        userId: account.id,
+        reviewId,
+      })
+      .then(() => {
+        toast({
+          description: "리뷰가 등록되었습니다.",
+          status: "success",
+          position: "top",
+        });
+        onClose();
+      })
+      .catch((e) => {
+        const code = e.response.status;
+
+        if (code === 400) {
+          toast({
+            status: "error",
+            description: "리뷰 등록 실패",
+            position: "top",
+          });
+        }
+      })
+      .finally(() => setLoading(false));
   };
 
   // spinner
@@ -306,7 +341,13 @@ export function ChatRoom() {
             ))}
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>후기 보내기</Button>
+            <Button
+              isLoading={loading}
+              isDisabled={reviewId.length === 0}
+              onClick={handleReviewSaveButtonClick}
+            >
+              후기 보내기
+            </Button>
           </ModalFooter>
           <ModalCloseButton />
         </ModalContent>
