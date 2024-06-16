@@ -1,10 +1,10 @@
 package com.backend.controller.review;
 
+import com.backend.domain.review.Review;
+import com.backend.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -19,5 +19,10 @@ public class ReviewController {
     public ResponseEntity reviewList() {
         List<Map<String, Object>> result = service.selectReviewList();
         return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("{productId}")
+    public void reviewAdd(@PathVariable Integer productId, @RequestBody Review review) {
+        service.insertReview(review);
     }
 }
