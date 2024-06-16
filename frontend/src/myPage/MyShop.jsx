@@ -176,14 +176,16 @@ export function MyShop() {
             접기
           </Button>
         ) : (
-          <Button
-            w={"30%"}
-            colorScheme={"blue"}
-            mt={4}
-            onClick={handleScrollToTop}
-          >
-            맨 위로
-          </Button>
+          productList.length > 6 && (
+            <Button
+              w={"30%"}
+              colorScheme={"blue"}
+              mt={4}
+              onClick={handleScrollToTop}
+            >
+              맨 위로
+            </Button>
+          )
         )}
       </Box>
     </Box>

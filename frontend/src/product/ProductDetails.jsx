@@ -135,7 +135,6 @@ export function ProductDetails() {
   return (
     <Box>
       <Category />
-      {/*TODO:user 상점 조회 고미*/}
       <Box mt={3}>
         <Heading
           color={"blue"}

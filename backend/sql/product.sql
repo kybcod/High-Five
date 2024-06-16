@@ -56,5 +56,9 @@ SELECT *
 FROM user;
 
 SELECT *
-FROM product_like
-WHERE user_id = 37;
+FROM product p
+         JOIN user u
+              ON p.user_id = u.id
+WHERE p.user_id = 30
+ORDER BY p.end_time
+LIMIT 9 OFFSET 0;
