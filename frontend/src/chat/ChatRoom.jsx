@@ -1,7 +1,15 @@
-import { Box, Button, Flex, Input, Spinner, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Input,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { ProductStateComp } from "./chatComponent/ProductStateComp.jsx";
@@ -119,39 +127,50 @@ export function ChatRoom() {
     return <Spinner />;
   }
 
-  // 뒤로 이동
-  const handleBackButtonClick = () => {
-    disConnect();
-    navigate(-1);
-  };
-
   return (
     <Box>
       <Box>
-        <Button onClick={handleBackButtonClick}>
+        <Button
+          onClick={() => {
+            disConnect();
+            navigate(-1);
+          }}
+        >
           {/* 뒤로 가기 */}
           <FontAwesomeIcon icon={faAngleLeft} />
         </Button>
       </Box>
+      <Box cursor={"pointer"}>
+        {/* 상대방 상점 */}
+        <Center fontSize={"xl"}>
+          {roomInfo.sellerId === Number(account.id) ? (
+            <Text onClick={() => navigate(`/shop/${roomInfo.userId}/products`)}>
+              {roomInfo.userName}
+            </Text>
+          ) : (
+            <Text
+              onClick={() => navigate(`/shop/${roomInfo.sellerId}/products`)}
+            >
+              {roomInfo.sellerName}
+            </Text>
+          )}
+        </Center>
+      </Box>
       <Box>
         <Flex>
-          <Box>
-            <Link to={`/product/${productInfo.id}`}>{productInfo.title}</Link>
+          <Box cursor={"pointer"}>
+            <Text onClick={() => navigate(`/product/${productInfo.id}`)}>
+              {productInfo.title}
+            </Text>
           </Box>
-          <Button
-            onClick={() => navigate(`/shop/${roomInfo.sellerId}/products`)}
-            colorScheme={"yellow"}
-          >
-            {/* 경로 수정 예정 : 내 정보 확인 -> 닉네임 상점 */}
-            {roomInfo.sellerName} 상점
-          </Button>
+          <Button></Button>
         </Flex>
         <Flex>
           <ProductStateComp
             productInfo={productInfo}
             userId={`${account.id}`}
           />
-          <ChatRoomDeleteComp />
+          <Button>채팅삭제</Button>
         </Flex>
       </Box>
       <Box>
