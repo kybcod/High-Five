@@ -9,8 +9,6 @@ export function Navbar() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
 
-  // TODO. 머지 전에 navbar userInfo 삭제
-
   return (
     <Flex gap={2} bgColor={"lightgreen"} cursor={"pointer"}>
       <Center onClick={() => navigate("/")}>HOME</Center>
@@ -48,9 +46,6 @@ export function Navbar() {
           MyPage
         </Center>
       )}
-      <Center onClick={() => navigate(`/shop/${account.id}/userInfo`)}>
-        userInfo
-      </Center>
       <Center onClick={() => navigate("/user/list")}>UserList</Center>
     </Flex>
   );

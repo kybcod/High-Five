@@ -3,7 +3,12 @@ package com.backend.service.user;
 import com.backend.component.SmsUtil;
 import com.backend.domain.user.User;
 import com.backend.mapper.user.UserMapper;
+import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -223,7 +228,15 @@ public class UserService {
         return true;
     }
 
-    public List<User> getUserList() {
-        return mapper.selectUserList();
+    public Map<String, Object> getUserList(int page) {
+        int offset = (page - 1) * 10;
+        List<User> userList = mapper.selectUserList(offset);
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        int totalUserNumber = mapper.selectTotalUserCount();
+        Page<User> pageImpl = new PageImpl<>(userList, pageable, totalUserNumber);
+        PageInfo paeInfo = new PageInfo().setting(pageImpl);
+
+        return Map.of("userList", userList, "pageInfo", paeInfo);
     }
 }

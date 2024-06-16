@@ -66,6 +66,38 @@ public interface UserMapper {
             """)
     int updateUser(User user);
 
+    @Select("""
+                <script>
+                SELECT id, email, nick_name, inserted
+                FROM user
+                ORDER BY id DESC
+                LIMIT #{offset}, 10
+                </script>
+            """)
+    List<User> selectUserList(int offset);
+
+//    @Select("""
+//                <script>
+//                SELECT id, email, nick_name, inserted
+//                FROM user
+//                    <trim prefix="WHERE" prefixOverrides="OR">
+//                        <bind name="pattern" value="%" + keyword + "%"/>
+//                        <if test="searchType != null">
+//                            <if test="keyword != ''">
+//                                OR email LIKE #{pattern}
+//                                OR nick_name LIKE #{pattern}
+//                            </if>
+//                            <if test searchType == 'black'>
+//                                OR black_count > 5
+//                            </if>
+//                        </if>
+//                    <trim>
+//                ORDER BY id DESC
+//                LIMIT #{offset}, 10
+//                </script>
+//            """)
+//    List<User> selectUserList(int offset);
+
     @Delete("""
                 DELETE FROM authority
                 WHERE user_id = #{userId}
@@ -73,8 +105,7 @@ public interface UserMapper {
     int deleteAuthorityById(Integer userId);
 
     @Select("""
-                SELECT id, email, nick_name, inserted
-                FROM user
+                SELECT COUNT(*) FROM user
             """)
-    List<User> selectUserList();
+    int selectTotalUserCount();
 }
