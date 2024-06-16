@@ -4,6 +4,10 @@ import {
   Center,
   Flex,
   Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Spinner,
   Text,
 } from "@chakra-ui/react";
@@ -15,8 +19,10 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
+  faCircleExclamation,
   faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export function ChatRoom() {
   const { productId } = useParams();
@@ -158,9 +164,21 @@ export function ChatRoom() {
           </Center>
           {/* 채팅방 나가기, 신고하기 */}
           <Box w={"10%"}>
-            <Button>
-              <FontAwesomeIcon icon={faEllipsisVertical} />
-            </Button>
+            <Menu>
+              <MenuButton as={Button}>
+                <FontAwesomeIcon icon={faEllipsisVertical} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem gap={2}>
+                  <FontAwesomeIcon icon={faCircleExclamation} />
+                  신고하기
+                </MenuItem>
+                <MenuItem color={"red"} gap={2}>
+                  <FontAwesomeIcon icon={faTrashCan} />
+                  채팅방 나가기
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Box>
         </Flex>
       </Box>
