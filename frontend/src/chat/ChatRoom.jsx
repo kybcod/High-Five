@@ -188,7 +188,10 @@ export function ChatRoom() {
           });
         }
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setReviewId("");
+      });
   };
 
   // spinner
@@ -330,9 +333,9 @@ export function ChatRoom() {
         <ModalContent>
           <ModalHeader>후기 작성</ModalHeader>
           <ModalBody>
-            {reviewList.map((review, index) => (
+            {reviewList.map((review) => (
               <Checkbox
-                key={index}
+                key={review.id}
                 onChange={handleReviewChange}
                 value={review.id}
               >
