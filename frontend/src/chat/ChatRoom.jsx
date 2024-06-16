@@ -56,11 +56,8 @@ export function ChatRoom() {
       .finally();
   }, []);
 
-  console.log("roomId : ", roomId);
-
   // -- stomp
   useEffect(() => {
-    console.log("roomId2 : ", roomId);
     const client = new StompJs.Client({
       brokerURL: "ws://localhost:8080/ws",
       // connectHeaders: {
@@ -112,6 +109,7 @@ export function ChatRoom() {
       body: JSON.stringify(chatMessage),
     });
 
+    // 전송 시간 추가
     chatMessage.inserted = new Date().toLocaleTimeString();
 
     // -- 내가 보낸 거
@@ -203,7 +201,7 @@ export function ChatRoom() {
       </Box>
       <Box>
         <Box>
-          <Box>
+          <Box h={"500px"} overflow={"auto"}>
             {messages.map((msg, index) => (
               <Box key={index}>
                 <Flex>
