@@ -46,8 +46,10 @@ export function ChatRoom() {
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState(""); // 입력된 채팅 내용
   const [messages, setMessages] = useState([]); // 채팅 리스트
-  const [reviewList, setReviewList] = useState([]);
+  // -- review
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [reviewList, setReviewList] = useState([]);
+  const [reviewId, setReviewId] = useState([]);
   const navigate = useNavigate();
   // -- axios.get
   useEffect(() => {
@@ -133,7 +135,7 @@ export function ChatRoom() {
     console.log("Disconnected");
   };
 
-  // -- 모달 클릭 시 리뷰 리스트 가져와서 뿌리기
+  // -- review list
   const handleReviewButtonClick = () => {
     axios
       .get(`/api/reviews/list`)
@@ -142,6 +144,16 @@ export function ChatRoom() {
       })
       .catch()
       .finally();
+  };
+
+  // -- review check
+  const handleReviewChange = (event) => {
+    const id = parseInt(event.target.value);
+    if (event.target.checked) {
+      setReviewId([...reviewId, id]);
+    } else {
+      setReviewId([reviewId.filter((reviewId) => reviewId !== id)]);
+    }
   };
 
   // spinner
@@ -284,7 +296,13 @@ export function ChatRoom() {
           <ModalHeader>후기 작성</ModalHeader>
           <ModalBody>
             {reviewList.map((review, index) => (
-              <Checkbox key={index}>{review.content}</Checkbox>
+              <Checkbox
+                key={index}
+                onChange={handleReviewChange}
+                value={review.id}
+              >
+                {review.content}
+              </Checkbox>
             ))}
           </ModalBody>
           <ModalFooter>
