@@ -13,7 +13,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faEllipsisVertical,
+} from "@fortawesome/free-solid-svg-icons";
 
 const ChatRoomDeleteComp = () => {
   return (
@@ -90,7 +93,7 @@ export function ChatRoom() {
         disConnect();
       }
     };
-  }, [roomId]);
+  }, []);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
@@ -108,6 +111,8 @@ export function ChatRoom() {
       destination: `/app/chat`,
       body: JSON.stringify(chatMessage),
     });
+
+    chatMessage.inserted = new Date().toLocaleTimeString();
 
     // -- 내가 보낸 거
     let formattedMessage = chatMessage;
@@ -127,40 +132,58 @@ export function ChatRoom() {
   }
 
   return (
-    <Box>
+    <Box w={"70%"}>
       <Box>
-        <Button
-          onClick={() => {
-            disConnect();
-            navigate(-1);
-          }}
-        >
+        <Flex>
           {/* 뒤로 가기 */}
-          <FontAwesomeIcon icon={faAngleLeft} />
-        </Button>
-      </Box>
-      <Box cursor={"pointer"}>
-        {/* 상대방 상점 */}
-        <Center fontSize={"xl"}>
-          {roomInfo.sellerId === Number(account.id) ? (
-            <Text onClick={() => navigate(`/shop/${roomInfo.userId}/products`)}>
-              {roomInfo.userName}
-            </Text>
-          ) : (
-            <Text
-              onClick={() => navigate(`/shop/${roomInfo.sellerId}/products`)}
+          <Box w={"10%"}>
+            <Button
+              onClick={() => {
+                disConnect();
+                navigate(-1);
+              }}
             >
-              {roomInfo.sellerName}
-            </Text>
-          )}
-        </Center>
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </Button>
+          </Box>
+          {/* 상대방 상점 */}
+          <Center cursor={"pointer"} w={"80%"}>
+            <Box fontSize={"xl"}>
+              {roomInfo.sellerId === Number(account.id) ? (
+                <Text
+                  onClick={() => navigate(`/shop/${roomInfo.userId}/products`)}
+                >
+                  {roomInfo.userName}
+                </Text>
+              ) : (
+                <Text
+                  onClick={() =>
+                    navigate(`/shop/${roomInfo.sellerId}/products`)
+                  }
+                >
+                  {roomInfo.sellerName}
+                </Text>
+              )}
+            </Box>
+          </Center>
+          {/* 채팅방 나가기, 신고하기 */}
+          <Box w={"10%"}>
+            <Button>
+              <FontAwesomeIcon icon={faEllipsisVertical} />
+            </Button>
+          </Box>
+        </Flex>
       </Box>
       <Box>
         <Flex>
-          <Box cursor={"pointer"}>
-            <Text v>{productInfo.title}</Text>
+          <Box
+            cursor={"pointer"}
+            onClick={() => navigate(`/product/${productInfo.id}`)}
+            w={"80%"}
+          >
+            <Text>{productInfo.title}</Text>
           </Box>
-          <Box>
+          <Box w={"20%"}>
             {/* 상품 상태 */}
             {productInfo.status === 0 &&
             productInfo.buyerId === Number(account.id) ? (
@@ -177,9 +200,6 @@ export function ChatRoom() {
             )}
           </Box>
         </Flex>
-        <Flex>
-          <Button>채팅삭제</Button>
-        </Flex>
       </Box>
       <Box>
         <Box>
@@ -189,7 +209,7 @@ export function ChatRoom() {
                 <Flex>
                   <Text>
                     {/* 변수의 형식까지 비교하기 위해 account.id 문자열을 숫자로 변경 */}
-                    {msg.userId === Number(account.id) ? (
+                    {msg.userId == account.id ? (
                       <>{roomInfo.userName}</>
                     ) : (
                       <>{roomInfo.sellerName}</>
