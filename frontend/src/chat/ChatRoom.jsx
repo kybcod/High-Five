@@ -12,7 +12,6 @@ import * as StompJs from "@stomp/stompjs";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { ProductStateComp } from "./chatComponent/ProductStateComp.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
@@ -159,17 +158,26 @@ export function ChatRoom() {
       <Box>
         <Flex>
           <Box cursor={"pointer"}>
-            <Text onClick={() => navigate(`/product/${productInfo.id}`)}>
-              {productInfo.title}
-            </Text>
+            <Text v>{productInfo.title}</Text>
           </Box>
-          <Button></Button>
+          <Box>
+            {/* 상품 상태 */}
+            {productInfo.status === 0 &&
+            productInfo.buyerId === Number(account.id) ? (
+              // 후기 작성 모달 떠야함
+              <Button>거래완료</Button>
+            ) : productInfo.status === 1 ? (
+              // 상품 디테일 페이지로 이동
+              <Button onClick={() => navigate(`/product/${productInfo.id}`)}>
+                입찰가능
+              </Button>
+            ) : (
+              // 버튼 비활성화
+              <Button isDisabled={true}>판매종료</Button>
+            )}
+          </Box>
         </Flex>
         <Flex>
-          <ProductStateComp
-            productInfo={productInfo}
-            userId={`${account.id}`}
-          />
           <Button>채팅삭제</Button>
         </Flex>
       </Box>
