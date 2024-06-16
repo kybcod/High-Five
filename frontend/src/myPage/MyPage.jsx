@@ -7,19 +7,60 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { MyShop } from "./MyShop.jsx";
 import { LikeList } from "./LikeList.jsx";
 
-export function MyPage() {
+export function MyPage({ tab }) {
   const account = useContext(LoginContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { userId } = useParams();
+
+  // 탭 이름 -> 인덱스
+  const tabIndex = {
+    info: 0,
+    like: 1,
+    shop: 2,
+    bids: 3,
+    reviews: 4,
+  };
+
+  // 인덱스 -> 택이름
+  const indexTab = {
+    0: "info",
+    1: "like",
+    2: "shop",
+    3: "bids",
+    4: "reviews",
+  };
+
+  const currentTab = tab || "info";
+
+  useEffect(() => {
+    const tabName = location.pathname.split("/").pop();
+    if (!Object.keys(tabIndex).includes(tabName)) {
+      navigate(`/shop/${userId}`);
+    }
+  }, []);
+
+  const handleTabsChange = (index) => {
+    navigate(`/shop/${userId}/${indexTab[index]}`);
+  };
+
   return (
     <Box>
       <Heading mb={5} size={"lg"}>
         {account.nickName}
       </Heading>
-      <Tabs variant="unstyled" orientation={"vertical"}>
+      <Tabs
+        variant="unstyled"
+        orientation={"vertical"}
+        index={tabIndex[currentTab]}
+        onChange={handleTabsChange}
+      >
         <TabList w={"30%"} m={3} mr={20}>
           <Tab
             border={"1px solid #eee"}

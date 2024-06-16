@@ -17,7 +17,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 export function MyShop() {
-  const [productList, setProductList] = useState([]);
+  const [productList, setProductList] = useState(null);
   const [pageInfo, setPageInfo] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -53,16 +53,21 @@ export function MyShop() {
   }
 
   function handleFoldClick() {
-    searchParams.set("page", 1);
-    setSearchParams(searchParams);
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
-  if (productList.length === 0) {
-    return <Spinner />;
+    const scrollDuration = 500;
+    setTimeout(() => {
+      searchParams.set("page", 1);
+      setSearchParams(searchParams);
+    }, scrollDuration);
   }
 
   function handleScrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  if (productList === null) {
+    return <Spinner />;
   }
 
   return (
@@ -160,7 +165,7 @@ export function MyShop() {
           >
             더보기
           </Button>
-        ) : likeProductList.length > 9 ? (
+        ) : productList.length > 9 ? (
           <Button
             w={"30%"}
             colorScheme={"blue"}

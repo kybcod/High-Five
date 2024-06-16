@@ -1,5 +1,9 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { Home } from "./Home.jsx";
 import { ProductList } from "./product/ProductList.jsx";
 import { ProductUpload } from "./product/ProductUpload.jsx";
@@ -22,8 +26,6 @@ import { QuestionList } from "./Question/QuestionList.jsx";
 import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
-import { LikeList } from "./myPage/LikeList.jsx";
-import { MyShop } from "./myPage/MyShop.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -63,9 +65,12 @@ const router = createBrowserRouter([
       { path: "board/modify/:board_id", element: <BoardModify /> },
 
       //my page
-      { path: "shop/:userId", element: <MyPage /> },
-      { path: "shop/:userId/products/like", element: <LikeList /> },
-      { path: "shop/:userId/products", element: <MyShop /> },
+      { path: "shop/:userId", element: <Navigate to="info" /> },
+      { path: "shop/:userId/info", element: <MyPage tab="info" /> },
+      { path: "shop/:userId/like", element: <MyPage tab="like" /> },
+      { path: "shop/:userId/shop", element: <MyPage tab="shop" /> },
+      { path: "shop/:userId/bids", element: <MyPage tab="bids" /> },
+      { path: "shop/:userId/reviews", element: <MyPage tab="reviews" /> },
 
       //채팅방
       { path: "chat/:product_id", element: <ChatRoom /> },

@@ -92,6 +92,7 @@ export function LikeList() {
   }
 
   function handleFoldClick() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     searchParams.set("page", 1);
     setSearchParams(searchParams);
   }
