@@ -25,13 +25,12 @@ export function CommentList({ questionId }) {
         <CardBody>
           <Stack divider={<StackDivider />} spacing={4}>
             {question.map((comment) => (
-              <Flex gap={3}>
+              <Flex gap={3} key={comment.id}>
                 <input
                   value={comment.userId === 30 ? "관리자" : comment.userId}
-                  key={comment.id}
                 />
-                <Input value={comment.content} key={comment.id} />
-                <Input value={comment.inserted} key={comment.id} />
+                <Input value={comment.content} />
+                <Input value={comment.inserted} />
               </Flex>
             ))}
           </Stack>
