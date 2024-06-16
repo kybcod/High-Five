@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Box, Button, Input, Textarea } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Textarea } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { LoginContext } from "../component/LoginProvider.jsx";
 
@@ -15,8 +15,13 @@ export function CommentWrite({ questionId }) {
 
   return (
     <Box>
-      <Textarea onChange={(e) => setContent(e.target.value)} value={content} />
-      <Button onClick={handleWriteClick}>등록</Button>
+      <Flex gap={2}>
+        <Textarea
+          onChange={(e) => setContent(e.target.value)}
+          value={content}
+        />
+        <Button onClick={handleWriteClick}>등록</Button>
+      </Flex>
     </Box>
   );
 }

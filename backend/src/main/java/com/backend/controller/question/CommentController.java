@@ -21,6 +21,7 @@ public class CommentController {
 
     @GetMapping("{questionId}")
     public List<QuestionComment> getComments(@PathVariable Integer questionId) {
-        return null;
+        System.out.println("questionId = " + questionId);
+        return service.get(questionId);
     }
 }
