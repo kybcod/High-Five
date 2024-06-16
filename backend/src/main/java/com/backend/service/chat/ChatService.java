@@ -55,7 +55,6 @@ public class ChatService {
             // -- 이전 ChatData
             List<ChatMessage> messageList = mapper.selectMessage(roomId);
             Collections.reverse(messageList);
-            System.out.println("messageList = " + messageList);
             result.put("messageList", messageList);
         }
         // -- chat_room info
