@@ -37,13 +37,11 @@ import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 export function ChatRoom() {
   const { productId } = useParams();
   const account = useContext(LoginContext);
-  // const chatroomId = param.chatroomId;
-  // const [chatList, setChatList] = useState([]); // 채팅 리스트
+  // -- axios.get
   const [roomInfo, setRoomInfo] = useState(null);
   const [productInfo, setProductInfo] = useState(null);
   const [roomId, setRoomId] = useState(null);
-  // const [chat, setChat] = useState(""); // 입력된 채팅 내용
-  // -- GPT
+  // -- chat
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState(""); // 입력된 채팅 내용
   const [messages, setMessages] = useState([]); // 채팅 리스트
@@ -55,8 +53,10 @@ export function ChatRoom() {
 
   const toast = useToast();
   const navigate = useNavigate();
+
   // -- axios.get
   useEffect(() => {
+    // TODO : status 추가
     axios
       .get(`/api/chat/${productId}`)
       .then((res) => {
@@ -97,6 +97,7 @@ export function ChatRoom() {
       },
     });
 
+    // TODO : merge 전 주석 생성 / update 이후 주석 제거
     // client.activate(); // 활성화
     setStompClient(client);
 
@@ -119,6 +120,7 @@ export function ChatRoom() {
       userId: account.id,
       message: message,
     };
+
     stompClient.publish({
       destination: `/app/chat`,
       body: JSON.stringify(chatMessage),
@@ -141,6 +143,7 @@ export function ChatRoom() {
 
   // -- review list
   const handleReviewButtonClick = () => {
+    // TODO : status 추가
     axios
       .get(`/api/reviews/list`)
       .then((res) => {
@@ -190,7 +193,7 @@ export function ChatRoom() {
       })
       .finally(() => {
         setLoading(false);
-        setReviewId("");
+        setReviewId([]);
       });
   };
 
@@ -202,6 +205,8 @@ export function ChatRoom() {
   return (
     <Box w={"70%"}>
       <Box>
+        {/* TODO : 기능 구현 완료 후 삭제
+              기존 버튼에 함수 추가 필수 */}
         <Button
           onClick={() => {
             onOpen();
@@ -210,7 +215,6 @@ export function ChatRoom() {
         >
           거래완료
         </Button>
-
         <Flex>
           {/* 뒤로 가기 */}
           <Box w={"10%"}>
@@ -226,6 +230,7 @@ export function ChatRoom() {
           {/* 상대방 상점 */}
           <Center cursor={"pointer"} w={"80%"}>
             <Box fontSize={"xl"}>
+              {/* TODO : 경로 이동 (현재: 마이페이지) */}
               {roomInfo.sellerId === Number(account.id) ? (
                 <Text
                   onClick={() => navigate(`/shop/${roomInfo.userId}/products`)}
@@ -243,17 +248,18 @@ export function ChatRoom() {
               )}
             </Box>
           </Center>
-          {/* 채팅방 나가기, 신고하기 */}
           <Box w={"10%"}>
             <Menu>
               <MenuButton as={Button}>
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </MenuButton>
               <MenuList>
+                {/* TODO : 채팅방 신고하기 */}
                 <MenuItem gap={2}>
                   <FontAwesomeIcon icon={faCircleExclamation} />
                   신고하기
                 </MenuItem>
+                {/* TODO : 채팅방 나가기 */}
                 <MenuItem color={"red"} gap={2}>
                   <FontAwesomeIcon icon={faTrashCan} />
                   채팅방 나가기
@@ -276,15 +282,12 @@ export function ChatRoom() {
             {/* 상품 상태 */}
             {productInfo.status === 0 &&
             productInfo.buyerId === Number(account.id) ? (
-              // 후기 작성 모달 떠야함
               <Button onClick={isOpen}>거래완료</Button>
             ) : productInfo.status === 1 ? (
-              // 상품 디테일 페이지로 이동
               <Button onClick={() => navigate(`/product/${productInfo.id}`)}>
                 입찰가능
               </Button>
             ) : (
-              // 버튼 비활성화
               <Button isDisabled={true}>판매종료</Button>
             )}
           </Box>
