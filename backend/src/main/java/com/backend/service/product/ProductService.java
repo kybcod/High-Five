@@ -307,6 +307,30 @@ public class ProductService {
         return Map.of("likeProductList", likeProductList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
     }
 
+    // TODO : 코드 정리
+//    public ProductListResponse getById(Integer id, Authentication authentication) {
+//        mapper.updateViewCount(id);
+//
+//        ProductWithUserDTO product = mapper.selectById2(id);
+//
+//        List<String> productFiles = mapper.selectFileByProductId(product.getId());
+//        List<ProductFile> files = productFiles.stream()
+//                .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+//                .toList();
+////        product.setProductFileList(files);
+//
+//        //좋아요
+//        Like like = new Like();
+//        if (authentication == null) {
+//            like.setLike(false);
+//        } else {
+//            int i = mapper.selectLikeByProductIdAndUserId(id, authentication.getName());
+//            like.setLike(i == 1);
+//        }
+//        like.setCount(mapper.selectCountLikeByProductId(id));
+//
+//        return new ProductListResponse(product, like, files);
+//    }
 }
 
 

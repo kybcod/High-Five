@@ -2,6 +2,7 @@ package com.backend.mapper.product;
 
 import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
+import com.backend.domain.product.ProductWithUserDTO;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Pageable;
 
@@ -249,4 +250,26 @@ public interface ProductMapper {
             WHERE user_id = #{userId};
             """)
     int selectCountLikeByUserId(Integer userId);
+
+    @Select("""
+            SELECT p.id,
+                   p.user_id,
+                   p.title,
+                   p.category,
+                   p.start_price,
+                   p.start_time,
+                   p.end_time,
+                   p.content,
+                   p.view_count,
+                   p.status,
+                   COUNT(DISTINCT bl.user_id) AS numberOfJoin,
+                   u.nick_name       AS userNickName,
+                   MAX(bl.bid_price) AS maxBidPrice
+            FROM product p
+                     LEFT JOIN bid_list bl
+                               ON p.id = bl.product_id
+                     JOIN user u ON u.id = p.user_id
+            WHERE p.id = #{id};
+            """)
+    ProductWithUserDTO selectById2(Integer id);
 }
