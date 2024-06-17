@@ -14,4 +14,5 @@ public class Board {
     private LocalDateTime inserted;
 
     private List<BoardFile> boardFileList;
+    private Integer numberOfImages;
 }

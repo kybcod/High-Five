@@ -72,14 +72,17 @@ export function BoardView() {
         )}
       </Flex>
       <Box mt={3}>
-        {board.boardFileList &&
-          board.boardFileList.map((file) => (
-            <Card m={3} key={file.name}>
-              <CardBody>
-                <Image src={file.src} />
-              </CardBody>
-            </Card>
-          ))}
+        <Flex>
+          {board.boardFileList &&
+            board.boardFileList.length > 0 &&
+            board.boardFileList.map((file, index) => (
+              <Card m={3} key={index} w={"400px"}>
+                <CardBody>
+                  <Image src={file.filePath} sizes={"100%"} />
+                </CardBody>
+              </Card>
+            ))}
+        </Flex>
       </Box>
       <Box>
         <Textarea value={board.content} readOnly />

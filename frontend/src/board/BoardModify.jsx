@@ -1,39 +1,62 @@
 import {
+  Badge,
   Box,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
+  IconButton,
+  Image,
   Input,
+  List,
+  ListItem,
+  Spacer,
+  Switch,
+  Text,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 export function BoardModify() {
-  const [board, setBoard] = useState({ title: "", content: "", inserted: "" });
+  const [board, setBoard] = useState({
+    id: "",
+    title: "",
+    content: "",
+  });
+  const [removeFileList, setRemoveFileList] = useState([]);
+  const [addFileList, setAddFileList] = useState([]);
   const { successToast, errorToast } = CustomToast();
   const { board_id } = useParams();
   const navigate = useNavigate();
-  const offset = 1000 * 60 * 60 * 9;
 
   useEffect(() => {
     axios.get(`/api/board/${board_id}`).then((res) => {
-      const boardData = {
-        ...res.data,
-        inserted: new Date(Date.now() + offset).toISOString(),
-      };
-      setBoard(boardData);
+      setBoard(res.data);
     });
   }, []);
 
   function handleClickSaveButton() {
     axios
-      .put(`/api/board/modify`, board)
+      .putForm(`/api/board/modify`, {
+        id: board.id,
+        title: board.title,
+        content: board.content,
+        removeFileList,
+        addFileList,
+      })
       .then(() => {
         successToast("게시물 수정이 완료되었습니다");
+        navigate("/board/list");
       })
       .catch((err) => {
         if (err.response.status === 400) {
@@ -56,6 +79,42 @@ export function BoardModify() {
       });
   }
 
+  function handleRemoveSwitchChange(fileName, checked) {
+    if (checked) {
+      setRemoveFileList([...removeFileList, fileName]);
+    } else {
+      setRemoveFileList(removeFileList.filter((item) => item !== fileName));
+    }
+  }
+
+  const fileNameList = [];
+  for (let i = 0; i < addFileList.length; i++) {
+    let duplicate = false;
+    for (let file of board.boardFileList) {
+      if (file.name === addFileList.name) {
+        duplicate = true;
+        break;
+      }
+    }
+    fileNameList.push(
+      <Flex key={i}>
+        <ListItem display="flex" alignItems="center">
+          <Text flex="1">{addFileList[i].name}</Text>
+          {duplicate && <Badge colorScheme={"yellow"}>중복된 파일</Badge>}
+        </ListItem>
+        <IconButton
+          aria-label="Remove"
+          icon={<DeleteIcon />}
+          onClick={() => {
+            const newFiles = Array.from(addFileList);
+            newFiles.splice(i, 1);
+            setAddFileList(newFiles);
+          }}
+        />
+      </Flex>,
+    );
+  }
+
   return (
     <Box>
       <Heading>자유게시판 글 수정</Heading>
@@ -68,17 +127,63 @@ export function BoardModify() {
           />
         </FormControl>
       </Box>
+      <Flex>
+        {board.boardFileList &&
+          board.boardFileList.map((file, index) => (
+            <Card m={3} key={index} w={"400px"}>
+              <CardBody>
+                <Image src={file.filePath} sizes={"100%"} />
+              </CardBody>
+              <CardFooter>
+                <Flex>
+                  <Box mr={3}>
+                    <FontAwesomeIcon icon={faTrashCan} />
+                  </Box>
+                  <Box mr={1}>
+                    <Switch
+                      onChange={(e) =>
+                        handleRemoveSwitchChange(
+                          file.fileName,
+                          e.target.checked,
+                        )
+                      }
+                    />
+                  </Box>
+                  <Box>
+                    <Text>{file.fileName}</Text>
+                  </Box>
+                </Flex>
+              </CardFooter>
+            </Card>
+          ))}
+      </Flex>
       <Box>
         <FormControl>
-          <FormLabel>상품 상세 내용</FormLabel>
+          <Flex>
+            <FormLabel>상품 상세 내용</FormLabel>
+            <Spacer />
+            <Input
+              multiple
+              type={"file"}
+              accept={"image/*"}
+              onChange={(e) => {
+                setAddFileList(e.target.files);
+              }}
+            />
+          </Flex>
+          {addFileList.length > 0 && (
+            <Box mt={2}>
+              <Heading size="md" mb={2}>
+                선택된 파일 목록
+              </Heading>
+              <List spacing={2}>{fileNameList}</List>
+            </Box>
+          )}
           <Textarea
             onChange={(e) => setBoard({ ...board, content: e.target.value })}
             value={board.content}
           />
         </FormControl>
-      </Box>
-      <Box>
-        <Input type={"hidden"} value={board.inserted} />
       </Box>
       <Box>
         <Button onClick={handleClickSaveButton}>게시글 수정</Button>

@@ -1,9 +1,8 @@
 package com.backend.mapper.user;
 
+import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.user.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -44,4 +43,78 @@ public interface UserMapper {
                 WHERE id = #{userId}
             """)
     String selectEmailById(Integer userId);
+
+    // -- ChatService
+    @Select("""
+            SELECT nick_name
+            FROM user
+            WHERE id = #{sellerId}
+            """)
+    String selectSellerName(ChatRoom chatRoom);
+
+    @Select("""
+                SELECT *
+                FROM user
+                WHERE id = #{userId}
+            """)
+    User selectUserById(Integer id);
+
+    @Delete(
+            """
+                        DELETE FROM user
+                        WHERE id = #{id}
+                    """
+    )
+    int deleteUserById(Integer id);
+
+    @Update("""
+                UPDATE user
+                SET password = #{password},
+                    nick_name = #{nickName}
+                WHERE id = #{id}
+            """)
+    int updateUser(User user);
+
+    @Select("""
+                <script>
+                SELECT id, email, nick_name, inserted
+                FROM user
+                ORDER BY id DESC
+                LIMIT #{offset}, 10
+                </script>
+            """)
+    List<User> selectUserList(int offset);
+
+//    @Select("""
+//                <script>
+//                SELECT id, email, nick_name, inserted
+//                FROM user
+//                    <trim prefix="WHERE" prefixOverrides="OR">
+//                        <bind name="pattern" value="%" + keyword + "%"/>
+//                        <if test="searchType != null">
+//                            <if test="keyword != ''">
+//                                OR email LIKE #{pattern}
+//                                OR nick_name LIKE #{pattern}
+//                            </if>
+//                            <if test searchType == 'black'>
+//                                OR black_count > 5
+//                            </if>
+//                        </if>
+//                    <trim>
+//                ORDER BY id DESC
+//                LIMIT #{offset}, 10
+//                </script>
+//            """)
+//    List<User> selectUserList(int offset);
+
+    @Delete("""
+                DELETE FROM authority
+                WHERE user_id = #{userId}
+            """)
+    int deleteAuthorityById(Integer userId);
+
+    @Select("""
+                SELECT COUNT(*) FROM user
+            """)
+    int selectTotalUserCount();
 }

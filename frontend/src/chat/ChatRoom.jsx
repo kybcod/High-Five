@@ -1,20 +1,77 @@
-import { Box, Button, Heading, Input } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Center,
+  Checkbox,
+  Flex,
+  Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  Text,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
+import { useContext, useEffect, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { LoginContext } from "../component/LoginProvider.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAngleLeft,
+  faCircleExclamation,
+  faEllipsisVertical,
+} from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export function ChatRoom() {
-  const param = useParams(); // 채널을 구분하는 식별자
-  const chatroomId = param.chatroomId;
-  const [chatList, setChatList] = useState([]); // 채팅 리스트
-  const [chat, setChat] = useState(""); // 입력된 채팅 내용
-  // -- GPT
+  const { productId } = useParams();
+  const account = useContext(LoginContext);
+  // -- axios.get
+  const [roomInfo, setRoomInfo] = useState(null);
+  const [productInfo, setProductInfo] = useState(null);
+  const [roomId, setRoomId] = useState(null);
+  // -- chat
   const [stompClient, setStompClient] = useState(null);
-  const [message, setMessage] = useState("");
-  const roomId = 1;
-  const userId = 1;
-  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState(""); // 입력된 채팅 내용
+  const [messages, setMessages] = useState([]); // 채팅 리스트
+  // -- review
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [reviewList, setReviewList] = useState([]);
+  const [reviewId, setReviewId] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  // -- axios.get
+  useEffect(() => {
+    // TODO : status 추가
+    axios
+      .get(`/api/chat/${productId}`)
+      .then((res) => {
+        setRoomInfo(res.data.chatRoom);
+        setProductInfo(res.data.chatProduct);
+        setRoomId(res.data.chatRoom.id);
+        if (!res.data.firstChat) {
+          setMessages(res.data.messageList);
+        }
+      })
+      .catch()
+      .finally();
+  }, []);
+
+  // -- stomp
   useEffect(() => {
     const client = new StompJs.Client({
       brokerURL: "ws://localhost:8080/ws",
@@ -26,51 +83,55 @@ export function ChatRoom() {
         console.log(str);
       },
       reconnectDelay: 5000,
-      heartbeatIncoming: 30000,
-      heartbeatOutgoing: 30000,
+      heartbeatIncoming: 30 * 1000,
+      heartbeatOutgoing: 30 * 1000,
       onConnect: function () {
         console.log("Connected to WebSocket");
         client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
-        client.subscribe(`/topic/chat/${roomId}`, callback, { ack: "client" }); // 본인
+        client.subscribe(`/topic/chat/${roomId}`, callback, {
+          ack: "client",
+        }); // 본인
       },
       onStompError: (frame) => {
         console.error("STOMP error: ", frame);
       },
     });
 
-    client.activate(); // 활성화
+    // TODO : merge 전 주석 생성 / update 이후 주석 제거
+    // client.activate(); // 활성화
     setStompClient(client);
 
-    // return () => {
-    //   if (client) {
-    //     disConnect();
-    //   }
-    // };
-  }, [roomId]);
+    return () => {
+      if (stompClient) {
+        disConnect();
+      }
+    };
+  }, []);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
-    console.log("receivedMessage : ", receivedMessage);
     setMessages((prevMessages) => [...prevMessages, receivedMessage]);
     message.ack();
   };
 
   const sendMessage = () => {
     let chatMessage = {
-      roomId,
-      userId,
+      chatRoomId: roomInfo.id,
+      userId: account.id,
       message: message,
     };
-    console.log("send Message!");
+
     stompClient.publish({
       destination: `/app/chat`,
       body: JSON.stringify(chatMessage),
     });
 
+    // 전송 시간 추가
+    chatMessage.inserted = new Date().toLocaleTimeString();
+
     // -- 내가 보낸 거
-    // let formattedMessage = chatMessage;
-    // console.log("formattedMessage", formattedMessage);
-    // setMessages((prevMessages) => [...prevMessages, formattedMessage]);
+    let formattedMessage = chatMessage;
+    setMessages((prevMessages) => [...prevMessages, formattedMessage]);
     setMessage("");
   };
 
@@ -80,28 +141,223 @@ export function ChatRoom() {
     console.log("Disconnected");
   };
 
+  // -- review list
+  const handleReviewButtonClick = () => {
+    // TODO : status 추가
+    axios
+      .get(`/api/reviews/list`)
+      .then((res) => {
+        setReviewList(res.data);
+      })
+      .catch()
+      .finally();
+  };
+
+  // -- review check
+  const handleReviewChange = (event) => {
+    const id = parseInt(event.target.value);
+    if (event.target.checked) {
+      setReviewId([...reviewId, id]);
+    } else {
+      setReviewId([reviewId.filter((reviewId) => reviewId !== id)]);
+    }
+  };
+
+  const handleReviewSaveButtonClick = (event) => {
+    event.preventDefault();
+    setLoading(true);
+    axios
+      .post(`/api/reviews/${roomInfo.productId}`, {
+        productId: roomInfo.productId,
+        userId: account.id,
+        reviewId,
+      })
+      .then(() => {
+        toast({
+          description: "리뷰가 등록되었습니다.",
+          status: "success",
+          position: "top",
+        });
+        onClose();
+      })
+      .catch((e) => {
+        const code = e.response.status;
+
+        if (code === 400) {
+          toast({
+            status: "error",
+            description: "리뷰 등록 실패",
+            position: "top",
+          });
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+        setReviewId([]);
+      });
+  };
+
+  // spinner
+  if (roomInfo == null) {
+    return <Spinner />;
+  }
+
   return (
-    <Box>
+    <Box w={"70%"}>
+      <Box>
+        {/* TODO : 기능 구현 완료 후 삭제
+              기존 버튼에 함수 추가 필수 */}
+        <Button
+          onClick={() => {
+            onOpen();
+            handleReviewButtonClick();
+          }}
+        >
+          거래완료
+        </Button>
+        <Flex>
+          {/* 뒤로 가기 */}
+          <Box w={"10%"}>
+            <Button
+              onClick={() => {
+                disConnect();
+                navigate(-1);
+              }}
+            >
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </Button>
+          </Box>
+          {/* 상대방 상점 */}
+          <Center cursor={"pointer"} w={"80%"}>
+            <Box fontSize={"xl"}>
+              {/* TODO : 경로 이동 (현재: 마이페이지) */}
+              {roomInfo.sellerId === Number(account.id) ? (
+                <Text
+                  onClick={() => navigate(`/shop/${roomInfo.userId}/products`)}
+                >
+                  {roomInfo.userName}
+                </Text>
+              ) : (
+                <Text
+                  onClick={() =>
+                    navigate(`/shop/${roomInfo.sellerId}/products`)
+                  }
+                >
+                  {roomInfo.sellerName}
+                </Text>
+              )}
+            </Box>
+          </Center>
+          <Box w={"10%"}>
+            <Menu>
+              <MenuButton as={Button}>
+                <FontAwesomeIcon icon={faEllipsisVertical} />
+              </MenuButton>
+              <MenuList>
+                {/* TODO : 채팅방 신고하기 */}
+                <MenuItem gap={2}>
+                  <FontAwesomeIcon icon={faCircleExclamation} />
+                  신고하기
+                </MenuItem>
+                {/* TODO : 채팅방 나가기 */}
+                <MenuItem color={"red"} gap={2}>
+                  <FontAwesomeIcon icon={faTrashCan} />
+                  채팅방 나가기
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Box>
+        </Flex>
+      </Box>
+      <Box>
+        <Flex>
+          <Box
+            cursor={"pointer"}
+            onClick={() => navigate(`/product/${productInfo.id}`)}
+            w={"80%"}
+          >
+            <Text>{productInfo.title}</Text>
+          </Box>
+          <Box w={"20%"}>
+            {/* 상품 상태 */}
+            {productInfo.status === 0 &&
+            productInfo.buyerId === Number(account.id) ? (
+              <Button onClick={isOpen}>거래완료</Button>
+            ) : productInfo.status === 1 ? (
+              <Button onClick={() => navigate(`/product/${productInfo.id}`)}>
+                입찰가능
+              </Button>
+            ) : (
+              <Button isDisabled={true}>판매종료</Button>
+            )}
+          </Box>
+        </Flex>
+      </Box>
       <Box>
         <Box>
-          <Heading>Chat Room: {roomId}</Heading>
-          <Box>
+          <Box h={"500px"} overflow={"auto"}>
             {messages.map((msg, index) => (
               <Box key={index}>
-                <li>
-                  [{msg.roomId}] {msg.userId}: {msg.message}
-                </li>
+                <Flex>
+                  <Text>
+                    {/* 변수의 형식까지 비교하기 위해 account.id 문자열을 숫자로 변경 */}
+                    {msg.userId == account.id ? (
+                      <>{roomInfo.userName}</>
+                    ) : (
+                      <>{roomInfo.sellerName}</>
+                    )}
+                  </Text>
+                  <Text> : {msg.message}</Text>
+                </Flex>
+                <Text fontSize={"xs"}>{msg.inserted}</Text>
               </Box>
             ))}
           </Box>
-          <Input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <Button onClick={sendMessage}>Send</Button>
+          <Box>
+            <Flex>
+              <Input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <Button
+                isDisabled={message.trim().length === 0}
+                onClick={sendMessage}
+              >
+                send
+              </Button>
+            </Flex>
+          </Box>
         </Box>
       </Box>
+      {/* 후기 작성 모달 */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>후기 작성</ModalHeader>
+          <ModalBody>
+            {reviewList.map((review) => (
+              <Checkbox
+                key={review.id}
+                onChange={handleReviewChange}
+                value={review.id}
+              >
+                {review.content}
+              </Checkbox>
+            ))}
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              isLoading={loading}
+              isDisabled={reviewId.length === 0}
+              onClick={handleReviewSaveButtonClick}
+            >
+              후기 보내기
+            </Button>
+          </ModalFooter>
+          <ModalCloseButton />
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

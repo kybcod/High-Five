@@ -1,5 +1,9 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { Home } from "./Home.jsx";
 import { ProductList } from "./product/ProductList.jsx";
 import { ProductUpload } from "./product/ProductUpload.jsx";
@@ -7,7 +11,7 @@ import { MainProduct } from "./product/MainProduct.jsx";
 import { ProductEdit } from "./product/ProductEdit.jsx";
 import { ProductDetails } from "./product/ProductDetails.jsx";
 import { SignUp } from "./user/SignUp.jsx";
-import { Login } from "./Login.jsx";
+import { Login } from "./user/Login.jsx";
 import { LoginProvider } from "./component/LoginProvider.jsx";
 import axios from "axios";
 import { BoardWrite } from "./board/BoardWrite.jsx";
@@ -22,7 +26,9 @@ import { QuestionList } from "./Question/QuestionList.jsx";
 import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
+import { UserList } from "./user/UserList.jsx";
 import { ProductShop } from "./product/ProductShop.jsx";
+import { ChatRoomList } from "./chat/ChatRoomList.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -43,11 +49,11 @@ const router = createBrowserRouter([
       { path: "list", element: <ProductList /> },
       { path: "edit/:id", element: <ProductEdit /> },
       { path: "product/:id", element: <ProductDetails /> },
-      { path: "shop/:userId", element: <ProductShop /> },
 
       // user
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
+      { path: "user/list", element: <UserList /> },
 
       //question
       { path: "question/write", element: <QuestionWrite /> },
@@ -62,10 +68,16 @@ const router = createBrowserRouter([
       { path: "board/modify/:board_id", element: <BoardModify /> },
 
       //my page
-      { path: "shop/:userId/products", element: <MyPage /> },
+      { path: "myPage/:userId", element: <Navigate to="userInfo" /> },
+      { path: "myPage/:userId/userInfo", element: <MyPage tab="userInfo" /> },
+      { path: "myPage/:userId/like", element: <MyPage tab="like" /> },
+      { path: "myPage/:userId/shop", element: <MyPage tab="shop" /> },
+      { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },
+      { path: "myPage/:userId/reviews", element: <MyPage tab="reviews" /> },
 
-      //채팅방
-      { path: "chat/:product_id", element: <ChatRoom /> },
+      // chat
+      { path: "chat/:productId", element: <ChatRoom /> },
+      { path: "chat/list", element: <ChatRoomList /> },
     ],
   },
 ]);
