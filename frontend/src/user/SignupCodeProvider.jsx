@@ -5,7 +5,7 @@ import { CustomToast } from "../component/CustomToast.jsx";
 
 export const SignupCodeContext = createContext(null);
 
-export function SingupCodeProvider({ children }) {
+export function SignupCodeProvider({ children }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isCheckedCode, setIsCheckedCode] = useState(false);
   const [isSendingCode, setIsSendingCode] = useState(false);
@@ -17,7 +17,9 @@ export function SingupCodeProvider({ children }) {
     setIsCheckedCode(false);
   }
 
-  function handleInputCode() {}
+  function handleInputCode(code) {
+    setVerificationCode(code);
+  }
 
   function handleSendCode() {
     setIsSendingCode(true);
@@ -50,6 +52,7 @@ export function SingupCodeProvider({ children }) {
         setVerificationCode: setVerificationCode,
         handleCheckCode: handleCheckCode,
         handleInputPhoneNumber: handleInputPhoneNumber,
+        handleInputCode: handleInputCode,
       }}
     >
       {children}
@@ -57,4 +60,4 @@ export function SingupCodeProvider({ children }) {
   );
 }
 
-export default SingupCodeProvider;
+export default SignupCodeProvider;
