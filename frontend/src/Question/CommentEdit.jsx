@@ -1,4 +1,4 @@
-import { Button, Flex, Input, Textarea } from "@chakra-ui/react";
+import { Button, Flex, Textarea } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
