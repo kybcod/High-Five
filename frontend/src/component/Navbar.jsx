@@ -1,8 +1,18 @@
-import { Center, Flex } from "@chakra-ui/react";
+import { Center, Flex, Spacer, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClipboardList,
+  faHome,
+  faQuestionCircle,
+  faSignInAlt,
+  faSignOutAlt,
+  faUser,
+  faUserCircle,
+  faUserPlus,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Navbar() {
@@ -10,44 +20,66 @@ export function Navbar() {
   const account = useContext(LoginContext);
 
   return (
-    <Flex gap={2} bgColor={"lightgreen"} cursor={"pointer"}>
-      <Center onClick={() => navigate("/")}>HOME</Center>
-
-      {account.isLoggedIn() || (
-        <Center onClick={() => navigate("/signup")}>signup</Center>
-      )}
-      {account.isLoggedIn() || (
-        <Center onClick={() => navigate("/login")}>login</Center>
-      )}
-      {account.isLoggedIn() && (
-        <Center
-          onClick={() => {
-            account.logout();
-            navigate("/");
-          }}
-        >
-          logout
-        </Center>
-      )}
-      {account.isLoggedIn() && (
-        <Center>
-          <FontAwesomeIcon icon={faUser} />
-          {account.nickName} 님
-        </Center>
-      )}
-      <Center onClick={() => navigate("/question/list")} cursor="pointer">
-        QnA
+    <Flex bg="green.500" color="white" p={4} align="center">
+      <Center onClick={() => navigate("/")} cursor="pointer" mx={2}>
+        <FontAwesomeIcon icon={faHome} />
+        <Text ml={2}>HOME</Text>
       </Center>
-      {account.isLoggedIn() && (
-        <Center
-          onClick={() => navigate(`/myPage/${account.id}`)}
-          cursor="pointer"
-        >
-          MyPage
-        </Center>
+      <Center onClick={() => navigate("/board/list")} cursor="pointer" mx={2}>
+        <FontAwesomeIcon icon={faClipboardList} />
+        <Text ml={2}>자유게시판</Text>
+      </Center>
+      <Center
+        onClick={() => navigate("/question/list")}
+        cursor="pointer"
+        mx={2}
+      >
+        <FontAwesomeIcon icon={faQuestionCircle} />
+        <Text ml={2}>QnA</Text>
+      </Center>
+      <Center
+        onClick={() => navigate(`/myPage/${account.id}`)}
+        cursor="pointer"
+        mx={2}
+      >
+        <FontAwesomeIcon icon={faUser} />
+        <Text ml={2}>MyPage</Text>
+      </Center>
+      <Center onClick={() => navigate("/user/list")} cursor="pointer" mx={2}>
+        <FontAwesomeIcon icon={faUsers} />
+        <Text ml={2}>USER LIST</Text>
+      </Center>
+      <Spacer />
+      {account.isLoggedIn() ? (
+        <>
+          <Center mx={2}>
+            <FontAwesomeIcon icon={faUserCircle} />
+            <Text ml={2}>{account.nickName} 님</Text>
+          </Center>
+          <Center
+            onClick={() => {
+              account.logout();
+              navigate("/");
+            }}
+            cursor="pointer"
+            mx={2}
+          >
+            <FontAwesomeIcon icon={faSignOutAlt} />
+            <Text ml={2}>LOGOUT</Text>
+          </Center>
+        </>
+      ) : (
+        <>
+          <Center onClick={() => navigate("/login")} cursor="pointer" mx={2}>
+            <FontAwesomeIcon icon={faSignInAlt} />
+            <Text ml={2}>LOGIN</Text>
+          </Center>
+          <Center onClick={() => navigate("/signup")} cursor="pointer" mx={2}>
+            <FontAwesomeIcon icon={faUserPlus} />
+            <Text ml={2}>SIGNUP</Text>
+          </Center>
+        </>
       )}
-      <Center onClick={() => navigate("/user/list")}>UserList</Center>
-      <Center onClick={() => navigate("/board/list")}>자유게시판</Center>
     </Flex>
   );
 }
