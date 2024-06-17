@@ -77,8 +77,8 @@ export function Login() {
           <Center>
             <Flex gap={10} fontSize={"md"}>
               <Link to={"/signup"}>이메일 가입</Link>
-              <Link>이메일 찾기</Link>
-              <Link>비밀번호 찾기</Link>
+              <Link to={"/user/email"}>이메일 찾기</Link>
+              <Link to={"/user/password"}>비밀번호 찾기</Link>
             </Flex>
           </Center>
         </Box>

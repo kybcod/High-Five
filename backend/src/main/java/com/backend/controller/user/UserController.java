@@ -109,6 +109,15 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/users/emails/{phoneNumber}")
+    public ResponseEntity getEmails(@PathVariable String phoneNumber) {
+        String email = service.getEmailByPhoneNumber(phoneNumber);
+        if (email == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(email);
+    }
+
     // 회원가입 시 닉네임 중복 확인
     @GetMapping("/users/nickNames")
     public ResponseEntity nickNames(String nickName) {

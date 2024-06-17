@@ -144,4 +144,11 @@ public interface UserMapper {
                 WHERE id = #{id}
             """)
     int updateBlackCountByUserId(Integer id);
+
+    @Select("""
+                SELECT email
+                FROM user
+                WHERE phone_number = #{phoneNumber}
+            """)
+    String selectEmailByPhoneNumber(String phoneNumber);
 }

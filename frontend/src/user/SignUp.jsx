@@ -9,30 +9,29 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
-import { ConfirmPhoneNumber } from "./ConfirmPhoneNumber.jsx";
+import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
+import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [nickName, setNickName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [isCheckedEmail, setIsCheckedEmail] = useState(false);
   const [isCheckedNickName, setIsCheckedNickName] = useState(false);
-  const [isCheckedCode, setIsCheckedCode] = useState(false);
-  const [isSendingCode, setIsSendingCode] = useState(false);
   const { successToast, errorToast } = CustomToast();
+  const codeInfo = useContext(SignupCodeContext);
   const navigate = useNavigate();
 
   function handleSignUp() {
     setIsLoading(true);
+    const phoneNumber = codeInfo.phoneNumber;
     axios
       .post("/api/users", { email, password, nickName, phoneNumber })
       .then(() => {
@@ -136,7 +135,6 @@ export function SignUp() {
             />
             <InputRightElement width="4.5rem">
               <Button
-                Button
                 h="1.75rem"
                 size="sm"
                 onClick={handleCheckEmail}
@@ -201,7 +199,6 @@ export function SignUp() {
             />
             <InputRightElement width="4.5rem">
               <Button
-                Button
                 h="1.75rem"
                 size="sm"
                 onClick={handleCheckNickName}
@@ -213,7 +210,7 @@ export function SignUp() {
           </InputGroup>
           <FormHelperText>닉네임은 10자까지 작성 가능합니다</FormHelperText>
         </FormControl>
-        <ConfirmPhoneNumber />
+        <UserPhoneNumber />
         <Center mt={5}>
           <Button
             colorScheme={"green"}

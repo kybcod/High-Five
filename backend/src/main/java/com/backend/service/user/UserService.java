@@ -253,4 +253,8 @@ public class UserService {
     public void reportUserById(Integer id) {
         mapper.updateBlackCountByUserId(id);
     }
+
+    public String getEmailByPhoneNumber(String phoneNumber) {
+        return mapper.selectEmailByPhoneNumber(phoneNumber);
+    }
 }

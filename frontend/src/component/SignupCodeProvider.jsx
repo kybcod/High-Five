@@ -1,6 +1,6 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
-import { CustomToast } from "../component/CustomToast.jsx";
+import { CustomToast } from "./CustomToast.jsx";
 
 export const SignupCodeContext = createContext(undefined);
 
@@ -11,7 +11,13 @@ export function SignupCodeProvider({ children }) {
   const [verificationCode, setVerificationCode] = useState("");
   const { successToast, errorToast } = CustomToast();
 
-  let isWrongPhoneNumberLength = phoneNumber.length !== 11;
+  useEffect(() => {
+    setPhoneNumber("");
+    setIsCheckedCode(false);
+    setVerificationCode("");
+  }, []);
+
+  let isWrongPhoneNumberLength = phoneNumber.length !== 8;
   let isDisabledCheckButton = verificationCode.trim().length !== 4;
 
   function handleInputPhoneNumber(input) {
@@ -27,7 +33,7 @@ export function SignupCodeProvider({ children }) {
 
   function handleSendCode() {
     setIsSendingCode(true);
-    axios.get(`/api/users/codes?phoneNumber=${phoneNumber}`);
+    axios.get(`/api/users/codes?phoneNumber=010${phoneNumber}`);
   }
 
   function handleCheckCode() {

@@ -11,9 +11,9 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { useContext } from "react";
-import { SignupCodeContext } from "./SignupCodeProvider.jsx";
+import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 
-export function ConfirmPhoneNumber() {
+export function UserPhoneNumber() {
   const codeInfo = useContext(SignupCodeContext);
 
   return (
@@ -36,7 +36,6 @@ export function ConfirmPhoneNumber() {
           <InputRightElement width="4.5rem">
             {codeInfo.isSendingCode || (
               <Button
-                Button
                 h="1.75rem"
                 size="sm"
                 onClick={codeInfo.handleSendCode}
@@ -47,7 +46,6 @@ export function ConfirmPhoneNumber() {
             )}
             {codeInfo.isSendingCode && (
               <Button
-                Button
                 h="1.75rem"
                 size="sm"
                 onClick={codeInfo.handleSendCode}
