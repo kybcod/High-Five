@@ -11,6 +11,7 @@ export const Styled_Slide = styled(Slider)`
 
   .slick-track {
     display: flex;
+    align-items: center; /* 추가: 이미지가 가운데 정렬되도록 */
   }
 
   .slick-slide {
@@ -20,14 +21,5 @@ export const Styled_Slide = styled(Slider)`
     height: 300px;
     width: 100%;
     object-fit: contain;
-  }
-
-  .slick-prev:before,
-  .slick-next:before {
-    font-size: 40px;
-    line-height: 1;
-    opacity: 0.75;
-    color: #ffffff;
-    -webkit-font-smoothing: antialiased;
   }
 `;

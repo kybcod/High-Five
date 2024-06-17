@@ -15,6 +15,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ArrowDownIcon, ArrowUpIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 export function MyShop() {
   const { userId } = useParams();
@@ -78,10 +79,20 @@ export function MyShop() {
           판매한 상품이 없습니다.
         </Text>
       ) : (
-        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+        <Grid
+          templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
+          gap={6}
+        >
           {productList.map((product) => (
             <GridItem key={product.id}>
-              <Card maxW={"s"} h={"100%"}>
+              <Card
+                maxW="sm"
+                h="100%"
+                borderWidth="1px"
+                borderColor={"#eee"}
+                borderRadius="lg"
+                overflow="hidden"
+              >
                 <CardBody position={"relative"} h={"100%"}>
                   <Box mt={2} w="30%%">
                     {product.status ? (
@@ -169,6 +180,7 @@ export function MyShop() {
             colorScheme={"blue"}
             mt={4}
             onClick={handleMoreClick}
+            rightIcon={<ArrowDownIcon />}
           >
             더보기
           </Button>
@@ -177,6 +189,7 @@ export function MyShop() {
             w={"30%"}
             colorScheme={"blue"}
             mt={4}
+            rightIcon={<ChevronUpIcon />}
             onClick={handleFoldClick}
           >
             접기
@@ -187,6 +200,7 @@ export function MyShop() {
               w={"30%"}
               colorScheme={"blue"}
               mt={4}
+              rightIcon={<ArrowUpIcon />}
               onClick={handleScrollToTop}
             >
               맨 위로

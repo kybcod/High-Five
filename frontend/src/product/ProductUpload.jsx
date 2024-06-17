@@ -33,16 +33,6 @@ export function ProductUpload() {
   const navigate = useNavigate();
 
   function handleSaleClick() {
-    if (!date || !time) {
-      toast({
-        status: "warning",
-        description: "입찰 마감 시간을 입력해주세요.",
-        position: "top-right",
-        duration: 1000,
-      });
-      return;
-    }
-
     if (files.length === 0) {
       toast({
         status: "warning",
@@ -73,6 +63,16 @@ export function ProductUpload() {
       return;
     }
 
+    if (!date || !time) {
+      toast({
+        status: "warning",
+        description: "입찰 마감 시간을 입력해주세요.",
+        position: "top-right",
+        duration: 1000,
+      });
+      return;
+    }
+
     if (!startPrice) {
       toast({
         status: "warning",
@@ -85,14 +85,14 @@ export function ProductUpload() {
 
     const localDate = new Date(`${date}T${time}`);
     localDate.setHours(localDate.getHours() + 9);
-    setEndTime(localDate.toISOString().slice(0, -5));
+    const formattedEndTime = localDate.toISOString().slice(0, -5);
 
     axios
       .postForm("/api/products", {
         title: title,
         category: category,
         startPrice: startPrice,
-        endTime: endTime,
+        endTime: formattedEndTime,
         content: content,
         files: files,
       })
@@ -247,7 +247,7 @@ export function ProductUpload() {
             />
           </FormControl>
           <FormControl>
-            <FormLabel>시간 (24시간제)</FormLabel>
+            <FormLabel>시간(AM 8:00 ~ PM 23:00)</FormLabel>
             <Select
               placeholder="시간"
               value={time}

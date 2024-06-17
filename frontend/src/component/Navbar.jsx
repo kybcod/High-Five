@@ -20,7 +20,14 @@ export function Navbar() {
   const account = useContext(LoginContext);
 
   return (
-    <Flex bg="green.500" color="white" p={4} align="center">
+    <Flex
+      bg="green.500"
+      color="white"
+      p={4}
+      align="center"
+      h={20}
+      fontSize={"lg"}
+    >
       <Center onClick={() => navigate("/")} cursor="pointer" mx={2}>
         <FontAwesomeIcon icon={faHome} />
         <Text ml={2}>HOME</Text>

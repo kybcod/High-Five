@@ -19,6 +19,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ArrowDownIcon, ArrowUpIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 export function LikeList() {
   const { userId } = useParams();
@@ -108,10 +109,20 @@ export function LikeList() {
           찜한 상품이 없습니다.
         </Text>
       ) : (
-        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+        <Grid
+          templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
+          gap={6}
+        >
           {likeProductList.map((product) => (
             <GridItem key={product.id}>
-              <Card maxW="sm" h="100%">
+              <Card
+                maxW="sm"
+                h="100%"
+                borderWidth="1px"
+                borderColor={"#eee"}
+                borderRadius="lg"
+                overflow="hidden"
+              >
                 <CardBody position="relative" h="100%">
                   <Box mt={2} w="100%">
                     {product.status ? (
@@ -220,6 +231,7 @@ export function LikeList() {
             colorScheme={"blue"}
             mt={4}
             onClick={handleMoreClick}
+            rightIcon={<ArrowDownIcon />}
           >
             더보기
           </Button>
@@ -228,6 +240,7 @@ export function LikeList() {
             w={"30%"}
             colorScheme={"blue"}
             mt={4}
+            rightIcon={<ChevronUpIcon />}
             onClick={handleFoldClick}
           >
             접기
@@ -238,6 +251,7 @@ export function LikeList() {
               w={"30%"}
               colorScheme={"blue"}
               mt={4}
+              rightIcon={<ArrowUpIcon />}
               onClick={handleScrollToTop}
             >
               맨 위로

@@ -23,10 +23,10 @@ export function MainSlider() {
       <Styled_Slide {...settings}>
         <Box width="100%" height="300px" boxSize={"full"}>
           <Image
-            src="/img/nike.png"
+            src="/img/auction.png"
             width="100%"
             height="100%"
-            objectFit="contain"
+            objectFit="cover"
           />
         </Box>
         <Box width="100%" height="300px" boxSize={"full"}>
@@ -34,15 +34,15 @@ export function MainSlider() {
             src="/img/iphone.png"
             width="100%"
             height="100%"
-            objectFit="contain"
+            objectFit="cover"
           />
         </Box>
         <Box width="100%" height="300px" boxSize={"full"}>
           <Image
-            src="/img/auction.png"
+            src="/img/nike.png"
             width="100%"
             height="100%"
-            objectFit="contain"
+            objectFit="cover"
           />
         </Box>
       </Styled_Slide>
