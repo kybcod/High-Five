@@ -31,6 +31,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export function ProductEdit() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [existingFilePreviews, setExistingFilePreviews] = useState([]);
   const [newFilePreviews, setNewFilePreviews] = useState([]);
   const [newFileList, setNewFileList] = useState([]);
@@ -44,16 +46,27 @@ export function ProductEdit() {
     axios.get(`/api/products/${id}`).then((res) => {
       setProduct(res.data.product);
       setExistingFilePreviews(res.data.productFileList || []);
+
+      const endTime = res.data.product.endTime;
+      const [datePart, timePart] = endTime.split("T");
+      setDate(datePart);
+      setTime(timePart.slice(0, 5));
     });
   }, []);
 
+  console.log(date);
+  console.log(time);
+
   function handleUpdateClick() {
+    const localDate = new Date(`${date}T${time}`);
+    localDate.setHours(localDate.getHours() + 9);
+    const endTime = localDate.toISOString().slice(0, -5);
     axios
       .putForm("/api/products", {
         id: product.id,
         title: product.title,
         category: product.category,
-        endTime: product.endTime,
+        endTime: endTime,
         startPrice: product.startPrice,
         content: product.content,
         removedFileList,
@@ -257,16 +270,41 @@ export function ProductEdit() {
         </FormControl>
       </Box>
       <Box>
-        <FormControl>
-          <FormLabel>입찰 마감 시간</FormLabel>
-          <Input
-            defaultValue={product.endTime}
-            type={"datetime-local"}
-            onChange={(e) =>
-              setProduct({ ...product, endTime: e.target.value })
-            }
-          />
-        </FormControl>
+        <Flex spacing={3}>
+          <FormControl>
+            <FormLabel>날짜</FormLabel>
+            <Input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>시간(AM 8:00 ~ PM 23:00)</FormLabel>
+            <Select
+              placeholder="시간"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+            >
+              <option value="08:00">08:00</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="12:00">12:00</option>
+              <option value="13:00">13:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+              <option value="18:00">18:00</option>
+              <option value="19:00">19:00</option>
+              <option value="20:00">20:00</option>
+              <option value="21:00">21:00</option>
+              <option value="22:00">22:00</option>
+              <option value="23:00">23:00</option>
+            </Select>
+          </FormControl>
+        </Flex>
       </Box>
       <Box>
         <FormControl>

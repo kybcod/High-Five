@@ -27,10 +27,22 @@ export function ProductUpload() {
   const [filePreview, setFilePreView] = useState([]);
   const [content, setContent] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
 
   function handleSaleClick() {
+    if (!date || !time) {
+      toast({
+        status: "warning",
+        description: "입찰 마감 시간을 입력해주세요.",
+        position: "top-right",
+        duration: 1000,
+      });
+      return;
+    }
+
     if (files.length === 0) {
       toast({
         status: "warning",
@@ -71,24 +83,18 @@ export function ProductUpload() {
       return;
     }
 
-    if (!endTime) {
-      toast({
-        status: "warning",
-        description: "입찰 마감 시간을 입력해주세요.",
-        position: "top-right",
-        duration: 1000,
-      });
-      return;
-    }
+    const localDate = new Date(`${date}T${time}`);
+    localDate.setHours(localDate.getHours() + 9);
+    setEndTime(localDate.toISOString().slice(0, -5));
 
     axios
       .postForm("/api/products", {
-        title,
-        category,
-        startPrice,
-        endTime,
-        content,
-        files,
+        title: title,
+        category: category,
+        startPrice: startPrice,
+        endTime: endTime,
+        content: content,
+        files: files,
       })
       .then(() => {
         toast({
@@ -100,10 +106,16 @@ export function ProductUpload() {
         navigate("/");
       })
       .catch((err) => {
-        if (err.response.status === 413) {
+        if (err.response && err.response.status === 413) {
           toast({
             status: "error",
             description: `파일이 너무 큽니다. 다른 파일을 선택해주세요.`,
+            position: "top-right",
+          });
+        } else {
+          toast({
+            status: "error",
+            description: `서버 오류가 발생했습니다. 다시 시도해주세요.`,
             position: "top-right",
           });
         }
@@ -157,24 +169,9 @@ export function ProductUpload() {
     }
   }
 
-  const handleDateTimeChange = (e) => {
-    const value = e.target.value;
-
-    //분해
-    const [date, time] = value.split("T");
-    const [hour, minute] = time.split(":");
-    //계산
-    const roundedMinute = Math.floor(parseInt(minute) / 5) * 5;
-    //다시 붙이기
-    const newTime = `${hour}:${roundedMinute.toString().padStart(2, "0")}`;
-    const newValue = `${date}T${newTime}`;
-    setEndTime(newValue);
-  };
-
   return (
     <Box>
       <Box>
-        <Flex></Flex>
         <FormControl>
           <FormLabel>상품 이미지</FormLabel>
         </FormControl>
@@ -240,27 +237,60 @@ export function ProductUpload() {
         </FormControl>
       </Box>
       <Box>
-        <FormControl>
-          <FormLabel>입찰 마감 시간</FormLabel>
-          <Input
-            type="datetime-local"
-            value={endTime}
-            onChange={handleDateTimeChange}
-          />
-        </FormControl>
+        <Flex spacing={3}>
+          <FormControl>
+            <FormLabel>날짜</FormLabel>
+            <Input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>시간 (24시간제)</FormLabel>
+            <Select
+              placeholder="시간"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+            >
+              <option value="08:00">08:00</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="12:00">12:00</option>
+              <option value="13:00">13:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+              <option value="18:00">18:00</option>
+              <option value="19:00">19:00</option>
+              <option value="20:00">20:00</option>
+              <option value="21:00">21:00</option>
+              <option value="22:00">22:00</option>
+              <option value="23:00">23:00</option>
+            </Select>
+          </FormControl>
+        </Flex>
       </Box>
       <Box>
         <FormControl>
-          <FormLabel>상품 상세내용</FormLabel>
+          <FormLabel>상품 설명</FormLabel>
           <Textarea
-            whiteSpace={"pre-wrap"}
             onChange={(e) => setContent(e.target.value)}
-            placeholder={"상품에 대한 정보 작성해주세요."}
+            placeholder="상품 설명을 입력하세요."
           />
         </FormControl>
       </Box>
-      <Box>
-        <Button onClick={handleSaleClick}>판매시작</Button>
+      <Box textAlign="center">
+        <Button
+          mt={2}
+          onClick={handleSaleClick}
+          colorScheme="blue"
+          align="center"
+        >
+          판매하기
+        </Button>
       </Box>
     </Box>
   );
