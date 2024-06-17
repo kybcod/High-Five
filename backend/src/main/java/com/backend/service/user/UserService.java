@@ -34,15 +34,25 @@ public class UserService {
 
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
-        sms.sendOne(phoneNumber, verificationCode);
+//        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
+
+        Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
+        if (dbCode != null) {
+            mapper.deleteCodeByPhoneNumber(phoneNumber);
+        }
+
+        mapper.insertCode(phoneNumber, verificationCode);
+//        if (response.getStatusCode().equals("2000")) {
+//        }
         return verificationCode;
     }
 
-    public boolean checkVerificationCode(String verificationCode, String customerCode) {
-        if (verificationCode.equals(customerCode)) {
-            return true;
+    public boolean checkVerificationCode(String phoneNumber, int verificationCode) {
+        Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
+        if (dbCode != null) {
+            mapper.deleteCodeByPhoneNumber(phoneNumber);
         }
-        return false;
+        return verificationCode == dbCode;
     }
 
     public void addUser(User user) {

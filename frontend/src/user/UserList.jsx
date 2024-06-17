@@ -12,8 +12,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -26,22 +25,23 @@ export function UserList() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchParams] = useSearchParams();
 
-  useEffect(() => {
-    axios.get(`/api/users/list?${searchParams}`).then((res) => {
-      setUserList(res.data.userList);
-      setPageInfo(res.data.pageInfo);
-      setSearchType("all");
-      setSearchKeyword("");
-      const typeParam = searchParams.get("type");
-      const keywordParam = searchParams.get("keyword");
-      if (typeParam) {
-        setSearchType(typeParam);
-      }
-      if (keywordParam) {
-        setSearchKeyword(keywordParam);
-      }
-    });
-  }, [searchParams]);
+  // TODO. 주석 해제
+  // useEffect(() => {
+  //   axios.get(`/api/users/list?${searchParams}`).then((res) => {
+  //     setUserList(res.data.userList);
+  //     setPageInfo(res.data.pageInfo);
+  //     setSearchType("all");
+  //     setSearchKeyword("");
+  //     const typeParam = searchParams.get("type");
+  //     const keywordParam = searchParams.get("keyword");
+  //     if (typeParam) {
+  //       setSearchType(typeParam);
+  //     }
+  //     if (keywordParam) {
+  //       setSearchKeyword(keywordParam);
+  //     }
+  //   });
+  // }, [searchParams]);
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {

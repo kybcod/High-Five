@@ -117,4 +117,24 @@ public interface UserMapper {
                 SELECT COUNT(*) FROM user
             """)
     int selectTotalUserCount();
+
+    @Insert("""
+                INSERT INTO code
+                (phone_number, code)
+                VALUES (#{phoneNumber}, #{code})
+            """)
+    void insertCode(String phoneNumber, String code);
+
+    @Select("""
+                SELECT code AS verificationCode
+                FROM code
+                WHERE phone_number = #{phoneNumber}
+            """)
+    Integer selectCodeByPhoneNumber(String phoneNumber);
+
+    @Delete("""
+                DELETE FROM code
+                WHERE phone_number = #{phone_number}
+            """)
+    int deleteCodeByPhoneNumber(String phoneNumber);
 }

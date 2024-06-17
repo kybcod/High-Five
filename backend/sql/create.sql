@@ -185,3 +185,11 @@ CREATE TABLE chat
     message      VARCHAR(100) NOT NULL,
     inserted     DATETIME     NOT NULL DEFAULT NOW()
 );
+
+# 회원가입 시 인증번호 테이블
+CREATE TABLE code
+(
+    phone_number VARCHAR(11) NOT NULL ,
+    code INT NOT NULL ,
+    PRIMARY KEY (phone_number, code)
+);

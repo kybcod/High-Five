@@ -41,3 +41,10 @@ VALUES (14, 'user');
 DELETE
 FROM user
 WHERE id = 6;
+
+SELECT *
+FROM code;
+
+DELETE
+FROM code
+WHERE phone_number = '01071263769';

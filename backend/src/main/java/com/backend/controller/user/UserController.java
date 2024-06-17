@@ -42,6 +42,24 @@ public class UserController {
 //        return ResponseEntity.badRequest().build();
     }
 
+
+    // 회원가입 시 인증코드 받기
+    // TODO. 나중에 활성화
+    @GetMapping("users/codes")
+    public void sendCode(String phoneNumber) {
+        String verificationCode = service.sendMessage(phoneNumber);
+        System.out.println("verificationCode = " + verificationCode);
+    }
+
+    // 인증코드 일치 확인
+    @GetMapping("users/confirmation")
+    public ResponseEntity verifyCode(String phoneNumber, int verificationCode) {
+        if (service.checkVerificationCode(phoneNumber, verificationCode)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     // user 수정
     @PreAuthorize("isAuthenticated()")
     @PutMapping("users/{id}")
@@ -62,15 +80,6 @@ public class UserController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
-    // 회원가입 시 인증코드 받기
-    // TODO. 나중에 활성화
-    @GetMapping("users/codes")
-    public void sendCode(String phoneNumber) {
-        String verificationCode = service.sendMessage(phoneNumber);
-//         TODO. 인증 확인 API 분리
-        service.checkVerificationCode(verificationCode, "");
     }
 
     // user 로그인
@@ -119,4 +128,5 @@ public class UserController {
 //        return service.getUserList(PageRequest.of(page - 1, 10));
         return service.getUserList(page);
     }
+    
 }

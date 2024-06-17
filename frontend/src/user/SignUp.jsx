@@ -22,11 +22,13 @@ export function SignUp() {
   const [passwordCheck, setPasswordCheck] = useState("");
   const [nickName, setNickName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [isCheckedEmail, setIsCheckedEmail] = useState(false);
   const [isCheckedNickName, setIsCheckedNickName] = useState(false);
   const [isCheckedCode, setIsCheckedCode] = useState(false);
+  const [isSendingCode, setIsSendingCode] = useState(false);
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
 
@@ -44,8 +46,21 @@ export function SignUp() {
   // TODO. 휴대폰 번호 11자리 (-)없이 숫자만 입력 가능하게끔 설정, 표시 메세지, 형식 다르면 메세지 전송버튼 활성화 X
 
   function handleSendCode() {
-    // axios.get(`/api/users/codes?phoneNumber=${phoneNumber}`);
-    setIsCheckedCode(true);
+    setIsSendingCode(true);
+    axios.get(`/api/users/codes?phoneNumber=${phoneNumber}`);
+  }
+
+  function handleCheckCode() {
+    axios
+      .get(
+        `/api/users/confirmation?phoneNumber=${phoneNumber}&verificationCode=${verificationCode}`,
+      )
+      .then(() => {
+        successToast("휴대폰 번호가 인증되었습니다");
+        setIsCheckedCode(true);
+      })
+      .catch(() => errorToast("인증번호가 다릅니다"))
+      .finally(() => setIsSendingCode(false));
   }
 
   function handleCheckEmail() {
@@ -222,13 +237,20 @@ export function SignUp() {
               }}
             />
             <InputRightElement>
-              {isCheckedCode && <CheckIcon color="green.500" />}
-              {isCheckedCode || (
+              {isSendingCode || (
                 <Button
                   onClick={handleSendCode}
                   isDisabled={phoneNumber.length !== 11}
                 >
                   인증 요청
+                </Button>
+              )}
+              {isSendingCode && (
+                <Button
+                  onClick={handleSendCode}
+                  isDisabled={phoneNumber.length !== 11}
+                >
+                  재전송
                 </Button>
               )}
             </InputRightElement>
@@ -237,6 +259,20 @@ export function SignUp() {
             휴대폰 번호는 010과 (-)를 제외한 숫자만 입력해주세요 ex)11112222
           </FormHelperText>
         </FormControl>
+        {setIsSendingCode && (
+          <FormControl>
+            <FormLabel>인증번호 입력</FormLabel>
+            <InputGroup>
+              <Input onChange={(e) => setVerificationCode(e.target.value)} />
+              <InputRightElement>
+                {isCheckedCode || (
+                  <Button onClick={handleCheckCode}>확인</Button>
+                )}
+                {isCheckedCode && <CheckIcon color="green.500" />}
+              </InputRightElement>
+            </InputGroup>
+          </FormControl>
+        )}
         <Center mt={5}>
           <Button
             colorScheme={"green"}
