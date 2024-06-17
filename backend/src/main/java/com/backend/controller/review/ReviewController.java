@@ -36,7 +36,8 @@ public class ReviewController {
     }
 
     @GetMapping("{productId}")
-    public void findReviewById(@PathVariable Integer productId) throws Exception {
-
+    public ResponseEntity findReviewById(@PathVariable Integer productId) throws Exception {
+        Review review = service.findReviewById(productId);
+        return ResponseEntity.ok().body(review);
     }
 }
