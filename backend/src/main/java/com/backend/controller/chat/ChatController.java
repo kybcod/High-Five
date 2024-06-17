@@ -27,4 +27,10 @@ public class ChatController {
         Map<String, Object> result = service.selectChatRoomId(productId, authentication);
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/list")
+    @PreAuthorize("isAuthenticated()")
+    public void getChatList(Authentication authentication) {
+        service.selectChatList(authentication);
+    }
 }
