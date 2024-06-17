@@ -27,7 +27,6 @@ import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
 import { UserList } from "./user/UserList.jsx";
-import { ProductShop } from "./product/ProductShop.jsx";
 import { ChatRoomList } from "./chat/ChatRoomList.jsx";
 
 axios.interceptors.request.use((config) => {
