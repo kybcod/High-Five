@@ -11,7 +11,7 @@ import { MainProduct } from "./product/MainProduct.jsx";
 import { ProductEdit } from "./product/ProductEdit.jsx";
 import { ProductDetails } from "./product/ProductDetails.jsx";
 import { SignUp } from "./user/SignUp.jsx";
-import { Login } from "./Login.jsx";
+import { Login } from "./user/Login.jsx";
 import { LoginProvider } from "./component/LoginProvider.jsx";
 import axios from "axios";
 import { BoardWrite } from "./board/BoardWrite.jsx";
@@ -26,6 +26,10 @@ import { QuestionList } from "./Question/QuestionList.jsx";
 import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
+import { ProductShop } from "./product/ProductShop.jsx";
+import { UserEdit } from "./myPage/UserEdit.jsx";
+import { UserInfo } from "./myPage/UserInfo.jsx";
+import { UserList } from "./user/UserList.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -50,6 +54,7 @@ const router = createBrowserRouter([
       // user
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
+      { path: "user/list", element: <UserList /> },
 
       //question
       { path: "question/write", element: <QuestionWrite /> },
@@ -65,7 +70,10 @@ const router = createBrowserRouter([
 
       //my page
       { path: "myPage/:userId", element: <Navigate to="info" /> },
-      { path: "myPage/:userId/info", element: <MyPage tab="info" /> },
+      // { path: "shop/:userId/products", element: <MyPage /> },
+      // { path: "myPage/:userId/info", element: <MyPage tab="info" /> },
+      { path: "shop/:userId/userInfo", element: <UserInfo /> },
+      { path: "shop/:userId/userEdit", element: <UserEdit /> },
       { path: "myPage/:userId/like", element: <MyPage tab="like" /> },
       { path: "myPage/:userId/shop", element: <MyPage tab="shop" /> },
       { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },

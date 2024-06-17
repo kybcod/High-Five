@@ -12,6 +12,7 @@ import {
   Image,
   Input,
   Spinner,
+  Switch,
   Text,
   Textarea,
   useToast,
@@ -24,6 +25,8 @@ import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export function QuestionEdit() {
   const [question, setQuestion] = useState({});
+  const [removeFileList, setRemoveFileList] = useState([]);
+  const [addFileList, setAddFileList] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
@@ -37,6 +40,8 @@ export function QuestionEdit() {
       .putForm(`/api/question/${id}`, {
         title: question.title,
         content: question.content,
+        addFileList,
+        removeFileList,
       })
       .then(() => {
         toast({
@@ -60,6 +65,14 @@ export function QuestionEdit() {
 
   if (question === null) {
     return <Spinner />;
+  }
+
+  function handleRemoveSwitch(name, checked) {
+    if (checked) {
+      setRemoveFileList([...removeFileList, name]);
+    } else {
+      setRemoveFileList(removeFileList.filter((item) => item !== name));
+    }
   }
 
   return (
@@ -110,11 +123,24 @@ export function QuestionEdit() {
                     <Box>
                       <FontAwesomeIcon color={"red"} icon={faTrashCan} />
                     </Box>
+                    <Switch
+                      colorScheme={"pink"}
+                      onChange={(e) =>
+                        handleRemoveSwitch(file.name, e.target.checked)
+                      }
+                    />
                     <Text>{file.name}</Text>
                   </Flex>
                 </CardFooter>
                 <CardBody>
-                  <Image src={file.src} />
+                  <Image
+                    src={file.src}
+                    sx={
+                      removeFileList.includes(file.name)
+                        ? { filter: "blur(8px)" }
+                        : {}
+                    }
+                  />
                 </CardBody>
               </Card>
             ))}
