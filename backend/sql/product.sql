@@ -1,9 +1,6 @@
 USE prj3;
 
 SELECT *
-FROM product;
-
-SELECT *
 FROM product_like;
 
 SELECT *
@@ -12,7 +9,14 @@ FROM bid_list;
 SELECT *
 FROM user;
 
-DESC product;
+SELECT *
+FROM product
+WHERE id = 55;
+
+UPDATE product
+SET status = TRUE
+WHERE status = FALSE;
+
 
 SELECT p.id,
        p.title,
@@ -52,13 +56,13 @@ FROM product p
          JOIN user u ON u.id = p.user_id
 WHERE p.id = 28;
 
-SELECT *
-FROM user;
 
-SELECT *
-FROM product p
-         JOIN user u
-              ON p.user_id = u.id
-WHERE p.user_id = 30
-ORDER BY p.end_time
-LIMIT 9 OFFSET 0;
+
+SHOW STATUS LIKE 'threads_connected'; # 148
+SHOW VARIABLES LIKE 'max_connections'; # 151
+SHOW VARIABLES LIKE 'wait_timeout'; #28800
+
+SET GLOBAL MAX_CONNECTIONS = 300;
+
+
+DESC chat_room;

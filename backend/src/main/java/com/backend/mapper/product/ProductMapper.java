@@ -151,7 +151,7 @@ public interface ProductMapper {
     void insertBidPrice(BidList bid);
 
     @Delete("DELETE FROM product_like WHERE product_id=#{productId}")
-    int deleteLikeByBoardId(Integer productId);
+    int deleteLikeByProductId(Integer productId);
 
     @Select("""
             SELECT COUNT(*)
@@ -302,4 +302,10 @@ public interface ProductMapper {
             WHERE id=#{userId}
             """)
     String selectUserNickName(Integer userId);
+
+    @Delete("DELETE FROM bid_list WHERE product_id=#{productId}")
+    int deleteBidListByProductId(Integer productId);
+
+    @Delete("DELETE FROM chat_room WHERE seller_id=#{userId}")
+    int deleteChatRoomBySellerId(Integer userId);
 }

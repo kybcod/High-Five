@@ -169,6 +169,7 @@ public class ProductService {
 
     public void remove(Integer id) {
 
+        Product product = mapper.selectById(id);
         // s3에서 파일(이미지) 삭제
         List<String> fileNameList = mapper.selectFileByProductId(id);
         for (String fileName : fileNameList) {
@@ -180,7 +181,10 @@ public class ProductService {
             s3Client.deleteObject(deleteObjectRequest);
         }
 
-        mapper.deleteLikeByBoardId(id);
+        //TODO: chat : id랑 productId를 가져옴 삭제해야함
+//        mapper.deleteChatRoomBySellerId(product.getUserId());
+        mapper.deleteBidListByProductId(id);
+        mapper.deleteLikeByProductId(id);
         mapper.deleteFileByProductId(id);
         mapper.deleteByProductId(id);
     }
