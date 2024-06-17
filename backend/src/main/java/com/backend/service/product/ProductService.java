@@ -206,9 +206,7 @@ public class ProductService {
         return result;
     }
 
-    public List<Integer> getLike(Integer userId, Authentication authentication) {
-        // TODO. Authentication 값 넣기
-
+    public List<Integer> getLike(Integer userId) {
         return mapper.selectLikeByUserId(userId);
     }
 
@@ -265,8 +263,8 @@ public class ProductService {
         }
     }
 
-    public List<Product> getProductsByUserId(Integer userId) {
-        List<Product> productList = mapper.selectProductsByUserId(userId);
+    public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
+        List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
 
         for (Product product : productList) {
             List<String> productFiles = mapper.selectFileByProductId(product.getId());
@@ -275,8 +273,64 @@ public class ProductService {
                     .toList();
             product.setProductFileList(files);
         }
-        return productList;
+
+        // 더보기 : 페이지
+        int total = mapper.selectTotalCountByUserId(userId);
+        Page<Product> page = new PageImpl<>(productList, pageable, total);
+        PageInfo pageInfo = new PageInfo().setting(page);
+        boolean hasNextPage = pageable.getPageNumber() + 1 < page.getTotalPages();
+
+
+        return Map.of("productList", productList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
+
     }
+
+    public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable) {
+        // 좋아요
+        List<Product> likeProductList = mapper.selectLikeSelectByUserId(userId, pageable);
+
+        for (Product product : likeProductList) {
+            List<String> productFiles = mapper.selectFileByProductId(product.getId());
+            List<ProductFile> files = productFiles.stream()
+                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+                    .toList();
+            product.setProductFileList(files);
+        }
+
+        int total = mapper.selectCountLikeByUserId(userId);
+
+        // 더보기 : 페이지
+        PageImpl<Product> page = new PageImpl<>(likeProductList, pageable, total);
+        PageInfo pageInfo = new PageInfo().setting(page);
+        boolean hasNextPage = pageable.getPageNumber() + 1 < page.getTotalPages();
+
+        return Map.of("likeProductList", likeProductList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
+    }
+
+    // TODO : 코드 정리
+//    public ProductListResponse getById(Integer id, Authentication authentication) {
+//        mapper.updateViewCount(id);
+//
+//        ProductWithUserDTO product = mapper.selectById2(id);
+//
+//        List<String> productFiles = mapper.selectFileByProductId(product.getId());
+//        List<ProductFile> files = productFiles.stream()
+//                .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+//                .toList();
+////        product.setProductFileList(files);
+//
+//        //좋아요
+//        Like like = new Like();
+//        if (authentication == null) {
+//            like.setLike(false);
+//        } else {
+//            int i = mapper.selectLikeByProductIdAndUserId(id, authentication.getName());
+//            like.setLike(i == 1);
+//        }
+//        like.setCount(mapper.selectCountLikeByProductId(id));
+//
+//        return new ProductListResponse(product, like, files);
+//    }
 }
 
 

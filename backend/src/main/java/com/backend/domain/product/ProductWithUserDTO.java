@@ -6,10 +6,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Data
-public class Product {
+public class ProductWithUserDTO {
     private Integer id;
     private Integer userId;
     private String title;
@@ -22,8 +21,8 @@ public class Product {
     private int viewCount;
     private Boolean reviewStatus;
 
-    // TODO:지우기
-    private List<ProductFile> productFileList;
+
+    //    private List<ProductFile> productFileList;
     private Integer numberOfJoin;
     private String userNickName;
     private String maxBidPrice;

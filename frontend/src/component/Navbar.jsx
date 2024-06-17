@@ -20,7 +20,14 @@ export function Navbar() {
         <Center onClick={() => navigate("/login")}>login</Center>
       )}
       {account.isLoggedIn() && (
-        <Center onClick={() => account.logout()}>logout</Center>
+        <Center
+          onClick={() => {
+            account.logout();
+            navigate("/");
+          }}
+        >
+          logout
+        </Center>
       )}
       {account.isLoggedIn() && (
         <Center>
@@ -33,12 +40,13 @@ export function Navbar() {
       </Center>
       {account.isLoggedIn() && (
         <Center
-          onClick={() => navigate(`/shop/${account.id}/products`)}
+          onClick={() => navigate(`/myPage/${account.id}`)}
           cursor="pointer"
         >
           MyPage
         </Center>
       )}
+      <Center onClick={() => navigate("/user/list")}>UserList</Center>
     </Flex>
   );
 }
