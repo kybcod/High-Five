@@ -73,89 +73,95 @@ export function MyShop() {
 
   return (
     <Box>
-      <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-        {productList.map((product) => (
-          <GridItem key={product.id}>
-            <Card maxW={"s"} h={"100%"}>
-              <CardBody position={"relative"} h={"100%"}>
-                <Box mt={2} w="30%%">
-                  {product.status ? (
-                    <>
-                      {product.productFileList && (
+      {productList.length === 0 ? (
+        <Text align="center" fontSize="xl" fontWeight="bold" mt={4}>
+          판매한 상품이 없습니다.
+        </Text>
+      ) : (
+        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+          {productList.map((product) => (
+            <GridItem key={product.id}>
+              <Card maxW={"s"} h={"100%"}>
+                <CardBody position={"relative"} h={"100%"}>
+                  <Box mt={2} w="30%%">
+                    {product.status ? (
+                      <>
+                        {product.productFileList && (
+                          <Image
+                            onClick={() => navigate(`/product/${product.id}`)}
+                            src={product.productFileList[0].filePath}
+                            borderRadius={"lg"}
+                            w={"100%"}
+                            h={"200px"}
+                          />
+                        )}
+                        <Badge
+                          position={"absolute"}
+                          top={"1"}
+                          left={"1"}
+                          colorScheme={"teal"}
+                        >
+                          {product.endTimeFormat}
+                        </Badge>
+                      </>
+                    ) : (
+                      <Box position={"relative"} w={"100%"} h={"200px"}>
                         <Image
-                          onClick={() => navigate(`/product/${product.id}`)}
                           src={product.productFileList[0].filePath}
-                          borderRadius={"lg"}
-                          w={"100%"}
-                          h={"200px"}
+                          borderRadius="lg"
+                          w="100%"
+                          h="200px"
+                          filter="brightness(50%)"
+                          position="absolute"
+                          top="0"
+                          left="0"
                         />
-                      )}
-                      <Badge
-                        position={"absolute"}
-                        top={"1"}
-                        left={"1"}
-                        colorScheme={"teal"}
-                      >
-                        {product.endTimeFormat}
-                      </Badge>
-                    </>
-                  ) : (
-                    <Box position={"relative"} w={"100%"} h={"200px"}>
-                      <Image
-                        src={product.productFileList[0].filePath}
-                        borderRadius="lg"
-                        w="100%"
-                        h="200px"
-                        filter="brightness(50%)"
-                        position="absolute"
-                        top="0"
-                        left="0"
-                      />
-                      <Text
-                        onClick={() => navigate(`/product/${product.id}`)}
-                        cursor={"pointer"}
-                        borderRadius="lg"
-                        w="100%"
-                        h="200px"
-                        position="absolute"
-                        top="0"
-                        left="0"
-                        color={"white"}
-                        display={"flex"}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                        fontSize={"2xl"}
-                        as="b"
-                      >
-                        판매완료
-                      </Text>
+                        <Text
+                          onClick={() => navigate(`/product/${product.id}`)}
+                          cursor={"pointer"}
+                          borderRadius="lg"
+                          w="100%"
+                          h="200px"
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          color={"white"}
+                          display={"flex"}
+                          alignItems={"center"}
+                          justifyContent={"center"}
+                          fontSize={"2xl"}
+                          as="b"
+                        >
+                          판매완료
+                        </Text>
+                      </Box>
+                    )}
+                  </Box>
+                  <Text mt={2} as={"b"} noOfLines={1} fontSize="lg">
+                    {product.title}
+                  </Text>
+                  <Flex justifyContent={"space-between"}>
+                    <Text color="blue.600" fontSize="xl">
+                      {product.startPrice
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      원
+                    </Text>
+                    <Text>{product.timeFormat}</Text>
+                  </Flex>
+                  {product.status || (
+                    <Box display="flex" justifyContent="center">
+                      <Button mt={2} w={"100%"} colorScheme={"green"}>
+                        상품 후기
+                      </Button>
                     </Box>
                   )}
-                </Box>
-                <Text mt={2} as={"b"} noOfLines={1} fontSize="lg">
-                  {product.title}
-                </Text>
-                <Flex justifyContent={"space-between"}>
-                  <Text color="blue.600" fontSize="xl">
-                    {product.startPrice
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    원
-                  </Text>
-                  <Text>{product.timeFormat}</Text>
-                </Flex>
-                {product.status || (
-                  <Box display="flex" justifyContent="center">
-                    <Button mt={2} w={"100%"} colorScheme={"green"}>
-                      상품 후기
-                    </Button>
-                  </Box>
-                )}
-              </CardBody>
-            </Card>
-          </GridItem>
-        ))}
-      </Grid>
+                </CardBody>
+              </Card>
+            </GridItem>
+          ))}
+        </Grid>
+      )}
       <Box display={"flex"} justifyContent={"center"}>
         {hasNextPage ? (
           <Button
