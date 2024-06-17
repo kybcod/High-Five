@@ -111,9 +111,8 @@ public class ProductController {
         }
     }
 
-//    // 스케줄링 : 5분마다 실행됨
-//    // TODO :  (fixedRate = 5분)
-////    @Scheduled(fixedRate = 60000) //1분
+    //    // TODO :  (fixedRate = 5분)
+//    @Scheduled(cron = "0 0 0/1 * * *", zone = "Asia/Seoul") //1시간
 //    public void checkEndTimeAndProductState() {
 //        service.updateProductState();
 //    }
@@ -133,6 +132,7 @@ public class ProductController {
 
 
 // TODO: 코드 정리
+    
 //    @GetMapping("/test/{id}")
 //    public ProductListResponse getProductById(@PathVariable Integer id, Authentication authentication) {
 //        return service.getById(id, authentication);
