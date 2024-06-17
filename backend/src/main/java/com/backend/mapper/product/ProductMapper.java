@@ -209,7 +209,7 @@ public interface ProductMapper {
     Integer selectProductSellerId(Integer productId);
 
     @Select("""
-            SELECT id, title, status
+            SELECT id, title, status, review_status
             FROM product
             WHERE id =#{productId}
             """)
