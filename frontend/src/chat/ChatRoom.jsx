@@ -5,6 +5,8 @@ import {
   Checkbox,
   Flex,
   Input,
+  List,
+  ListItem,
   Menu,
   MenuButton,
   MenuItem,
@@ -30,6 +32,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
+  faCircleCheck,
   faCircleExclamation,
   faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons";
@@ -164,7 +167,7 @@ export function ChatRoom() {
     }
   };
 
-  const handleReviewSaveButtonClick = (event) => {
+  const handleSaveReviewButtonClick = (event) => {
     event.preventDefault();
     setLoading(true);
     axios
@@ -197,6 +200,15 @@ export function ChatRoom() {
         setReviewId([]);
       });
   };
+  const handleGetReviewButtonClick = () => {
+    axios
+      .get(`/api/reviews/${productId}`)
+      .then((res) => {
+        setReviewList(res.data.reviewList);
+      })
+      .catch()
+      .finally();
+  };
 
   // spinner
   if (roomInfo == null) {
@@ -206,16 +218,6 @@ export function ChatRoom() {
   return (
     <Box w={"70%"}>
       <Box>
-        {/* TODO : 기능 구현 완료 후 삭제
-              기존 버튼에 함수 추가 필수 */}
-        <Button
-          onClick={() => {
-            onOpen();
-            handleReviewButtonClick();
-          }}
-        >
-          거래완료
-        </Button>
         <Flex>
           {/* 뒤로 가기 */}
           <Box w={"10%"}>
@@ -282,19 +284,25 @@ export function ChatRoom() {
             {productInfo.status === 0 &&
             productInfo.buyerId === Number(account.id) &&
             productInfo.reviewStatus === 0 ? (
-              // TODO : productDB review_status 1 이면 버튼 숨김
               <Button
                 onClick={() => {
                   onOpen();
                   handleReviewButtonClick();
                 }}
               >
-                후기 보내기
+                후기 등록
               </Button>
             ) : productInfo.status === 0 &&
               productInfo.buyerId === Number(account.id) &&
               productInfo.reviewStatus === 1 ? (
-              <Button>작성 후기 확인</Button>
+              <Button
+                onClick={() => {
+                  onOpen();
+                  handleGetReviewButtonClick();
+                }}
+              >
+                작성 후기 확인
+              </Button>
             ) : productInfo.status === 1 ? (
               <Button onClick={() => navigate(`/product/${productInfo.id}`)}>
                 입찰 가능 상품
@@ -346,25 +354,39 @@ export function ChatRoom() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>후기 작성</ModalHeader>
-          <ModalBody>
-            <Stack>
-              {reviewList.map((review) => (
-                <Checkbox
-                  key={review.id}
-                  onChange={handleReviewChange}
-                  value={review.id}
-                >
-                  {review.content}
-                </Checkbox>
-              ))}
-            </Stack>
-          </ModalBody>
+          <ModalHeader>판매자님에게 보내는 후기</ModalHeader>
+          {productInfo.reviewStatus === 0 ? (
+            <ModalBody>
+              <Stack>
+                {reviewList.map((review) => (
+                  <Checkbox
+                    key={review.id}
+                    onChange={handleReviewChange}
+                    value={review.id}
+                  >
+                    {review.content}
+                  </Checkbox>
+                ))}
+              </Stack>
+            </ModalBody>
+          ) : (
+            <ModalBody>
+              <List>
+                {reviewList.map((review) => (
+                  <ListItem key={review.id}>
+                    <FontAwesomeIcon icon={faCircleCheck} />
+                    {review.content}
+                  </ListItem>
+                ))}
+              </List>
+            </ModalBody>
+          )}
           <ModalFooter>
             <Button
               isLoading={loading}
               isDisabled={reviewId.length === 0}
-              onClick={handleReviewSaveButtonClick}
+              onClick={handleSaveReviewButtonClick}
+              hidden={productInfo.reviewStatus === 1}
             >
               후기 보내기
             </Button>
