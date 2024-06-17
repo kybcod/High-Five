@@ -1,0 +1,63 @@
+import { Button, Flex, Input, Textarea, useToast } from "@chakra-ui/react";
+import React, { useEffect } from "react";
+import axios from "axios";
+
+export function Comment({ comment, questionId }) {
+  const toast = useToast();
+  // Prop이 제대로 넘어오는지 확인하기 위해 콘솔 로그 추가
+  useEffect(() => {
+    console.log("Comment prop:", comment);
+  }, [comment]);
+
+  // comment id 넘겨주기
+  function handleRemoveClick() {
+    axios
+      .delete(`/api/question/comment`, {
+        data: { id: comment.id },
+      })
+      .then(() => {
+        toast({
+          status: "success",
+          description: `${questionId}번 게시물이 삭제 되었습니다.`,
+          position: "bottom",
+          duration: 2000,
+        });
+      })
+      .catch((err) => {
+        const code = err.response.status;
+        if (code === 400) {
+          toast({
+            status: "error",
+            description: `삭제되지 않았습니다`,
+            position: "bottom",
+            duration: 2000,
+          });
+        }
+        if (code === 404) {
+          toast({
+            status: "error",
+            description: `id가 없습니다.`,
+            position: "bottom",
+            duration: 2000,
+          });
+        }
+      })
+      .finally();
+  }
+
+  return (
+    <>
+      <Flex gap={3}>
+        <input value={comment.userId === 30 ? "관리자" : comment.userId} />
+        <Textarea value={comment.content} />
+        <Input value={comment.inserted} />
+        {/*{account.hasAccess(question.userId) && (*/}
+        <>
+          <Button>수정</Button>
+          <Button onClick={handleRemoveClick}>삭제</Button>
+        </>
+        {/*)}*/}
+      </Flex>
+    </>
+  );
+}

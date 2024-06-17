@@ -3,6 +3,7 @@ package com.backend.domain.question;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 public class QuestionComment {
@@ -11,4 +12,8 @@ public class QuestionComment {
     private Integer userId;
     private String content;
     private LocalDateTime inserted;
+
+    public String getInserted() {
+        return inserted.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
 }

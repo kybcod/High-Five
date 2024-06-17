@@ -28,7 +28,7 @@ import { CommentComponent } from "./CommentComponent.jsx";
 
 export function QuestionView() {
   const { id } = useParams();
-  const [question, setQuestion] = useState([]);
+  const [question, setQuestion] = useState(null);
   const navigate = useNavigate();
   const toast = useToast();
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -37,7 +37,10 @@ export function QuestionView() {
   useEffect(() => {
     axios
       .get(`/api/question/${id}`)
-      .then((res) => setQuestion(res.data))
+      .then((res) => {
+        setQuestion(res.data);
+        // console.log("question.id : ", res.data.id);
+      })
       .catch((err) => {
         if (err.response.status === 404) {
           toast({
@@ -46,10 +49,12 @@ export function QuestionView() {
             position: "top",
             duration: 2500,
           });
+          navigate("/question/list");
+        } else {
+          console.log("error status!!", err);
         }
-        navigate("/question/list");
       });
-  }, []);
+  }, [id]);
 
   function handleRemoveClick() {
     axios
@@ -137,6 +142,7 @@ export function QuestionView() {
         </Box>
         {/*)}*/}
 
+        {/*댓글 컴포넌트*/}
         <CommentComponent questionId={question.id} />
 
         <Center m={10}>
