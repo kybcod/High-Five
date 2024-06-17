@@ -137,9 +137,11 @@ public class BoardService {
         if (count == 0) {
             mapper.insertLikeByIdAndUserId(boardId, userId);
             result.put("boardLike", true);
+        } else {
+            result.put("boardLike", false);
         }
 
-        result.put("boardLike", mapper.selectCountLikeByBoardId(boardId));
+        result.put("count", mapper.selectCountLikeByBoardId(boardId));
 
         return result;
     }

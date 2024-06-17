@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,14 +59,16 @@ public class BoardController {
         return service.deleteById(id);
     }
 
-    @PutMapping("like")
-    public Map<String, Object> like(@RequestBody Map<String, Object> req, Authentication authentication) {
-        return service.like(req, authentication);
+    @PutMapping("like/{id}")
+    public ResponseEntity<Map<String, Object>> like(@PathVariable Integer id, @RequestBody Map<String, Object> req, Authentication authentication) {
+        Map<String, Object> likeResult = service.like(req, authentication);
+        Map<String, Object> viewResult = service.selectById(id, authentication);
+
+        Map<String, Object> combinedResult = new HashMap<>();
+        combinedResult.putAll(likeResult);
+        combinedResult.putAll(viewResult);
+
+        return ResponseEntity.ok().body(combinedResult);
     }
 
-    @GetMapping("/like/{id}")
-    public ResponseEntity<Map<String, Object>> like(@PathVariable Integer id, Authentication authentication) {
-        Map<String, Object> result = service.selectById(id, authentication);
-        return ResponseEntity.ok().body(result);
-    }
 }

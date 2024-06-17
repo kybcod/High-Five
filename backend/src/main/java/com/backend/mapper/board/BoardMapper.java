@@ -71,7 +71,7 @@ public interface BoardMapper {
 
     @Insert("""
             INSERT INTO board_like (board_id, user_id)
-            VALUES (#{boardId}, #{user_id})
+            VALUES (#{boardId}, #{userId})
             """)
     void insertLikeByIdAndUserId(Integer boardId, Integer userId);
 

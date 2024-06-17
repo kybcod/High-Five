@@ -22,7 +22,7 @@ import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 export function BoardView() {
   const [board, setBoard] = useState("");
   const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
-  const [isLikeProccess, setIsLikeProccess] = useState(false);
+  const [isLikeProcess, setIsLikeProcess] = useState(false);
   const navigate = useNavigate();
   const { successToast, errorToast } = CustomToast();
   const account = useContext(LoginContext);
@@ -50,15 +50,18 @@ export function BoardView() {
   }
 
   function handleClickLike() {
-    if (!account.login) {
+    if (!account.isLoggedIn()) {
       return;
     }
-    setIsLikeProccess(true);
+    setIsLikeProcess(true);
     axios
       .put(`/api/board/like/${board_id}`, { boardId: board.id })
-      .then((res) => setBoardLike(res.data))
+      .then((res) => {
+        setBoardLike(res.data.boardLike);
+        setBoard(res.data.board);
+      })
       .finally(() => {
-        setIsLikeProccess(false);
+        setIsLikeProcess(false);
       });
   }
 
@@ -72,7 +75,7 @@ export function BoardView() {
           <Text fontSize="30px">{board.title}</Text>
         </Box>
         <Spacer />
-        {isLikeProccess || (
+        {isLikeProcess || (
           <Flex>
             <Box onClick={handleClickLike}>
               {boardLike.boardLike && <FontAwesomeIcon icon={fullHeart} />}
@@ -85,7 +88,7 @@ export function BoardView() {
             </Box>
           </Flex>
         )}
-        {isLikeProccess && (
+        {isLikeProcess && (
           <Box>
             <Spinner />
           </Box>
