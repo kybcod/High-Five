@@ -1,5 +1,6 @@
 package com.backend.mapper.product;
 
+import com.backend.domain.chat.ChatProduct;
 import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductWithUserDTO;
@@ -218,6 +219,30 @@ public interface ProductMapper {
             ORDER BY p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
+    List<Product> selectProductsByUserId(Integer userId);
+
+    // -- ChatService
+    @Select("""
+            SELECT user_id
+            FROM product
+            WHERE id = #{productId}
+            """)
+    Integer selectProductSellerId(Integer productId);
+
+    @Select("""
+            SELECT id, title, status
+            FROM product
+            WHERE id =#{productId}
+            """)
+    ChatProduct selectChatProductInfo(Integer productId);
+
+    @Select("""
+            SELECT b.user_id buyerId
+            FROM product p
+                     LEFT JOIN bid_list b ON p.id = b.product_id
+            WHERE b.product_id = #{productId};
+            """)
+    Integer selectBuyerId(Integer productId);
     List<Product> selectProductsByUserIdWithPagination(Integer userId, Pageable pageable);
 
     @Select("""

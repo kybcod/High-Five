@@ -27,6 +27,8 @@ import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
 import { UserList } from "./user/UserList.jsx";
+import { ProductShop } from "./product/ProductShop.jsx";
+import { ChatRoomList } from "./chat/ChatRoomList.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -73,8 +75,9 @@ const router = createBrowserRouter([
       { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },
       { path: "myPage/:userId/reviews", element: <MyPage tab="reviews" /> },
 
-      //채팅방
-      { path: "chat/:product_id", element: <ChatRoom /> },
+      // chat
+      { path: "chat/:productId", element: <ChatRoom /> },
+      { path: "chat/list", element: <ChatRoomList /> },
     ],
   },
 ]);

@@ -1,6 +1,7 @@
 package com.backend.controller.chat;
 
 import com.backend.domain.chat.ChatMessage;
+import com.backend.service.chat.ChatService;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -11,19 +12,22 @@ import org.springframework.stereotype.Controller;
 public class WebSocketController {
     // WebSocket 메시지를 보내기 위한 간단한 템플릿을 제공
     private final SimpMessagingTemplate template;
+    private final ChatService service;
 
-    public WebSocketController(SimpMessagingTemplate template) {
+    public WebSocketController(SimpMessagingTemplate template, ChatService service) {
         this.template = template;
+        this.service = service;
     }
 
     @MessageMapping("/chat") // /app/chatroom
     public void receiveMessage(ChatMessage chatMessage) throws Exception {
-        String roomId = String.valueOf(chatMessage.getRoomId());
+        String chatRoomId = String.valueOf(chatMessage.getChatRoomId());
         // 메세지를 보낸 사용자에게 응답을 보냄(채팅 전송)
-        template.convertAndSendToUser(roomId, "/queue/chat", chatMessage);
+        template.convertAndSendToUser(chatRoomId, "/queue/chat", chatMessage);
         // 메시지를 채팅방의 다른 사용자에게 보냄(채팅방 조회)
-        template.convertAndSend("/topic/chat/" + roomId, chatMessage);
+        template.convertAndSend("/topic/chat/" + chatRoomId, chatMessage);
         // ChatMessage save
+        service.insertMessage(chatMessage);
     }
 
     @MessageExceptionHandler
