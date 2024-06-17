@@ -84,4 +84,9 @@ public class ChatService {
     public void insertMessage(ChatMessage chatMessage) {
         int success = mapper.insertMessage(chatMessage);
     }
+
+    public void selectChatList(Authentication authentication) {
+        Integer userId = Integer.valueOf(authentication.getName());
+        // TODO : mapper 작성
+    }
 }
