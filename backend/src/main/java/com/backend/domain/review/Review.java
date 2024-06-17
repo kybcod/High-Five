@@ -10,5 +10,6 @@ public class Review {
     private Integer productId;
     private Integer userId;
     private List<Integer> reviewId;
+    private String reviewIds;
     private LocalDateTime inserted;
 }
