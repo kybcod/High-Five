@@ -151,4 +151,11 @@ public interface UserMapper {
                 WHERE phone_number = #{phoneNumber}
             """)
     String selectEmailByPhoneNumber(String phoneNumber);
+
+    @Update("""
+                UPDATE user
+                SET password = #{password}
+                WHERE email = #{email}
+            """)
+    int updatePassword(User user);
 }

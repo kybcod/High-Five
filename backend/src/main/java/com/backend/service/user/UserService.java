@@ -257,4 +257,14 @@ public class UserService {
     public String getEmailByPhoneNumber(String phoneNumber) {
         return mapper.selectEmailByPhoneNumber(phoneNumber);
     }
+
+    public boolean modifyPassword(User user) {
+        User dbUser = getUserByEmail(user.getEmail());
+        if (dbUser != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            mapper.updatePassword(user);
+            return true;
+        }
+        return false;
+    }
 }

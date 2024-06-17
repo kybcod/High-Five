@@ -24,7 +24,7 @@ export function UserEmail() {
         if (err.response.status === 404) {
           errorToast("해당 번호로 가입된 회원이 없습니다");
         } else {
-          errorToast("회원 조회 중 문제가 발생했습니다. 다시 시도해 주세요");
+          errorToast("회원 조회 중 문제가 발생했습니다. 다시 시도해주세요");
         }
       });
   }

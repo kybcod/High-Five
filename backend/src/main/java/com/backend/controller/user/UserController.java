@@ -109,15 +109,6 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/users/emails/{phoneNumber}")
-    public ResponseEntity getEmails(@PathVariable String phoneNumber) {
-        String email = service.getEmailByPhoneNumber(phoneNumber);
-        if (email == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(email);
-    }
-
     // 회원가입 시 닉네임 중복 확인
     @GetMapping("/users/nickNames")
     public ResponseEntity nickNames(String nickName) {
@@ -137,8 +128,28 @@ public class UserController {
         return service.getUserList(page);
     }
 
+    // 유저 신고하기
     @PutMapping("/users/black/{id}")
     public void reportUser(@PathVariable Integer id) {
         service.reportUserById(id);
+    }
+
+    // 전화번호로 이메일 찾기
+    @GetMapping("/users/emails/{phoneNumber}")
+    public ResponseEntity getEmails(@PathVariable String phoneNumber) {
+        String email = service.getEmailByPhoneNumber(phoneNumber);
+        if (email == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(email);
+    }
+
+    // 비밀번호 재설정
+    @PutMapping("/user/passwords")
+    public ResponseEntity modifyPassword(@RequestBody User user) {
+        if (service.modifyPassword(user)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
