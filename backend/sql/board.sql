@@ -1,6 +1,9 @@
 SELECT *
 FROM board;
 
+SELECT *
+FROM board_like;
+
 ALTER TABLE board
     MODIFY user_id INT NOT NULL;
 

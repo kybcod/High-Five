@@ -22,9 +22,10 @@ public interface BoardMapper {
     void insertFileName(Integer boardId, String fileName);
 
     @Select("""
-            SELECT b.id, b.title, b.user_id, b.inserted, COUNT(DISTINCT f.file_name) number_of_images
-            FROM board b JOIN board_file f ON b.id = f.board_id
-            GROUP BY b.id
+            SELECT b.id, b.title, b.user_id, b.inserted, COUNT(DISTINCT f.file_name) number_of_images, COUNT(DISTINCT l.user_id) number_of_likes
+            FROM board b LEFT JOIN board_file f ON b.id = f.board_id
+                         LEFT JOIN board_like l ON b.id = l.board_id
+            GROUP BY b.id, b.title, b.user_id, b.inserted
             ORDER BY b.id DESC
             """)
     List<Board> selectAll();

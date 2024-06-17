@@ -14,7 +14,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart as fullHeart,
+  faImage,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
@@ -54,6 +57,16 @@ export function BoardList() {
                           <FontAwesomeIcon icon={faImage} />
                         </Box>
                         <Box>{board.numberOfImages}</Box>
+                      </Flex>
+                    </Badge>
+                  )}
+                  {board.numberOfLikes > 0 && (
+                    <Badge>
+                      <Flex>
+                        <Box>
+                          <FontAwesomeIcon icon={fullHeart} />
+                        </Box>
+                        <Box>{board.numberOfLikes}</Box>
                       </Flex>
                     </Badge>
                   )}
