@@ -3,6 +3,7 @@ package com.backend.domain.user;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ public class User {
     private Integer id;
     private String email;
     private String password;
+    private String oldPassword;
     private String nickName;
     private String phoneNumber;
     private Integer blackCount;
@@ -24,5 +26,11 @@ public class User {
                     .collect(Collectors.joining(" "));
         }
         return auth;
+    }
+
+    public String getSignupDateAndTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+
+        return inserted.format(formatter);
     }
 }
