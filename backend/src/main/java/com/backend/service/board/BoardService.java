@@ -5,6 +5,7 @@ import com.backend.domain.board.BoardFile;
 import com.backend.mapper.board.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +16,9 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -62,7 +65,9 @@ public class BoardService {
         return mapper.selectAll();
     }
 
-    public Board selectById(Integer id) {
+    public Map<String, Object> selectById(Integer id, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+
         Board board = mapper.selectById(id);
         List<String> fileNames = mapper.selectFileNameByBoardId(board.getId());
         List<BoardFile> files = fileNames.stream()
@@ -71,7 +76,18 @@ public class BoardService {
 
         board.setBoardFileList(files);
 
-        return board;
+        Map<String, Object> boardLike = new HashMap<>();
+        if (authentication == null) {
+            boardLike.put("boardLike", false);
+        } else {
+            int c = mapper.selectLikeByBoardIdAndUserId(id, authentication.getName());
+            boardLike.put("boardLike", c == 1);
+        }
+        boardLike.put("count", mapper.selectCountLikeByBoardId(id));
+        result.put("board", board);
+        result.put("boardLike", boardLike);
+
+        return result;
 
     }
 
@@ -108,5 +124,23 @@ public class BoardService {
 
     public int deleteById(Integer id) {
         return mapper.deleteById(id);
+    }
+
+    public Map<String, Object> like(Map<String, Object> req, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("boardLike", false);
+        Integer boardId = (Integer) req.get("boardId");
+        Integer userId = Integer.valueOf(authentication.getName());
+
+        int count = mapper.deleteLikeByBoardIdAndUserId(boardId, userId);
+
+        if (count == 0) {
+            mapper.insertLikeByIdAndUserId(boardId, userId);
+            result.put("boardLike", true);
+        }
+
+        result.put("boardLike", mapper.selectCountLikeByBoardId(boardId));
+
+        return result;
     }
 }

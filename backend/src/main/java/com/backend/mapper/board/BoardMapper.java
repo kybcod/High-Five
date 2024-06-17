@@ -61,4 +61,31 @@ public interface BoardMapper {
             AND file_name = #{fileName}
             """)
     void deleteFileByBoardIdAndName(Integer boardId, String fileName);
+
+    @Delete("""
+            DELETE FROM board_like
+            WHERE board_id = #{boardId}
+            AND user_id = #{userId}
+            """)
+    int deleteLikeByBoardIdAndUserId(Integer boardId, Integer userId);
+
+    @Insert("""
+            INSERT INTO board_like (board_id, user_id)
+            VALUES (#{boardId}, #{user_id})
+            """)
+    void insertLikeByIdAndUserId(Integer boardId, Integer userId);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM board_like
+            WHERE board_id = #{boardId}
+            """)
+    int selectCountLikeByBoardId(Integer boardId);
+
+    @Select("""
+            SELECT COUNT(*) FROM board_like
+            WHERE board_id = #{boardId}
+            AND user_id = #{userId}
+            """)
+    int selectLikeByBoardIdAndUserId(Integer boardId, String userId);
 }

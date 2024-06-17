@@ -4,11 +4,13 @@ import com.backend.domain.board.Board;
 import com.backend.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/board")
@@ -33,8 +35,10 @@ public class BoardController {
     }
 
     @GetMapping("{id}")
-    public Board view(@PathVariable Integer id) {
-        return service.selectById(id);
+    public ResponseEntity view(@PathVariable Integer id, Authentication authentication) {
+        Map<String, Object> result = service.selectById(id, authentication);
+
+        return ResponseEntity.ok().body(result);
     }
 
     @PutMapping("modify")
@@ -52,5 +56,16 @@ public class BoardController {
     @DeleteMapping("{id}")
     public int delete(@PathVariable Integer id) {
         return service.deleteById(id);
+    }
+
+    @PutMapping("like")
+    public Map<String, Object> like(@RequestBody Map<String, Object> req, Authentication authentication) {
+        return service.like(req, authentication);
+    }
+
+    @GetMapping("/like/{id}")
+    public ResponseEntity<Map<String, Object>> like(@PathVariable Integer id, Authentication authentication) {
+        Map<String, Object> result = service.selectById(id, authentication);
+        return ResponseEntity.ok().body(result);
     }
 }
