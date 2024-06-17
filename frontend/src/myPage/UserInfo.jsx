@@ -10,6 +10,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -18,6 +19,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+import ReportButton from "../user/ReportButton.jsx";
 
 export function UserInfo() {
   const account = useContext(LoginContext);
@@ -64,6 +66,7 @@ export function UserInfo() {
   return (
     <Box>
       <Box>
+        <ReportButton userId={user.id} />
         <FormControl>
           <FormLabel>이메일 주소</FormLabel>
           <Input
@@ -89,6 +92,7 @@ export function UserInfo() {
         </Flex>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>삭제하시겠습니까?</ModalHeader>
           <ModalBody>비밀번호를 입력해주세요</ModalBody>

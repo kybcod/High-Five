@@ -48,3 +48,13 @@ FROM code;
 DELETE
 FROM code
 WHERE phone_number = '01071263769';
+
+
+SELECT *
+FROM user
+WHERE id = 37
+;
+
+UPDATE user
+SET black_count = 0
+WHERE id = 37;

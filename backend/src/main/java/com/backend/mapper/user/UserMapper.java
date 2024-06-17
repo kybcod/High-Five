@@ -137,4 +137,11 @@ public interface UserMapper {
                 WHERE phone_number = #{phone_number}
             """)
     int deleteCodeByPhoneNumber(String phoneNumber);
+
+    @Update("""
+                UPDATE user
+                SET black_count = black_count + 1
+                WHERE id = #{id}
+            """)
+    int updateBlackCountByUserId(Integer id);
 }

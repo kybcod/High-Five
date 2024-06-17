@@ -249,4 +249,8 @@ public class UserService {
 
         return Map.of("userList", userList, "pageInfo", paeInfo);
     }
+
+    public void reportUserById(Integer id) {
+        mapper.updateBlackCountByUserId(id);
+    }
 }

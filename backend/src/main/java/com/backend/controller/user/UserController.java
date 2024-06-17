@@ -125,8 +125,12 @@ public class UserController {
     public Map<String, Object> list(@RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false) String type,
                                     @RequestParam(required = false) String keyword) {
-//        return service.getUserList(PageRequest.of(page - 1, 10));
         return service.getUserList(page);
     }
-    
+
+    @PutMapping("/users/black/{id}")
+    public void reportUser(@PathVariable Integer id) {
+        System.out.println("id = " + id);
+        service.reportUserById(id);
+    }
 }

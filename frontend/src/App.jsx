@@ -29,6 +29,7 @@ import { MyPage } from "./myPage/MyPage.jsx";
 import { UserList } from "./user/UserList.jsx";
 import { ChatRoomList } from "./chat/ChatRoomList.jsx";
 import { UserEdit } from "./myPage/UserEdit.jsx";
+import { UserFindEmail } from "./user/UserFindEmail.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
       { path: "user/list", element: <UserList /> },
+      { path: "user/email", element: <UserFindEmail /> },
 
       //question
       { path: "question/write", element: <QuestionWrite /> },
