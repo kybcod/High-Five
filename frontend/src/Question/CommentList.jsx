@@ -11,13 +11,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
-export function CommentList({ questionId }) {
+export function CommentList({ questionId, isProcessing, setIsprocessing }) {
   const [question, setQuestion] = useState([]);
   useEffect(() => {
-    axios
-      .get(`/api/question/comment/${questionId}`)
-      .then((res) => setQuestion(res.data));
-  }, [questionId]);
+    if (!isProcessing) {
+      axios
+        .get(`/api/question/comment/${questionId}`)
+        .then((res) => setQuestion(res.data));
+    }
+  }, [isProcessing]);
 
   return (
     <Box>
@@ -25,7 +27,12 @@ export function CommentList({ questionId }) {
         <CardBody>
           <Stack divider={<StackDivider />} spacing={4}>
             {question.map((comment) => (
-              <Flex gap={3} key={comment.id}>
+              <Flex
+                gap={3}
+                key={comment.id}
+                isProcessing={isProcessing}
+                setIsProcessing={setIsprocessing}
+              >
                 <input
                   value={comment.userId === 30 ? "관리자" : comment.userId}
                 />

@@ -3,14 +3,15 @@ import { Box, Button, Flex, Input, Textarea } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { LoginContext } from "../component/LoginProvider.jsx";
 
-export function CommentWrite({ questionId }) {
+export function CommentWrite({ questionId, isProcessing, setIsProcessing }) {
   const [content, setContent] = useState("");
   const account = useContext(LoginContext);
 
-  // questionId, userId, content 어떻게 backend로 넘겨줄까?
-  // questionId => prop으로
   function handleWriteClick() {
-    axios.post(`/api/question/comment`, { content, questionId });
+    setIsProcessing(true);
+    axios
+      .post(`/api/question/comment`, { content, questionId })
+      .then(setIsProcessing(false));
   }
 
   return (
@@ -20,7 +21,13 @@ export function CommentWrite({ questionId }) {
           onChange={(e) => setContent(e.target.value)}
           value={content}
         />
-        <Button onClick={handleWriteClick}>등록</Button>
+        <Button
+          onClick={handleWriteClick}
+          isDisabled={content.trim().length === 0}
+          isLoading={isProcessing}
+        >
+          등록
+        </Button>
       </Flex>
     </Box>
   );
