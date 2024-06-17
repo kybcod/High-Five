@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Input,
@@ -80,7 +81,12 @@ export function UserInfo() {
           <FormLabel>가입일시</FormLabel>
           <Input variant="flushed" readOnly value={user.signupDateAndTime} />
         </FormControl>
-        <Link onClick={onOpen}>회원 탈퇴</Link>
+        <Flex gap={3}>
+          <Link onClick={() => navigate("/myPage/:userId/userEdit")}>
+            회원정보수정
+          </Link>
+          <Link onClick={onOpen}>회원 탈퇴</Link>
+        </Flex>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>

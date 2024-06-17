@@ -27,8 +27,8 @@ import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
 import { UserList } from "./user/UserList.jsx";
-import { ProductShop } from "./product/ProductShop.jsx";
 import { ChatRoomList } from "./chat/ChatRoomList.jsx";
+import { UserEdit } from "./myPage/UserEdit.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -70,6 +70,7 @@ const router = createBrowserRouter([
       //my page
       { path: "myPage/:userId", element: <Navigate to="userInfo" /> },
       { path: "myPage/:userId/userInfo", element: <MyPage tab="userInfo" /> },
+      { path: "myPage/:userId/userEdit", element: <UserEdit /> },
       { path: "myPage/:userId/like", element: <MyPage tab="like" /> },
       { path: "myPage/:userId/shop", element: <MyPage tab="shop" /> },
       { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },

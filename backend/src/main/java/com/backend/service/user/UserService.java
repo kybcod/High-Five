@@ -230,8 +230,8 @@ public class UserService {
 
     public Map<String, Object> getUserList(int page) {
         int offset = (page - 1) * 10;
-        List<User> userList = mapper.selectUserList(offset);
         Pageable pageable = PageRequest.of(page - 1, 10);
+        List<User> userList = mapper.selectUserList(offset);
 
         int totalUserNumber = mapper.selectTotalUserCount();
         Page<User> pageImpl = new PageImpl<>(userList, pageable, totalUserNumber);

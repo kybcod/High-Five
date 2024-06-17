@@ -58,14 +58,23 @@ export function UserList() {
   }
 
   function handleSearchClick() {
-    navigate(`/?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(`/user/list/?type=${searchType}&keyword=${searchKeyword}`);
   }
+
+  // function handleTypeClick(type) {
+  //   setSearchType(type);
+  //   navigate(`/user/list/?type=${searchType}&keyword=${searchKeyword}`);
+  // }
 
   return (
     <Box>
       <Flex gap={2}>
-        <Link to={`/user/list/?${searchParams}`}>전체</Link>
-        <Link to={`/user/list/?${searchParams}`}>블랙회원</Link>
+        {/*<Link cursor={"pointer"} onClick={() => handleTypeClick("all")}>*/}
+        {/*  전체*/}
+        {/*</Link>*/}
+        {/*<Link cursor={"pointer"} onClick={() => handleTypeClick("black")}>*/}
+        {/*  블랙회원*/}
+        {/*</Link>*/}
       </Flex>
       <Table>
         <Thead>

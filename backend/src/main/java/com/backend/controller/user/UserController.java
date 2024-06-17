@@ -113,7 +113,9 @@ public class UserController {
 
     // user 리스트 조회
     @GetMapping("/users/list")
-    public Map<String, Object> list(@RequestParam(required = false, defaultValue = "1") int page) {
+    public Map<String, Object> list(@RequestParam(required = false, defaultValue = "1") int page,
+                                    @RequestParam(required = false) String type,
+                                    @RequestParam(required = false) String keyword) {
 //        return service.getUserList(PageRequest.of(page - 1, 10));
         return service.getUserList(page);
     }
