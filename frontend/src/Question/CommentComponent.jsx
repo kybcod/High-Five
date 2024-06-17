@@ -7,7 +7,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { useContext, useState } from "react";
 
 export function CommentComponent({ questionId }) {
-  const [isProcessing, setIsProcessing] = useState(false);
+  // const [isProcessing, setIsProcessing] = useState(false);
   return (
     <Box>
       <Box mb={5}>
@@ -17,18 +17,10 @@ export function CommentComponent({ questionId }) {
         </Heading>
       </Box>
       <Box mb={5}>
-        <CommentWrite
-          questionId={questionId}
-          setIsProcessing={setIsProcessing}
-          isProcessing={isProcessing}
-        />
+        <CommentWrite questionId={questionId} />
       </Box>
       <Box>
-        <CommentList
-          questionId={questionId}
-          setIsprocessing={setIsProcessing}
-          isProcessing={isProcessing}
-        />
+        <CommentList questionId={questionId} />
       </Box>
     </Box>
   );

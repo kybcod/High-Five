@@ -20,12 +20,12 @@ public interface QuestionCommentMapper {
     List<QuestionComment> getComment(Integer questionId);
 
     @Delete("""
-            DELETE FROM question_board_comment WHERE question_id=#{questionId}
+            DELETE FROM question_board_comment WHERE id=#{id}
             """)
-    int deleteComment(Integer questionId);
+    int deleteComment(Integer id);
 
     @Select("""
-            SELECT * FROM question_board_comment WHERE question_id=#{questionId}
+            SELECT * FROM question_board_comment WHERE id=#{id}
             """)
-    QuestionComment selectUserId(Integer questionId);
+    QuestionComment selectUserById(Integer id);
 }

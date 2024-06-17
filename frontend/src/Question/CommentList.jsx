@@ -8,27 +8,29 @@ import {
   Input,
   Stack,
   StackDivider,
-  Textarea,
   useToast,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../component/LoginProvider.jsx";
 
-export function CommentList({ questionId, isProcessing, setIsprocessing }) {
+export function CommentList({ questionId }) {
   const [question, setQuestion] = useState([]);
   const account = useContext(LoginContext);
   const toast = useToast();
   useEffect(() => {
-    if (!isProcessing) {
-      axios
-        .get(`/api/question/comment/${questionId}`)
-        .then((res) => setQuestion(res.data));
-    }
+    // if (!isProcessing) {
+    axios
+      .get(`/api/question/comment/${questionId}`)
+      .then((res) => setQuestion(res.data));
+    // }
   }, [questionId]);
 
-  function handleRemoveClick() {
+  function handleRemoveClick(commentId) {
+    // comment id 넘겨주기
     axios
-      .delete(`/api/question/comment/${questionId}`)
+      .delete(`/api/question/comment`, {
+        data: { id: commentId },
+      })
       .then(() => {
         toast({
           status: "success",
@@ -36,6 +38,9 @@ export function CommentList({ questionId, isProcessing, setIsprocessing }) {
           position: "bottom",
           duration: 2000,
         });
+        setQuestion((prevQuestion) =>
+          prevQuestion.filter((comment) => comment.id !== commentId),
+        );
       })
       .catch((err) => {
         const code = err.response.status;
@@ -43,6 +48,14 @@ export function CommentList({ questionId, isProcessing, setIsprocessing }) {
           toast({
             status: "error",
             description: `삭제되지 않았습니다`,
+            position: "bottom",
+            duration: 2000,
+          });
+        }
+        if (code === 404) {
+          toast({
+            status: "error",
+            description: `id가 없습니다.`,
             position: "bottom",
             duration: 2000,
           });
@@ -57,12 +70,7 @@ export function CommentList({ questionId, isProcessing, setIsprocessing }) {
         <CardBody>
           <Stack divider={<StackDivider />} spacing={4}>
             {question.map((comment) => (
-              <Flex
-                gap={3}
-                key={comment.id}
-                isProcessing={isProcessing}
-                setIsProcessing={setIsprocessing}
-              >
+              <Flex gap={3} key={comment.id}>
                 <input
                   value={comment.userId === 30 ? "관리자" : comment.userId}
                 />
@@ -71,7 +79,9 @@ export function CommentList({ questionId, isProcessing, setIsprocessing }) {
                 {/*{account.hasAccess(question.userId) && (*/}
                 <>
                   <Button>수정</Button>
-                  <Button onClick={handleRemoveClick}>삭제</Button>
+                  <Button onClick={() => handleRemoveClick(comment.id)}>
+                    삭제
+                  </Button>
                 </>
                 {/*)}*/}
               </Flex>

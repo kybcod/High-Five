@@ -3,6 +3,7 @@ package com.backend.controller.question;
 import com.backend.domain.question.QuestionComment;
 import com.backend.service.question.QuestionCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,15 +27,17 @@ public class QuestionCommentController {
         return service.get(questionId);
     }
 
-    @DeleteMapping("{questionId}")
+    @DeleteMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity delete(@PathVariable Integer questionId, Authentication authentication) {
-        if (service.hasAccess(questionId, authentication)) {
-            service.delete(questionId);
+    public ResponseEntity delete(@RequestBody Integer id, Authentication authentication) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body("ID is required");
+        }
+        if (service.hasAccess(id, authentication)) {
+            service.delete(id);
             return ResponseEntity.ok().build();
         } else {
-            System.out.println("authentication = " + authentication);
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 }

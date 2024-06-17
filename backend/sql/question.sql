@@ -20,3 +20,15 @@ desc question_board_comment;
 
 ALTER TABLE question_board_file
     MODIFY COLUMN file_name varchar(200) NOT NULL;
+
+SELECT *
+FROM question_board_comment
+WHERE question_id = 31;
+
+SELECT user_id
+FROM question_board_comment
+WHERE question_id = 31;
+
+SELECT COUNT(user_id)
+FROM question_board_comment
+WHERE question_id = 31;
