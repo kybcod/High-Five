@@ -14,6 +14,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { MyShop } from "./MyShop.jsx";
 import { LikeList } from "./LikeList.jsx";
 import axios from "axios";
+import { UserInfo } from "./UserInfo.jsx";
 
 export function MyPage({ tab }) {
   const [product, setProduct] = useState(null);
@@ -24,7 +25,7 @@ export function MyPage({ tab }) {
 
   // 탭 이름 -> 인덱스
   const tabIndex = {
-    info: 0,
+    userInfo: 0,
     like: 1,
     shop: 2,
     bids: 3,
@@ -33,14 +34,14 @@ export function MyPage({ tab }) {
 
   // 인덱스 -> 택이름
   const indexTab = {
-    0: "info",
+    0: "userInfo",
     1: "like",
     2: "shop",
     3: "bids",
     4: "reviews",
   };
 
-  const currentTab = tab || "info";
+  const currentTab = tab || "userInfo";
 
   useEffect(() => {
     const tabName = location.pathname.split("/").pop();
@@ -112,7 +113,9 @@ export function MyPage({ tab }) {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Box>내정보</Box>
+            <Box>
+              <UserInfo />
+            </Box>
           </TabPanel>
           <TabPanel>
             <Box>

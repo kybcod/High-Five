@@ -26,9 +26,6 @@ import { QuestionList } from "./Question/QuestionList.jsx";
 import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
-import { ProductShop } from "./product/ProductShop.jsx";
-import { UserEdit } from "./myPage/UserEdit.jsx";
-import { UserInfo } from "./myPage/UserInfo.jsx";
 import { UserList } from "./user/UserList.jsx";
 
 axios.interceptors.request.use((config) => {
@@ -69,11 +66,8 @@ const router = createBrowserRouter([
       { path: "board/modify/:board_id", element: <BoardModify /> },
 
       //my page
-      { path: "myPage/:userId", element: <Navigate to="info" /> },
-      // { path: "shop/:userId/products", element: <MyPage /> },
-      // { path: "myPage/:userId/info", element: <MyPage tab="info" /> },
-      { path: "shop/:userId/userInfo", element: <UserInfo /> },
-      { path: "shop/:userId/userEdit", element: <UserEdit /> },
+      { path: "myPage/:userId", element: <Navigate to="userInfo" /> },
+      { path: "myPage/:userId/userInfo", element: <MyPage tab="userInfo" /> },
       { path: "myPage/:userId/like", element: <MyPage tab="like" /> },
       { path: "myPage/:userId/shop", element: <MyPage tab="shop" /> },
       { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },
