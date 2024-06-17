@@ -8,4 +8,5 @@ public class ChatProduct {
     private String title;
     private Integer status;
     private Integer buyerId;
+    private Integer reviewStatus;
 }
