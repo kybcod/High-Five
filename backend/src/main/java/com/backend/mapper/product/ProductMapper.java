@@ -200,27 +200,6 @@ public interface ProductMapper {
             """)
     int updateBidStatusByProductId(Integer productId, boolean status);
 
-    @Select("""
-            SELECT p.id,
-                   p.user_id,
-                   p.title,
-                   p.category,
-                   p.start_price,
-                   p.start_time,
-                   p.end_time,
-                   p.content,
-                   p.view_count,
-                   p.status,
-                   u.nick_name AS userNickName
-            FROM product p
-                     JOIN user u
-                          ON p.user_id = u.id
-            WHERE p.user_id = #{userId}
-            ORDER BY p.end_time
-            LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
-            """)
-    List<Product> selectProductsByUserId(Integer userId);
-
     // -- ChatService
     @Select("""
             SELECT user_id
@@ -243,6 +222,26 @@ public interface ProductMapper {
             WHERE b.product_id = #{productId};
             """)
     Integer selectBuyerId(Integer productId);
+
+    @Select("""
+            SELECT p.id,
+                   p.user_id,
+                   p.title,
+                   p.category,
+                   p.start_price,
+                   p.start_time,
+                   p.end_time,
+                   p.content,
+                   p.view_count,
+                   p.status,
+                   u.nick_name AS userNickName
+            FROM product p
+                     JOIN user u
+                          ON p.user_id = u.id
+            WHERE p.user_id = #{userId}
+            ORDER BY p.end_time
+            LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+            """)
     List<Product> selectProductsByUserIdWithPagination(Integer userId, Pageable pageable);
 
     @Select("""
