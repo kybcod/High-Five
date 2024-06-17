@@ -17,6 +17,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Stack,
   Text,
   useDisclosure,
   useToast,
@@ -98,7 +99,7 @@ export function ChatRoom() {
     });
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    // client.activate(); // 활성화
+    client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
@@ -106,7 +107,7 @@ export function ChatRoom() {
         disConnect();
       }
     };
-  }, []);
+  }, [roomId]);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
@@ -167,7 +168,7 @@ export function ChatRoom() {
     event.preventDefault();
     setLoading(true);
     axios
-      .post(`/api/reviews/${roomInfo.productId}`, {
+      .post(`/api/reviews`, {
         productId: roomInfo.productId,
         userId: account.id,
         reviewId,
@@ -230,18 +231,15 @@ export function ChatRoom() {
           {/* 상대방 상점 */}
           <Center cursor={"pointer"} w={"80%"}>
             <Box fontSize={"xl"}>
-              {/* TODO : 경로 이동 (현재: 마이페이지) */}
               {roomInfo.sellerId === Number(account.id) ? (
                 <Text
-                  onClick={() => navigate(`/shop/${roomInfo.userId}/products`)}
+                  onClick={() => navigate(`/myPage/${roomInfo.userId}/shop`)}
                 >
                   {roomInfo.userName}
                 </Text>
               ) : (
                 <Text
-                  onClick={() =>
-                    navigate(`/shop/${roomInfo.sellerId}/products`)
-                  }
+                  onClick={() => navigate(`/myPage/${roomInfo.sellerId}/shop`)}
                 >
                   {roomInfo.sellerName}
                 </Text>
@@ -280,15 +278,29 @@ export function ChatRoom() {
           </Box>
           <Box w={"20%"}>
             {/* 상품 상태 */}
+            {/* 0 현재 판매 종료, 1 판매 중*/}
             {productInfo.status === 0 &&
-            productInfo.buyerId === Number(account.id) ? (
-              <Button onClick={isOpen}>거래완료</Button>
+            productInfo.buyerId === Number(account.id) &&
+            productInfo.reviewStatus === 0 ? (
+              // TODO : productDB review_status 1 이면 버튼 숨김
+              <Button
+                onClick={() => {
+                  onOpen();
+                  handleReviewButtonClick();
+                }}
+              >
+                후기 보내기
+              </Button>
+            ) : productInfo.status === 0 &&
+              productInfo.buyerId === Number(account.id) &&
+              productInfo.reviewStatus === 1 ? (
+              <Button>작성 후기 확인</Button>
             ) : productInfo.status === 1 ? (
               <Button onClick={() => navigate(`/product/${productInfo.id}`)}>
-                입찰가능
+                입찰 가능 상품
               </Button>
             ) : (
-              <Button isDisabled={true}>판매종료</Button>
+              <Button isDisabled={true}>판매 종료 상품</Button>
             )}
           </Box>
         </Flex>
@@ -336,15 +348,17 @@ export function ChatRoom() {
         <ModalContent>
           <ModalHeader>후기 작성</ModalHeader>
           <ModalBody>
-            {reviewList.map((review) => (
-              <Checkbox
-                key={review.id}
-                onChange={handleReviewChange}
-                value={review.id}
-              >
-                {review.content}
-              </Checkbox>
-            ))}
+            <Stack>
+              {reviewList.map((review) => (
+                <Checkbox
+                  key={review.id}
+                  onChange={handleReviewChange}
+                  value={review.id}
+                >
+                  {review.content}
+                </Checkbox>
+              ))}
+            </Stack>
           </ModalBody>
           <ModalFooter>
             <Button
