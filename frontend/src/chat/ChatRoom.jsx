@@ -281,6 +281,7 @@ export function ChatRoom() {
           <Box w={"20%"}>
             {/* 상품 상태 */}
             {/* 0 현재 판매 종료, 1 판매 중*/}
+            {/* TODO : Notion 정리 */}
             {productInfo.status === 0 &&
             productInfo.buyerId === Number(account.id) &&
             productInfo.reviewStatus === 0 ? (
@@ -375,6 +376,7 @@ export function ChatRoom() {
                 {reviewList.map((review) => (
                   <ListItem key={review.id}>
                     <FontAwesomeIcon icon={faCircleCheck} />
+                    &nbsp;
                     {review.content}
                   </ListItem>
                 ))}
