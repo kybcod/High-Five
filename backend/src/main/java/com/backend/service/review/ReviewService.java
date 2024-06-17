@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,5 +47,17 @@ public class ReviewService {
             return false;
         }
         return true;
+    }
+
+    public Review findReviewById(Integer productId) throws JsonProcessingException {
+        Review review = mapper.selectReviewById(productId);
+        String reviewIdsJson = review.getReviewIds();
+        review.setReviewId(objectMapper.readValue(reviewIdsJson, List.class));
+        List<Map<String, Object>> reviewList = new ArrayList<>();
+        for (Integer id : review.getReviewId()) {
+            reviewList.add(mapper.selectReviewListById(id));
+        }
+        review.setReviewList(reviewList);
+        return review;
     }
 }
