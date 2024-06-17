@@ -296,4 +296,13 @@ public interface ProductMapper {
             WHERE p.id = #{id};
             """)
     ProductWithUserDTO selectById2(Integer id);
+
+
+    // -- review 생성 시 review_status 변경
+    @Update("""
+            UPDATE product
+            SET review_status = 1
+            WHERE id = #{productId};
+            """)
+    int updateReviewStatusById(Integer productId);
 }
