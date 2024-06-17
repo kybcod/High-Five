@@ -5,7 +5,6 @@ import {
   Box,
   Card,
   CardBody,
-  Center,
   Flex,
   Grid,
   GridItem,
@@ -74,11 +73,11 @@ export function MainProduct() {
   return (
     <Box>
       <Category />
-      <Center w="100%">
-        <Box h={"100px"} border={"1px solid black"}>
-          <Box>이미지 배너</Box>
-        </Box>
-      </Center>
+      {/*<Center w="100%">*/}
+      {/*  <Box mt={2} w="100%">*/}
+      {/*    <MainSlider />*/}
+      {/*  </Box>*/}
+      {/*</Center>*/}
       <Heading my={4}>오늘의 상품</Heading>
       <Grid templateColumns="repeat(5, 1fr)" gap={6}>
         {productList.map((product) => (
