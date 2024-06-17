@@ -1,16 +1,16 @@
 import {
   Box,
   Button,
-  Card,
-  CardBody,
-  CardHeader,
   Flex,
   FormControl,
   FormLabel,
   Heading,
-  HStack,
+  IconButton,
   Input,
+  List,
+  ListItem,
   Spacer,
+  Text,
   Textarea,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
@@ -18,21 +18,18 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [files, setFiles] = useState([]);
   const [content, setContent] = useState("");
-  const [inserted, setInserted] = useState("");
   const [userId, setUserId] = useState("");
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const offset = 1000 * 60 * 60 * 9;
 
   useEffect(() => {
-    const LocalDateTime = new Date(Date.now() + offset).toISOString();
-    setInserted(LocalDateTime);
     if (account.isLoggedIn(account.id)) {
       setUserId(account.id);
     }
@@ -60,8 +57,19 @@ export function BoardWrite() {
   const fileNameList = [];
   for (let i = 0; i < files.length; i++) {
     fileNameList.push(
-      <Box>
-        <text fontSize={"mb"}>{files[i].name}</text>
+      <Box key={i}>
+        <ListItem display="flex" alignItems="center">
+          <Text flex="1">{files[i].name}</Text>
+        </ListItem>
+        <IconButton
+          aria-label="Remove"
+          icon={<DeleteIcon />}
+          onClick={() => {
+            const newFiles = Array.from(files);
+            newFiles.splice(i, 1);
+            setFiles(newFiles);
+          }}
+        />
       </Box>,
     );
   }
@@ -75,36 +83,29 @@ export function BoardWrite() {
           <Input onChange={(e) => setTitle(e.target.value)} />
         </FormControl>
       </Box>
-      <Box>
-        <FormControl>
-          <Flex>
-            <FormLabel>상품 상세 내용</FormLabel>
-            <Spacer />
-            <Input
-              multiple
-              type={"file"}
-              accept={"image/*"}
-              onChange={(e) => setFiles(e.target.files)}
-            />
-          </Flex>
-          {fileNameList.length > 0 && (
-            <Box>
-              <Card>
-                <CardHeader>
-                  <Heading>선택된 파일 목록</Heading>
-                </CardHeader>
-                <CardBody>
-                  <HStack spacing={24}>{fileNameList}</HStack>
-                </CardBody>
-              </Card>
-            </Box>
-          )}
-          <Textarea onChange={(e) => setContent(e.target.value)} />
-        </FormControl>
-      </Box>
-      <Box>
-        <Input type={"hidden"} value={inserted} />
-      </Box>
+      <FormControl>
+        <Flex>
+          <FormLabel>상품 상세 내용</FormLabel>
+          <Spacer />
+          <Input
+            multiple
+            type={"file"}
+            accept={"image/*"}
+            onChange={(e) => setFiles(Array.from(e.target.files))}
+          />
+        </Flex>
+        {fileNameList.length > 0 && (
+          <Box mt={2}>
+            <Heading size="md" mb={2}>
+              선택된 파일 목록
+            </Heading>
+            <List spacing={2}>{fileNameList}</List>
+          </Box>
+        )}
+      </FormControl>
+      <FormControl>
+        <Textarea onChange={(e) => setContent(e.target.value)} />
+      </FormControl>
       <Box>
         <Input type={"hidden"} value={account.id} />
       </Box>

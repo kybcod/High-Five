@@ -22,9 +22,10 @@ public interface BoardMapper {
     void insertFileName(Integer boardId, String fileName);
 
     @Select("""
-            SELECT id, title, user_id, inserted
-            FROM board
-            ORDER BY id DESC
+            SELECT b.id, b.title, b.user_id, b.inserted, COUNT(DISTINCT f.file_name) number_of_images
+            FROM board b JOIN board_file f ON b.id = f.board_id
+            GROUP BY b.id
+            ORDER BY b.id DESC
             """)
     List<Board> selectAll();
 
@@ -37,7 +38,7 @@ public interface BoardMapper {
 
     @Update("""
             UPDATE board
-            SET title = #{title}, content = #{content}, inserted = #{inserted}
+            SET id = #{id}, title = #{title}, content = #{content}, inserted = NOW()
             WHERE id = #{id}
             """)
     int update(Board board);
@@ -54,4 +55,10 @@ public interface BoardMapper {
             """)
     List<String> selectFileNameByBoardId(Integer boardId);
 
+    @Delete("""
+            DELETE FROM board_file
+            WHERE board_id = #{boardId}
+            AND file_name = #{fileName}
+            """)
+    void deleteFileByBoardIdAndName(Integer boardId, String fileName);
 }
