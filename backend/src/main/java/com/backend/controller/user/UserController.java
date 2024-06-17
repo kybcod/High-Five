@@ -130,7 +130,6 @@ public class UserController {
 
     @PutMapping("/users/black/{id}")
     public void reportUser(@PathVariable Integer id) {
-        System.out.println("id = " + id);
         service.reportUserById(id);
     }
 }
