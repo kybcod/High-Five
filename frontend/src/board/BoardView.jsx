@@ -55,7 +55,7 @@ export function BoardView() {
     }
     setIsLikeProccess(true);
     axios
-      .put(`/api/board/like`, { boardId: board.id })
+      .put(`/api/board/like/${board_id}`, { boardId: board.id })
       .then((res) => setBoardLike(res.data))
       .finally(() => {
         setIsLikeProccess(false);
