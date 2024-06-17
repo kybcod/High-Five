@@ -23,4 +23,16 @@ public class QuestionCommentService {
     public List<QuestionComment> get(Integer questionId) {
         return mapper.getComment(questionId);
     }
+
+    public void delete(Integer questionId) {
+        mapper.deleteComment(questionId);
+    }
+
+    public boolean hasAccess(Integer questionId, Authentication authentication) {
+        QuestionComment comment = mapper.selectUserId(questionId);
+        if (comment.getUserId().equals(Integer.valueOf(authentication.getName()))) {
+            return true;
+        }
+        return false;
+    }
 }
