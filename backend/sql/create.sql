@@ -122,16 +122,6 @@ CREATE TABLE review_list
     content VARCHAR(30) NOT NULL
 );
 
-# 리뷰 후기 테이블
-CREATE TABLE review
-(
-    product_id INT      NOT NULL REFERENCES product (id),
-    user_id    INT      NOT NULL REFERENCES user (id),
-    review_id  INT      NOT NULL REFERENCES review_list (id),
-    inserted   DATETIME NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (product_id, user_id)
-);
-
 # 입찰 내역 테이블
 CREATE TABLE bid_list
 (
@@ -160,10 +150,22 @@ CREATE TABLE bid_list
 #     end_time DATETIME NULL
 # );
 
+# 리뷰 후기 테이블
+# CREATE TABLE review
+# (
+#     product_id INT      NOT NULL REFERENCES product (id),
+#     user_id    INT      NOT NULL REFERENCES user (id),
+#     review_id  INT      NOT NULL REFERENCES review_list (id),
+#     inserted   DATETIME NOT NULL DEFAULT NOW(),
+#     PRIMARY KEY (product_id, user_id)
+# );
+
 # message 테이블 삭제
 DROP TABLE message;
 # chat_room 테이블 삭제
 DROP TABLE chat_room;
+# review 테이블 삭제
+DROP TABLE review;
 
 # -- 변경 후
 # 채팅방 테이블
@@ -184,4 +186,14 @@ CREATE TABLE chat
     user_id      INT          NOT NULL REFERENCES user (id),
     message      VARCHAR(100) NOT NULL,
     inserted     DATETIME     NOT NULL DEFAULT NOW()
+);
+
+# 리뷰 테이블
+CREATE TABLE review
+(
+    product_id INT      NOT NULL REFERENCES product (id),
+    user_id    INT      NOT NULL REFERENCES user (id),
+    review_id  JSON     NOT NULL,
+    inserted   DATETIME NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (product_id, user_id)
 );
