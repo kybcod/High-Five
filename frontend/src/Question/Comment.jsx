@@ -1,8 +1,10 @@
 import { Button, Flex, Input, Textarea, useToast } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import axios from "axios";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function Comment({ comment, questionId }) {
+  const account = useContext(LoginContext);
   const toast = useToast();
   // Prop이 제대로 넘어오는지 확인하기 위해 콘솔 로그 추가
   useEffect(() => {
@@ -25,18 +27,25 @@ export function Comment({ comment, questionId }) {
       })
       .catch((err) => {
         const code = err.response.status;
-        if (code === 400) {
-          toast({
-            status: "error",
-            description: `삭제되지 않았습니다`,
-            position: "bottom",
-            duration: 2000,
-          });
-        }
         if (code === 404) {
           toast({
             status: "error",
             description: `id가 없습니다.`,
+            position: "bottom",
+            duration: 2000,
+          });
+        }
+        if (code === 403) {
+          toast({
+            status: "error",
+            description: `삭제 권한이 없습니다`,
+            position: "bottom",
+            duration: 2000,
+          });
+        } else {
+          toast({
+            status: "error",
+            description: `삭제되지 않았습니다`,
             position: "bottom",
             duration: 2000,
           });
@@ -51,12 +60,12 @@ export function Comment({ comment, questionId }) {
         <input value={comment.userId === 30 ? "관리자" : comment.userId} />
         <Textarea value={comment.content} />
         <Input value={comment.inserted} />
-        {/*{account.hasAccess(question.userId) && (*/}
-        <>
-          <Button>수정</Button>
-          <Button onClick={handleRemoveClick}>삭제</Button>
-        </>
-        {/*)}*/}
+        {account.hasAccess(comment.userId) && (
+          <>
+            <Button>수정</Button>
+            <Button onClick={handleRemoveClick}>삭제</Button>
+          </>
+        )}
       </Flex>
     </>
   );
