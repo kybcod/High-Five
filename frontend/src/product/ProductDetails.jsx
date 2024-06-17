@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Divider,
   Flex,
   FormControl,
@@ -25,9 +24,15 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { faEye, faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCommentDots,
+  faExclamationTriangle,
+  faEye,
+  faHeart as fullHeart,
+  faMoneyBillAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SimpleSlider from "./SimpleSlider.jsx";
+import SimpleSlider from "./slider/SimpleSlider.jsx";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -137,35 +142,49 @@ export function ProductDetails() {
       <Category />
       <Box mt={3}>
         <Heading
+          mb={3}
           color={"blue"}
           cursor={"pointer"}
           onClick={() => navigate(`/myPage/${product.userId}/shop`)}
         >
           {product.userNickName}
         </Heading>
-        <Flex justifyContent={"space-evenly"}>
+        <Flex justifyContent={"space-around"}>
           <SimpleSlider
             images={existingFilePreviews}
             isBrightness={!product.status}
           />
+
           <Box ml={10} mb={5}>
             {product.status || (
               <>
                 {product.maxBidPrice !== null ? (
-                  <Box>
-                    <Heading color={"red"}>
-                      낙찰 금액 : {product.maxBidPrice}원
-                    </Heading>
+                  <Box
+                    mb={5}
+                    display={"flex"}
+                    alignContent={"center"}
+                    justifyContent={"center"}
+                  >
+                    <Box fontWeight={"bold"} fontSize={"3xl"} color={"red"}>
+                      낙찰 금액 : {formattedPrice(product.maxBidPrice)}원
+                    </Box>
                   </Box>
                 ) : (
-                  <Box>
-                    <Heading color={"red"}>상품이 낙찰되지 않았습니다.</Heading>
+                  <Box
+                    mb={5}
+                    display={"flex"}
+                    alignContent={"center"}
+                    justifyContent={"center"}
+                  >
+                    <Box fontWeight={"bold"} fontSize={"3xl"} color={"red"}>
+                      낙찰된 금액이 없습니다.
+                    </Box>
                   </Box>
                 )}
               </>
             )}
             <Box mb={5}>
-              <Heading fontSize={"xl"}> {product.title} </Heading>
+              <Heading> {product.title} </Heading>
             </Box>
             <Flex mb={5} justifyContent={"space-between"}>
               <Box>
@@ -174,49 +193,51 @@ export function ProductDetails() {
                 </Text>
               </Box>
               <Box>
-                <Text fontSize={"xl"}>
-                  {translateCategory(product.category)}
-                </Text>
+                <Text fontSize={"xl"}>{product.timeFormat}</Text>
               </Box>
             </Flex>
-            <Divider orientation="horizontal" mb={2} />
-            <Flex mb={5} justifyContent={"space-between"}>
-              <Flex>
-                <Center>
-                  <Box mr={1}>찜</Box>
-                  {account.isLoggedIn() && (
-                    <Box onClick={handleLikeClick}>
-                      {like.like && (
-                        <FontAwesomeIcon
-                          icon={fullHeart}
-                          size={"lg"}
-                          color={"red"}
-                          cursor={"pointer"}
-                        />
-                      )}
-                      {like.like || (
-                        <FontAwesomeIcon
-                          icon={emptyHeart}
-                          size={"lg"}
-                          color={"red"}
-                          cursor={"pointer"}
-                        />
-                      )}
-                    </Box>
-                  )}
-                  <Box>{like.count}</Box>
-                </Center>
+
+            <Divider mb={2} />
+
+            <Flex mb={5} justifyContent={"space-between"} alignItems={"center"}>
+              <Flex alignItems={"center"} mr={4}>
+                <Box mr={2}>찜</Box>
+                {account.isLoggedIn() && (
+                  <Button
+                    onClick={handleLikeClick}
+                    leftIcon={
+                      <FontAwesomeIcon
+                        icon={like.like ? fullHeart : emptyHeart}
+                        size={"lg"}
+                      />
+                    }
+                    colorScheme={like.like ? "red" : "gray"}
+                    variant="outline"
+                  >
+                    {like.count}
+                  </Button>
+                )}
               </Flex>
-              <Flex mb={2}>
-                <Center>
-                  <Box mr={2}>
-                    <FontAwesomeIcon icon={faEye} />
-                  </Box>
-                  <Box>{product.viewCount}</Box>
-                </Center>
+              <Flex alignItems={"center"} mr={4}>
+                <Box mr={2}>
+                  <FontAwesomeIcon icon={faEye} size={"lg"} />
+                </Box>
+                <Box>{product.viewCount}</Box>
               </Flex>
-              <Button onClick={handleEnterChatRoom}>문의하기</Button>
-              <Button>신고하기</Button>
+              <Button
+                colorScheme="teal"
+                leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
+                onClick={handleEnterChatRoom}
+                mr={4}
+              >
+                문의하기
+              </Button>
+              <Button
+                colorScheme="red"
+                leftIcon={<FontAwesomeIcon icon={faExclamationTriangle} />}
+              >
+                신고하기
+              </Button>
             </Flex>
             <Box
               mb={5}
@@ -264,11 +285,11 @@ export function ProductDetails() {
         </Flex>
       </Box>
 
-      <Divider mb={2} />
+      <Divider mb={5} />
 
       <Box>
         <FormControl>
-          <FormLabel>
+          <FormLabel mb={5}>
             <Heading fontSize={"2xl"}>상품 정보</Heading>
           </FormLabel>
           {product.content !== null && product.content !== "" ? (
@@ -282,32 +303,49 @@ export function ProductDetails() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader></ModalHeader>
+          <ModalHeader>
+            <Flex align="center">
+              <Box mr={2}>
+                <FontAwesomeIcon icon={faMoneyBillAlt} size="lg" />
+              </Box>
+              <Heading fontSize="xl">경매 참여하기</Heading>
+            </Flex>
+          </ModalHeader>
           <ModalBody>
             <FormControl>
               <FormLabel>입찰 금액</FormLabel>
               <InputGroup>
                 <Input
+                  type="text"
                   value={formattedPrice(bidPrice)}
                   onChange={(e) => handleIntegerNumber(e)}
+                  placeholder="숫자만 입력하세요"
+                  borderRadius="none"
+                  borderColor="gray.300"
+                  _hover={{ borderColor: "gray.400" }}
+                  _focus={{ borderColor: "blue.400", boxShadow: "outline" }}
                 />
-
                 <InputRightAddon>원</InputRightAddon>
               </InputGroup>
-              <Box>
-                {parseInt(bidPrice) <= product.startPrice && (
-                  <FormHelperText color={"red"}>
-                    입찰 금액이 시작가보다 작습니다.
-                  </FormHelperText>
-                )}
-              </Box>
+              {parseInt(bidPrice) <= product.startPrice && (
+                <FormHelperText color={"red"} mt={2}>
+                  입찰 금액이 시작가보다 작습니다.
+                </FormHelperText>
+              )}
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button isProcessing={isProcessing} onClick={handleJoinClick}>
+            <Button
+              colorScheme="blue"
+              onClick={handleJoinClick}
+              isLoading={isProcessing}
+              loadingText="처리중..."
+            >
               확인
             </Button>
-            <Button onClick={onClose}>취소</Button>
+            <Button onClick={onClose} ml={3}>
+              취소
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
