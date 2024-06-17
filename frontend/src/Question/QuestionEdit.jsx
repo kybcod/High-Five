@@ -26,6 +26,7 @@ import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 export function QuestionEdit() {
   const [question, setQuestion] = useState({});
   const [removeFileList, setRemoveFileList] = useState([]);
+  const [newFilePreviews, setNewFilePreviews] = useState([]);
   const [addFileList, setAddFileList] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -50,21 +51,43 @@ export function QuestionEdit() {
           position: "bottom",
           duration: 2000,
         });
-        navigate(`/question/list`);
+        navigate(`/question/${id}`);
       })
-      .catch(() => {
-        toast({
-          status: "error",
-          description: `게시물이 수정되지 않았습니다. 작성한 내용을 확인해주세요.`,
-          position: "bottom",
-          duration: 2500,
-        });
+      .catch((e) => {
+        const code = e.response.status;
+
+        if (code === 400) {
+          toast({
+            description: "등록되지 않았습니다. 내용을 확인해 주세요.",
+            status: "error",
+            position: "bottom",
+            duration: 2500,
+          });
+        }
+        if (code === 413) {
+          toast({
+            description: "파일 크기가 허용된 용량을 초과하였습니다.",
+            status: "error",
+            position: "top",
+            duration: 3000,
+          });
+        }
       })
       .finally(() => {});
   }
 
   if (question === null) {
     return <Spinner />;
+  }
+
+  // setQuestion({ ...question, fileList: e.target.files }
+  function handleChangeFiles(e) {
+    const newSelectedFiles = Array.from(e.target.files);
+    setAddFileList([...addFileList, ...newSelectedFiles]);
+    const newPreviews = newSelectedFiles.map((file) =>
+      URL.createObjectURL(file),
+    );
+    setNewFilePreviews([...newFilePreviews, ...newPreviews]);
   }
 
   function handleRemoveSwitch(name, checked) {
@@ -74,6 +97,18 @@ export function QuestionEdit() {
       setRemoveFileList(removeFileList.filter((item) => item !== name));
     }
   }
+
+  // const fileNameList = [];
+  // for (let addFile of addFileList) {
+  //   fileNameList.push(
+  //     <Flex>
+  //       <Text fontSize={"md"} mr={3}>
+  //         {addFile.name}
+  //       </Text>
+  //       <Box></Box>
+  //     </Flex>,
+  //   );
+  // }
 
   return (
     <Box>
@@ -123,12 +158,14 @@ export function QuestionEdit() {
                     <Box>
                       <FontAwesomeIcon color={"red"} icon={faTrashCan} />
                     </Box>
-                    <Switch
-                      colorScheme={"pink"}
-                      onChange={(e) =>
-                        handleRemoveSwitch(file.name, e.target.checked)
-                      }
-                    />
+                    <Box>
+                      <Switch
+                        colorScheme={"pink"}
+                        onChange={(e) =>
+                          handleRemoveSwitch(file.name, e.target.checked)
+                        }
+                      />
+                    </Box>
                     <Text>{file.name}</Text>
                   </Flex>
                 </CardFooter>
@@ -140,20 +177,35 @@ export function QuestionEdit() {
                         ? { filter: "blur(8px)" }
                         : {}
                     }
+                    w={"600px"}
                   />
                 </CardBody>
               </Card>
             ))}
         </Box>
+
+        <Box m={7}>
+          {newFilePreviews.map((src, index) => (
+            <Card m={1} key={index}>
+              <CardFooter>
+                <Flex gap={3}>
+                  <Text>{addFileList[index].name}</Text>
+                </Flex>
+              </CardFooter>
+              <CardBody>
+                <Image src={src} w={"600px"} />
+              </CardBody>
+            </Card>
+          ))}
+        </Box>
+
         <Box m={7}>
           <FormControl>
             <Input
               type={"file"}
               accept={"image/*"}
               multiple
-              onChange={(e) =>
-                setQuestion({ ...question, fileList: e.target.files })
-              }
+              onChange={handleChangeFiles}
             />
             <FormHelperText>
               이미지 파일만 업로드할 수 있습니다.

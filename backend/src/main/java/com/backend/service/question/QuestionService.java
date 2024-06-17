@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -117,7 +118,41 @@ public class QuestionService {
         mapper.deleteById(id);
     }
 
-    public void edit(Question question) {
+    public void edit(Question question, MultipartFile[] addFileList, List<String> removeFileList) throws IOException {
+
+        // 파일 먼저 지우고
+        // 파일 추가
+        if (removeFileList != null && removeFileList.size() > 0) {
+            for (String name : removeFileList) {
+                String key = STR."prj3/\{question.getId()}/\{name}";
+                DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .build();
+                s3Client.deleteObject(deleteObjectRequest);
+                mapper.deleteFileByIdAndFileName(question.getId(), name);
+            }
+        }
+
+        if (addFileList != null && addFileList.length > 0) {
+            List<String> fileNameList = mapper.selectFileByQuestionId(question.getId());
+            for (MultipartFile file : addFileList) {
+                String name = file.getOriginalFilename();
+                if (!fileNameList.contains(name)) {
+                    mapper.insertFileName(question.getId(), name);
+                }
+
+                String key = STR."prj3/\{question.getId()}/\{file.getOriginalFilename()}";
+                PutObjectRequest objectRequest = PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .acl(ObjectCannedACL.PUBLIC_READ)
+                        .build();
+
+                s3Client.putObject(objectRequest,
+                        RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            }
+        }
         mapper.updateById(question);
     }
 }

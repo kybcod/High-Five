@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -50,8 +51,16 @@ public class QuestionController {
     }
 
     @PutMapping("{id}")
-    public void update(@PathVariable Integer id, Question question) {
-        service.edit(question);
+    public ResponseEntity update(Question question,
+                                 @RequestParam(required = false, value = "addFileList[]") MultipartFile[] addFileList,
+                                 @RequestParam(required = false, value = "removeFileList[]") List<String> removeFileList
+    ) throws IOException {
+        if (service.validate(question)) {
+            service.edit(question, addFileList, removeFileList);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }
