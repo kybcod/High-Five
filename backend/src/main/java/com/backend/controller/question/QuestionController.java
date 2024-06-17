@@ -55,16 +55,12 @@ public class QuestionController {
                                  @RequestParam(required = false, value = "addFileList[]") MultipartFile[] addFileList,
                                  @RequestParam(required = false, value = "removeFileList[]") List<String> removeFileList
     ) throws IOException {
-
-
         if (service.validate(question)) {
             service.edit(question, addFileList, removeFileList);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
         }
-
-
     }
 
 }
