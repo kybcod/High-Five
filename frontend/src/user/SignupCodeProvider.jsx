@@ -1,9 +1,8 @@
 import React, { createContext, useState } from "react";
-import { LoginContext } from "../component/LoginProvider.jsx";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 
-export const SignupCodeContext = createContext(null);
+export const SignupCodeContext = createContext(undefined);
 
 export function SignupCodeProvider({ children }) {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -12,8 +11,13 @@ export function SignupCodeProvider({ children }) {
   const [verificationCode, setVerificationCode] = useState("");
   const { successToast, errorToast } = CustomToast();
 
+  let isWrongPhoneNumberLength = phoneNumber.length !== 11;
+  let isDisabledCheckButton = verificationCode.trim().length !== 4;
+
   function handleInputPhoneNumber(input) {
-    setPhoneNumber("010" + input);
+    input.replace(/[-\s]/g, "");
+    console.log(input);
+    setPhoneNumber(input);
     setIsCheckedCode(false);
   }
 
@@ -29,7 +33,7 @@ export function SignupCodeProvider({ children }) {
   function handleCheckCode() {
     axios
       .get(
-        `/api/users/confirmation?phoneNumber=${phoneNumber}&verificationCode=${verificationCode}`,
+        `/api/users/confirmation?phoneNumber=010${phoneNumber}&verificationCode=${verificationCode}`,
       )
       .then(() => {
         successToast("휴대폰 번호가 인증되었습니다");
@@ -40,7 +44,7 @@ export function SignupCodeProvider({ children }) {
   }
 
   return (
-    <LoginContext.Provider
+    <SignupCodeContext.Provider
       value={{
         phoneNumber: phoneNumber,
         setPhoneNumber: setPhoneNumber,
@@ -53,10 +57,12 @@ export function SignupCodeProvider({ children }) {
         handleCheckCode: handleCheckCode,
         handleInputPhoneNumber: handleInputPhoneNumber,
         handleInputCode: handleInputCode,
+        isWrongPhoneNumberLength: isWrongPhoneNumberLength,
+        isDisabledCheckButton: isDisabledCheckButton,
       }}
     >
       {children}
-    </LoginContext.Provider>
+    </SignupCodeContext.Provider>
   );
 }
 

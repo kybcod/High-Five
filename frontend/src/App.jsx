@@ -30,6 +30,7 @@ import { UserList } from "./user/UserList.jsx";
 import { ChatRoomList } from "./chat/ChatRoomList.jsx";
 import { UserEdit } from "./myPage/UserEdit.jsx";
 import { UserFindEmail } from "./user/UserFindEmail.jsx";
+import SignupCodeProvider from "./user/SignupCodeProvider.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -88,9 +89,11 @@ const router = createBrowserRouter([
 function App() {
   return (
     <LoginProvider>
-      <ChakraProvider>
-        <RouterProvider router={router} />
-      </ChakraProvider>
+      <SignupCodeProvider>
+        <ChakraProvider>
+          <RouterProvider router={router} />
+        </ChakraProvider>
+      </SignupCodeProvider>
     </LoginProvider>
   );
 }

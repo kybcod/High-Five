@@ -44,24 +44,6 @@ export function SignUp() {
   }
   // TODO. 휴대폰 번호 11자리 (-)없이 숫자만 입력 가능하게끔 설정, 표시 메세지, 형식 다르면 메세지 전송버튼 활성화 X
 
-  function handleSendCode() {
-    setIsSendingCode(true);
-    axios.get(`/api/users/codes?phoneNumber=${phoneNumber}`);
-  }
-
-  function handleCheckCode() {
-    axios
-      .get(
-        `/api/users/confirmation?phoneNumber=${phoneNumber}&verificationCode=${verificationCode}`,
-      )
-      .then(() => {
-        successToast("휴대폰 번호가 인증되었습니다");
-        setIsCheckedCode(true);
-      })
-      .catch(() => errorToast("인증번호가 다릅니다"))
-      .finally(() => setIsSendingCode(false));
-  }
-
   function handleCheckEmail() {
     axios
       .get(`/api/users/emails?email=${email}`)
@@ -231,17 +213,7 @@ export function SignUp() {
           </InputGroup>
           <FormHelperText>닉네임은 10자까지 작성 가능합니다</FormHelperText>
         </FormControl>
-        <ConfirmPhoneNumber
-          phoneNumber={phoneNumber}
-          setPhoneNumber={setPhoneNumber}
-          isCheckedCode={isCheckedCode}
-          setIsCheckedCode={setIsCheckedCode}
-          isSendingCode={isSendingCode}
-          setIsSendingCode={setIsSendingCode}
-          handleSendCode={handleSendCode}
-          setVerificationCode={setVerificationCode}
-          handleCheckCode={handleCheckCode}
-        />
+        <ConfirmPhoneNumber />
         <Center mt={5}>
           <Button
             colorScheme={"green"}
