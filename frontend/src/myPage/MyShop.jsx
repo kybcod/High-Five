@@ -14,20 +14,58 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 export function MyShop() {
+  const { userId } = useParams();
   const [productList, setProductList] = useState(null);
   const [pageInfo, setPageInfo] = useState({});
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [hasNextPage, setHasNextPage] = useState(true);
   const account = useContext(LoginContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`/api/products/user/${account.id}`).then((res) => {
-      console.log(res.data);
-      setProductList(res.data);
-    });
-  }, []);
+    const currentPage = parseInt(searchParams.get("page") || "1");
+    axios
+      .get(`/api/products/user/${userId}?page=${currentPage}`)
+      .then((res) => {
+        if (currentPage === 1) {
+          // 첫 번째 페이지
+          setProductList(res.data.productList);
+        } else {
+          // 이후 페이지 : 기존 리스트에 추가
+          setProductList((prevList) => [...prevList, ...res.data.productList]);
+        }
+        setPageInfo(res.data.pageInfo);
+        setHasNextPage(res.data.hasNextPage);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch products", error);
+      });
+  }, [searchParams]);
+
+  function handleMoreClick() {
+    if (!hasNextPage) return;
+
+    const currentPage = parseInt(searchParams.get("page") || "1");
+    searchParams.set("page", currentPage + 1);
+    setSearchParams(searchParams);
+  }
+
+  function handleFoldClick() {
+    const scrollDuration = 500;
+    setTimeout(() => {
+      searchParams.set("page", 1);
+      setSearchParams(searchParams);
+    }, scrollDuration);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleScrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   if (productList === null) {
     return <Spinner />;
@@ -118,6 +156,38 @@ export function MyShop() {
           </GridItem>
         ))}
       </Grid>
+      <Box display={"flex"} justifyContent={"center"}>
+        {hasNextPage ? (
+          <Button
+            w={"30%"}
+            colorScheme={"blue"}
+            mt={4}
+            onClick={handleMoreClick}
+          >
+            더보기
+          </Button>
+        ) : productList.length > 9 ? (
+          <Button
+            w={"30%"}
+            colorScheme={"blue"}
+            mt={4}
+            onClick={handleFoldClick}
+          >
+            접기
+          </Button>
+        ) : (
+          productList.length > 6 && (
+            <Button
+              w={"30%"}
+              colorScheme={"blue"}
+              mt={4}
+              onClick={handleScrollToTop}
+            >
+              맨 위로
+            </Button>
+          )
+        )}
+      </Box>
     </Box>
   );
 }

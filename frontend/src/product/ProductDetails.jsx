@@ -135,12 +135,11 @@ export function ProductDetails() {
   return (
     <Box>
       <Category />
-      {/*TODO:user 상점 조회 고미*/}
       <Box mt={3}>
         <Heading
           color={"blue"}
           cursor={"pointer"}
-          // onClick={() => navigate(`/shop/${product.userId}`)}
+          onClick={() => navigate(`/myPage/${product.userId}/shop`)}
         >
           {product.userNickName}
         </Heading>
@@ -150,6 +149,21 @@ export function ProductDetails() {
             isBrightness={!product.status}
           />
           <Box ml={10} mb={5}>
+            {product.status || (
+              <>
+                {product.maxBidPrice !== null ? (
+                  <Box>
+                    <Heading color={"red"}>
+                      낙찰 금액 : {product.maxBidPrice}원
+                    </Heading>
+                  </Box>
+                ) : (
+                  <Box>
+                    <Heading color={"red"}>상품이 낙찰되지 않았습니다.</Heading>
+                  </Box>
+                )}
+              </>
+            )}
             <Box mb={5}>
               <Heading fontSize={"xl"}> {product.title} </Heading>
             </Box>

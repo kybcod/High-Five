@@ -1,5 +1,9 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { Home } from "./Home.jsx";
 import { ProductList } from "./product/ProductList.jsx";
 import { ProductUpload } from "./product/ProductUpload.jsx";
@@ -46,7 +50,6 @@ const router = createBrowserRouter([
       { path: "list", element: <ProductList /> },
       { path: "edit/:id", element: <ProductEdit /> },
       { path: "product/:id", element: <ProductDetails /> },
-      { path: "shop/:userId", element: <ProductShop /> },
 
       // user
       { path: "signup", element: <SignUp /> },
@@ -66,9 +69,15 @@ const router = createBrowserRouter([
       { path: "board/modify/:board_id", element: <BoardModify /> },
 
       //my page
-      { path: "shop/:userId/products", element: <MyPage /> },
+      { path: "myPage/:userId", element: <Navigate to="info" /> },
+      // { path: "shop/:userId/products", element: <MyPage /> },
+      // { path: "myPage/:userId/info", element: <MyPage tab="info" /> },
       { path: "shop/:userId/userInfo", element: <UserInfo /> },
       { path: "shop/:userId/userEdit", element: <UserEdit /> },
+      { path: "myPage/:userId/like", element: <MyPage tab="like" /> },
+      { path: "myPage/:userId/shop", element: <MyPage tab="shop" /> },
+      { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },
+      { path: "myPage/:userId/reviews", element: <MyPage tab="reviews" /> },
 
       //채팅방
       { path: "chat/:product_id", element: <ChatRoom /> },

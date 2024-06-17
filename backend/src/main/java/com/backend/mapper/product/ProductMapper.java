@@ -2,6 +2,7 @@ package com.backend.mapper.product;
 
 import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
+import com.backend.domain.product.ProductWithUserDTO;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Pageable;
 
@@ -55,7 +56,8 @@ public interface ProductMapper {
                    p.view_count,
                    p.status,
                    COUNT(DISTINCT bl.user_id) AS numberOfJoin,
-                   u.nick_name       AS userNickName
+                   u.nick_name       AS userNickName,
+                   MAX(bl.bid_price) AS maxBidPrice
             FROM product p
                      LEFT JOIN bid_list bl
                                ON p.id = bl.product_id
@@ -198,10 +200,76 @@ public interface ProductMapper {
     int updateBidStatusByProductId(Integer productId, boolean status);
 
     @Select("""
-            SELECT * 
+            SELECT p.id,
+                   p.user_id,
+                   p.title,
+                   p.category,
+                   p.start_price,
+                   p.start_time,
+                   p.end_time,
+                   p.content,
+                   p.view_count,
+                   p.status,
+                   u.nick_name AS userNickName
             FROM product p
+                     JOIN user u
+                          ON p.user_id = u.id
             WHERE p.user_id = #{userId}
             ORDER BY p.end_time
+            LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
-    List<Product> selectProductsByUserId(Integer userId);
+    List<Product> selectProductsByUserIdWithPagination(Integer userId, Pageable pageable);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM product
+            WHERE user_id = #{userId}
+            """)
+    int selectTotalCountByUserId(Integer userId);
+
+    @Select("""
+            SELECT p.id,
+                   p.title,
+                   p.category,
+                   p.start_price,
+                   p.start_time,
+                   p.end_time,
+                   p.content,
+                   p.status,
+                   p.user_id
+            FROM product p
+                     JOIN product_like pl ON p.id = pl.product_id
+            WHERE pl.user_id = #{userId}
+            LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+            """)
+    List<Product> selectLikeSelectByUserId(Integer userId, Pageable pageable);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM product_like
+            WHERE user_id = #{userId};
+            """)
+    int selectCountLikeByUserId(Integer userId);
+
+    @Select("""
+            SELECT p.id,
+                   p.user_id,
+                   p.title,
+                   p.category,
+                   p.start_price,
+                   p.start_time,
+                   p.end_time,
+                   p.content,
+                   p.view_count,
+                   p.status,
+                   COUNT(DISTINCT bl.user_id) AS numberOfJoin,
+                   u.nick_name       AS userNickName,
+                   MAX(bl.bid_price) AS maxBidPrice
+            FROM product p
+                     LEFT JOIN bid_list bl
+                               ON p.id = bl.product_id
+                     JOIN user u ON u.id = p.user_id
+            WHERE p.id = #{id};
+            """)
+    ProductWithUserDTO selectById2(Integer id);
 }
