@@ -37,3 +37,7 @@ GROUP BY u.id;
 INSERT INTO authority
     (user_id, name)
 VALUES (14, 'user');
+
+DELETE
+FROM user
+WHERE id = 6;

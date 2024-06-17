@@ -3,9 +3,15 @@ package com.backend.service.user;
 import com.backend.component.SmsUtil;
 import com.backend.domain.user.User;
 import com.backend.mapper.user.UserMapper;
+import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -143,5 +149,94 @@ public class UserService {
                 .anyMatch(a -> a.getAuthority().equals("SCOPE_admin"));
 
         return self || isAdmin;
+    }
+
+    public User getUserByUserId(Integer id) {
+        return mapper.selectUserById(id);
+    }
+
+    public void removeUserById(Integer id) {
+        // TODO. 지울것이 산더미,,
+
+        // 권한 지우기
+        mapper.deleteAuthorityById(id);
+
+        // chatMapper
+        // 채팅룸 지우기
+        // 메시지 지우기
+        // 경매내역 지우기
+
+        // boardMapper
+        // 자유 게시물 파일 지우기
+        // 자유 게시물 좋아요 지우기
+        // 자유 게시물 댓글 지우기
+        // 자유 게시물 지우기
+
+        // questionMapper
+        // QnA 게시물 파일 지우기
+        // QnA 게시물 좋아요 지우기
+        // QnA 게시물 댓글 지우기
+        // QnA 게시물 지우기
+
+        // productMapper
+        // 상품 좋아요 지우기
+        // 상품 파일 지우기
+        // 상품 리뷰 지우기
+        // 상품 게시물 지우기
+
+        // 회원 지우기
+        mapper.deleteUserById(id);
+    }
+
+    public Map<String, Object> updateUser(User user, Authentication authentication) {
+        if (user.getPassword() != null && user.getPassword().length() > 0) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            User db = mapper.selectUserById(user.getId());
+            user.setPassword(db.getPassword());
+        }
+        mapper.updateUser(user);
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        Instant now = Instant.now();
+
+        Map<String, Object> claims = jwt.getClaims();
+        JwtClaimsSet.Builder jwtClaimsSetBuilder = JwtClaimsSet.builder();
+        claims.forEach(jwtClaimsSetBuilder::claim);
+        jwtClaimsSetBuilder.claim("nickName", user.getNickName());
+
+        JwtClaimsSet jwtClaimsSet = jwtClaimsSetBuilder.build();
+
+        String token = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
+        return Map.of("token", token);
+    }
+
+    public boolean identificationToModify(User user) {
+        User db = mapper.selectUserById(user.getId());
+        return passwordEncoder.matches(user.getOldPassword(), db.getPassword());
+    }
+
+    public boolean identificationToDelete(User user, Authentication authentication) {
+        User db = mapper.selectUserById(Integer.valueOf(authentication.getName()));
+        if (user.getId() != db.getId()) {
+            return false;
+        }
+        if (!passwordEncoder.matches(user.getOldPassword(), db.getPassword())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public Map<String, Object> getUserList(int page) {
+        int offset = (page - 1) * 10;
+        List<User> userList = mapper.selectUserList(offset);
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        int totalUserNumber = mapper.selectTotalUserCount();
+        Page<User> pageImpl = new PageImpl<>(userList, pageable, totalUserNumber);
+        PageInfo paeInfo = new PageInfo().setting(pageImpl);
+
+        return Map.of("userList", userList, "pageInfo", paeInfo);
     }
 }

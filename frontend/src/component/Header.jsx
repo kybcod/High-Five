@@ -66,7 +66,11 @@ export function Header() {
           </Box>
         </Center>
         <Center>
-          <Box>채팅방</Box>
+          {account.isLoggedIn() && (
+            <Box onClick={() => navigate("/chat/list")} cursor={"pointer"}>
+              채팅방
+            </Box>
+          )}
         </Center>
       </Flex>
     </Box>

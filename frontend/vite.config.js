@@ -9,9 +9,6 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:8080",
       },
-      "/login": {
-        target: "http://localhost:8080",
-      },
     },
   },
 });

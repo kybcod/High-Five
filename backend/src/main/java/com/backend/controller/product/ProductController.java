@@ -94,8 +94,8 @@ public class ProductController {
     }
 
     @GetMapping("like/{userId}")
-    public List<Integer> getLike(@PathVariable Integer userId, Authentication authentication) {
-        return service.getLike(userId, authentication);
+    public List<Integer> getLike(@PathVariable Integer userId) {
+        return service.getLike(userId);
     }
 
     // 참여하기 Controller
@@ -120,7 +120,21 @@ public class ProductController {
 
     // User와 Product 관련 Controller
     @GetMapping("user/{userId}")
-    public List<Product> getUserProducts(@PathVariable Integer userId) {
-        return service.getProductsByUserId(userId);
+    public Map<String, Object> getUserProducts(@PathVariable Integer userId,
+                                               @RequestParam(defaultValue = "1") int page) {
+        return service.getProductsByUserId(userId, PageRequest.of(page - 1, 9));
     }
+
+    // MyPage
+    @GetMapping("user/{userId}/like")
+    public Map<String, Object> getUserProductsLike(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page) {
+        return service.getProductsLikeByUserId(userId, PageRequest.of(page - 1, 9));
+    }
+
+
+// TODO: 코드 정리
+//    @GetMapping("/test/{id}")
+//    public ProductListResponse getProductById(@PathVariable Integer id, Authentication authentication) {
+//        return service.getById(id, authentication);
+//    }
 }

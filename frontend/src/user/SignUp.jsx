@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Center,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -13,6 +14,7 @@ import { useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
+import { CheckIcon } from "@chakra-ui/icons";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
@@ -42,7 +44,8 @@ export function SignUp() {
   // TODO. 휴대폰 번호 11자리 (-)없이 숫자만 입력 가능하게끔 설정, 표시 메세지, 형식 다르면 메세지 전송버튼 활성화 X
 
   function handleSendCode() {
-    axios.get(`/api/users/codes?phoneNumber=${phoneNumber}`);
+    // axios.get(`/api/users/codes?phoneNumber=${phoneNumber}`);
+    setIsCheckedCode(true);
   }
 
   function handleCheckEmail() {
@@ -116,115 +119,135 @@ export function SignUp() {
   }
 
   return (
-    <Box>
-      <Box>회원 가입</Box>
-      <FormControl>
-        <FormLabel>이메일</FormLabel>
-        <InputGroup>
+    <Center>
+      <Box>
+        <FormControl>
+          <FormLabel>이메일 주소</FormLabel>
+          <InputGroup>
+            <Input
+              placeholder={"이메일 중복 확인 필수"}
+              isInvalid={isCheckedEmail ? false : true}
+              errorBorderColor={"red.300"}
+              variant="flushed"
+              type={"email"}
+              maxLength="30"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setIsValidEmail(!e.target.validity.typeMismatch);
+                setIsCheckedEmail(false);
+              }}
+            />
+            <InputRightElement>
+              <Button
+                onClick={handleCheckEmail}
+                isDisabled={!isValidEmail || email.trim().length === 0}
+              >
+                중복확인
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+          {isValidEmail || (
+            <FormHelperText>올바른 이메일 형식이 아닙니다</FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <FormLabel>비밀번호</FormLabel>
           <Input
-            type={"email"}
-            maxLength="30"
+            variant="flushed"
+            type="password"
             onChange={(e) => {
-              setEmail(e.target.value);
-              setIsValidEmail(!e.target.validity.typeMismatch);
-              setIsCheckedEmail(false);
+              setPassword(e.target.value);
+              isValidPassword = false;
             }}
+            isInvalid={isValidPassword ? false : true}
+            errorBorderColor={"red.300"}
           />
-          <InputRightElement>
-            <Button
-              onClick={handleCheckEmail}
-              isDisabled={!isValidEmail || email.trim().length === 0}
-            >
-              중복확인
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-        {isValidEmail || (
-          <FormHelperText>올바른 이메일 형식이 아닙니다</FormHelperText>
-        )}
-        {isCheckedEmail || (
-          <FormHelperText>이메일 중복확인을 해주세요</FormHelperText>
-        )}
-      </FormControl>
-      <FormControl>
-        <FormLabel>비밀번호</FormLabel>
-        <Input
-          type="password"
-          onChange={(e) => {
-            setPassword(e.target.value);
-            isValidPassword = false;
-          }}
-          isInvalid={isValidPassword ? false : true}
-          errorBorderColor={"red.300"}
-        />
-        {isValidPassword || (
+          {isValidPassword || (
+            <FormHelperText>
+              비밀번호는 8자 이상으로, 영문 대소문자와 숫자, 특수기호를
+              포함하여야 합니다
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <FormLabel>비밀번호 확인</FormLabel>
+          <Input
+            isInvalid={isCheckedPassword ? false : true}
+            errorBorderColor={"red.300"}
+            variant="flushed"
+            type="password"
+            onChange={(e) => setPasswordCheck(e.target.value)}
+          />
+          {isCheckedPassword || (
+            <FormHelperText>비밀번호가 일치하지 않습니다</FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <FormLabel>닉네임</FormLabel>
+          <InputGroup>
+            <Input
+              isInvalid={isCheckedNickName ? false : true}
+              errorBorderColor={"red.300"}
+              variant="flushed"
+              onChange={(e) => {
+                setNickName(e.target.value);
+                setIsCheckedNickName(false);
+              }}
+              maxLength="10"
+              placeholder={"닉네임 중복 확인 필수"}
+            />
+            <InputRightElement>
+              <Button
+                onClick={handleCheckNickName}
+                isDisabled={nickName.trim().length === 0}
+              >
+                중복확인
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+          <FormHelperText>닉네임은 10자까지 작성 가능합니다</FormHelperText>
+        </FormControl>
+        <FormControl>
+          <InputGroup>
+            <InputLeftAddon bg={"none"} border={"none"}>
+              010
+            </InputLeftAddon>
+            <Input
+              variant="flushed"
+              type="tel"
+              placeholder={"phone number"}
+              onChange={(e) => {
+                setPhoneNumber("010" + e.target.value);
+                setIsCheckedCode(false);
+              }}
+            />
+            <InputRightElement>
+              {isCheckedCode && <CheckIcon color="green.500" />}
+              {isCheckedCode || (
+                <Button
+                  onClick={handleSendCode}
+                  isDisabled={phoneNumber.length !== 11}
+                >
+                  인증 요청
+                </Button>
+              )}
+            </InputRightElement>
+          </InputGroup>
           <FormHelperText>
-            비밀번호는 8자 이상으로, 영문 대소문자와 숫자, 특수기호를 포함하여야
-            합니다
+            휴대폰 번호는 010과 (-)를 제외한 숫자만 입력해주세요 ex)11112222
           </FormHelperText>
-        )}
-      </FormControl>
-      <FormControl>
-        <FormLabel>비밀번호 확인</FormLabel>
-        <Input
-          type="password"
-          onChange={(e) => setPasswordCheck(e.target.value)}
-        />
-        {isCheckedPassword || (
-          <FormHelperText>비밀번호가 일치하지 않습니다</FormHelperText>
-        )}
-      </FormControl>
-      <FormControl>
-        <FormLabel>닉네임</FormLabel>
-        <InputGroup>
-          <Input
-            onChange={(e) => {
-              setNickName(e.target.value);
-              setIsCheckedNickName(false);
-            }}
-            maxLength="10"
-          />
-          <InputRightElement>
-            <Button
-              onClick={handleCheckNickName}
-              isDisabled={nickName.trim().length === 0}
-            >
-              중복확인
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-        <FormHelperText>닉네임은 10자까지 작성 가능합니다</FormHelperText>
-      </FormControl>
-      <FormControl>
-        <InputGroup>
-          <InputLeftAddon>010</InputLeftAddon>
-          <Input
-            type="tel"
-            placeholder={"phone number"}
-            onChange={(e) => {
-              setPhoneNumber("010" + e.target.value);
-            }}
-          />
-          <InputRightElement>
-            <Button
-              onClick={handleSendCode}
-              isDisabled={phoneNumber.length !== 11}
-            >
-              인증 요청
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-        <FormHelperText>
-          휴대폰 번호는 (-)를 제외한 숫자만 입력해주세요 ex)11112222
-        </FormHelperText>
-      </FormControl>
-      <Button
-        onClick={handleSignUp}
-        isLoading={isLoading}
-        // isDisabled={isDisabled}
-      >
-        회원가입
-      </Button>
-    </Box>
+        </FormControl>
+        <Center mt={5}>
+          <Button
+            colorScheme={"green"}
+            onClick={handleSignUp}
+            isLoading={isLoading}
+            // isDisabled={isDisabled}
+          >
+            SignUp
+          </Button>
+        </Center>
+      </Box>
+    </Center>
   );
 }
