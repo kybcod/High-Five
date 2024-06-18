@@ -4,6 +4,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -63,10 +64,17 @@ export function UserInfo() {
     return <Spinner />;
   }
 
+  console.log(user.profileImage.src);
+
   return (
     <Box>
       <Box>
         <ReportButton userId={user.id} />
+        <Image
+          borderRadius="full"
+          boxSize="150px"
+          src={user.profileImage.src}
+        />
         <FormControl>
           <FormLabel>이메일 주소</FormLabel>
           <Input

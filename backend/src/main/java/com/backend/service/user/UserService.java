@@ -2,9 +2,11 @@ package com.backend.service.user;
 
 import com.backend.component.SmsUtil;
 import com.backend.domain.user.User;
+import com.backend.domain.user.UserFile;
 import com.backend.mapper.user.UserMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +19,13 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +39,13 @@ public class UserService {
     private final SmsUtil sms;
     private final PasswordEncoder passwordEncoder;
     private final JwtEncoder jwtEncoder;
+    private final S3Client s3Client;
+
+    @Value("${aws.s3.bucket.name}")
+    String bucketName;
+
+    @Value("${image.src.prefix}")
+    String srcPrefix;
 
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
@@ -166,7 +181,12 @@ public class UserService {
     }
 
     public User getUserByUserId(Integer id) {
-        return mapper.selectUserById(id);
+        User user = mapper.selectUserById(id);
+        String fileName = mapper.selectFileNameByUserId(id);
+        UserFile userFile = UserFile.builder()
+                .fileName(fileName).src(STR."\{srcPrefix}user/\{user.getId()}/\{fileName}").build();
+        user.setProfileImage(userFile);
+        return user;
     }
 
     public void removeUserById(Integer id) {
@@ -202,7 +222,21 @@ public class UserService {
         mapper.deleteUserById(id);
     }
 
-    public Map<String, Object> updateUser(User user, Authentication authentication) {
+    public Map<String, Object> updateUser(User user, Authentication authentication, MultipartFile profileImage) throws IOException {
+        if (profileImage != null) {
+            mapper.insertProfileImage(user.getId(), profileImage.getOriginalFilename());
+
+            String key = STR."prj3/user/\{user.getId()}/\{profileImage.getOriginalFilename()}";
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .acl(ObjectCannedACL.PUBLIC_READ)
+                    .build();
+
+            s3Client.putObject(putObjectRequest,
+                    RequestBody.fromInputStream(profileImage.getInputStream(), profileImage.getSize()));
+        }
+
         if (user.getPassword() != null && user.getPassword().length() > 0) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         } else {

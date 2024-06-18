@@ -189,7 +189,14 @@ CREATE TABLE chat
 # 회원가입 시 인증번호 테이블
 CREATE TABLE code
 (
-    phone_number VARCHAR(11) NOT NULL ,
-    code INT NOT NULL ,
+    phone_number VARCHAR(11) NOT NULL,
+    code         INT         NOT NULL,
     PRIMARY KEY (phone_number, code)
+);
+
+CREATE TABLE user_file
+(
+    user_id   INT         NOT NULL REFERENCES user (id),
+    file_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (user_id, file_name)
 );

@@ -142,4 +142,18 @@ public interface UserMapper {
                 WHERE email = #{email}
             """)
     int updatePassword(User user);
+
+    @Insert("""
+                INSERT INTO user_file
+                (user_id, file_name)
+                VALUES (#{userId}, #{fileName})
+            """)
+    int insertProfileImage(Integer userId, String fileName);
+
+    @Select("""
+                SELECT file_name
+                FROM user_file
+                WHERE user_id = #{userId}
+            """)
+    String selectFileNameByUserId(Integer userId);
 }

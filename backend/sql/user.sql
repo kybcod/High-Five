@@ -57,3 +57,6 @@ FROM user
 UPDATE user
 SET black_count = 0
 WHERE id = 37;
+
+SELECT *
+FROM user_file;
