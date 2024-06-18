@@ -60,11 +60,7 @@ export function BoardList() {
   }
 
   function handleSearchButtonClick() {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("type", searchType);
-    newParams.set("keyword", searchKeyword);
-    newParams.set("page", 1); // 검색 시 첫 페이지로 이동
-    navigate(`/board/list/?${newParams.toString()}`);
+    navigate(`/board/list/?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   return (
