@@ -25,6 +25,7 @@ public interface BoardMapper {
             <script>
             SELECT b.id,
                     b.title,
+                    b.content,
                     b.user_id,
                     b.inserted,
                     COUNT(DISTINCT f.file_name) AS number_of_images,
@@ -35,24 +36,24 @@ public interface BoardMapper {
                 <if test="keyword != null and keyword != ''">
                     <bind name="pattern" value="'%' + keyword + '%'"/>
                     <choose>
-                        <when test="searchType == 'text'">
+                        <when test="searchType == 'all'">
                             (b.title LIKE #{pattern} OR b.content LIKE #{pattern})
                         </when>
-                        <when test="searchType == 'content'">
-                            b.user_id LIKE #{pattern}
+                        <when test="searchType == 'title'">
+                            b.title LIKE #{pattern}
                         </when>
-                        <when test="searchType == 'all'">
-                            (b.title LIKE #{pattern} OR b.content LIKE #{pattern} OR b.user_id LIKE #{pattern})
+                        <when test="searchType == 'content'">
+                            b.content LIKE #{pattern}
                         </when>
                     </choose>
                 </if>
             </where>
-            GROUP BY b.id, b.title, b.user_id, b.inserted
+            GROUP BY b.id
             ORDER BY b.id DESC
             LIMIT #{offset}, 10
             </script>
             """)
-    List<Board> selectAll(int offset, @Param("keyword") String keyword, @Param("searchType") String searchType);
+    List<Board> selectAll(int offset, String searchType, String keyword);
 
     @Select("""
             SELECT id, title, user_id, inserted, content
@@ -121,19 +122,19 @@ public interface BoardMapper {
                 <if test="keyword != null and keyword != ''">
                     <bind name="pattern" value="'%' + keyword + '%'"/>
                     <choose>
-                        <when test="searchType == 'title'">
+                        <when test="searchType == 'all'">
                             (b.title LIKE #{pattern} OR b.content LIKE #{pattern})
                         </when>
-                        <when test="searchType == 'content'">
-                            b.user_id LIKE #{pattern}
+                        <when test="searchType == 'title'">
+                            b.title LIKE #{pattern}
                         </when>
-                        <when test="searchType == 'all'">
-                            (b.title LIKE #{pattern} OR b.content LIKE #{pattern} OR b.user_id LIKE #{pattern})
+                        <when test="searchType == 'content'">
+                            b.content LIKE #{pattern}
                         </when>
                     </choose>
                 </if>
             </where>
             </script>
             """)
-    int selectTotalBoardCount(String searchType, String keyword);
+    int selectTotalBoardCount(@Param("searchType") String searchType, @Param("keyword") String keyword);
 }

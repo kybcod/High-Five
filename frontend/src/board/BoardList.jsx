@@ -34,19 +34,18 @@ export function BoardList() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
+    const typeParam = searchParams.get("type");
+    const keywordParam = searchParams.get("keyword");
+    if (typeParam) {
+      setSearchType(typeParam);
+    }
+    if (keywordParam) {
+      setSearchKeyword(keywordParam);
+    }
+
     axios.get(`/api/board/list?${searchParams}`).then((res) => {
       setBoardList(res.data.boardList);
       setPageInfo(res.data.pageInfo);
-      setSearchType("all");
-      setSearchKeyword("");
-      const typeParam = searchParams.get("type");
-      const keywordParam = searchParams.get("keyword");
-      if (typeParam) {
-        setSearchType(typeParam);
-      }
-      if (keywordParam) {
-        setSearchKeyword(keywordParam);
-      }
     });
   }, [searchParams]);
 
@@ -61,7 +60,11 @@ export function BoardList() {
   }
 
   function handleSearchButtonClick() {
-    navigate(`?type=${searchType}&keyword=${searchKeyword}`);
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("type", searchType);
+    newParams.set("keyword", searchKeyword);
+    newParams.set("page", 1); // 검색 시 첫 페이지로 이동
+    navigate(`/board/list/?${newParams.toString()}`);
   }
 
   return (
@@ -108,6 +111,7 @@ export function BoardList() {
                 </Td>
                 <Td>{board.userId}</Td>
                 <Td>{board.inserted}</Td>
+                <Td hidden>{board.content}</Td>
               </Tr>
             ))}
           </Tbody>
@@ -120,8 +124,8 @@ export function BoardList() {
             onChange={(e) => setSearchType(e.target.value)}
           >
             <option value={"all"}>전체</option>
-            <option value={"userId"}>작성자</option>
-            <option value={"text"}>제목 + 내용</option>
+            <option value={"content"}>내용</option>
+            <option value={"title"}>제목</option>
           </Select>
           <Input
             value={searchKeyword}
