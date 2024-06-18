@@ -39,7 +39,7 @@ import {
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export function ChatRoom() {
-  const { productId } = useParams();
+  const { productId, buyerId } = useParams();
   const account = useContext(LoginContext);
   // -- axios.get
   const [roomInfo, setRoomInfo] = useState(null);
@@ -62,11 +62,12 @@ export function ChatRoom() {
   useEffect(() => {
     // TODO : status 추가
     axios
-      .get(`/api/chat/${productId}`)
+      .get(`/api/chats/products/${productId}/buyer/${buyerId}`)
       .then((res) => {
-        setRoomInfo(res.data.chatRoom);
-        setProductInfo(res.data.chatProduct);
-        setRoomId(res.data.chatRoom.id);
+        console.log(res.data);
+        // setRoomInfo(res.data.chatRoom);
+        // setProductInfo(res.data.chatProduct);
+        // setRoomId(res.data.chatRoom.id);
         if (!res.data.firstChat) {
           setMessages(res.data.messageList);
         }
@@ -102,7 +103,7 @@ export function ChatRoom() {
     });
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    client.activate(); // 활성화
+    // client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
@@ -216,11 +217,11 @@ export function ChatRoom() {
   }
 
   return (
-    <Box w={"70%"}>
-      <Box>
+    <Box w={"70%"} border={"1px solid gray"}>
+      <Box border={"1px solid red"}>
         <Flex>
           {/* 뒤로 가기 */}
-          <Box w={"10%"}>
+          <Box w={"10%"} border={"1px solid gray"}>
             <Button
               onClick={() => {
                 disConnect();
@@ -231,7 +232,7 @@ export function ChatRoom() {
             </Button>
           </Box>
           {/* 상대방 상점 */}
-          <Center cursor={"pointer"} w={"80%"}>
+          <Center cursor={"pointer"} w={"80%"} border={"1px solid blue"}>
             <Box fontSize={"xl"}>
               {roomInfo.sellerId === Number(account.id) ? (
                 <Text
@@ -248,7 +249,7 @@ export function ChatRoom() {
               )}
             </Box>
           </Center>
-          <Box w={"10%"}>
+          <Box w={"10%"} border={"1px solid yellow"}>
             <Menu>
               <MenuButton as={Button}>
                 <FontAwesomeIcon icon={faEllipsisVertical} />
@@ -269,16 +270,17 @@ export function ChatRoom() {
           </Box>
         </Flex>
       </Box>
-      <Box>
+      <Box border={"1px solid green"}>
         <Flex>
           <Box
             cursor={"pointer"}
             onClick={() => navigate(`/product/${productInfo.id}`)}
             w={"80%"}
+            border={"1px solid blue"}
           >
             <Text>{productInfo.title}</Text>
           </Box>
-          <Box w={"20%"}>
+          <Box w={"20%"} border={"1px solid red"}>
             {/* 상품 상태 */}
             {/* 0 현재 판매 종료, 1 판매 중*/}
             {/* TODO : Notion 정리 */}
@@ -318,7 +320,12 @@ export function ChatRoom() {
         <Box>
           <Box h={"500px"} overflow={"auto"}>
             {messages.map((msg, index) => (
-              <Box key={index}>
+              <Box
+                key={index}
+                border={"1px solid red"}
+                borderRadius={30}
+                pl={3}
+              >
                 <Flex>
                   <Text>
                     {/* 변수의 형식까지 비교하기 위해 account.id 문자열을 숫자로 변경 */}
