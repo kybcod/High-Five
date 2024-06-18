@@ -3,6 +3,7 @@ package com.backend.controller.question;
 import com.backend.domain.question.Question;
 import com.backend.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -52,15 +53,24 @@ public class QuestionController {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Integer id) {
-        service.delete(id);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity delete(@PathVariable Integer id, Authentication authentication) {
+        if (service.hasAccess(id, authentication)) {
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @PutMapping("{id}")
-    public ResponseEntity update(Question question,
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity update(Question question, Authentication authentication,
                                  @RequestParam(required = false, value = "addFileList[]") MultipartFile[] addFileList,
                                  @RequestParam(required = false, value = "removeFileList[]") List<String> removeFileList
     ) throws IOException {
+        if (!service.hasAccess(question.getId(), authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         if (service.validate(question)) {
             service.edit(question, addFileList, removeFileList);
             return ResponseEntity.ok().build();

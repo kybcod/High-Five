@@ -164,4 +164,9 @@ public class QuestionService {
         }
         mapper.updateById(question);
     }
+
+    public boolean hasAccess(Integer id, Authentication authentication) {
+        Question question = mapper.selectById(id);
+        return question.getUserId().equals(Integer.valueOf(authentication.getName()));
+    }
 }

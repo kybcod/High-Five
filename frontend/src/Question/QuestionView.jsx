@@ -69,13 +69,22 @@ export function QuestionView() {
         });
         navigate("/question/list");
       })
-      .catch(() => {
-        toast({
-          status: "error",
-          description: `${id}번 게시물 삭제 중 오류가 발생하였습니다.`,
-          position: "top",
-          duration: 2500,
-        });
+      .catch((res) => {
+        if (res.response.status === 403) {
+          toast({
+            status: "error",
+            description: `권한이 없는 사용자입니다`,
+            position: "top",
+            duration: 2500,
+          });
+        } else {
+          toast({
+            status: "error",
+            description: `${id}번 게시물 삭제 중 오류가 발생하였습니다.`,
+            position: "top",
+            duration: 2500,
+          });
+        }
       });
   }
 
@@ -124,22 +133,22 @@ export function QuestionView() {
           </Box>
         </Box>
 
-        {/*{account.hasAccess(question.userId) && (*/}
-        <Box>
-          <Flex justify={"flex-end"} mr={10} mt={5} gap={4}>
-            <Button
-              w={"70px"}
-              colorScheme={"purple"}
-              onClick={() => navigate(`/question/edit/${id}`)}
-            >
-              수정
-            </Button>
-            <Button w={"70px"} onClick={onOpen} colorScheme={"red"}>
-              삭제
-            </Button>
-          </Flex>
-        </Box>
-        {/*)}*/}
+        {account.hasAccess(question.userId) && (
+          <Box>
+            <Flex justify={"flex-end"} mr={10} mt={5} gap={4}>
+              <Button
+                w={"70px"}
+                colorScheme={"purple"}
+                onClick={() => navigate(`/question/edit/${id}`)}
+              >
+                수정
+              </Button>
+              <Button w={"70px"} onClick={onOpen} colorScheme={"red"}>
+                삭제
+              </Button>
+            </Flex>
+          </Box>
+        )}
 
         {/*댓글 컴포넌트*/}
         <CommentComponent questionId={question.id} />
