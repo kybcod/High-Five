@@ -16,6 +16,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -25,6 +26,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CommentComponent } from "./CommentComponent.jsx";
+import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
 
 export function QuestionView() {
   const { id } = useParams();
@@ -94,23 +96,41 @@ export function QuestionView() {
 
   return (
     <Box>
-      <Box>
-        <Box mt={2}>
-          <FormControl>
-            <FormLabel>제목</FormLabel>
-            <Input value={question.title} readOnly></Input>
-          </FormControl>
-        </Box>
+      <Box mt={2}>
+        <Text value={question.id} />
+      </Box>
 
-        <Box mt={2}>
-          <Flex justify={"space-between"}>
-            <Box w="10%">작성자</Box>
-            <Input w="30%" value={question.nickName} readOnly />
-            <Box w="10%">작성시간</Box>
-            <Input w="30%" value={question.inserted} readOnly />
+      {account.hasAccess(question.userId) && (
+        <Box>
+          <Flex justify={"flex-end"} mr={10} mt={5} gap={8}>
+            <EditIcon
+              w={8}
+              h={8}
+              color="blue.500"
+              onClick={() => navigate(`/question/edit/${id}`)}
+            />
+            <DeleteIcon w={8} h={8} color="red.500" onClick={onOpen} />
           </Flex>
         </Box>
+      )}
 
+      <Box mt={2}>
+        <FormControl>
+          <FormLabel>제목</FormLabel>
+          <Input value={question.title} readOnly></Input>
+        </FormControl>
+      </Box>
+
+      <Box mt={2}>
+        <Flex justify={"space-between"}>
+          <Box w="10%">작성자</Box>
+          <Input w="30%" value={question.nickName} readOnly />
+          <Box w="10%">작성시간</Box>
+          <Input w="30%" value={question.inserted} readOnly />
+        </Flex>
+      </Box>
+
+      <Box>
         <Box mt={5}>
           <FormControl>
             <FormLabel>문의 상세내용</FormLabel>
@@ -132,23 +152,6 @@ export function QuestionView() {
               ))}
           </Box>
         </Box>
-
-        {account.hasAccess(question.userId) && (
-          <Box>
-            <Flex justify={"flex-end"} mr={10} mt={5} gap={4}>
-              <Button
-                w={"70px"}
-                colorScheme={"purple"}
-                onClick={() => navigate(`/question/edit/${id}`)}
-              >
-                수정
-              </Button>
-              <Button w={"70px"} onClick={onOpen} colorScheme={"red"}>
-                삭제
-              </Button>
-            </Flex>
-          </Box>
-        )}
 
         {/*댓글 컴포넌트*/}
         <CommentComponent questionId={question.id} />

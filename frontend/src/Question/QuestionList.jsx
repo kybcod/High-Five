@@ -23,8 +23,10 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
+  faEye,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import { ViewIcon } from "@chakra-ui/icons";
 
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);

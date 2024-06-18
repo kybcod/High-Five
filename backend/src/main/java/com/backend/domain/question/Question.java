@@ -20,7 +20,7 @@ public class Question {
     private Integer numberOfCount;
 
     public String getInserted() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
         return inserted.format(formatter);
     }
 
