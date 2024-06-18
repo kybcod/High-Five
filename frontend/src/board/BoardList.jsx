@@ -6,6 +6,8 @@ import {
   Center,
   Flex,
   Heading,
+  Input,
+  Select,
   Table,
   Tbody,
   Td,
@@ -20,11 +22,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart as fullHeart,
   faImage,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
+  const [searchType, setSearchType] = useState("all");
+  const [searchKeyword, setSearchKeyword] = useState("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -32,6 +37,16 @@ export function BoardList() {
     axios.get(`/api/board/list?${searchParams}`).then((res) => {
       setBoardList(res.data.boardList);
       setPageInfo(res.data.pageInfo);
+      setSearchType("all");
+      setSearchKeyword("");
+      const typeParam = searchParams.get("type");
+      const keywordParam = searchParams.get("keyword");
+      if (typeParam) {
+        setSearchType(typeParam);
+      }
+      if (keywordParam) {
+        setSearchKeyword(keywordParam);
+      }
     });
   }, [searchParams]);
 
@@ -43,6 +58,10 @@ export function BoardList() {
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
     navigate(`/board/list/?${searchParams}`);
+  }
+
+  function handleSearchButtonClick() {
+    navigate(`?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   return (
@@ -94,6 +113,25 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
+      <Center>
+        <Flex>
+          <Select
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
+          >
+            <option value={"all"}>전체</option>
+            <option value={"userId"}>작성자</option>
+            <option value={"text"}>제목 + 내용</option>
+          </Select>
+          <Input
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+          <Button onClick={handleSearchButtonClick}>
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </Button>
+        </Flex>
+      </Center>
       <Center>
         {pageNumbers.map((pageNumber) => (
           <ButtonGroup

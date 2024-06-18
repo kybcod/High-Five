@@ -66,12 +66,12 @@ public class BoardService {
     }
 
 
-    public Map<String, Object> list(int page) {
+    public Map<String, Object> list(int page, String searchType, String keyword) {
         int offset = (page - 1) * 10;
-        List<Board> boardList = mapper.selectAll(offset);
+        List<Board> boardList = mapper.selectAll(offset, searchType, keyword);
         Pageable pageable = PageRequest.of(page - 1, 10);
 
-        int totalBoardNumber = mapper.selectTotalBoardCount();
+        int totalBoardNumber = mapper.selectTotalBoardCount(searchType, keyword);
         Page<Board> pageImpl = new PageImpl<>(boardList, pageable, totalBoardNumber);
         PageInfo pageInfo = new PageInfo().setting(pageImpl);
 

@@ -23,15 +23,36 @@ public interface BoardMapper {
 
     @Select("""
             <script>
-            SELECT b.id, b.title, b.user_id, b.inserted, COUNT(DISTINCT f.file_name) number_of_images, COUNT(DISTINCT l.user_id) number_of_likes
+            SELECT b.id,
+                    b.title,
+                    b.user_id,
+                    b.inserted,
+                    COUNT(DISTINCT f.file_name) AS number_of_images,
+                    COUNT(DISTINCT l.user_id) AS number_of_likes
             FROM board b LEFT JOIN board_file f ON b.id = f.board_id
                          LEFT JOIN board_like l ON b.id = l.board_id
+            <where>
+                <if test="keyword != null and keyword != ''">
+                    <bind name="pattern" value="'%' + keyword + '%'"/>
+                    <choose>
+                        <when test="searchType == 'text'">
+                            (b.title LIKE #{pattern} OR b.content LIKE #{pattern})
+                        </when>
+                        <when test="searchType == 'content'">
+                            b.user_id LIKE #{pattern}
+                        </when>
+                        <when test="searchType == 'all'">
+                            (b.title LIKE #{pattern} OR b.content LIKE #{pattern} OR b.user_id LIKE #{pattern})
+                        </when>
+                    </choose>
+                </if>
+            </where>
             GROUP BY b.id, b.title, b.user_id, b.inserted
             ORDER BY b.id DESC
             LIMIT #{offset}, 10
             </script>
             """)
-    List<Board> selectAll(int offset);
+    List<Board> selectAll(int offset, @Param("keyword") String keyword, @Param("searchType") String searchType);
 
     @Select("""
             SELECT id, title, user_id, inserted, content
@@ -94,7 +115,25 @@ public interface BoardMapper {
     int selectLikeByBoardIdAndUserId(Integer boardId, String userId);
 
     @Select("""
-            SELECT COUNT(*) FROM board
+            <script>
+            SELECT COUNT(*) FROM board b
+            <where>
+                <if test="keyword != null and keyword != ''">
+                    <bind name="pattern" value="'%' + keyword + '%'"/>
+                    <choose>
+                        <when test="searchType == 'title'">
+                            (b.title LIKE #{pattern} OR b.content LIKE #{pattern})
+                        </when>
+                        <when test="searchType == 'content'">
+                            b.user_id LIKE #{pattern}
+                        </when>
+                        <when test="searchType == 'all'">
+                            (b.title LIKE #{pattern} OR b.content LIKE #{pattern} OR b.user_id LIKE #{pattern})
+                        </when>
+                    </choose>
+                </if>
+            </where>
+            </script>
             """)
-    int selectTotalBoardCount();
+    int selectTotalBoardCount(String searchType, String keyword);
 }
