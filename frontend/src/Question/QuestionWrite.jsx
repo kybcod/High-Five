@@ -16,19 +16,22 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function QuestionWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState([]);
-  const [userId, setUserId] = useState(12);
+  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const toast = useToast();
+  const account = useContext(LoginContext);
+
   function handleSaveClick() {
     setLoading(true);
     axios
@@ -36,7 +39,6 @@ export function QuestionWrite() {
         title,
         content,
         files,
-        userId,
       })
       .then(() => {
         toast({

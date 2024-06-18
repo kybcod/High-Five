@@ -6,6 +6,7 @@ import com.backend.mapper.question.QuestionCommentMapper;
 import com.backend.mapper.question.QuestionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,11 @@ public class QuestionService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
-    public void add(Question question, MultipartFile[] files) throws IOException {
+    public void add(Question question, MultipartFile[] files, Authentication authentication) throws IOException {
+
+        // userId를 인증된 사용자의 id로 셋팅
+        question.setUserId(Integer.valueOf(authentication.getName()));
+
         mapper.insert(question);
 
         if (files != null) {

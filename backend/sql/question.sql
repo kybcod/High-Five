@@ -32,3 +32,6 @@ WHERE question_id = 31;
 SELECT COUNT(user_id)
 FROM question_board_comment
 WHERE question_id = 31;
+
+INSERT INTO authority (user_id, name)
+VALUES (58, 'user');

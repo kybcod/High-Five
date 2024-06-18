@@ -4,6 +4,8 @@ import com.backend.domain.question.Question;
 import com.backend.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,9 +20,13 @@ public class QuestionController {
     private final QuestionService service;
 
     @PostMapping("")
-    public ResponseEntity add(Question question, @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity add(Question question,
+                              @RequestParam(value = "files[]", required = false) MultipartFile[] files,
+                              Authentication authentication
+    ) throws IOException {
         if (service.validate(question)) {
-            service.add(question, files);
+            service.add(question, files, authentication);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

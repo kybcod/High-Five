@@ -39,7 +39,6 @@ export function QuestionView() {
       .get(`/api/question/${id}`)
       .then((res) => {
         setQuestion(res.data);
-        // console.log("question.id : ", res.data.id);
       })
       .catch((err) => {
         if (err.response.status === 404) {
