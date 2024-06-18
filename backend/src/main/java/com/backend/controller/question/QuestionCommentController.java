@@ -43,4 +43,15 @@ public class QuestionCommentController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
+    @PutMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity edit(QuestionComment comment, Authentication authentication) {
+        if (service.hasAccess(comment.getId(), authentication)) {
+            service.edit(comment.getId());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 }

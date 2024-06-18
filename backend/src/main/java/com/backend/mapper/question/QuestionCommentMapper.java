@@ -33,4 +33,9 @@ public interface QuestionCommentMapper {
             SELECT * FROM question_board_comment WHERE id=#{id}
             """)
     QuestionComment selectUserById(Integer id);
+
+    @Update("""
+            UPDATE question_board_comment SET content=#{content}, inserted=now() WHERE id=#{id}
+            """)
+    int updateById(Integer id);
 }
