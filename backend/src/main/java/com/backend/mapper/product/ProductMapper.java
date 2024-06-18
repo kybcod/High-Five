@@ -3,7 +3,6 @@ package com.backend.mapper.product;
 import com.backend.domain.auction.BidList;
 import com.backend.domain.chat.ChatProduct;
 import com.backend.domain.chat.ChatRoom;
-import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductWithUserDTO;
 import org.apache.ibatis.annotations.*;
