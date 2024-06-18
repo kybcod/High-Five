@@ -137,6 +137,7 @@ export function ProductUpload() {
           id={uniqueKey}
           boxSize={"180px"}
           position="relative"
+          minWidth="180px" // 고정된 너비 설정
         >
           <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
           <Button
@@ -212,7 +213,7 @@ export function ProductUpload() {
               </Box>
             </FormLabel>
           </Center>
-          <Flex ml={4} flexWrap="nowrap" overflowX={"scroll"}>
+          <Flex ml={4} flexWrap="nowrap" overflowX={"scroll"} maxWidth="400px">
             {filePreview}
           </Flex>
         </Flex>

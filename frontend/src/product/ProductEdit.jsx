@@ -4,7 +4,6 @@ import {
   Center,
   Flex,
   FormControl,
-  FormHelperText,
   FormLabel,
   Image,
   Input,
@@ -164,11 +163,8 @@ export function ProductEdit() {
   }
 
   return (
-    <Box>
+    <Box p={4} mx="auto" maxWidth="600px">
       <Box>
-        <FormControl>
-          <FormLabel>상품 이미지</FormLabel>
-        </FormControl>
         <Flex>
           <Center>
             <FormLabel htmlFor="file-upload">
@@ -180,8 +176,15 @@ export function ProductEdit() {
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
+                flexDirection="column"
+                _hover={{
+                  borderColor: "blue.500",
+                }}
               >
-                <FontAwesomeIcon icon={faCamera} size="2xl" />
+                <Box mb={2}>
+                  <FontAwesomeIcon icon={faCamera} size="2xl" />
+                </Box>
+                <Box>Upload files</Box>
                 <Input
                   ref={fileInputRef}
                   id="file-upload"
@@ -193,6 +196,9 @@ export function ProductEdit() {
                 />
               </Box>
             </FormLabel>
+          </Center>
+
+          <Flex ml={4} flexWrap="nowrap" overflowX={"scroll"} maxWidth="400px">
             {/* 기존 이미지 표시 */}
             {existingFilePreviews.map((file) => (
               <Box
@@ -200,6 +206,7 @@ export function ProductEdit() {
                 boxSize={"180px"}
                 key={file.fileName}
                 position="relative"
+                minWidth="180px"
               >
                 <Image boxSize={"180px"} src={file.filePath} mr={2} />
                 <Button
@@ -215,7 +222,7 @@ export function ProductEdit() {
             ))}
             {/* 새로운 파일 선택 시 미리보기 표시 */}
             {newFilePreviews.map((src, index) => (
-              <Box mr={3} key={index} position="relative">
+              <Box mr={3} key={index} position="relative" minWidth="180px">
                 <Image boxSize={"180px"} src={src} mr={2} />
                 <Button
                   position="absolute"
@@ -228,7 +235,7 @@ export function ProductEdit() {
                 </Button>
               </Box>
             ))}
-          </Center>
+          </Flex>
         </Flex>
       </Box>
       <Box>
@@ -271,7 +278,6 @@ export function ProductEdit() {
             />
             <InputRightAddon>원</InputRightAddon>
           </InputGroup>
-          <FormHelperText>숫자만 입력해주세요.</FormHelperText>
         </FormControl>
       </Box>
       <Box>
