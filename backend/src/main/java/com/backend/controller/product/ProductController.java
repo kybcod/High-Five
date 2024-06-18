@@ -1,7 +1,6 @@
 package com.backend.controller.product;
 
 
-import com.backend.domain.auction.BidList;
 import com.backend.domain.product.Product;
 import com.backend.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -98,20 +97,8 @@ public class ProductController {
         return service.getLike(userId);
     }
 
-    // 참여하기 Controller
-    @PostMapping("join")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity joinProduct(@RequestBody BidList bid, Authentication authentication) {
-        //클라이언트로 부터 받은 userId(상품의 주인)와 토큰을 가지고 있는 userId가 같다면 참여 못함
-        if (service.hasAccess(bid.getProductId(), authentication)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } else {
-            service.upsertBidPrice(bid);
-            return ResponseEntity.ok().build();
-        }
-    }
 
-    //    // TODO :  (fixedRate = 5분)
+    //    // TODO :  나중에 실행할 때 주석 풀기
 //    @Scheduled(cron = "0 0 0/1 * * *", zone = "Asia/Seoul") //1시간
 //    public void checkEndTimeAndProductState() {
 //        service.updateProductState();

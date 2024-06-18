@@ -1,6 +1,5 @@
 package com.backend.service.product;
 
-import com.backend.domain.auction.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
 import com.backend.mapper.product.ProductMapper;
@@ -229,14 +228,6 @@ public class ProductService {
 
     public List<Integer> getLike(Integer userId) {
         return mapper.selectLikeByUserId(userId);
-    }
-
-    public void upsertBidPrice(BidList bid) {
-        if (mapper.existsBid(bid.getProductId(), bid.getUserId())) {
-            mapper.updateBidPrice(bid);
-        } else {
-            mapper.insertBidPrice(bid);
-        }
     }
 
 
