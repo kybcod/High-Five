@@ -62,36 +62,40 @@ public class UserService {
 
     public Map<String, Object> issueToken(User user) {
 
-        Map<String, Object> result = null;
+        Map<String, Object> result = new HashMap<>();
 
         User db = mapper.selectUserByEmail(user.getEmail());
 
         if (db != null) {
             if (passwordEncoder.matches(user.getPassword(), db.getPassword())) {
-                result = new HashMap<>();
-                String token = "";
-                Instant now = Instant.now();
+                if (db.getBlackCount() == null || db.getBlackCount() < 5) {
 
-                List<String> authorities = mapper.selectAuthoritiesByUserId(db.getId());
-                String authorityString = "user";
-                if (authorities != null) {
-                    user.setAuthority(authorities);
-                    authorityString = user.getAuth();
+                    String token = "";
+                    Instant now = Instant.now();
+
+                    List<String> authorities = mapper.selectAuthoritiesByUserId(db.getId());
+                    String authorityString = "user";
+                    if (authorities != null) {
+                        user.setAuthority(authorities);
+                        authorityString = user.getAuth();
+                    }
+
+                    JwtClaimsSet claims = JwtClaimsSet.builder()
+                            .issuer("LiveAuction")
+                            .issuedAt(now)
+                            .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
+                            .subject(db.getId().toString())
+                            .claim("nickName", db.getNickName())
+                            .claim("scope", authorityString)
+                            .claim("email", db.getEmail())
+                            .build();
+
+                    token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+                    result.put("token", token);
+                } else {
+                    result.put("message", "신고 누적으로 정지된 유저입니다");
                 }
-
-                JwtClaimsSet claims = JwtClaimsSet.builder()
-                        .issuer("LiveAuction")
-                        .issuedAt(now)
-                        .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
-                        .subject(db.getId().toString())
-                        .claim("nickName", db.getNickName())
-                        .claim("scope", authorityString)
-                        .claim("email", db.getEmail())
-                        .build();
-
-                token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
-                result.put("token", token);
             }
         }
 

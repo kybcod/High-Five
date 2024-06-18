@@ -32,8 +32,10 @@ export function Login() {
         navigate("/");
       })
       .catch((err) => {
-        if (err.response.status === 401) {
+        if (err.response.status === 404) {
           errorToast("아이디나 비밀번호가 일치하지 않습니다");
+        } else if (err.response.status === 401) {
+          errorToast("신고 누적으로 정지된 유저입니다");
         } else {
           errorToast("로그인 중 문제가 발생하였습니다");
         }

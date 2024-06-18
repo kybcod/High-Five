@@ -52,7 +52,6 @@ WHERE phone_number = '01071263769';
 
 SELECT *
 FROM user
-WHERE id = 37
 ;
 
 UPDATE user

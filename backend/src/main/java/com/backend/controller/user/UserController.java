@@ -89,9 +89,12 @@ public class UserController {
     // user 로그인
     @PostMapping("users/login")
     public ResponseEntity login(@RequestBody User user) {
-        Map<String, Object> token = service.issueToken(user);
 
+        Map<String, Object> token = service.issueToken(user);
         if (token == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (token.get("message") != null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
