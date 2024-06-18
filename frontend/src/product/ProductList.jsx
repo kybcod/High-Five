@@ -97,6 +97,9 @@ export function ProductList() {
               borderColor={"#eee"}
               borderRadius="lg"
               overflow="hidden"
+              boxShadow="md"
+              transition="transform 0.2s"
+              _hover={{ transform: "scale(1.05)" }}
             >
               <CardBody position="relative" h="100%">
                 <Box mt={2} w="100%">

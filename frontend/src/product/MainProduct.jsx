@@ -92,6 +92,9 @@ export function MainProduct() {
               borderColor={"#eee"}
               borderRadius="lg"
               overflow="hidden"
+              boxShadow="md"
+              transition="transform 0.2s"
+              _hover={{ transform: "scale(1.05)" }}
             >
               <CardBody position="relative" h="100%">
                 <Box mt={2} w="100%">
@@ -150,7 +153,13 @@ export function MainProduct() {
                 </Box>
                 <Stack mt="4" spacing="2">
                   <Flex justifyContent="space-between" alignItems="center">
-                    <Text fontSize="lg" fontWeight="bold" noOfLines={1}>
+                    <Text
+                      onClick={() => navigate(`/product/${product.id}`)}
+                      cursor={"pointer"}
+                      fontSize="lg"
+                      fontWeight="bold"
+                      noOfLines={1}
+                    >
                       {product.title}
                     </Text>
                     {account.isLoggedIn() && (

@@ -161,10 +161,10 @@ export function ProductEdit() {
 
   function handleFormattedNumber(e) {
     const inputValue = e.target.value.replaceAll(",", "");
-    // 입력 값이 숫자인지 확인
-    if (/^\d+$/.test(inputValue)) {
-      setProduct({ ...product, startPrice: inputValue });
-    }
+    // 숫자가 아닌 문자를 제외하고 필터링
+    const filteredValue = inputValue.replace(/\D/g, "");
+
+    setProduct({ ...product, startPrice: filteredValue });
   }
 
   return (
