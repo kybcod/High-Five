@@ -84,12 +84,25 @@ export function ProductList() {
     <Box>
       <Category />
       <Heading my={4}>오늘의 상품</Heading>
-      <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+      <Grid
+        templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(5, 1fr)" }}
+        gap={6}
+      >
         {productList.map((product) => (
-          <GridItem key={product.id} w={"100%"}>
-            <Card maxW="sm" h={"100%"}>
-              <CardBody position="relative" h={"100%"}>
-                <Box mt={2} w={"100%"}>
+          <GridItem key={product.id}>
+            <Card
+              maxW="sm"
+              h="100%"
+              borderWidth="1px"
+              borderColor={"#eee"}
+              borderRadius="lg"
+              overflow="hidden"
+              boxShadow="md"
+              transition="transform 0.2s"
+              _hover={{ transform: "scale(1.05)" }}
+            >
+              <CardBody position="relative" h="100%">
+                <Box mt={2} w="100%">
                   {product.status ? (
                     <>
                       {product.productFileList && (
@@ -103,8 +116,8 @@ export function ProductList() {
                       )}
                       <Badge
                         position="absolute"
-                        top="1"
-                        left="1"
+                        top="1.5"
+                        left="2"
                         colorScheme="teal"
                       >
                         {product.endTimeFormat}
@@ -143,33 +156,27 @@ export function ProductList() {
                     </Box>
                   )}
                 </Box>
-                <Stack mt="6" spacing="3">
-                  <Flex justifyContent={"space-between"}>
-                    <Text as={"b"} noOfLines={1} fontSize="lg">
+                <Stack mt="4" spacing="2">
+                  <Flex justifyContent="space-between" alignItems="center">
+                    <Text fontSize="lg" fontWeight="bold" noOfLines={1}>
                       {product.title}
                     </Text>
                     {account.isLoggedIn() && (
                       <Box onClick={() => handleLikeClick(product.id)}>
-                        {(() => {
-                          const isLiked = likes[product.id];
-                          const icon = isLiked ? fullHeart : emptyHeart;
-                          return (
-                            <FontAwesomeIcon
-                              icon={icon}
-                              style={{ color: "red" }}
-                              cursor="pointer"
-                              size="xl"
-                            />
-                          );
-                        })()}
+                        <FontAwesomeIcon
+                          icon={likes[product.id] ? fullHeart : emptyHeart}
+                          style={{ color: "red" }}
+                          cursor="pointer"
+                          size="lg"
+                        />
                       </Box>
                     )}
                   </Flex>
-                  <Flex justifyContent={"space-between"}>
+                  <Flex justifyContent="space-between">
                     <Text color="blue.600" fontSize="xl">
                       {product.startPrice
                         .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
                       원
                     </Text>
                     <Text>{product.timeFormat}</Text>

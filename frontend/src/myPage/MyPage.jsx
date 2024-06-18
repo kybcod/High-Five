@@ -8,17 +8,15 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { LoginContext } from "../component/LoginProvider.jsx";
 import { MyShop } from "./MyShop.jsx";
 import { LikeList } from "./LikeList.jsx";
 import axios from "axios";
 import { UserInfo } from "./UserInfo.jsx";
 
 export function MyPage({ tab }) {
-  const [product, setProduct] = useState(null);
-  const account = useContext(LoginContext);
+  const [userNickName, setUserNickName] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { userId } = useParams();
@@ -44,29 +42,25 @@ export function MyPage({ tab }) {
   const currentTab = tab || "userInfo";
 
   useEffect(() => {
+    axios.get(`/api/products/user/${userId}`).then((res) => {
+      console.log(res.data);
+      setUserNickName(res.data.userNickName);
+    });
+
     const tabName = location.pathname.split("/").pop();
     if (!Object.keys(tabIndex).includes(tabName)) {
       navigate(`/myPage/${userId}`);
     }
-
-    axios.get(`/api/products/user/${userId}`).then((res) => {
-      console.log(res.data.productList);
-      setProduct(res.data.productList);
-    });
   }, []);
 
   const handleTabsChange = (index) => {
     navigate(`/myPage/${userId}/${indexTab[index]}`);
   };
 
-  if (product === null) {
-    return <Spinner />;
-  }
-
   return (
     <Box>
       <Heading mb={5} size={"lg"}>
-        {/*{product[0].userNickName}*/}
+        {userNickName}
       </Heading>
       <Tabs
         variant="unstyled"
