@@ -1,14 +1,17 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
+  Image,
   Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -17,6 +20,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+import ReportButton from "../user/ReportButton.jsx";
 
 export function UserInfo() {
   const account = useContext(LoginContext);
@@ -60,9 +64,17 @@ export function UserInfo() {
     return <Spinner />;
   }
 
+  console.log(user.profileImage.src);
+
   return (
     <Box>
       <Box>
+        <ReportButton userId={user.id} />
+        <Image
+          borderRadius="full"
+          boxSize="150px"
+          src={user.profileImage.src}
+        />
         <FormControl>
           <FormLabel>이메일 주소</FormLabel>
           <Input
@@ -80,9 +92,15 @@ export function UserInfo() {
           <FormLabel>가입일시</FormLabel>
           <Input variant="flushed" readOnly value={user.signupDateAndTime} />
         </FormControl>
-        <Link onClick={onOpen}>회원 탈퇴</Link>
+        <Flex gap={3}>
+          <Link onClick={() => navigate("/myPage/:userId/userEdit")}>
+            회원정보수정
+          </Link>
+          <Link onClick={onOpen}>회원 탈퇴</Link>
+        </Flex>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>삭제하시겠습니까?</ModalHeader>
           <ModalBody>비밀번호를 입력해주세요</ModalBody>

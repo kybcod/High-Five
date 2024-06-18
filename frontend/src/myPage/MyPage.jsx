@@ -66,7 +66,7 @@ export function MyPage({ tab }) {
   return (
     <Box>
       <Heading mb={5} size={"lg"}>
-        {product[0].userNickName}
+        {/*{product[0].userNickName}*/}
       </Heading>
       <Tabs
         variant="unstyled"

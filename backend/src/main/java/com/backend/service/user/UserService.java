@@ -2,9 +2,11 @@ package com.backend.service.user;
 
 import com.backend.component.SmsUtil;
 import com.backend.domain.user.User;
+import com.backend.domain.user.UserFile;
 import com.backend.mapper.user.UserMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +19,13 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -31,18 +39,35 @@ public class UserService {
     private final SmsUtil sms;
     private final PasswordEncoder passwordEncoder;
     private final JwtEncoder jwtEncoder;
+    private final S3Client s3Client;
+
+    @Value("${aws.s3.bucket.name}")
+    String bucketName;
+
+    @Value("${image.src.prefix}")
+    String srcPrefix;
 
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
-        sms.sendOne(phoneNumber, verificationCode);
+//        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
+
+        Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
+        if (dbCode != null) {
+            mapper.deleteCodeByPhoneNumber(phoneNumber);
+        }
+
+        mapper.insertCode(phoneNumber, verificationCode);
+//        if (response.getStatusCode().equals("2000")) {
+//        }
         return verificationCode;
     }
 
-    public boolean checkVerificationCode(String verificationCode, String customerCode) {
-        if (verificationCode.equals(customerCode)) {
-            return true;
+    public boolean checkVerificationCode(String phoneNumber, int verificationCode) {
+        Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
+        if (dbCode != null) {
+            mapper.deleteCodeByPhoneNumber(phoneNumber);
         }
-        return false;
+        return verificationCode == dbCode;
     }
 
     public void addUser(User user) {
@@ -52,36 +77,40 @@ public class UserService {
 
     public Map<String, Object> issueToken(User user) {
 
-        Map<String, Object> result = null;
+        Map<String, Object> result = new HashMap<>();
 
         User db = mapper.selectUserByEmail(user.getEmail());
 
         if (db != null) {
             if (passwordEncoder.matches(user.getPassword(), db.getPassword())) {
-                result = new HashMap<>();
-                String token = "";
-                Instant now = Instant.now();
+                if (db.getBlackCount() == null || db.getBlackCount() < 5) {
 
-                List<String> authorities = mapper.selectAuthoritiesByUserId(db.getId());
-                String authorityString = "user";
-                if (authorities != null) {
-                    user.setAuthority(authorities);
-                    authorityString = user.getAuth();
+                    String token = "";
+                    Instant now = Instant.now();
+
+                    List<String> authorities = mapper.selectAuthoritiesByUserId(db.getId());
+                    String authorityString = "user";
+                    if (authorities != null) {
+                        user.setAuthority(authorities);
+                        authorityString = user.getAuth();
+                    }
+
+                    JwtClaimsSet claims = JwtClaimsSet.builder()
+                            .issuer("LiveAuction")
+                            .issuedAt(now)
+                            .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
+                            .subject(db.getId().toString())
+                            .claim("nickName", db.getNickName())
+                            .claim("scope", authorityString)
+                            .claim("email", db.getEmail())
+                            .build();
+
+                    token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+                    result.put("token", token);
+                } else {
+                    result.put("message", "신고 누적으로 정지된 유저입니다");
                 }
-
-                JwtClaimsSet claims = JwtClaimsSet.builder()
-                        .issuer("LiveAuction")
-                        .issuedAt(now)
-                        .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
-                        .subject(db.getId().toString())
-                        .claim("nickName", db.getNickName())
-                        .claim("scope", authorityString)
-                        .claim("email", db.getEmail())
-                        .build();
-
-                token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
-                result.put("token", token);
             }
         }
 
@@ -152,7 +181,12 @@ public class UserService {
     }
 
     public User getUserByUserId(Integer id) {
-        return mapper.selectUserById(id);
+        User user = mapper.selectUserById(id);
+        String fileName = mapper.selectFileNameByUserId(id);
+        UserFile userFile = UserFile.builder()
+                .fileName(fileName).src(STR."\{srcPrefix}user/\{user.getId()}/\{fileName}").build();
+        user.setProfileImage(userFile);
+        return user;
     }
 
     public void removeUserById(Integer id) {
@@ -188,7 +222,21 @@ public class UserService {
         mapper.deleteUserById(id);
     }
 
-    public Map<String, Object> updateUser(User user, Authentication authentication) {
+    public Map<String, Object> updateUser(User user, Authentication authentication, MultipartFile profileImage) throws IOException {
+        if (profileImage != null) {
+            mapper.insertProfileImage(user.getId(), profileImage.getOriginalFilename());
+
+            String key = STR."prj3/user/\{user.getId()}/\{profileImage.getOriginalFilename()}";
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .acl(ObjectCannedACL.PUBLIC_READ)
+                    .build();
+
+            s3Client.putObject(putObjectRequest,
+                    RequestBody.fromInputStream(profileImage.getInputStream(), profileImage.getSize()));
+        }
+
         if (user.getPassword() != null && user.getPassword().length() > 0) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         } else {
@@ -228,15 +276,33 @@ public class UserService {
         return true;
     }
 
-    public Map<String, Object> getUserList(int page) {
+    public Map<String, Object> getUserList(int page, String type, String keyword) {
         int offset = (page - 1) * 10;
-        List<User> userList = mapper.selectUserList(offset);
         Pageable pageable = PageRequest.of(page - 1, 10);
+        List<User> userList = mapper.selectUserList(offset, type, keyword);
 
         int totalUserNumber = mapper.selectTotalUserCount();
         Page<User> pageImpl = new PageImpl<>(userList, pageable, totalUserNumber);
         PageInfo paeInfo = new PageInfo().setting(pageImpl);
 
         return Map.of("userList", userList, "pageInfo", paeInfo);
+    }
+
+    public void reportUserById(Integer id) {
+        mapper.updateBlackCountByUserId(id);
+    }
+
+    public String getEmailByPhoneNumber(String phoneNumber) {
+        return mapper.selectEmailByPhoneNumber(phoneNumber);
+    }
+
+    public boolean modifyPassword(User user) {
+        User dbUser = getUserByEmail(user.getEmail());
+        if (dbUser != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            mapper.updatePassword(user);
+            return true;
+        }
+        return false;
     }
 }
