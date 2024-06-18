@@ -111,7 +111,7 @@ export function ProductDetails() {
   // 채팅방 연결
   const handleEnterChatRoom = () => {
     if (account.isLoggedIn()) {
-      navigate(`/chat/${product.id}`);
+      navigate(`/chat/product/${product.id}/buyer/${account.id}`);
     } else {
       alert("로그인이 필요한 서비스입니다.");
       navigate("/login");
