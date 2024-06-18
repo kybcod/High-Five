@@ -13,10 +13,8 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export function UserList() {
   const [userList, setUserList] = useState(null);
@@ -26,21 +24,23 @@ export function UserList() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchParams] = useSearchParams();
 
+  // TODO. 주석 해제
   useEffect(() => {
     axios.get(`/api/users/list?${searchParams}`).then((res) => {
       setUserList(res.data.userList);
       setPageInfo(res.data.pageInfo);
-      setSearchType("all");
-      setSearchKeyword("");
-      const typeParam = searchParams.get("type");
-      const keywordParam = searchParams.get("keyword");
-      if (typeParam) {
-        setSearchType(typeParam);
-      }
-      if (keywordParam) {
-        setSearchKeyword(keywordParam);
-      }
     });
+
+    setSearchType("all");
+    setSearchKeyword("");
+    const typeParam = searchParams.get("type");
+    const keywordParam = searchParams.get("keyword");
+    if (typeParam) {
+      setSearchType(typeParam);
+    }
+    if (keywordParam) {
+      setSearchKeyword(keywordParam);
+    }
   }, [searchParams]);
 
   const pageNumbers = [];
@@ -58,14 +58,22 @@ export function UserList() {
   }
 
   function handleSearchClick() {
-    navigate(`/?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(`/user/list/?type=${searchType}&keyword=${searchKeyword}`);
+  }
+
+  function handleTypeClick(type) {
+    navigate(`/user/list/?type=${type}&keyword=${searchKeyword}`);
   }
 
   return (
     <Box>
       <Flex gap={2}>
-        <Link to={`/user/list/?${searchParams}`}>전체</Link>
-        <Link to={`/user/list/?${searchParams}`}>블랙회원</Link>
+        <Link cursor={"pointer"} onClick={() => handleTypeClick("all")}>
+          전체
+        </Link>
+        <Link cursor={"pointer"} onClick={() => handleTypeClick("black")}>
+          블랙회원
+        </Link>
       </Flex>
       <Table>
         <Thead>
@@ -73,7 +81,8 @@ export function UserList() {
             <Th>No.</Th>
             <Th>Email</Th>
             <Th>Name</Th>
-            <Th>Value</Th>
+            <Th>Inserted</Th>
+            <Th>Black_count</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -83,6 +92,7 @@ export function UserList() {
               <Td>{user.email}</Td>
               <Td>{user.nickName}</Td>
               <Td>{user.signupDateAndTime}</Td>
+              <Td>{user.blackCount}</Td>
             </Tr>
           ))}
         </Tbody>
@@ -97,9 +107,7 @@ export function UserList() {
             />
           </Box>
           <Box>
-            <Button onClick={handleSearchClick}>
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </Button>
+            <Button onClick={handleSearchClick}>검색</Button>
           </Box>
         </Flex>
       </Center>

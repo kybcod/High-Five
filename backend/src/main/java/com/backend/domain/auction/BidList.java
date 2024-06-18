@@ -1,4 +1,4 @@
-package com.backend.domain.product;
+package com.backend.domain.auction;
 
 import lombok.Data;
 
