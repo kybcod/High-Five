@@ -6,6 +6,7 @@ import {
   Heading,
   Image,
   Spacer,
+  Spinner,
   Text,
   Textarea,
 } from "@chakra-ui/react";
@@ -14,16 +15,25 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import { BoardCommentComponent } from "./BoardCommentComponent.jsx";
 
 export function BoardView() {
   const [board, setBoard] = useState("");
+  const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
+  const [isLikeProcess, setIsLikeProcess] = useState(false);
   const navigate = useNavigate();
   const { successToast, errorToast } = CustomToast();
   const account = useContext(LoginContext);
   const { board_id } = useParams();
 
   useEffect(() => {
-    axios.get(`/api/board/${board_id}`).then((res) => setBoard(res.data));
+    axios.get(`/api/board/${board_id}`).then((res) => {
+      setBoard(res.data.board);
+      setBoardLike(res.data.boardLike);
+    });
   }, []);
 
   function handleClickDelete() {
@@ -40,14 +50,51 @@ export function BoardView() {
       });
   }
 
+  function handleClickLike() {
+    if (!account.isLoggedIn()) {
+      return;
+    }
+    setIsLikeProcess(true);
+    axios
+      .put(`/api/board/like/${board_id}`, { boardId: board.id })
+      .then((res) => {
+        setBoardLike(res.data.boardLike);
+        setBoard(res.data.board);
+      })
+      .finally(() => {
+        setIsLikeProcess(false);
+      });
+  }
+
   return (
     <Box>
       <Box>
         <Heading>자유게시판 게시글</Heading>
       </Box>
-      <Box>
-        <Text fontSize="30px">{board.title}</Text>
-      </Box>
+      <Flex>
+        <Box>
+          <Text fontSize="30px">{board.title}</Text>
+        </Box>
+        <Spacer />
+        {isLikeProcess || (
+          <Flex>
+            <Box onClick={handleClickLike}>
+              {boardLike.boardLike && <FontAwesomeIcon icon={fullHeart} />}
+              {boardLike.boardLike || <FontAwesomeIcon icon={emptyHeart} />}
+              {boardLike.count > 0 && (
+                <Box mx={3} fontSize={"3xl"}>
+                  {boardLike.count}
+                </Box>
+              )}
+            </Box>
+          </Flex>
+        )}
+        {isLikeProcess && (
+          <Box>
+            <Spinner />
+          </Box>
+        )}
+      </Flex>
       <Flex>
         <Flex>
           <Box>
@@ -87,6 +134,8 @@ export function BoardView() {
       <Box>
         <Textarea value={board.content} readOnly />
       </Box>
+
+      <BoardCommentComponent boardId={board.id} />
     </Box>
   );
 }

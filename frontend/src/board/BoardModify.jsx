@@ -15,6 +15,7 @@ import {
   List,
   ListItem,
   Spacer,
+  Spinner,
   Switch,
   Text,
   Textarea,
@@ -28,11 +29,8 @@ import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { DeleteIcon } from "@chakra-ui/icons";
 
 export function BoardModify() {
-  const [board, setBoard] = useState({
-    id: "",
-    title: "",
-    content: "",
-  });
+  const [board, setBoard] = useState(null);
+  const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
   const [removeFileList, setRemoveFileList] = useState([]);
   const [addFileList, setAddFileList] = useState([]);
   const { successToast, errorToast } = CustomToast();
@@ -41,7 +39,8 @@ export function BoardModify() {
 
   useEffect(() => {
     axios.get(`/api/board/${board_id}`).then((res) => {
-      setBoard(res.data);
+      setBoard(res.data.board);
+      setBoardLike(res.data.boardLike);
     });
   }, []);
 
@@ -51,6 +50,7 @@ export function BoardModify() {
         id: board.id,
         title: board.title,
         content: board.content,
+        boardLike,
         removeFileList,
         addFileList,
       })
@@ -63,6 +63,10 @@ export function BoardModify() {
           errorToast("게시물 수정에 실패했습니다. 다시 수정해주세요");
         }
       });
+  }
+
+  if (board === null) {
+    return <Spinner />;
   }
 
   function handleClickDeleteButton() {
@@ -123,7 +127,7 @@ export function BoardModify() {
           <FormLabel>제목</FormLabel>
           <Input
             onChange={(e) => setBoard({ ...board, title: e.target.value })}
-            value={board.title}
+            defaultValue={board.title}
           />
         </FormControl>
       </Box>
@@ -181,7 +185,7 @@ export function BoardModify() {
           )}
           <Textarea
             onChange={(e) => setBoard({ ...board, content: e.target.value })}
-            value={board.content}
+            defaultValue={board.content}
           />
         </FormControl>
       </Box>
