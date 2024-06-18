@@ -28,7 +28,16 @@ export function CommentWrite({ questionId }) {
           duration: 2000,
         });
       })
-      .catch()
+      .catch((err) => {
+        if (err.response.status === 403) {
+          toast({
+            description: "관리자만 댓글을 등록할 수 있습니다",
+            status: "error",
+            position: "top",
+            duration: 2500,
+          });
+        }
+      })
       .finally(() => {
         setIsProcessing(false);
       });
@@ -36,23 +45,23 @@ export function CommentWrite({ questionId }) {
 
   return (
     <Box>
-      {/*{account.hasAccess(account.userId) && (*/}
-      <>
-        <Flex gap={2}>
-          <Textarea
-            onChange={(e) => setContent(e.target.value)}
-            value={content}
-          />
-          <Button
-            onClick={handleWriteClick}
-            isDisabled={content.trim().length === 0}
-            isLoading={isProcessing}
-          >
-            등록
-          </Button>
-        </Flex>
-      </>
-      {/*)}*/}
+      {account.isAdmin(account.userId) && (
+        <>
+          <Flex gap={2}>
+            <Textarea
+              onChange={(e) => setContent(e.target.value)}
+              value={content}
+            />
+            <Button
+              onClick={handleWriteClick}
+              isDisabled={content.trim().length === 0}
+              isLoading={isProcessing}
+            >
+              등록
+            </Button>
+          </Flex>
+        </>
+      )}
     </Box>
   );
 }

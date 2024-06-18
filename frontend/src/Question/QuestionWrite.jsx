@@ -49,7 +49,6 @@ export function QuestionWrite() {
       })
       .catch((e) => {
         const code = e.response.status;
-
         if (code === 400) {
           toast({
             description: "등록되지 않았습니다. 내용을 확인해 주세요.",

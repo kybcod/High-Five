@@ -19,9 +19,15 @@ public class QuestionCommentController {
     private final QuestionCommentService service;
 
     @PostMapping("")
-    @PreAuthorize("isAuthenticated()")
-    public void add(@RequestBody QuestionComment comment, Authentication authentication) {
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    public ResponseEntity add(@RequestBody QuestionComment comment, Authentication authentication) {
         service.addComment(comment, authentication);
+        if (authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("SCOPE_admin"))) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @GetMapping("{questionId}")
