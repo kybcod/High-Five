@@ -1,5 +1,6 @@
 package com.backend.mapper.chat;
 
+import com.backend.domain.chat.Chat;
 import com.backend.domain.chat.ChatMessage;
 import com.backend.domain.chat.ChatRoom;
 import org.apache.ibatis.annotations.Insert;
@@ -45,4 +46,20 @@ public interface ChatMapper {
             LIMIT 20
             """)
     List<ChatMessage> selectMessage(Integer roomId);
+
+    @Select("""
+            SELECT *
+            FROM chat_room
+            WHERE user_id = #{tokenUserId} OR seller_id = #{tokenUserId}
+            """)
+    List<ChatRoom> selectChatRoomListByUserId(Integer tokenUserId);
+
+    @Select("""
+            SELECT *
+            FROM chat
+            WHERE chat_room_id = #{id}
+            ORDER BY inserted DESC
+            LIMIT 1
+            """)
+    Chat selectMessageByRoomId(ChatRoom chatRoom);
 }
