@@ -1,12 +1,22 @@
-import { Box, Heading, Spinner, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  HStack,
+  Spinner,
+} from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function ChatRoomList() {
   const account = useContext(LoginContext);
   const [chatRoomList, setChatRoomList] = useState([]);
-  const [obj, setObj] = useState(null);
+  const navigate = useNavigate();
+
   // -- axios.get
   useEffect(() => {
     // TODO : status 추가
@@ -19,23 +29,50 @@ export function ChatRoomList() {
       .catch()
       .finally();
   }, []);
-  // spinner
+
+  // -- spinner
   if (chatRoomList == null) {
     return <Spinner />;
   }
+
   return (
-    <Box>
+    <Box width={"40%"}>
       <Heading>채팅방 목록</Heading>
+
       {/* 상품 제목, 닉네임, 대화내용, 대화시간 */}
-      {chatRoomList.map((item, index) => {
-        <Box key={index}>
-          <Text>text</Text>
-          {/*<Text>{title}</Text>*/}
-          {/*<Text>닉네임</Text>*/}
-          {/*<Text>대화내용</Text>*/}
-          {/*<Text>마지막 대화시간</Text>*/}
-        </Box>;
-      })}
+      {chatRoomList.map((item, index) => (
+        <Box key={index} border={"1px solid gray"} height={"110px"}>
+          <Box m={2}>
+            <Button
+              size="lg"
+              variant="link"
+              onClick={() => navigate(`/product/${item.product.id}`)}
+            >
+              {item.product.title}
+            </Button>
+          </Box>
+          <Box m={2}>
+            <Flex>
+              <HStack spacing={4}>
+                <Center bgColor={"blue"}>
+                  <Button
+                    variant="link"
+                    onClick={() => navigate(`/myPage/${item.user.id}/shop`)}
+                  >
+                    {item.user.nickName}
+                  </Button>
+                </Center>
+                <Box fontSize={"xs"} color={"blue.300"}>
+                  {item.chat.inserted}
+                </Box>
+              </HStack>
+            </Flex>
+          </Box>
+          <Box bgColor={"gray.200"} m={2}>
+            <Box cursor={"pointer"}>{item.chat.message}</Box>
+          </Box>
+        </Box>
+      ))}
     </Box>
   );
 }
