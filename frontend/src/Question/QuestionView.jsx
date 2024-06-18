@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -27,20 +28,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CommentComponent } from "./CommentComponent.jsx";
 import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
+import { QuestionList } from "./QuestionList.jsx";
 
-export function QuestionView() {
+export function QuestionView({ isNewBadge }) {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
   const navigate = useNavigate();
   const toast = useToast();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
+  const [isNewBadge, setIsNewBadge] = useState("");
 
   useEffect(() => {
     axios
       .get(`/api/question/${id}`)
       .then((res) => {
         setQuestion(res.data);
+        setIsNewBadge(res.data);
       })
       .catch((err) => {
         if (err.response.status === 404) {
@@ -50,9 +54,7 @@ export function QuestionView() {
             position: "top",
             duration: 2500,
           });
-          navigate("/question/list");
-        } else {
-          console.log("error status!!", err);
+          // navigate("/question/list");
         }
       });
   }, [id]);
@@ -127,6 +129,9 @@ export function QuestionView() {
           <Input w="30%" value={question.nickName} readOnly />
           <Box w="10%">작성시간</Box>
           <Input w="30%" value={question.inserted} readOnly />
+          <Box>
+            {question.isNewBadge && <Badge colorScheme="green">New</Badge>}
+          </Box>
         </Flex>
       </Box>
 

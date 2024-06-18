@@ -118,6 +118,7 @@ public class QuestionService {
                 .map(name -> new QuestionFile(name, STR."\{srcPrefix}\{question.getId()}/\{name}"))
                 .toList();
         question.setFileList(files);
+        question.setIsNewBadge(question.isNewBadge());
         return question;
     }
 
