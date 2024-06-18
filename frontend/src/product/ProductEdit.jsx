@@ -23,7 +23,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { faCamera, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,6 +41,7 @@ export function ProductEdit() {
   const updateModal = useDisclosure();
   const deleteModal = useDisclosure();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
@@ -54,19 +55,17 @@ export function ProductEdit() {
     });
   }, []);
 
-  console.log(date);
-  console.log(time);
-
   function handleUpdateClick() {
     const localDate = new Date(`${date}T${time}`);
     localDate.setHours(localDate.getHours() + 9);
-    const endTime = localDate.toISOString().slice(0, -5);
+    const formattedEndTime = localDate.toISOString().slice(0, -5);
+
     axios
       .putForm("/api/products", {
         id: product.id,
         title: product.title,
         category: product.category,
-        endTime: endTime,
+        endTime: formattedEndTime,
         startPrice: product.startPrice,
         content: product.content,
         removedFileList,
@@ -129,6 +128,11 @@ export function ProductEdit() {
       URL.createObjectURL(file),
     );
     setNewFilePreviews([...newFilePreviews, ...newPreviews]);
+
+    // 파일 인풋 초기화(같은 파일 선택 시 초기화)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   }
 
   function handleRemoveExistingFile(fileName) {
@@ -179,6 +183,7 @@ export function ProductEdit() {
               >
                 <FontAwesomeIcon icon={faCamera} size="2xl" />
                 <Input
+                  ref={fileInputRef}
                   id="file-upload"
                   type="file"
                   multiple

@@ -14,7 +14,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
@@ -26,11 +26,11 @@ export function ProductUpload() {
   const [files, setFiles] = useState([]);
   const [filePreview, setFilePreView] = useState([]);
   const [content, setContent] = useState("");
-  const [endTime, setEndTime] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   function handleSaleClick() {
     if (files.length === 0) {
@@ -83,6 +83,7 @@ export function ProductUpload() {
       return;
     }
 
+    // endTime : Date, time으로 나누기
     const localDate = new Date(`${date}T${time}`);
     localDate.setHours(localDate.getHours() + 9);
     const formattedEndTime = localDate.toISOString().slice(0, -5);
@@ -122,40 +123,47 @@ export function ProductUpload() {
       });
   }
 
-  function handleRemoveFile(fileName) {
-    setFiles((prevFiles) => {
-      const newFiles = prevFiles.filter((file) => file.name !== fileName);
-      return newFiles;
-    });
-
-    setFilePreView((prevPreviews) => {
-      const newPreviews = prevPreviews.filter(
-        (filePreview) => filePreview.key !== fileName,
-      );
-      return newPreviews;
-    });
-  }
-
   function handleChangeFiles(e) {
     const fileList = Array.from(e.target.files);
-    const updatedFiles = [...files, ...fileList]; // 기존 파일에 새 파일 추가
+    const updatedFiles = [...files, ...fileList];
     setFiles(updatedFiles);
 
-    const filePreviewList = updatedFiles.map((file) => (
-      <Box mr={3} key={file.name} boxSize={"180px"} position="relative">
-        <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
-        <Button
-          position="absolute"
-          top={1}
-          right={2}
-          variant="ghost"
-          onClick={() => handleRemoveFile(file.name)}
+    const filePreviewList = updatedFiles.map((file, index) => {
+      const uniqueKey = index + file.name;
+      return (
+        <Box
+          mr={3}
+          key={uniqueKey}
+          id={uniqueKey}
+          boxSize={"180px"}
+          position="relative"
         >
-          <FontAwesomeIcon icon={faCircleXmark} size="lg" />
-        </Button>
-      </Box>
-    ));
+          <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
+          <Button
+            position="absolute"
+            top={1}
+            right={2}
+            variant="ghost"
+            onClick={() => handleRemoveFile(uniqueKey, file)}
+          >
+            <FontAwesomeIcon icon={faCircleXmark} size="lg" />
+          </Button>
+        </Box>
+      );
+    });
     setFilePreView(filePreviewList);
+
+    // 파일 인풋 초기화(같은 파일 선택 시 초기화)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
+  function handleRemoveFile(fileKey, file) {
+    setFiles((prevFiles) => prevFiles.filter((f) => f !== file));
+    setFilePreView((prevPreviews) =>
+      prevPreviews.filter((filePreview) => filePreview.key !== fileKey),
+    );
   }
 
   const formattedPrice = (money) => {
@@ -170,11 +178,8 @@ export function ProductUpload() {
   }
 
   return (
-    <Box>
+    <Box p={4} mx="auto" maxWidth="600px">
       <Box>
-        <FormControl>
-          <FormLabel>상품 이미지</FormLabel>
-        </FormControl>
         <Flex>
           <Center>
             <FormLabel htmlFor="file-upload">
@@ -186,29 +191,40 @@ export function ProductUpload() {
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
+                flexDirection="column"
+                _hover={{
+                  borderColor: "blue.500",
+                }}
               >
-                <FontAwesomeIcon icon={faCamera} size="2xl" />
+                <Box mb={2}>
+                  <FontAwesomeIcon icon={faCamera} size="2xl" />
+                </Box>
+                <Box>Upload files</Box>
                 <Input
+                  ref={fileInputRef}
                   id="file-upload"
                   type="file"
                   multiple
                   accept={"image/*"}
                   style={{ display: "none" }}
-                  onChange={(e) => handleChangeFiles(e)}
+                  onChange={handleChangeFiles}
                 />
               </Box>
             </FormLabel>
-            <Center>{filePreview}</Center>
           </Center>
+          <Flex ml={4} flexWrap="nowrap" overflowX={"scroll"}>
+            {filePreview}
+          </Flex>
         </Flex>
       </Box>
-      <Box>
+
+      <Box mb={4}>
         <FormControl>
           <FormLabel>제목</FormLabel>
           <Input onChange={(e) => setTitle(e.target.value)} />
         </FormControl>
       </Box>
-      <Box>
+      <Box mb={4}>
         <FormControl>
           <FormLabel>카테고리</FormLabel>
           <Select
@@ -224,7 +240,7 @@ export function ProductUpload() {
           </Select>
         </FormControl>
       </Box>
-      <Box>
+      <Box mb={4}>
         <FormControl>
           <FormLabel>입찰 시작가</FormLabel>
           <InputGroup>
@@ -237,8 +253,8 @@ export function ProductUpload() {
         </FormControl>
       </Box>
       <Box>
-        <Flex spacing={3}>
-          <FormControl>
+        <Flex mb={4}>
+          <FormControl mr={4}>
             <FormLabel>날짜</FormLabel>
             <Input
               type="date"
@@ -273,7 +289,7 @@ export function ProductUpload() {
           </FormControl>
         </Flex>
       </Box>
-      <Box>
+      <Box mb={4}>
         <FormControl>
           <FormLabel>상품 설명</FormLabel>
           <Textarea
@@ -288,6 +304,8 @@ export function ProductUpload() {
           onClick={handleSaleClick}
           colorScheme="blue"
           align="center"
+          isLoading={false}
+          loadingText={"업로드 중"}
         >
           판매하기
         </Button>
