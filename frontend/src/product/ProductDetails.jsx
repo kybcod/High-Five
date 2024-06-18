@@ -180,32 +180,37 @@ export function ProductDetails() {
 
             <Divider mb={2} />
 
-            <Flex mb={5} justifyContent={"space-between"} alignItems={"center"}>
-              <Flex alignItems={"center"} mr={4}>
-                <Box mr={2}>찜</Box>
-                {account.isLoggedIn() && (
-                  <Button
-                    onClick={handleLikeClick}
-                    leftIcon={
-                      <FontAwesomeIcon
-                        icon={like.like ? fullHeart : emptyHeart}
-                        size={"lg"}
-                      />
-                    }
-                    colorScheme={like.like ? "red" : "gray"}
-                    variant="outline"
-                  >
-                    {like.count}
-                  </Button>
-                )}
-              </Flex>
-              <Flex alignItems={"center"} mr={4}>
-                <Box mr={2}>
-                  <FontAwesomeIcon icon={faEye} size={"lg"} />
-                </Box>
-                <Box>{product.viewCount}</Box>
-              </Flex>
-              {account.hasAccess(product.userId) || (
+            {/*로그인이 되어 있고 내 상품 아닐 때*/}
+            {account.isLoggedIn() && !account.hasAccess(product.userId) && (
+              <Flex
+                mb={5}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
+                <Flex alignItems={"center"} mr={4}>
+                  <Box mr={2}>찜</Box>
+                  {account.isLoggedIn() && (
+                    <Button
+                      onClick={handleLikeClick}
+                      leftIcon={
+                        <FontAwesomeIcon
+                          icon={like.like ? fullHeart : emptyHeart}
+                          size={"lg"}
+                        />
+                      }
+                      colorScheme={like.like ? "red" : "gray"}
+                      variant="outline"
+                    >
+                      {like.count}
+                    </Button>
+                  )}
+                </Flex>
+                <Flex alignItems={"center"} mr={4}>
+                  <Box mr={2}>
+                    <FontAwesomeIcon icon={faEye} size={"lg"} />
+                  </Box>
+                  <Box>{product.viewCount}</Box>
+                </Flex>
                 <Flex>
                   <Box>
                     <Button
@@ -221,8 +226,25 @@ export function ProductDetails() {
                     <ReportButton userId={product.userId} />
                   </Box>
                 </Flex>
-              )}
-            </Flex>
+              </Flex>
+            )}
+
+            {/*로그인이 되어 있지 않거나 내 상품일 때*/}
+            {(!account.isLoggedIn() || account.hasAccess(product.userId)) && (
+              <Flex mb={5} alignItems={"center"} justifyContent={"center"}>
+                <Flex alignItems={"center"} mr={10}>
+                  <Box mr={3}>찜</Box>
+                  {like.count}
+                </Flex>
+                <Flex alignItems={"center"} mr={4}>
+                  <Box mr={2}>
+                    <FontAwesomeIcon icon={faEye} size={"lg"} />
+                  </Box>
+                  <Box>{product.viewCount}</Box>
+                </Flex>
+              </Flex>
+            )}
+
             <Box
               mb={5}
               display={"flex"}
