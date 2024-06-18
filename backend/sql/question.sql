@@ -35,3 +35,6 @@ WHERE question_id = 31;
 
 INSERT INTO authority (user_id, name)
 VALUES (58, 'user');
+
+ALTER TABLE question_board
+    ADD COLUMN number_of_count INT DEFAULT 0 NOT NULL;

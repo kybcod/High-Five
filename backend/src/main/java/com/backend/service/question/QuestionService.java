@@ -108,6 +108,7 @@ public class QuestionService {
     }
 
     public Question get(Integer id) {
+        mapper.updateCountById(id);
         Question question = mapper.selectById(id);
         if (question == null) {
             return null;

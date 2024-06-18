@@ -25,12 +25,10 @@ export function QuestionWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState([]);
-  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const toast = useToast();
-  const account = useContext(LoginContext);
 
   function handleSaveClick() {
     setLoading(true);

@@ -17,6 +17,8 @@ public class Question {
 
     private List<QuestionFile> fileList;
 
+    private Integer numberOfCount;
+
     public String getInserted() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
         return inserted.format(formatter);
