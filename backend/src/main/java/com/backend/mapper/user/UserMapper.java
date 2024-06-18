@@ -75,16 +75,6 @@ public interface UserMapper {
             """)
     int updateUser(User user);
 
-//    @Select("""
-//                <script>
-//                SELECT id, email, nick_name, inserted
-//                FROM user
-//                ORDER BY id DESC
-//                LIMIT #{offset}, 10
-//                </script>
-//            """)
-//    List<User> selectUserList(int offset);
-
     @Select("""
                 <script>
                 SELECT id, email, nick_name, inserted, black_count
