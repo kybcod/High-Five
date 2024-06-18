@@ -3,8 +3,13 @@ package com.backend.service.board;
 import com.backend.domain.board.Board;
 import com.backend.domain.board.BoardFile;
 import com.backend.mapper.board.BoardMapper;
+import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +66,17 @@ public class BoardService {
     }
 
 
-    public List<Board> list() {
-        return mapper.selectAll();
+    public Map<String, Object> list(int page) {
+        int offset = (page - 1) * 10;
+        List<Board> boardList = mapper.selectAll(offset);
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        int totalBoardNumber = mapper.selectTotalBoardCount();
+        Page<Board> pageImpl = new PageImpl<>(boardList, pageable, totalBoardNumber);
+        PageInfo pageInfo = new PageInfo().setting(pageImpl);
+
+        return Map.of("boardList", boardList, "pageInfo", pageInfo);
+
     }
 
     public Map<String, Object> selectById(Integer id, Authentication authentication) {
@@ -145,4 +159,5 @@ public class BoardService {
 
         return result;
     }
+
 }

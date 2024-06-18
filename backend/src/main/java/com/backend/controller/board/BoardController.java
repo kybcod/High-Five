@@ -31,8 +31,8 @@ public class BoardController {
     }
 
     @GetMapping("list")
-    public List<Board> list() {
-        return service.list();
+    public Map<String, Object> list(@RequestParam(defaultValue = "1", required = false) int page) {
+        return service.list(page);
     }
 
     @GetMapping("{id}")

@@ -1,6 +1,9 @@
 import {
   Badge,
   Box,
+  Button,
+  ButtonGroup,
+  Center,
   Flex,
   Heading,
   Table,
@@ -12,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart as fullHeart,
@@ -21,13 +24,26 @@ import {
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    axios.get("/api/board/list").then((res) => {
-      setBoardList(res.data);
+    axios.get(`/api/board/list?${searchParams}`).then((res) => {
+      setBoardList(res.data.boardList);
+      setPageInfo(res.data.pageInfo);
     });
-  }, []);
+  }, [searchParams]);
+
+  const pageNumbers = [];
+  for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
+    pageNumbers.push(i);
+  }
+
+  function handlePageButtonClick(pageNumber) {
+    searchParams.set("page", pageNumber);
+    navigate(`/board/list/?${searchParams}`);
+  }
 
   return (
     <Box>
@@ -78,6 +94,16 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
+      <Center>
+        {pageNumbers.map((pageNumber) => (
+          <ButtonGroup
+            key={pageNumber}
+            onClick={() => handlePageButtonClick(pageNumber)}
+          >
+            <Button>{pageNumber}</Button>
+          </ButtonGroup>
+        ))}
+      </Center>
     </Box>
   );
 }
