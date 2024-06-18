@@ -6,7 +6,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class Product {
@@ -64,5 +66,13 @@ public class Product {
     public String getStartTimeFormat() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         return startTime.format(formatter);
+    }
+
+    // -- chatList
+    public Map<String, Object> getProductIdAndTitle() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", getId());
+        map.put("title", getTitle());
+        return map;
     }
 }
