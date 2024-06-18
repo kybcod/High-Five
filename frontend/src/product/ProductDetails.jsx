@@ -26,7 +26,6 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   faCommentDots,
-  faExclamationTriangle,
   faEye,
   faHeart as fullHeart,
   faMoneyBillAlt,
@@ -39,6 +38,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { Category } from "../component/Category.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+import ReportButton from "../user/ReportButton.jsx";
 
 export function ProductDetails() {
   const { id } = useParams();
@@ -206,22 +206,21 @@ export function ProductDetails() {
                 <Box>{product.viewCount}</Box>
               </Flex>
               {account.hasAccess(product.userId) || (
-                <Box>
-                  <Button
-                    colorScheme="teal"
-                    leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
-                    onClick={handleEnterChatRoom}
-                    mr={4}
-                  >
-                    문의하기
-                  </Button>
-                  <Button
-                    colorScheme="red"
-                    leftIcon={<FontAwesomeIcon icon={faExclamationTriangle} />}
-                  >
-                    신고하기
-                  </Button>
-                </Box>
+                <Flex>
+                  <Box>
+                    <Button
+                      colorScheme="teal"
+                      leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
+                      onClick={handleEnterChatRoom}
+                      mr={4}
+                    >
+                      문의하기
+                    </Button>
+                  </Box>
+                  <Box>
+                    <ReportButton userId={product.userId} />
+                  </Box>
+                </Flex>
               )}
             </Flex>
             <Box
