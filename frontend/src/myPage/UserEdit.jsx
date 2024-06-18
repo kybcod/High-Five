@@ -88,10 +88,6 @@ export function UserEdit() {
   let disabled = false;
   let isPasswordCheck = user.password === passwordCheck;
 
-  if (user.nickName === oldNickName) {
-    disabledNickNameCheckButton = false;
-  }
-
   if (user.nickName.length === 0) {
     disabledNickNameCheckButton = false;
   }
