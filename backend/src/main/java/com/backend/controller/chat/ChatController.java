@@ -28,7 +28,6 @@ public class ChatController {
 
         // TODO : 로직 전부 변경 예정 후 status 추가
         Map<String, Object> result = service.selectChatRoomId(productId, buyerId, authentication);
-        System.out.println("result = " + result);
         return ResponseEntity.ok().body(result);
     }
 
