@@ -2,9 +2,11 @@ package com.backend.service.question;
 
 import com.backend.domain.question.Question;
 import com.backend.domain.question.QuestionFile;
+import com.backend.mapper.question.QuestionCommentMapper;
 import com.backend.mapper.question.QuestionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class QuestionService {
     private final QuestionMapper mapper;
+    private final QuestionCommentMapper commentMapper;
     private final S3Client s3Client;
 
     @Value("${aws.s3.bucket.name}")
@@ -32,7 +35,11 @@ public class QuestionService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
-    public void add(Question question, MultipartFile[] files) throws IOException {
+    public void add(Question question, MultipartFile[] files, Authentication authentication) throws IOException {
+
+        // userId를 인증된 사용자의 id로 셋팅
+        question.setUserId(Integer.valueOf(authentication.getName()));
+
         mapper.insert(question);
 
         if (files != null) {
@@ -101,6 +108,7 @@ public class QuestionService {
     }
 
     public Question get(Integer id) {
+        mapper.updateCountById(id);
         Question question = mapper.selectById(id);
         if (question == null) {
             return null;
@@ -114,6 +122,7 @@ public class QuestionService {
     }
 
     public void delete(Integer id) {
+        commentMapper.deleteCommentByQuestionId(id);
         mapper.deleteByIdFile(id);
         mapper.deleteById(id);
     }
@@ -154,5 +163,10 @@ public class QuestionService {
             }
         }
         mapper.updateById(question);
+    }
+
+    public boolean hasAccess(Integer id, Authentication authentication) {
+        Question question = mapper.selectById(id);
+        return question.getUserId().equals(Integer.valueOf(authentication.getName()));
     }
 }

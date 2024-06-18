@@ -20,3 +20,26 @@ desc question_board_comment;
 
 ALTER TABLE question_board_file
     MODIFY COLUMN file_name varchar(200) NOT NULL;
+
+SELECT *
+FROM question_board_comment
+WHERE question_id = 31;
+
+SELECT user_id
+FROM question_board_comment
+WHERE question_id = 31;
+
+SELECT COUNT(user_id)
+FROM question_board_comment
+WHERE question_id = 31;
+
+INSERT INTO authority (user_id, name)
+VALUES (58, 'user');
+
+ALTER TABLE question_board
+    ADD COLUMN number_of_count INT DEFAULT 0 NOT NULL;
+
+SELECT qb.id, qb.user_id, qb.question_id, qb.content, qb.inserted, user.nick_name
+FROM question_board_comment qb
+         JOIN user ON qb.user_id = user.id
+WHERE question_id = 31;

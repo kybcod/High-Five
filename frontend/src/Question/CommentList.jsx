@@ -3,42 +3,36 @@ import {
   Box,
   Card,
   CardBody,
-  Flex,
-  Input,
   Stack,
   StackDivider,
-  Textarea,
+  useToast,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { LoginContext } from "../component/LoginProvider.jsx";
+import { Comment } from "./Comment.jsx";
 
-export function CommentList({ questionId, isProcessing, setIsprocessing }) {
-  const [question, setQuestion] = useState([]);
+export function CommentList({ questionId }) {
+  const [commentList, setCommentList] = useState([]);
+
   useEffect(() => {
-    if (!isProcessing) {
+    // if (!isProcessing) {
+    console.log("Received questionId:", questionId); // questionId 로그 추가
+    if (questionId) {
       axios
         .get(`/api/question/comment/${questionId}`)
-        .then((res) => setQuestion(res.data));
+        .then((res) => setCommentList(res.data))
+        .catch((err) => console("comment error!!!", err));
+      // }
     }
-  }, [isProcessing]);
+  }, []);
 
   return (
     <Box>
       <Card>
         <CardBody>
           <Stack divider={<StackDivider />} spacing={4}>
-            {question.map((comment) => (
-              <Flex
-                gap={3}
-                key={comment.id}
-                isProcessing={isProcessing}
-                setIsProcessing={setIsprocessing}
-              >
-                <input
-                  value={comment.userId === 30 ? "관리자" : comment.userId}
-                />
-                <Input value={comment.content} />
-                <Input value={comment.inserted} />
-              </Flex>
+            {commentList.map((comment) => (
+              <Comment key={comment.id} comment={comment} />
             ))}
           </Stack>
         </CardBody>

@@ -3,7 +3,10 @@ package com.backend.controller.question;
 import com.backend.domain.question.Question;
 import com.backend.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,9 +21,13 @@ public class QuestionController {
     private final QuestionService service;
 
     @PostMapping("")
-    public ResponseEntity add(Question question, @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity add(Question question,
+                              @RequestParam(value = "files[]", required = false) MultipartFile[] files,
+                              Authentication authentication
+    ) throws IOException {
         if (service.validate(question)) {
-            service.add(question, files);
+            service.add(question, files, authentication);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -46,15 +53,24 @@ public class QuestionController {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Integer id) {
-        service.delete(id);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity delete(@PathVariable Integer id, Authentication authentication) {
+        if (service.hasAccess(id, authentication)) {
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @PutMapping("{id}")
-    public ResponseEntity update(Question question,
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity update(Question question, Authentication authentication,
                                  @RequestParam(required = false, value = "addFileList[]") MultipartFile[] addFileList,
                                  @RequestParam(required = false, value = "removeFileList[]") List<String> removeFileList
     ) throws IOException {
+        if (!service.hasAccess(question.getId(), authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         if (service.validate(question)) {
             service.edit(question, addFileList, removeFileList);
             return ResponseEntity.ok().build();
