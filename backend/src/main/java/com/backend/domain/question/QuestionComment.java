@@ -12,6 +12,7 @@ public class QuestionComment {
     private Integer userId;
     private String content;
     private LocalDateTime inserted;
+    private String nickName;
 
     public String getInserted() {
         return inserted.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

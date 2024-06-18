@@ -15,7 +15,8 @@ public interface QuestionCommentMapper {
     int insertComment(QuestionComment comment);
 
     @Select("""
-            SELECT id,user_id,question_id,content,inserted FROM question_board_comment WHERE question_id=#{questionId}
+            SELECT qb.id,qb.user_id,qb.question_id,qb.content,qb.inserted,user.nick_name FROM question_board_comment qb
+                                               JOIN user ON qb.user_id = user.id WHERE question_id=#{questionId}
             """)
     List<QuestionComment> getComment(Integer questionId);
 

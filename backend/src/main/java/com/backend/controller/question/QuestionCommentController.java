@@ -19,6 +19,7 @@ public class QuestionCommentController {
     private final QuestionCommentService service;
 
     @PostMapping("")
+    @PreAuthorize("isAuthenticated()")
     public void add(@RequestBody QuestionComment comment, Authentication authentication) {
         service.addComment(comment, authentication);
     }

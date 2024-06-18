@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Flex,
   Input,
@@ -15,8 +16,9 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { CommentEdit } from "./CommentEdit.jsx";
 import { CommentWrite } from "./CommentWrite.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 export function Comment({ comment }) {
   const account = useContext(LoginContext);
@@ -81,7 +83,10 @@ export function Comment({ comment }) {
   return (
     <>
       <Flex gap={3}>
-        <input value={comment.userId === 30 ? "관리자" : comment.userId} />
+        <Box>
+          <FontAwesomeIcon icon={faUser} style={{ color: "#22c393" }} />
+        </Box>
+        <input value={comment.nickName} />
         <Textarea value={comment.content} />
         <Input value={comment.inserted} />
         {account.hasAccess(comment.userId) && (
