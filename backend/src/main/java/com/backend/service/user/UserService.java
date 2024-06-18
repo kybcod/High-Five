@@ -80,6 +80,11 @@ public class UserService {
         Map<String, Object> result = new HashMap<>();
 
         User db = mapper.selectUserByEmail(user.getEmail());
+        String fileSrc = "";
+        String fileName = mapper.selectFileNameByUserId(user.getId());
+        if (fileName != null) {
+            fileSrc = STR."\{srcPrefix}user/\{user.getId()}/\{fileName}";
+        }
 
         if (db != null) {
             if (passwordEncoder.matches(user.getPassword(), db.getPassword())) {
@@ -103,6 +108,7 @@ public class UserService {
                             .claim("nickName", db.getNickName())
                             .claim("scope", authorityString)
                             .claim("email", db.getEmail())
+                            .claim("profileImage", fileSrc)
                             .build();
 
                     token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
