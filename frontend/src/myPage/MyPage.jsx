@@ -1,6 +1,7 @@
 import {
   Box,
   Heading,
+  Spinner,
   Tab,
   TabList,
   TabPanel,
