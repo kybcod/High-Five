@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Flex,
   FormControl,
   FormLabel,
@@ -24,7 +23,13 @@ import {
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { faCamera, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCamera,
+  faCheck,
+  faTimes,
+  faTimesCircle,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function ProductEdit() {
@@ -164,51 +169,48 @@ export function ProductEdit() {
 
   return (
     <Box p={4} mx="auto" maxWidth="600px">
-      <Box>
-        <Flex>
-          <Center>
-            <FormLabel htmlFor="file-upload">
-              <Box
-                boxSize={"180px"}
-                border={"1px dashed gray"}
-                textAlign="center"
-                cursor="pointer"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-                _hover={{
-                  borderColor: "blue.500",
-                }}
-              >
-                <Box mb={2}>
-                  <FontAwesomeIcon icon={faCamera} size="2xl" />
-                </Box>
-                <Box>Upload files</Box>
-                <Input
-                  ref={fileInputRef}
-                  id="file-upload"
-                  type="file"
-                  multiple
-                  accept={"image/*"}
-                  style={{ display: "none" }}
-                  onChange={handleChangeFiles}
-                />
+      <Box mb={4}>
+        <Flex alignItems="center">
+          <FormLabel htmlFor="file-upload">
+            <Box
+              border="1px dashed gray"
+              textAlign="center"
+              cursor="pointer"
+              _hover={{ borderColor: "blue.500" }}
+              mr={4}
+              p={4}
+              rounded="md"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+            >
+              <Box mb={2}>
+                <FontAwesomeIcon icon={faCamera} size="2xl" />
               </Box>
-            </FormLabel>
-          </Center>
+              <Box>Upload files</Box>
+              <Input
+                ref={fileInputRef}
+                id="file-upload"
+                type="file"
+                multiple
+                accept={"image/*"}
+                style={{ display: "none" }}
+                onChange={handleChangeFiles}
+              />
+            </Box>
+          </FormLabel>
 
-          <Flex ml={4} flexWrap="nowrap" overflowX={"scroll"} maxWidth="400px">
+          <Flex overflowX="auto" flexWrap="nowrap" maxWidth="400px">
             {/* 기존 이미지 표시 */}
             {existingFilePreviews.map((file) => (
               <Box
-                mr={3}
-                boxSize={"180px"}
                 key={file.fileName}
                 position="relative"
+                mr={3}
                 minWidth="180px"
               >
-                <Image boxSize={"180px"} src={file.filePath} mr={2} />
+                <Image boxSize="180px" src={file.filePath} mr={2} />
                 <Button
                   position="absolute"
                   top={1}
@@ -216,14 +218,14 @@ export function ProductEdit() {
                   variant="ghost"
                   onClick={() => handleRemoveExistingFile(file.fileName)}
                 >
-                  <FontAwesomeIcon icon={faCircleXmark} size="lg" />
+                  <FontAwesomeIcon icon={faTimesCircle} size="lg" />
                 </Button>
               </Box>
             ))}
             {/* 새로운 파일 선택 시 미리보기 표시 */}
             {newFilePreviews.map((src, index) => (
-              <Box mr={3} key={index} position="relative" minWidth="180px">
-                <Image boxSize={"180px"} src={src} mr={2} />
+              <Box key={index} position="relative" mr={3} minWidth="180px">
+                <Image boxSize="180px" src={src} mr={2} />
                 <Button
                   position="absolute"
                   top={1}
@@ -231,134 +233,171 @@ export function ProductEdit() {
                   variant="ghost"
                   onClick={() => handleRemoveNewFile(index)}
                 >
-                  <FontAwesomeIcon icon={faCircleXmark} size="lg" />
+                  <FontAwesomeIcon icon={faTimesCircle} size="lg" />
                 </Button>
               </Box>
             ))}
           </Flex>
         </Flex>
       </Box>
-      <Box>
-        <FormControl>
-          <FormLabel>제목</FormLabel>
+
+      <FormControl mb={4}>
+        <FormLabel>제목</FormLabel>
+        <Input
+          borderColor="gray.400"
+          defaultValue={product.title}
+          onChange={(e) => setProduct({ ...product, title: e.target.value })}
+        />
+      </FormControl>
+
+      <FormControl mb={4}>
+        <FormLabel>카테고리</FormLabel>
+        <Select
+          defaultValue={product.category}
+          onChange={(e) => setProduct({ ...product, category: e.target.value })}
+          placeholder="카테고리 선택"
+          borderWidth="1px"
+          borderColor="gray.400"
+          borderRadius="md"
+          _focus={{ borderColor: "blue.500" }}
+        >
+          <option value="clothes">의류</option>
+          <option value="goods">잡화</option>
+          <option value="food">식품</option>
+          <option value="digital">디지털</option>
+          <option value="sport">스포츠</option>
+          <option value="e-coupon">e-쿠폰</option>
+        </Select>
+      </FormControl>
+
+      <FormControl mb={4}>
+        <FormLabel>입찰 시작가</FormLabel>
+        <InputGroup>
           <Input
-            defaultValue={product.title}
-            onChange={(e) => setProduct({ ...product, title: e.target.value })}
+            borderColor="gray.400"
+            value={formattedPrice(product.startPrice)}
+            onChange={handleFormattedNumber}
+          />
+          <InputRightAddon>원</InputRightAddon>
+        </InputGroup>
+      </FormControl>
+
+      <Flex spacing={3}>
+        <FormControl mr={4}>
+          <FormLabel>날짜</FormLabel>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            borderWidth="1px"
+            borderColor="gray.400"
+            borderRadius="md"
+            _focus={{ borderColor: "blue.500" }}
           />
         </FormControl>
-      </Box>
-      <Box>
         <FormControl>
-          <FormLabel>카테고리</FormLabel>
+          <FormLabel>시간(AM 8:00 ~ PM 23:00)</FormLabel>
           <Select
-            defaultValue={product.category}
-            onChange={(e) =>
-              setProduct({ ...product, category: e.target.value })
-            }
-            placeholder="카테고리 선택"
+            placeholder="시간"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            borderWidth="1px"
+            borderColor="gray.400"
+            borderRadius="md"
+            _focus={{ borderColor: "blue.500" }}
           >
-            <option value="clothes">의류</option>
-            <option value="goods">잡화</option>
-            <option value="food">식품</option>
-            <option value="digital">디지털</option>
-            <option value="sport">스포츠</option>
-            <option value="e-coupon">e-쿠폰</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
           </Select>
         </FormControl>
-      </Box>
-      <Box>
-        <FormControl>
-          <FormLabel>입찰 시작가</FormLabel>
-          <InputGroup>
-            <Input
-              value={formattedPrice(product.startPrice)}
-              onChange={(e) => {
-                handleFormattedNumber(e);
-              }}
-            />
-            <InputRightAddon>원</InputRightAddon>
-          </InputGroup>
-        </FormControl>
-      </Box>
-      <Box>
-        <Flex spacing={3}>
-          <FormControl>
-            <FormLabel>날짜</FormLabel>
-            <Input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>시간(AM 8:00 ~ PM 23:00)</FormLabel>
-            <Select
-              placeholder="시간"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-            >
-              <option value="08:00">08:00</option>
-              <option value="09:00">09:00</option>
-              <option value="10:00">10:00</option>
-              <option value="11:00">11:00</option>
-              <option value="12:00">12:00</option>
-              <option value="13:00">13:00</option>
-              <option value="14:00">14:00</option>
-              <option value="15:00">15:00</option>
-              <option value="16:00">16:00</option>
-              <option value="17:00">17:00</option>
-              <option value="18:00">18:00</option>
-              <option value="19:00">19:00</option>
-              <option value="20:00">20:00</option>
-              <option value="21:00">21:00</option>
-              <option value="22:00">22:00</option>
-              <option value="23:00">23:00</option>
-            </Select>
-          </FormControl>
-        </Flex>
-      </Box>
-      <Box>
-        <FormControl>
-          <FormLabel>상품 상세내용</FormLabel>
-          <Textarea
-            defaultValue={product.content}
-            whiteSpace={"pre-wrap"}
-            onChange={(e) =>
-              setProduct({ ...product, content: e.target.value })
-            }
-            placeholder={"상품에 대한 정보 작성해주세요."}
-          />
-        </FormControl>
-      </Box>
-      <Flex>
-        <Box>
-          <Button onClick={updateModal.onOpen}>수정</Button>
-        </Box>
-        <Box>
-          <Button onClick={deleteModal.onOpen}>삭제</Button>
-        </Box>
       </Flex>
 
+      <FormControl mb={4}>
+        <FormLabel>상품 상세내용</FormLabel>
+        <Textarea
+          borderColor="gray.400"
+          defaultValue={product.content}
+          onChange={(e) => setProduct({ ...product, content: e.target.value })}
+          placeholder="상품에 대한 정보를 작성해주세요."
+        />
+      </FormControl>
+
+      <Flex justifyContent="space-between">
+        <Button
+          onClick={updateModal.onOpen}
+          w={"100%"}
+          mr={4}
+          colorScheme={"green"}
+        >
+          수정
+        </Button>
+        <Button onClick={deleteModal.onOpen} w={"100%"} colorScheme="red">
+          삭제
+        </Button>
+      </Flex>
+
+      {/* 수정 모달 */}
       <Modal isOpen={updateModal.isOpen} onClose={updateModal.onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader></ModalHeader>
+          <ModalHeader>수정하기</ModalHeader>
           <ModalBody>정말로 수정하시겠습니까?</ModalBody>
           <ModalFooter>
-            <Button onClick={handleUpdateClick}>확인</Button>
-            <Button onClick={updateModal.onClose}>취소</Button>
+            <Button
+              mr={3}
+              onClick={handleUpdateClick}
+              colorScheme="blue"
+              leftIcon={<FontAwesomeIcon icon={faCheck} />}
+            >
+              확인
+            </Button>
+            <Button
+              mr={3}
+              onClick={updateModal.onClose}
+              leftIcon={<FontAwesomeIcon icon={faTimes} />}
+            >
+              취소
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
+      {/* 삭제 모달 */}
       <Modal isOpen={deleteModal.isOpen} onClose={deleteModal.onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader></ModalHeader>
+          <ModalHeader>삭제하기</ModalHeader>
           <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
           <ModalFooter>
-            <Button onClick={handleDeleteClick}>확인</Button>
-            <Button onClick={deleteModal.onClose}>취소</Button>
+            <Button
+              mr={3}
+              onClick={handleDeleteClick}
+              colorScheme="red"
+              leftIcon={<FontAwesomeIcon icon={faTrashAlt} />}
+            >
+              확인
+            </Button>
+            <Button
+              mr={3}
+              onClick={deleteModal.onClose}
+              leftIcon={<FontAwesomeIcon icon={faTimes} />}
+            >
+              취소
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

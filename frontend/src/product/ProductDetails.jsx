@@ -93,25 +93,6 @@ export function ProductDetails() {
     }
   }
 
-  function translateCategory(category) {
-    switch (category) {
-      case "clothes":
-        return "의류";
-      case "goods":
-        return "잡화";
-      case "food":
-        return "식품";
-      case "digital":
-        return "디지털";
-      case "sport":
-        return "스포츠";
-      case "e-coupon":
-        return "e-쿠폰";
-      default:
-        return "";
-    }
-  }
-
   const formattedPrice = (money) => {
     return money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };

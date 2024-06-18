@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Flex,
   FormControl,
   FormLabel,
@@ -180,40 +179,38 @@ export function ProductUpload() {
 
   return (
     <Box p={4} mx="auto" maxWidth="600px">
-      <Box>
-        <Flex>
-          <Center>
-            <FormLabel htmlFor="file-upload">
-              <Box
-                boxSize={"180px"}
-                border={"1px dashed gray"}
-                textAlign="center"
-                cursor="pointer"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-                _hover={{
-                  borderColor: "blue.500",
-                }}
-              >
-                <Box mb={2}>
-                  <FontAwesomeIcon icon={faCamera} size="2xl" />
-                </Box>
-                <Box>Upload files</Box>
-                <Input
-                  ref={fileInputRef}
-                  id="file-upload"
-                  type="file"
-                  multiple
-                  accept={"image/*"}
-                  style={{ display: "none" }}
-                  onChange={handleChangeFiles}
-                />
+      <Box mb={4}>
+        <Flex alignItems="center">
+          <FormLabel htmlFor="file-upload">
+            <Box
+              border="1px dashed gray"
+              textAlign="center"
+              cursor="pointer"
+              _hover={{ borderColor: "blue.500" }}
+              mr={4}
+              p={4}
+              rounded="md"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+            >
+              <Box mb={2}>
+                <FontAwesomeIcon icon={faCamera} size="2xl" />
               </Box>
-            </FormLabel>
-          </Center>
-          <Flex ml={4} flexWrap="nowrap" overflowX={"scroll"} maxWidth="400px">
+              <Box>Upload files</Box>
+              <Input
+                ref={fileInputRef}
+                id="file-upload"
+                type="file"
+                multiple
+                accept={"image/*"}
+                style={{ display: "none" }}
+                onChange={handleChangeFiles}
+              />
+            </Box>
+          </FormLabel>
+          <Flex overflowX="auto" flexWrap="nowrap" maxWidth="400px">
             {filePreview}
           </Flex>
         </Flex>
@@ -222,7 +219,10 @@ export function ProductUpload() {
       <Box mb={4}>
         <FormControl>
           <FormLabel>제목</FormLabel>
-          <Input onChange={(e) => setTitle(e.target.value)} />
+          <Input
+            borderColor="gray.400"
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </FormControl>
       </Box>
       <Box mb={4}>
@@ -230,6 +230,10 @@ export function ProductUpload() {
           <FormLabel>카테고리</FormLabel>
           <Select
             placeholder="카테고리 선택"
+            borderWidth="1px"
+            borderColor="gray.400"
+            borderRadius="md"
+            _focus={{ borderColor: "blue.500" }}
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="clothes">의류</option>
@@ -246,6 +250,7 @@ export function ProductUpload() {
           <FormLabel>입찰 시작가</FormLabel>
           <InputGroup>
             <Input
+              borderColor="gray.400"
               value={formattedPrice(startPrice)}
               onChange={(e) => handleIntegerNumber(e)}
             />
@@ -261,6 +266,10 @@ export function ProductUpload() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              borderWidth="1px"
+              borderColor="gray.400"
+              borderRadius="md"
+              _focus={{ borderColor: "blue.500" }}
             />
           </FormControl>
           <FormControl>
@@ -269,6 +278,10 @@ export function ProductUpload() {
               placeholder="시간"
               value={time}
               onChange={(e) => setTime(e.target.value)}
+              borderWidth="1px"
+              borderColor="gray.400"
+              borderRadius="md"
+              _focus={{ borderColor: "blue.500" }}
             >
               <option value="08:00">08:00</option>
               <option value="09:00">09:00</option>
@@ -294,6 +307,7 @@ export function ProductUpload() {
         <FormControl>
           <FormLabel>상품 설명</FormLabel>
           <Textarea
+            borderColor="gray.400"
             onChange={(e) => setContent(e.target.value)}
             placeholder="상품 설명을 입력하세요."
           />
@@ -307,6 +321,7 @@ export function ProductUpload() {
           align="center"
           isLoading={false}
           loadingText={"업로드 중"}
+          w={"100%"}
         >
           판매하기
         </Button>
