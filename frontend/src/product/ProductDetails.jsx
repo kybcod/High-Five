@@ -73,7 +73,7 @@ export function ProductDetails() {
     if (parseInt(bidPrice) > product.startPrice) {
       setIsProcessing(true);
       axios
-        .post("/api/products/join", {
+        .post("/api/bids/join", {
           productId: id,
           userId: account.id,
           bidPrice: bidPrice,
