@@ -131,8 +131,8 @@ public class UserController {
     @GetMapping("/users/list")
     public Map<String, Object> list(@RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false) String type,
-                                    @RequestParam(required = false) String keyword) {
-        return service.getUserList(page);
+                                    @RequestParam(required = false, defaultValue = "") String keyword) {
+        return service.getUserList(page, type, keyword);
     }
 
     // 유저 신고하기

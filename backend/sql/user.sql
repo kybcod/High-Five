@@ -50,7 +50,7 @@ FROM code
 WHERE phone_number = '01071263769';
 
 
-SELECT *
+SELECT black_count, id, email
 FROM user
 ;
 
