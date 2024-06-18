@@ -1,7 +1,7 @@
 package com.backend.mapper.product;
 
+import com.backend.domain.auction.BidList;
 import com.backend.domain.chat.ChatProduct;
-import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductWithUserDTO;
 import org.apache.ibatis.annotations.*;
@@ -306,6 +306,15 @@ public interface ProductMapper {
     @Delete("DELETE FROM bid_list WHERE product_id=#{productId}")
     int deleteBidListByProductId(Integer productId);
 
+    @Delete("DELETE FROM chat_room WHERE product_id=#{productId}")
+    int deleteChatRoomByProductId(Integer productId);
+
     @Delete("DELETE FROM chat_room WHERE seller_id=#{userId}")
     int deleteChatRoomBySellerId(Integer userId);
+
+    @Select("SELECT id FROM chat_room WHERE product_id=#{productId}")
+    List<Integer> selectChatByChatRoomId(Integer productId);
+
+    @Delete("DELETE FROM chat WHERE chat_room_id = #{chatRoomId}")
+    int deleteChatByChatRoomId(Integer chatRoomId);
 }

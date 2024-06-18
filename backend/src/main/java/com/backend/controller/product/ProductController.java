@@ -1,7 +1,7 @@
 package com.backend.controller.product;
 
 
-import com.backend.domain.product.BidList;
+import com.backend.domain.auction.BidList;
 import com.backend.domain.product.Product;
 import com.backend.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -132,7 +132,7 @@ public class ProductController {
 
 
 // TODO: 코드 정리
-    
+
 //    @GetMapping("/test/{id}")
 //    public ProductListResponse getProductById(@PathVariable Integer id, Authentication authentication) {
 //        return service.getById(id, authentication);

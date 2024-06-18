@@ -1,6 +1,6 @@
 package com.backend.service.product;
 
-import com.backend.domain.product.BidList;
+import com.backend.domain.auction.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
 import com.backend.mapper.product.ProductMapper;
@@ -170,22 +170,39 @@ public class ProductService {
     public void remove(Integer id) {
 
         Product product = mapper.selectById(id);
-        // s3에서 파일(이미지) 삭제
-        List<String> fileNameList = mapper.selectFileByProductId(id);
-        for (String fileName : fileNameList) {
-            String key = STR."prj3/\{id}/\{fileName}";
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .build();
-            s3Client.deleteObject(deleteObjectRequest);
-        }
 
-        //TODO: chat : id랑 productId를 가져옴 삭제해야함
-//        mapper.deleteChatRoomBySellerId(product.getUserId());
+        // chat 삭제
+        // chat_room_id 가져오기
+        List<Integer> chatRoomIds = mapper.selectChatByChatRoomId(id);
+        for (Integer chatRoomId : chatRoomIds) {
+            mapper.deleteChatByChatRoomId(chatRoomId);
+        }
+        // chat_room 삭제
+        mapper.deleteChatRoomBySellerId(product.getUserId());
+        mapper.deleteChatRoomByProductId(id);
+
+
+        // s3에서 파일(이미지) 삭제
+//        List<String> fileNameList = mapper.selectFileByProductId(id);
+//        for (String fileName : fileNameList) {
+//            String key = STR."prj3/\{id}/\{fileName}";
+//            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+//                    .bucket(bucketName)
+//                    .key(key)
+//                    .build();
+//            s3Client.deleteObject(deleteObjectRequest);
+//        }
+
+        // 입찰 내역 삭제
         mapper.deleteBidListByProductId(id);
+
+        //좋아요 삭제
         mapper.deleteLikeByProductId(id);
+
+        //파일 DB 삭제
         mapper.deleteFileByProductId(id);
+
+        // 상품 삭제
         mapper.deleteByProductId(id);
     }
 
