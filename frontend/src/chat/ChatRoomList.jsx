@@ -68,7 +68,15 @@ export function ChatRoomList() {
               </HStack>
             </Flex>
           </Box>
-          <Box bgColor={"gray.200"} m={2}>
+          <Box
+            bgColor={"gray.200"}
+            m={2}
+            onClick={() =>
+              navigate(
+                `/chat/product/${item.product.id}/buyer/${item.chatRoom.userId}`,
+              )
+            }
+          >
             <Box cursor={"pointer"}>{item.chat.message}</Box>
           </Box>
         </Box>
