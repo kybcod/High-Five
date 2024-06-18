@@ -5,6 +5,8 @@ import {
   Checkbox,
   Flex,
   Input,
+  List,
+  ListItem,
   Menu,
   MenuButton,
   MenuItem,
@@ -17,6 +19,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Stack,
   Text,
   useDisclosure,
   useToast,
@@ -29,6 +32,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
+  faCircleCheck,
   faCircleExclamation,
   faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons";
@@ -98,7 +102,7 @@ export function ChatRoom() {
     });
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    // client.activate(); // 활성화
+    client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
@@ -106,7 +110,7 @@ export function ChatRoom() {
         disConnect();
       }
     };
-  }, []);
+  }, [roomId]);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
@@ -163,11 +167,11 @@ export function ChatRoom() {
     }
   };
 
-  const handleReviewSaveButtonClick = (event) => {
+  const handleSaveReviewButtonClick = (event) => {
     event.preventDefault();
     setLoading(true);
     axios
-      .post(`/api/reviews/${roomInfo.productId}`, {
+      .post(`/api/reviews`, {
         productId: roomInfo.productId,
         userId: account.id,
         reviewId,
@@ -196,6 +200,15 @@ export function ChatRoom() {
         setReviewId([]);
       });
   };
+  const handleGetReviewButtonClick = () => {
+    axios
+      .get(`/api/reviews/${productId}`)
+      .then((res) => {
+        setReviewList(res.data.reviewList);
+      })
+      .catch()
+      .finally();
+  };
 
   // spinner
   if (roomInfo == null) {
@@ -205,16 +218,6 @@ export function ChatRoom() {
   return (
     <Box w={"70%"}>
       <Box>
-        {/* TODO : 기능 구현 완료 후 삭제
-              기존 버튼에 함수 추가 필수 */}
-        <Button
-          onClick={() => {
-            onOpen();
-            handleReviewButtonClick();
-          }}
-        >
-          거래완료
-        </Button>
         <Flex>
           {/* 뒤로 가기 */}
           <Box w={"10%"}>
@@ -230,18 +233,15 @@ export function ChatRoom() {
           {/* 상대방 상점 */}
           <Center cursor={"pointer"} w={"80%"}>
             <Box fontSize={"xl"}>
-              {/* TODO : 경로 이동 (현재: 마이페이지) */}
               {roomInfo.sellerId === Number(account.id) ? (
                 <Text
-                  onClick={() => navigate(`/shop/${roomInfo.userId}/products`)}
+                  onClick={() => navigate(`/myPage/${roomInfo.userId}/shop`)}
                 >
                   {roomInfo.userName}
                 </Text>
               ) : (
                 <Text
-                  onClick={() =>
-                    navigate(`/shop/${roomInfo.sellerId}/products`)
-                  }
+                  onClick={() => navigate(`/myPage/${roomInfo.sellerId}/shop`)}
                 >
                   {roomInfo.sellerName}
                 </Text>
@@ -280,15 +280,36 @@ export function ChatRoom() {
           </Box>
           <Box w={"20%"}>
             {/* 상품 상태 */}
+            {/* 0 현재 판매 종료, 1 판매 중*/}
+            {/* TODO : Notion 정리 */}
             {productInfo.status === 0 &&
-            productInfo.buyerId === Number(account.id) ? (
-              <Button onClick={isOpen}>거래완료</Button>
+            productInfo.buyerId === Number(account.id) &&
+            productInfo.reviewStatus === 0 ? (
+              <Button
+                onClick={() => {
+                  onOpen();
+                  handleReviewButtonClick();
+                }}
+              >
+                후기 등록
+              </Button>
+            ) : productInfo.status === 0 &&
+              productInfo.buyerId === Number(account.id) &&
+              productInfo.reviewStatus === 1 ? (
+              <Button
+                onClick={() => {
+                  onOpen();
+                  handleGetReviewButtonClick();
+                }}
+              >
+                작성 후기 확인
+              </Button>
             ) : productInfo.status === 1 ? (
               <Button onClick={() => navigate(`/product/${productInfo.id}`)}>
-                입찰가능
+                입찰 가능 상품
               </Button>
             ) : (
-              <Button isDisabled={true}>판매종료</Button>
+              <Button isDisabled={true}>판매 종료 상품</Button>
             )}
           </Box>
         </Flex>
@@ -334,23 +355,40 @@ export function ChatRoom() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>후기 작성</ModalHeader>
-          <ModalBody>
-            {reviewList.map((review) => (
-              <Checkbox
-                key={review.id}
-                onChange={handleReviewChange}
-                value={review.id}
-              >
-                {review.content}
-              </Checkbox>
-            ))}
-          </ModalBody>
+          <ModalHeader>판매자님에게 보내는 후기</ModalHeader>
+          {productInfo.reviewStatus === 0 ? (
+            <ModalBody>
+              <Stack>
+                {reviewList.map((review) => (
+                  <Checkbox
+                    key={review.id}
+                    onChange={handleReviewChange}
+                    value={review.id}
+                  >
+                    {review.content}
+                  </Checkbox>
+                ))}
+              </Stack>
+            </ModalBody>
+          ) : (
+            <ModalBody>
+              <List>
+                {reviewList.map((review) => (
+                  <ListItem key={review.id}>
+                    <FontAwesomeIcon icon={faCircleCheck} />
+                    &nbsp;
+                    {review.content}
+                  </ListItem>
+                ))}
+              </List>
+            </ModalBody>
+          )}
           <ModalFooter>
             <Button
               isLoading={loading}
               isDisabled={reviewId.length === 0}
-              onClick={handleReviewSaveButtonClick}
+              onClick={handleSaveReviewButtonClick}
+              hidden={productInfo.reviewStatus === 1}
             >
               후기 보내기
             </Button>

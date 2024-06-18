@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/chat")
+@RequestMapping("/api/chats")
 public class ChatController {
     private final ChatService service;
 
@@ -24,7 +25,16 @@ public class ChatController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity getChatRoomInfo(
             @PathVariable Integer productId, Authentication authentication) {
+        // TODO : 로직 전부 변경 예정
         Map<String, Object> result = service.selectChatRoomId(productId, authentication);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity getChatList(Authentication authentication) {
+        // TODO : status 추가 예정
+        List<Map<String, Object>> result = service.getChatRoomList(authentication);
         return ResponseEntity.ok().body(result);
     }
 }

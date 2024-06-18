@@ -2,6 +2,7 @@ package com.backend.mapper.product;
 
 import com.backend.domain.auction.BidList;
 import com.backend.domain.chat.ChatProduct;
+import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductWithUserDTO;
 import org.apache.ibatis.annotations.*;
@@ -317,4 +318,21 @@ public interface ProductMapper {
 
     @Delete("DELETE FROM chat WHERE chat_room_id = #{chatRoomId}")
     int deleteChatByChatRoomId(Integer chatRoomId);
+
+
+    // -- review 생성 시 review_status 변경
+    @Update("""
+            UPDATE product
+            SET review_status = 1
+            WHERE id = #{productId};
+            """)
+    int updateReviewStatusById(Integer productId);
+
+
+    @Select("""
+            SELECT id, title
+            FROM product
+            WHERE id = #{productId}
+            """)
+    Product selectProductTitleById(ChatRoom chatRoom);
 }

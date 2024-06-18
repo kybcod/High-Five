@@ -4,7 +4,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Data
@@ -33,5 +35,13 @@ public class User {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
 
         return inserted.format(formatter);
+    }
+
+    // -- chatList
+    public Map<String, Object> getUserIdAndNickName() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", getId());
+        map.put("nickName", getNickName());
+        return map;
     }
 }

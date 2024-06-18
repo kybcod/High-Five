@@ -1,5 +1,6 @@
 package com.backend.mapper.review;
 
+import com.backend.domain.review.Review;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -17,7 +18,19 @@ public interface ReviewMapper {
 
     @Insert("""
             INSERT INTO review (product_id, user_id, review_id)
-            VALUES (#{productId}, #{userId}, #{reviewId})
+            VALUES (#{productId}, #{userId}, #{reviewIds})
             """)
-    int insertReview(Integer productId, Integer userId, Integer reviewId);
+    int insertReview(Review review);
+
+    @Select("""
+            SELECT product_id, user_id, review_id reviewIds, inserted
+            FROM review
+            WHERE product_id = #{productId}
+            """)
+    Review selectReviewById(Integer productId);
+
+    @Select("""
+            SELECT * FROM review_list WHERE id = #{id}
+            """)
+    Map<String, Object> selectReviewListById(Integer id);
 }

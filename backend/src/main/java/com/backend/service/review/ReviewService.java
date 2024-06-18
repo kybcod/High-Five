@@ -1,11 +1,15 @@
 package com.backend.service.review;
 
 import com.backend.domain.review.Review;
+import com.backend.mapper.product.ProductMapper;
 import com.backend.mapper.review.ReviewMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,21 +18,46 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewMapper mapper;
+    private final ObjectMapper objectMapper;
+    private final ProductMapper productMapper;
 
     public List<Map<String, Object>> selectReviewList() {
         return mapper.selectReviewList();
     }
 
-    public void insertReview(Review review) {
-        
-        // 문자열 저장?
-        // 쪼개서 저장
-//        List<Integer> reviewList = review.getReviewId();
-//        Integer productId = review.getProductId();
-//        Integer userId = review.getUserId();
-//        int success;
-//        for (Integer reviewId : reviewList) {
-//            success = mapper.insertReview(productId, userId, reviewId);
-//        }
+    public void insertReview(Review review) throws JsonProcessingException {
+        String reviewIds = objectMapper.writeValueAsString(review.getReviewId());
+        review.setReviewIds(reviewIds);
+        int createSuccess = mapper.insertReview(review);
+        if (createSuccess == 1) {
+            Integer productId = review.getProductId();
+            int productSuccess = productMapper.updateReviewStatusById(productId);
+        } else {
+        }
+    }
+
+    public boolean validate(Review review) {
+        if (review.getUserId() == null) {
+            return false;
+        }
+        if (review.getReviewId() == null) {
+            return false;
+        }
+        if (review.getProductId() == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public Review findReviewById(Integer productId) throws JsonProcessingException {
+        Review review = mapper.selectReviewById(productId);
+        String reviewIdsJson = review.getReviewIds();
+        review.setReviewId(objectMapper.readValue(reviewIdsJson, List.class));
+        List<Map<String, Object>> reviewList = new ArrayList<>();
+        for (Integer id : review.getReviewId()) {
+            reviewList.add(mapper.selectReviewListById(id));
+        }
+        review.setReviewList(reviewList);
+        return review;
     }
 }

@@ -102,6 +102,13 @@ public interface UserMapper {
             """)
     int selectTotalUserCount();
 
+    @Select("""
+            SELECT id, nick_name
+            FROM user
+            WHERE id = #{userId}
+            """)
+    User selectUserNickNameById(Integer userId);
+
     @Insert("""
                 INSERT INTO code
                 (phone_number, code)

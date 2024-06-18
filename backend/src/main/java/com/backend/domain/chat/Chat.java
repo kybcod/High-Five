@@ -7,18 +7,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class ChatRoom {
+public class Chat {
     private Integer id;
-    private Integer productId;
-    private Integer sellerId;
+    private Integer chatRoomId;
     private Integer userId;
+    private String message;
     private LocalDateTime inserted;
 
     // -- chatList
-    public Map<String, Object> getChatRoomIdAndBuyerId() {
+    public Map<String, Object> getChatMessageAndInserted() {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", getId());
-        map.put("userId", getUserId());
+        map.put("message", getMessage());
+        map.put("inserted", getInserted());
         return map;
     }
+
 }
