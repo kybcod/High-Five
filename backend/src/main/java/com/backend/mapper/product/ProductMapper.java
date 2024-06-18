@@ -1,6 +1,7 @@
 package com.backend.mapper.product;
 
 import com.backend.domain.chat.ChatProduct;
+import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductWithUserDTO;
@@ -305,4 +306,12 @@ public interface ProductMapper {
             WHERE id = #{productId};
             """)
     int updateReviewStatusById(Integer productId);
+
+
+    @Select("""
+            SELECT id, title
+            FROM product
+            WHERE id = #{productId}
+            """)
+    Product selectProductTitleById(ChatRoom chatRoom);
 }
