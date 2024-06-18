@@ -20,7 +20,6 @@ import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { MainSlider } from "./slider/MainSlider.jsx";
 import { Category } from "../component/Category.jsx";
 
 export function MainProduct() {
@@ -76,7 +75,7 @@ export function MainProduct() {
       <Category />
       <Center w="100%">
         <Box mt={2} w="100%">
-          <MainSlider />
+          {/*<MainSlider />*/}
         </Box>
       </Center>
       <Heading my={4}>오늘의 상품</Heading>
