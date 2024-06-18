@@ -7,31 +7,31 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputLeftAddon,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
-import { CheckIcon } from "@chakra-ui/icons";
+import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
+import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [nickName, setNickName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [isCheckedEmail, setIsCheckedEmail] = useState(false);
   const [isCheckedNickName, setIsCheckedNickName] = useState(false);
-  const [isCheckedCode, setIsCheckedCode] = useState(false);
   const { successToast, errorToast } = CustomToast();
+  const codeInfo = useContext(SignupCodeContext);
   const navigate = useNavigate();
 
   function handleSignUp() {
     setIsLoading(true);
+    const phoneNumber = codeInfo.phoneNumber;
     axios
       .post("/api/users", { email, password, nickName, phoneNumber })
       .then(() => {
@@ -42,11 +42,6 @@ export function SignUp() {
       .finally(() => setIsLoading(false));
   }
   // TODO. 휴대폰 번호 11자리 (-)없이 숫자만 입력 가능하게끔 설정, 표시 메세지, 형식 다르면 메세지 전송버튼 활성화 X
-
-  function handleSendCode() {
-    // axios.get(`/api/users/codes?phoneNumber=${phoneNumber}`);
-    setIsCheckedCode(true);
-  }
 
   function handleCheckEmail() {
     axios
@@ -123,8 +118,9 @@ export function SignUp() {
       <Box>
         <FormControl>
           <FormLabel>이메일 주소</FormLabel>
-          <InputGroup>
+          <InputGroup size="md">
             <Input
+              pr="4.5rem"
               placeholder={"이메일 중복 확인 필수"}
               isInvalid={isCheckedEmail ? false : true}
               errorBorderColor={"red.300"}
@@ -137,8 +133,10 @@ export function SignUp() {
                 setIsCheckedEmail(false);
               }}
             />
-            <InputRightElement>
+            <InputRightElement width="4.5rem">
               <Button
+                h="1.75rem"
+                size="sm"
                 onClick={handleCheckEmail}
                 isDisabled={!isValidEmail || email.trim().length === 0}
               >
@@ -153,6 +151,7 @@ export function SignUp() {
         <FormControl>
           <FormLabel>비밀번호</FormLabel>
           <Input
+            pr="4.5rem"
             variant="flushed"
             type="password"
             onChange={(e) => {
@@ -172,6 +171,7 @@ export function SignUp() {
         <FormControl>
           <FormLabel>비밀번호 확인</FormLabel>
           <Input
+            pr="4.5rem"
             isInvalid={isCheckedPassword ? false : true}
             errorBorderColor={"red.300"}
             variant="flushed"
@@ -184,8 +184,9 @@ export function SignUp() {
         </FormControl>
         <FormControl>
           <FormLabel>닉네임</FormLabel>
-          <InputGroup>
+          <InputGroup size="md">
             <Input
+              pr="4.5rem"
               isInvalid={isCheckedNickName ? false : true}
               errorBorderColor={"red.300"}
               variant="flushed"
@@ -196,8 +197,10 @@ export function SignUp() {
               maxLength="10"
               placeholder={"닉네임 중복 확인 필수"}
             />
-            <InputRightElement>
+            <InputRightElement width="4.5rem">
               <Button
+                h="1.75rem"
+                size="sm"
                 onClick={handleCheckNickName}
                 isDisabled={nickName.trim().length === 0}
               >
@@ -207,36 +210,7 @@ export function SignUp() {
           </InputGroup>
           <FormHelperText>닉네임은 10자까지 작성 가능합니다</FormHelperText>
         </FormControl>
-        <FormControl>
-          <InputGroup>
-            <InputLeftAddon bg={"none"} border={"none"}>
-              010
-            </InputLeftAddon>
-            <Input
-              variant="flushed"
-              type="tel"
-              placeholder={"phone number"}
-              onChange={(e) => {
-                setPhoneNumber("010" + e.target.value);
-                setIsCheckedCode(false);
-              }}
-            />
-            <InputRightElement>
-              {isCheckedCode && <CheckIcon color="green.500" />}
-              {isCheckedCode || (
-                <Button
-                  onClick={handleSendCode}
-                  isDisabled={phoneNumber.length !== 11}
-                >
-                  인증 요청
-                </Button>
-              )}
-            </InputRightElement>
-          </InputGroup>
-          <FormHelperText>
-            휴대폰 번호는 010과 (-)를 제외한 숫자만 입력해주세요 ex)11112222
-          </FormHelperText>
-        </FormControl>
+        <UserPhoneNumber />
         <Center mt={5}>
           <Button
             colorScheme={"green"}

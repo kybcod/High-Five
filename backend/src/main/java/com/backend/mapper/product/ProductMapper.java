@@ -1,7 +1,7 @@
 package com.backend.mapper.product;
 
+import com.backend.domain.auction.BidList;
 import com.backend.domain.chat.ChatProduct;
-import com.backend.domain.product.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductWithUserDTO;
 import org.apache.ibatis.annotations.*;
@@ -127,13 +127,13 @@ public interface ProductMapper {
     int updateViewCount(Integer id);
 
     @Delete("DELETE FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
-    int deleteLikeByBoardIdAndUserId(Integer productId, Integer userId);
+    int deleteLikeByProductIdAndUserId(Integer productId, Integer userId);
 
     @Insert("""
             INSERT INTO product_like (product_id, user_id)
             VALUES (#{productId}, #{userId})
             """)
-    int insertLikeByBoardIdAndUserId(Integer productId, Integer userId);
+    int insertLikeByProductIdAndUserId(Integer productId, Integer userId);
 
     @Select("SELECT product_id FROM product_like WHERE user_id=#{userId}")
     List<Integer> selectLikeByUserId(Integer userId);
@@ -151,7 +151,7 @@ public interface ProductMapper {
     void insertBidPrice(BidList bid);
 
     @Delete("DELETE FROM product_like WHERE product_id=#{productId}")
-    int deleteLikeByBoardId(Integer productId);
+    int deleteLikeByProductId(Integer productId);
 
     @Select("""
             SELECT COUNT(*)
@@ -233,8 +233,7 @@ public interface ProductMapper {
                    p.end_time,
                    p.content,
                    p.view_count,
-                   p.status,
-                   u.nick_name AS userNickName
+                   p.status
             FROM product p
                      JOIN user u
                           ON p.user_id = u.id
@@ -296,4 +295,26 @@ public interface ProductMapper {
             WHERE p.id = #{id};
             """)
     ProductWithUserDTO selectById2(Integer id);
+
+    @Select("""
+            SELECT nick_name
+            FROM user
+            WHERE id=#{userId}
+            """)
+    String selectUserNickName(Integer userId);
+
+    @Delete("DELETE FROM bid_list WHERE product_id=#{productId}")
+    int deleteBidListByProductId(Integer productId);
+
+    @Delete("DELETE FROM chat_room WHERE product_id=#{productId}")
+    int deleteChatRoomByProductId(Integer productId);
+
+    @Delete("DELETE FROM chat_room WHERE seller_id=#{userId}")
+    int deleteChatRoomBySellerId(Integer userId);
+
+    @Select("SELECT id FROM chat_room WHERE product_id=#{productId}")
+    List<Integer> selectChatByChatRoomId(Integer productId);
+
+    @Delete("DELETE FROM chat WHERE chat_room_id = #{chatRoomId}")
+    int deleteChatByChatRoomId(Integer chatRoomId);
 }

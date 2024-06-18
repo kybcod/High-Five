@@ -39,7 +39,7 @@ public interface QuestionMapper {
 
     @Select("""
             <script>
-                SELECT qb.id, qb.title, user.nick_name as nickName, qb.inserted
+                SELECT qb.id, qb.title, user.nick_name as nickName, qb.number_of_count, qb.inserted
                 FROM question_board qb
                 JOIN user ON qb.user_id = user.id
                     <trim prefix="WHERE" prefixOverrides="OR">
@@ -99,4 +99,9 @@ public interface QuestionMapper {
             DELETE FROM question_board_file WHERE question_id=#{id} AND file_name=#{name}
             """)
     void deleteFileByIdAndFileName(Integer id, String name);
+
+    @Update("""
+            UPDATE question_board SET number_of_count = number_of_count+1 WHERE id=#{id}
+            """)
+    int updateCountById(Integer id);
 }

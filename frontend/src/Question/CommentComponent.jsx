@@ -4,31 +4,22 @@ import { faComments } from "@fortawesome/free-solid-svg-icons";
 import { CommentWrite } from "./CommentWrite.jsx";
 import { CommentList } from "./CommentList.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 
 export function CommentComponent({ questionId }) {
-  const [isProcessing, setIsProcessing] = useState(false);
   return (
     <Box>
       <Box mb={5}>
         <Heading>
           <FontAwesomeIcon icon={faComments} />
-          댓글
+          {questionId}번 게시글 댓글
         </Heading>
       </Box>
       <Box mb={5}>
-        <CommentWrite
-          questionId={questionId}
-          setIsProcessing={setIsProcessing}
-          isProcessing={isProcessing}
-        />
+        <CommentWrite questionId={questionId} />
       </Box>
       <Box>
-        <CommentList
-          questionId={questionId}
-          setIsprocessing={setIsProcessing}
-          isProcessing={isProcessing}
-        />
+        <CommentList questionId={questionId} />
       </Box>
     </Box>
   );

@@ -27,8 +27,11 @@ import { QuestionView } from "./Question/QuestionView.jsx";
 import { QuestionEdit } from "./Question/QuestionEdit.jsx";
 import { MyPage } from "./myPage/MyPage.jsx";
 import { UserList } from "./user/UserList.jsx";
-import { ProductShop } from "./product/ProductShop.jsx";
 import { ChatRoomList } from "./chat/ChatRoomList.jsx";
+import { UserEdit } from "./myPage/UserEdit.jsx";
+import { UserEmail } from "./user/UserEmail.jsx";
+import SignupCodeProvider from "./component/SignupCodeProvider.jsx";
+import { UserPassword } from "./user/UserPassword.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -54,6 +57,8 @@ const router = createBrowserRouter([
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
       { path: "user/list", element: <UserList /> },
+      { path: "user/email", element: <UserEmail /> },
+      { path: "user/password", element: <UserPassword /> },
 
       //question
       { path: "question/write", element: <QuestionWrite /> },
@@ -70,6 +75,7 @@ const router = createBrowserRouter([
       //my page
       { path: "myPage/:userId", element: <Navigate to="userInfo" /> },
       { path: "myPage/:userId/userInfo", element: <MyPage tab="userInfo" /> },
+      { path: "myPage/:userId/userEdit", element: <UserEdit /> },
       { path: "myPage/:userId/like", element: <MyPage tab="like" /> },
       { path: "myPage/:userId/shop", element: <MyPage tab="shop" /> },
       { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },
@@ -85,9 +91,11 @@ const router = createBrowserRouter([
 function App() {
   return (
     <LoginProvider>
-      <ChakraProvider>
-        <RouterProvider router={router} />
-      </ChakraProvider>
+      <SignupCodeProvider>
+        <ChakraProvider>
+          <RouterProvider router={router} />
+        </ChakraProvider>
+      </SignupCodeProvider>
     </LoginProvider>
   );
 }

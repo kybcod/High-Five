@@ -77,35 +77,19 @@ public interface UserMapper {
 
     @Select("""
                 <script>
-                SELECT id, email, nick_name, inserted
+                SELECT id, email, nick_name, inserted, black_count
                 FROM user
+                    <bind name="pattern" value="'%' + keyword + '%'" />
+                WHERE
+                    (email LIKE #{pattern} OR nick_name LIKE #{pattern})
+                    <if test="type == 'black'">
+                        AND black_count > 4
+                    </if>
                 ORDER BY id DESC
                 LIMIT #{offset}, 10
                 </script>
             """)
-    List<User> selectUserList(int offset);
-
-//    @Select("""
-//                <script>
-//                SELECT id, email, nick_name, inserted
-//                FROM user
-//                    <trim prefix="WHERE" prefixOverrides="OR">
-//                        <bind name="pattern" value="%" + keyword + "%"/>
-//                        <if test="searchType != null">
-//                            <if test="keyword != ''">
-//                                OR email LIKE #{pattern}
-//                                OR nick_name LIKE #{pattern}
-//                            </if>
-//                            <if test searchType == 'black'>
-//                                OR black_count > 5
-//                            </if>
-//                        </if>
-//                    <trim>
-//                ORDER BY id DESC
-//                LIMIT #{offset}, 10
-//                </script>
-//            """)
-//    List<User> selectUserList(int offset);
+    List<User> selectUserList(int offset, String type, String keyword);
 
     @Delete("""
                 DELETE FROM authority
@@ -117,4 +101,59 @@ public interface UserMapper {
                 SELECT COUNT(*) FROM user
             """)
     int selectTotalUserCount();
+
+    @Insert("""
+                INSERT INTO code
+                (phone_number, code)
+                VALUES (#{phoneNumber}, #{code})
+            """)
+    void insertCode(String phoneNumber, String code);
+
+    @Select("""
+                SELECT code AS verificationCode
+                FROM code
+                WHERE phone_number = #{phoneNumber}
+            """)
+    Integer selectCodeByPhoneNumber(String phoneNumber);
+
+    @Delete("""
+                DELETE FROM code
+                WHERE phone_number = #{phone_number}
+            """)
+    int deleteCodeByPhoneNumber(String phoneNumber);
+
+    @Update("""
+                UPDATE user
+                SET black_count = black_count + 1
+                WHERE id = #{id}
+            """)
+    int updateBlackCountByUserId(Integer id);
+
+    @Select("""
+                SELECT email
+                FROM user
+                WHERE phone_number = #{phoneNumber}
+            """)
+    String selectEmailByPhoneNumber(String phoneNumber);
+
+    @Update("""
+                UPDATE user
+                SET password = #{password}
+                WHERE email = #{email}
+            """)
+    int updatePassword(User user);
+
+    @Insert("""
+                INSERT INTO user_file
+                (user_id, file_name)
+                VALUES (#{userId}, #{fileName})
+            """)
+    int insertProfileImage(Integer userId, String fileName);
+
+    @Select("""
+                SELECT file_name
+                FROM user_file
+                WHERE user_id = #{userId}
+            """)
+    String selectFileNameByUserId(Integer userId);
 }

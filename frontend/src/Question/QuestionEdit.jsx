@@ -64,6 +64,14 @@ export function QuestionEdit() {
             duration: 2500,
           });
         }
+        if (code === 403) {
+          toast({
+            description: "권한이 없는 사용자입니다",
+            status: "error",
+            position: "top-right",
+            duration: 2500,
+          });
+        }
         if (code === 413) {
           toast({
             description: "파일 크기가 허용된 용량을 초과하였습니다.",
