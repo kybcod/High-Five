@@ -16,7 +16,7 @@ export function CommentWrite({ questionId }) {
       .post(`/api/question/comment`, {
         content,
         questionId,
-        // userId: account.userId,
+        userId: account.userId,
       })
       .then(() => {
         // todo : DOM을 직접 수정하는건 안좋은 방식. 다른 방식으로 생각해보기
@@ -36,19 +36,23 @@ export function CommentWrite({ questionId }) {
 
   return (
     <Box>
-      <Flex gap={2}>
-        <Textarea
-          onChange={(e) => setContent(e.target.value)}
-          value={content}
-        />
-        <Button
-          onClick={handleWriteClick}
-          isDisabled={content.trim().length === 0}
-          isLoading={isProcessing}
-        >
-          등록
-        </Button>
-      </Flex>
+      {/*{account.hasAccess(account.userId) && (*/}
+      <>
+        <Flex gap={2}>
+          <Textarea
+            onChange={(e) => setContent(e.target.value)}
+            value={content}
+          />
+          <Button
+            onClick={handleWriteClick}
+            isDisabled={content.trim().length === 0}
+            isLoading={isProcessing}
+          >
+            등록
+          </Button>
+        </Flex>
+      </>
+      {/*)}*/}
     </Box>
   );
 }

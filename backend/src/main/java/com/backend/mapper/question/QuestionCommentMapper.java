@@ -24,6 +24,11 @@ public interface QuestionCommentMapper {
             """)
     int deleteComment(Integer id);
 
+    @Delete("""
+            DELETE FROM question_board_comment WHERE question_id=#{questionId}
+            """)
+    int deleteCommentByQuestionId(Integer questionId);
+
     @Select("""
             SELECT * FROM question_board_comment WHERE id=#{id}
             """)

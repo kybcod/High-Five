@@ -2,6 +2,7 @@ package com.backend.service.question;
 
 import com.backend.domain.question.Question;
 import com.backend.domain.question.QuestionFile;
+import com.backend.mapper.question.QuestionCommentMapper;
 import com.backend.mapper.question.QuestionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class QuestionService {
     private final QuestionMapper mapper;
+    private final QuestionCommentMapper commentMapper;
     private final S3Client s3Client;
 
     @Value("${aws.s3.bucket.name}")
@@ -114,6 +116,7 @@ public class QuestionService {
     }
 
     public void delete(Integer id) {
+        commentMapper.deleteCommentByQuestionId(id);
         mapper.deleteByIdFile(id);
         mapper.deleteById(id);
     }
