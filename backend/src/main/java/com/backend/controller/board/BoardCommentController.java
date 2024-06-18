@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class BoardCommentController {
 
-    private BoardCommentService service;
+    final BoardCommentService service;
 
     @PostMapping("comment")
     public ResponseEntity addComment(@RequestBody BoardComment boardComment, Authentication authentication) {

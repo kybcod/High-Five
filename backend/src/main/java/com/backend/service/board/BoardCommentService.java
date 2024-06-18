@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BoardCommentService {
 
-    private BoardCommentMapper mapper;
+    final BoardCommentMapper mapper;
 
     public boolean validate(BoardComment boardComment) {
         if (boardComment == null) {
