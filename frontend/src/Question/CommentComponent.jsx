@@ -9,17 +9,17 @@ import React, { useContext, useState } from "react";
 export function CommentComponent({ questionId }) {
   return (
     <Box>
-      <Box mb={5}>
+      <Box mb={5} mt={15}>
         <Heading>
           <FontAwesomeIcon icon={faComments} />
-          {questionId}번 게시글 댓글
+          관리자 댓글
         </Heading>
       </Box>
-      <Box mb={5}>
-        <CommentWrite questionId={questionId} />
-      </Box>
-      <Box>
+      <Box mt={5}>
         <CommentList questionId={questionId} />
+      </Box>
+      <Box mt={5}>
+        <CommentWrite questionId={questionId} />
       </Box>
     </Box>
   );

@@ -18,6 +18,8 @@ public class Question {
     private List<QuestionFile> fileList;
 
     private Integer numberOfCount;
+    private Integer numberOfFiles;
+    private Integer numberOfComments;
 
     public String getInserted() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");

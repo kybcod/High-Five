@@ -43,3 +43,6 @@ SELECT qb.id, qb.user_id, qb.question_id, qb.content, qb.inserted, user.nick_nam
 FROM question_board_comment qb
          JOIN user ON qb.user_id = user.id
 WHERE question_id = 31;
+
+INSERT INTO authority(user_id, name)
+VALUES (59, 'admin');

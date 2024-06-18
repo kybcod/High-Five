@@ -6,6 +6,7 @@ import {
   Heading,
   Input,
   Select,
+  Spacer,
   Table,
   Tbody,
   Td,
@@ -23,10 +24,10 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
-  faEye,
+  faCamera,
+  faImage,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { ViewIcon } from "@chakra-ui/icons";
 
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
@@ -98,7 +99,17 @@ export function QuestionList() {
                 key={question.id}
               >
                 <Td>{question.id}</Td>
-                <Td>{question.title}</Td>
+                <Td>
+                  <Flex gap={2}>
+                    {question.title}
+                    {question.numberOfFiles > 0 && (
+                      <Box ml={2}>
+                        <FontAwesomeIcon icon={faCamera} />
+                        {question.numberOfFiles}
+                      </Box>
+                    )}
+                  </Flex>
+                </Td>
                 <Td>{question.nickName}</Td>
                 <Td>{question.numberOfCount}</Td>
                 <Td>{question.inserted}</Td>

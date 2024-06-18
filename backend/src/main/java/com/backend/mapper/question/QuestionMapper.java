@@ -39,9 +39,11 @@ public interface QuestionMapper {
 
     @Select("""
             <script>
-                SELECT qb.id, qb.title, user.nick_name as nickName, qb.number_of_count, qb.inserted
+                SELECT qb.id, qb.title, user.nick_name as nickName, qb.number_of_count, qb.inserted,
+                COUNT(qbf.question_id) as numberOfFiles
                 FROM question_board qb
                 JOIN user ON qb.user_id = user.id
+                     LEFT JOIN question_board_file qbf ON qb.id = qbf.question_id
                     <trim prefix="WHERE" prefixOverrides="OR">
                         <if test="searchType != null">
                             <bind name="pattern" value="'%' + keyword + '%'" />
