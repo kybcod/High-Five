@@ -18,6 +18,7 @@ import { CustomToast } from "../component/CustomToast.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import { BoardCommentComponent } from "./BoardCommentComponent.jsx";
 
 export function BoardView() {
   const [board, setBoard] = useState("");
@@ -133,6 +134,8 @@ export function BoardView() {
       <Box>
         <Textarea value={board.content} readOnly />
       </Box>
+
+      <BoardCommentComponent boardId={board.id} />
     </Box>
   );
 }
