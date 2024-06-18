@@ -117,4 +117,11 @@ public interface UserMapper {
                 SELECT COUNT(*) FROM user
             """)
     int selectTotalUserCount();
+
+    @Select("""
+            SELECT id, nick_name
+            FROM user
+            WHERE id = #{userId}
+            """)
+    User selectUserNickNameById(Integer userId);
 }
