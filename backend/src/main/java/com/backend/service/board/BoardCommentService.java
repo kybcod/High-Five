@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
@@ -33,5 +35,11 @@ public class BoardCommentService {
         boardComment.setUserId(Integer.valueOf(authentication.getName()));
 
         mapper.addComment(boardComment);
+    }
+
+    public List<BoardComment> commentList(Integer boardId) {
+        List<BoardComment> boardCommentList = mapper.selectAllComment(boardId);
+
+        return boardCommentList;
     }
 }

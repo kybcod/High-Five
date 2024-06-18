@@ -5,19 +5,18 @@ import com.backend.service.board.BoardCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/api/board")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/board/comment")
 @RequiredArgsConstructor
 public class BoardCommentController {
 
     final BoardCommentService service;
 
-    @PostMapping("comment")
+    @PostMapping
     public ResponseEntity addComment(@RequestBody BoardComment boardComment, Authentication authentication) {
         if (service.validate(boardComment)) {
             service.add(boardComment, authentication);
@@ -25,5 +24,11 @@ public class BoardCommentController {
         } else {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("{boardId}")
+    public List<BoardComment> commentList(@PathVariable Integer boardId) {
+        System.out.println(boardId);
+        return service.commentList(boardId);
     }
 }
