@@ -20,6 +20,7 @@ public class User {
     private Integer blackCount;
     private LocalDateTime inserted;
     private List<String> authority;
+    private UserFile profileImage;
 
     public String getAuth() {
         String auth = "";

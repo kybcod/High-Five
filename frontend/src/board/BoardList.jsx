@@ -1,8 +1,13 @@
 import {
   Badge,
   Box,
+  Button,
+  ButtonGroup,
+  Center,
   Flex,
   Heading,
+  Input,
+  Select,
   Table,
   Tbody,
   Td,
@@ -12,19 +17,51 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart as fullHeart,
+  faImage,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
+  const [searchType, setSearchType] = useState("all");
+  const [searchKeyword, setSearchKeyword] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    axios.get("/api/board/list").then((res) => {
-      setBoardList(res.data);
+    const typeParam = searchParams.get("type");
+    const keywordParam = searchParams.get("keyword");
+    if (typeParam) {
+      setSearchType(typeParam);
+    }
+    if (keywordParam) {
+      setSearchKeyword(keywordParam);
+    }
+
+    axios.get(`/api/board/list?${searchParams}`).then((res) => {
+      setBoardList(res.data.boardList);
+      setPageInfo(res.data.pageInfo);
     });
-  }, []);
+  }, [searchParams]);
+
+  const pageNumbers = [];
+  for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
+    pageNumbers.push(i);
+  }
+
+  function handlePageButtonClick(pageNumber) {
+    searchParams.set("page", pageNumber);
+    navigate(`/board/list/?${searchParams}`);
+  }
+
+  function handleSearchButtonClick() {
+    navigate(`/board/list/?type=${searchType}&keyword=${searchKeyword}`);
+  }
 
   return (
     <Box>
@@ -57,14 +94,54 @@ export function BoardList() {
                       </Flex>
                     </Badge>
                   )}
+                  {board.numberOfLikes > 0 && (
+                    <Badge>
+                      <Flex>
+                        <Box>
+                          <FontAwesomeIcon icon={fullHeart} />
+                        </Box>
+                        <Box>{board.numberOfLikes}</Box>
+                      </Flex>
+                    </Badge>
+                  )}
                 </Td>
                 <Td>{board.userId}</Td>
                 <Td>{board.inserted}</Td>
+                <Td hidden>{board.content}</Td>
               </Tr>
             ))}
           </Tbody>
         </Table>
       </Box>
+      <Center>
+        <Flex>
+          <Select
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
+          >
+            <option value={"all"}>전체</option>
+            <option value={"content"}>내용</option>
+            <option value={"title"}>제목</option>
+          </Select>
+          <Input
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+          <Button onClick={handleSearchButtonClick}>
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </Button>
+        </Flex>
+      </Center>
+      <Center>
+        {pageNumbers.map((pageNumber) => (
+          <ButtonGroup
+            key={pageNumber}
+            onClick={() => handlePageButtonClick(pageNumber)}
+          >
+            <Button>{pageNumber}</Button>
+          </ButtonGroup>
+        ))}
+      </Center>
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 package com.backend.service.product;
 
-import com.backend.domain.product.BidList;
+import com.backend.domain.auction.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
 import com.backend.mapper.product.ProductMapper;
@@ -169,19 +169,40 @@ public class ProductService {
 
     public void remove(Integer id) {
 
-        // s3에서 파일(이미지) 삭제
-        List<String> fileNameList = mapper.selectFileByProductId(id);
-        for (String fileName : fileNameList) {
-            String key = STR."prj3/\{id}/\{fileName}";
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .build();
-            s3Client.deleteObject(deleteObjectRequest);
-        }
+        Product product = mapper.selectById(id);
 
-        mapper.deleteLikeByBoardId(id);
+        // chat 삭제
+        // chat_room_id 가져오기
+        List<Integer> chatRoomIds = mapper.selectChatByChatRoomId(id);
+        for (Integer chatRoomId : chatRoomIds) {
+            mapper.deleteChatByChatRoomId(chatRoomId);
+        }
+        // chat_room 삭제
+        mapper.deleteChatRoomBySellerId(product.getUserId());
+        mapper.deleteChatRoomByProductId(id);
+
+
+        // s3에서 파일(이미지) 삭제
+//        List<String> fileNameList = mapper.selectFileByProductId(id);
+//        for (String fileName : fileNameList) {
+//            String key = STR."prj3/\{id}/\{fileName}";
+//            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+//                    .bucket(bucketName)
+//                    .key(key)
+//                    .build();
+//            s3Client.deleteObject(deleteObjectRequest);
+//        }
+
+        // 입찰 내역 삭제
+        mapper.deleteBidListByProductId(id);
+
+        //좋아요 삭제
+        mapper.deleteLikeByProductId(id);
+
+        //파일 DB 삭제
         mapper.deleteFileByProductId(id);
+
+        // 상품 삭제
         mapper.deleteByProductId(id);
     }
 
@@ -194,11 +215,11 @@ public class ProductService {
         Integer userId = Integer.valueOf(authentication.getName());
 
         // 이미 좋아요가 되어 있다면 delete(count=1)
-        int count = mapper.deleteLikeByBoardIdAndUserId(productId, userId);
+        int count = mapper.deleteLikeByProductIdAndUserId(productId, userId);
 
         // 좋아요 안했으면 insert
         if (count == 0) {
-            mapper.insertLikeByBoardIdAndUserId(productId, userId);
+            mapper.insertLikeByProductIdAndUserId(productId, userId);
             result.put("like", true);
         }
         result.put("count", mapper.selectCountLikeByProductId(productId));
@@ -244,11 +265,9 @@ public class ProductService {
 
     // TODO : Mapper 정리
     public void updateProductState() {
-        //현재 시간과 상품의 endTime을 비교해서
-        // 만약에 같다면 판매 상태(TRUE)로 바꾸고
-        // bid_list에서 status 상태(False)로 바꾸어야 합니다.
+        // 0: 판매종료(false)
+        // 1:판매중(true) => 기본값
 
-//        (상품 및 입찰 내역 관한 정보 가져오기)
         LocalDateTime currentTime = LocalDateTime.now();
         List<Product> productList = mapper.selectProductAndBidList();
 
@@ -258,6 +277,7 @@ public class ProductService {
                 mapper.updateStatus(product);
                 mapper.updateBidStatusByProductId(product.getId(), true);
             }
+            System.out.println("currentTime = " + currentTime);
             System.out.println(STR."\{product.getTitle()} : 끝나는 시간(\{product.getEndTime()}) , 상품 상태 : \{product.getStatus()}");
 
         }
@@ -265,6 +285,8 @@ public class ProductService {
 
     public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
         List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
+        String userNickName = mapper.selectUserNickName(userId);
+
 
         for (Product product : productList) {
             List<String> productFiles = mapper.selectFileByProductId(product.getId());
@@ -281,7 +303,7 @@ public class ProductService {
         boolean hasNextPage = pageable.getPageNumber() + 1 < page.getTotalPages();
 
 
-        return Map.of("productList", productList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
+        return Map.of("productList", productList, "pageInfo", pageInfo, "hasNextPage", hasNextPage, "userNickName", userNickName);
 
     }
 

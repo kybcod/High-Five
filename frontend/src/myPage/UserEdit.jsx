@@ -12,6 +12,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -27,6 +28,7 @@ export function UserEdit() {
   const [oldPassword, setOldPassword] = useState("");
   const [isCheckedNickName, setIsCheckedNickName] = useState(false);
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
   const { onClose, isOpen, onOpen } = useDisclosure();
@@ -42,7 +44,11 @@ export function UserEdit() {
   function handleUserUpdate() {
     setIsLoading(true);
     axios
-      .put(`/api/users/${account.id}`, { ...user, oldPassword })
+      .putForm(`/api/users/${account.id}`, {
+        ...user,
+        oldPassword,
+        profileImage,
+      })
       .then((res) => {
         account.logout;
         account.login(res.data.token);
@@ -106,6 +112,14 @@ export function UserEdit() {
     <Box>
       <Box>
         <FormControl>
+          <FormLabel>프로필 사진</FormLabel>
+          <Input
+            type={"file"}
+            accept="image/*"
+            onChange={(e) => setProfileImage(e.target.files)}
+          />
+        </FormControl>
+        <FormControl>
           <FormLabel>이메일 주소</FormLabel>
           <Input
             variant="flushed"
@@ -154,11 +168,15 @@ export function UserEdit() {
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button onClick={onOpen} isDisabled={disabled}>
+        <Button
+          onClick={onOpen}
+          // isDisabled={disabled}
+        >
           수정
         </Button>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>수정하시겠습니까?</ModalHeader>
           <ModalBody>비밀번호를 입력해주세요</ModalBody>

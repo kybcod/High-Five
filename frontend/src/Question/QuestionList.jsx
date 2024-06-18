@@ -23,8 +23,10 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
+  faEye,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import { ViewIcon } from "@chakra-ui/icons";
 
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
@@ -52,6 +54,7 @@ export function QuestionList() {
     }
   }, [searchParams]);
 
+  // 페이지 체크
   console.log("page", searchParams.get("page"));
 
   const pageNumbers = [];
@@ -82,6 +85,7 @@ export function QuestionList() {
               <Th>No.</Th>
               <Th>제목</Th>
               <Th>작성자</Th>
+              <Th>조회수</Th>
               <Th>작성시간</Th>
             </Tr>
           </Thead>
@@ -96,6 +100,7 @@ export function QuestionList() {
                 <Td>{question.id}</Td>
                 <Td>{question.title}</Td>
                 <Td>{question.nickName}</Td>
+                <Td>{question.numberOfCount}</Td>
                 <Td>{question.inserted}</Td>
               </Tr>
             ))}

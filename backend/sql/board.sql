@@ -1,6 +1,9 @@
 SELECT *
 FROM board;
 
+SELECT *
+FROM board_like;
+
 ALTER TABLE board
     MODIFY user_id INT NOT NULL;
 
@@ -22,6 +25,11 @@ FROM user;
 
 INSERT INTO authority (user_id, name)
     VALUE (36, 'user');
+
+# insert into board temporary
+INSERT INTO board (title, content, user_id, inserted)
+SELECT title, content, user_id, inserted
+FROM board;
 
 
 

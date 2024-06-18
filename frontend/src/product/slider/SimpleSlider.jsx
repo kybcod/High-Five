@@ -13,10 +13,16 @@ const NextArrow = (props) => {
       style={{
         ...style,
         position: "absolute",
-        backgroundColor: "black",
         display: "block",
-        right: 0,
+        right: "10px",
+        top: "50%",
+        transform: "translateY(-50%)",
         zIndex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        borderRadius: "50%",
+        color: "white",
+        fontSize: "20px",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)",
       }}
       onClick={onClick}
     />
@@ -32,10 +38,16 @@ const PrevArrow = (props) => {
       style={{
         ...style,
         position: "absolute",
-        backgroundColor: "black",
         display: "block",
-        left: 0,
+        left: "10px",
+        top: "50%",
+        transform: "translateY(-50%)",
         zIndex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        borderRadius: "50%",
+        color: "white",
+        fontSize: "20px",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)",
       }}
       onClick={onClick}
     />
@@ -52,15 +64,18 @@ function SimpleSlider({ images, isBrightness }) {
     arrows: images.length > 1,
     nextArrow: images.length > 1 ? <NextArrow /> : false,
     prevArrow: images.length > 1 ? <PrevArrow /> : false,
+    centerMode: false,
+    overflow: "hidden",
   };
 
   return (
-    <Box width="30%" position="relative">
+    <Box width="40%" height="300px" position="relative">
       <Slider {...settings}>
         {images.map((file, index) => (
-          <Box key={index} position="relative" width="100%" height="200px">
+          <Box key={index} position="relative" width="100%" height="300px">
             <Image
               src={file.filePath}
+              className="slick-custom-image"
               width="100%"
               height="100%"
               objectFit="contain"

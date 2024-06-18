@@ -15,4 +15,5 @@ public class Board {
 
     private List<BoardFile> boardFileList;
     private Integer numberOfImages;
+    private Integer numberOfLikes;
 }

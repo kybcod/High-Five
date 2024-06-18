@@ -3,8 +3,14 @@ package com.backend.service.board;
 import com.backend.domain.board.Board;
 import com.backend.domain.board.BoardFile;
 import com.backend.mapper.board.BoardMapper;
+import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +21,9 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -58,11 +66,24 @@ public class BoardService {
     }
 
 
-    public List<Board> list() {
-        return mapper.selectAll();
+    public Map<String, Object> list(int page, String type, String keyword) {
+        int offset = (page - 1) * 10;
+        List<Board> boardList = mapper.selectAll(offset, type, keyword);
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        int totalBoardNumber = mapper.selectTotalBoardCount(type, keyword);
+        Page<Board> pageImpl = new PageImpl<>(boardList, pageable, totalBoardNumber);
+        System.out.println(totalBoardNumber);
+        PageInfo pageInfo = new PageInfo().setting(pageImpl);
+        System.out.println(totalBoardNumber);
+
+        return Map.of("boardList", boardList, "pageInfo", pageInfo);
+
     }
 
-    public Board selectById(Integer id) {
+    public Map<String, Object> selectById(Integer id, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+
         Board board = mapper.selectById(id);
         List<String> fileNames = mapper.selectFileNameByBoardId(board.getId());
         List<BoardFile> files = fileNames.stream()
@@ -71,7 +92,18 @@ public class BoardService {
 
         board.setBoardFileList(files);
 
-        return board;
+        Map<String, Object> boardLike = new HashMap<>();
+        if (authentication == null) {
+            boardLike.put("boardLike", false);
+        } else {
+            int c = mapper.selectLikeByBoardIdAndUserId(id, authentication.getName());
+            boardLike.put("boardLike", c == 1);
+        }
+        boardLike.put("count", mapper.selectCountLikeByBoardId(id));
+        result.put("board", board);
+        result.put("boardLike", boardLike);
+
+        return result;
 
     }
 
@@ -109,4 +141,25 @@ public class BoardService {
     public int deleteById(Integer id) {
         return mapper.deleteById(id);
     }
+
+    public Map<String, Object> like(Map<String, Object> req, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("boardLike", false);
+        Integer boardId = (Integer) req.get("boardId");
+        Integer userId = Integer.valueOf(authentication.getName());
+
+        int count = mapper.deleteLikeByBoardIdAndUserId(boardId, userId);
+
+        if (count == 0) {
+            mapper.insertLikeByIdAndUserId(boardId, userId);
+            result.put("boardLike", true);
+        } else {
+            result.put("boardLike", false);
+        }
+
+        result.put("count", mapper.selectCountLikeByBoardId(boardId));
+
+        return result;
+    }
+
 }
