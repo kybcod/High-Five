@@ -205,20 +205,24 @@ export function ProductDetails() {
                 </Box>
                 <Box>{product.viewCount}</Box>
               </Flex>
-              <Button
-                colorScheme="teal"
-                leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
-                onClick={handleEnterChatRoom}
-                mr={4}
-              >
-                문의하기
-              </Button>
-              <Button
-                colorScheme="red"
-                leftIcon={<FontAwesomeIcon icon={faExclamationTriangle} />}
-              >
-                신고하기
-              </Button>
+              {account.hasAccess(product.userId) || (
+                <Box>
+                  <Button
+                    colorScheme="teal"
+                    leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
+                    onClick={handleEnterChatRoom}
+                    mr={4}
+                  >
+                    문의하기
+                  </Button>
+                  <Button
+                    colorScheme="red"
+                    leftIcon={<FontAwesomeIcon icon={faExclamationTriangle} />}
+                  >
+                    신고하기
+                  </Button>
+                </Box>
+              )}
             </Flex>
             <Box
               mb={5}
