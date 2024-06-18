@@ -1,11 +1,12 @@
 package com.backend.service.chat;
 
+import com.backend.domain.auction.BidList;
 import com.backend.domain.chat.Chat;
 import com.backend.domain.chat.ChatMessage;
-import com.backend.domain.chat.ChatProduct;
 import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.product.Product;
 import com.backend.domain.user.User;
+import com.backend.mapper.auction.BidMapper;
 import com.backend.mapper.chat.ChatMapper;
 import com.backend.mapper.product.ProductMapper;
 import com.backend.mapper.user.UserMapper;
@@ -26,58 +27,66 @@ public class ChatService {
     private final ChatMapper mapper;
     private final ProductMapper productMapper;
     private final UserMapper userMapper;
+    private final BidMapper bidMapper;
 
-    public Map<String, Object> selectChatRoomId(Integer productId, Authentication authentication) {
+    public Map<String, Object> selectChatRoomId(Integer productId, Integer buyerId, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();
         Jwt jwt = (Jwt) authentication.getPrincipal();
-        Integer userId = Integer.valueOf(authentication.getName());
+        Integer tokenUserId = Integer.valueOf(authentication.getName());
 
-        // productId, userId로 roomId 찾기
-        Integer roomId = mapper.selectRoomId(productId, userId);
+        // productId, buyerId로 roomInfo 찾기
+        ChatRoom chatRoom = mapper.selectChatRoomByIds(productId, buyerId);
 
-        // roomId가 없다면 생성
-        if (roomId == null) {
+        if (chatRoom == null) { // roomInfo 없다면 생성
+
+            ChatRoom newChatRoom = new ChatRoom();
+
+            newChatRoom.setUserId(Integer.valueOf(buyerId));
+            newChatRoom.setProductId(Integer.valueOf(productId));
+
             // SellerId 조회
-            Integer sellerId = productMapper.selectProductSellerId(productId);
+            newChatRoom.setSellerId(productMapper.selectProductSellerId(newChatRoom.getProductId()));
 
             // InsertChatRoom
-            int roomStatus = mapper.insertChatRoom(productId, sellerId, userId);
+            int roomCreate = mapper.insertChatRoom(newChatRoom);
 
-            if (roomStatus == 1) {
-                // room 생성 성공하면 roomId 조회
-                roomId = mapper.selectRoomId(productId, userId);
+            if (roomCreate == 1) {
+                // room 생성 성공하면 chatRoomId 조회
+                newChatRoom = mapper.selectChatRoomByIds(productId, buyerId);
             } else {
                 System.out.println("chatRoom get fail");
             }
             // -- 신규 메세지
             result.put("firstChat", "채팅방 입장을 환영합니다.");
-        } else {
-            // -- 이전 ChatData
-            List<ChatMessage> messageList = mapper.selectMessage(roomId);
-            Collections.reverse(messageList);
-            result.put("messageList", messageList);
+
+            chatRoom = newChatRoom;
+        } else { // -- 이전 ChatData
+            List<Chat> previousChatList = mapper.selectChatListByChatRoomId(chatRoom.getId());
+            Collections.reverse(previousChatList);
+            result.put("previousChatList", previousChatList);
         }
-        // -- chat_room info
-        ChatRoom chatRoom = mapper.selectChatRoomInfo(roomId);
+        result.put("chatRoom", chatRoom);
 
         // userName 추가
-//        chatRoom.setUserName(jwt.getClaim("nickName"));
-
+        User user = userMapper.selectUserById(chatRoom.getUserId());
+        result.put("user", user.getUserIdAndNickName());
         // sellerName 추가
-        String sellerName = userMapper.selectSellerName(chatRoom);
-//        chatRoom.setSellerName(sellerName);
+        user = userMapper.selectUserById(chatRoom.getSellerId());
+        result.put("seller", user.getUserIdAndNickName());
 
         // -- chat product info
-        // ChatProduct status = 1: 판매중, 0: 판매완료
-        ChatProduct chatProduct = productMapper.selectChatProductInfo(productId);
-        if (chatProduct.getStatus() != 1) {
-            Integer buyerId = productMapper.selectBuyerId(productId);
-            chatProduct.setBuyerId(buyerId);
+        // status = false (판매종료), reivewStatus = true (후기 등록됨)
+        Product product = productMapper.selectChatProductInfo(productId);
+        result.put("product", product.getProductStatusInfo());
+        if (!(Boolean) product.getProductStatusInfo().get("status")) {
+            // 판매 종료 상품의 낙찰자 가져오기
+            BidList bidder = bidMapper.selectBidderByProductId(productId);
+            if (bidder == null) {
+                result.put("bidder", 0);
+            } else {
+                result.put("bidder", bidder);
+            }
         }
-
-        // -- result 에 담기
-        result.put("chatRoom", chatRoom);
-        result.put("chatProduct", chatProduct);
         return result;
     }
 
@@ -89,7 +98,7 @@ public class ChatService {
         Integer tokenUserId = Integer.valueOf(authentication.getName());
 
         List<Map<String, Object>> result = new ArrayList<>();
-        
+
         List<ChatRoom> chatRoomList = mapper.selectChatRoomListByUserId(tokenUserId);
         for (ChatRoom chatRoom : chatRoomList) {
             Map<String, Object> map = new HashMap<>();
