@@ -23,6 +23,10 @@ export function UserEmail() {
       .catch((err) => {
         if (err.response.status === 404) {
           errorToast("해당 번호로 가입된 회원이 없습니다");
+        } else if (err.response.status === 400) {
+          errorToast(
+            "전화번호 자릿수가 올바르지 않습니다. 010을 제외한 8자를 입력해주세요",
+          );
         } else {
           errorToast("회원 조회 중 문제가 발생했습니다. 다시 시도해주세요");
         }

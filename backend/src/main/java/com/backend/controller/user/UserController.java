@@ -46,9 +46,13 @@ public class UserController {
     // 회원가입 시 인증코드 받기
     // TODO. 나중에 활성화
     @GetMapping("users/codes")
-    public void sendCode(String phoneNumber) {
-        String verificationCode = service.sendMessage(phoneNumber);
-        System.out.println("verificationCode = " + verificationCode);
+    public ResponseEntity sendCode(String phoneNumber) {
+        if (phoneNumber.length() == 11) {
+            String verificationCode = service.sendMessage(phoneNumber);
+            System.out.println("verificationCode = " + verificationCode);
+            return ResponseEntity.ok(verificationCode);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     // 인증코드 일치 확인
@@ -137,11 +141,14 @@ public class UserController {
     // 전화번호로 이메일 찾기
     @GetMapping("/users/emails/{phoneNumber}")
     public ResponseEntity getEmails(@PathVariable String phoneNumber) {
-        String email = service.getEmailByPhoneNumber(phoneNumber);
-        if (email == null) {
+        if (phoneNumber.length() == 11) {
+            String email = service.getEmailByPhoneNumber(phoneNumber);
+            if (email != null) {
+                return ResponseEntity.ok(email);
+            }
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(email);
+        return ResponseEntity.badRequest().build();
     }
 
     // 비밀번호 재설정
