@@ -1,7 +1,6 @@
 package com.backend.mapper.product;
 
 import com.backend.domain.auction.BidList;
-import com.backend.domain.chat.ChatProduct;
 import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductWithUserDTO;
@@ -210,11 +209,11 @@ public interface ProductMapper {
     Integer selectProductSellerId(Integer productId);
 
     @Select("""
-            SELECT id, title, status
+            SELECT id, title, status, review_status
             FROM product
             WHERE id =#{productId}
             """)
-    ChatProduct selectChatProductInfo(Integer productId);
+    Product selectChatProductInfo(Integer productId);
 
     @Select("""
             SELECT b.user_id buyerId
