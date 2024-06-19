@@ -30,21 +30,21 @@ import { CommentComponent } from "./CommentComponent.jsx";
 import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
 import { QuestionList } from "./QuestionList.jsx";
 
-export function QuestionView({ isNewBadge }) {
+export function QuestionView() {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
   const navigate = useNavigate();
   const toast = useToast();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
-  const [isNewBadge, setIsNewBadge] = useState("");
+  // const [isNewBadge, setIsNewBadge] = useState("");
 
   useEffect(() => {
     axios
       .get(`/api/question/${id}`)
       .then((res) => {
         setQuestion(res.data);
-        setIsNewBadge(res.data);
+        // setIsNewBadge(res.data);
       })
       .catch((err) => {
         if (err.response.status === 404) {
@@ -130,7 +130,7 @@ export function QuestionView({ isNewBadge }) {
           <Box w="10%">작성시간</Box>
           <Input w="30%" value={question.inserted} readOnly />
           <Box>
-            {question.isNewBadge && <Badge colorScheme="green">New</Badge>}
+            {/*{question.isNewBadge && <Badge colorScheme="green">New</Badge>}*/}
           </Box>
         </Flex>
       </Box>

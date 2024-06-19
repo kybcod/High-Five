@@ -40,7 +40,7 @@ public class Question {
         }
     }
 
-    public Boolean isNewBadge() {
+    public Boolean getIsNewBadge() {
         Duration duration = Duration.between(inserted, LocalDateTime.now());
         return duration.toHours() < 24;
     }

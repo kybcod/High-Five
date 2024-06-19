@@ -30,7 +30,7 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 
-export function QuestionList({ isNewBadge }) {
+export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [searchType, setSearchType] = useState("titleNick");
@@ -103,7 +103,9 @@ export function QuestionList({ isNewBadge }) {
                 <Td>
                   <Flex gap={2}>
                     {question.title}
-                    {isNewBadge && <Badge colorScheme="green">New</Badge>}
+                    {question.isNewBadge && (
+                      <Badge colorScheme="green">New</Badge>
+                    )}
                     {question.numberOfFiles > 0 && (
                       <Box ml={2}>
                         <FontAwesomeIcon icon={faCamera} />

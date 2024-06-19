@@ -39,7 +39,6 @@ public class QuestionCommentController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity delete(@RequestBody Map<String, Integer> request, Authentication authentication) {
         Integer id = request.get("id");
-        System.out.println("id = " + id);
         if (id == null) {
             return ResponseEntity.badRequest().body("ID is required");
         }

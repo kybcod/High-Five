@@ -9,7 +9,7 @@ import java.util.List;
 public interface QuestionMapper {
 
     @Insert("""
-            INSERT INTO question_board(title,content,user_id) VALUES (#{title},#{content},#{userId})
+            INSERT INTO question_board( title,content,user_id) VALUES (#{title},#{content},#{userId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Question question);

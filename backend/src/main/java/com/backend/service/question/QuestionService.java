@@ -78,7 +78,8 @@ public class QuestionService {
 //    }
 
     public Map<String, Object> list(Integer page, String searchType, String keyword) {
-        Map pageInfo = new HashMap();
+        Map pageInfo = new HashMap<>();
+
         Integer countAll = mapper.countAllWithSearch(searchType, keyword);
 
         Integer offset = (page - 1) * 5;
@@ -103,8 +104,11 @@ public class QuestionService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
+        List<Question> questions = mapper.selectUsingPageable(offset, searchType, keyword);
+        questions.forEach(q -> q.setIsNewBadge(q.getIsNewBadge()));
+
         return Map.of("pageInfo", pageInfo,
-                "content", mapper.selectUsingPageable(offset, searchType, keyword));
+                "content", questions);// "content" 키의 값으로 questions 리스트 반환
     }
 
     public Question get(Integer id) {
@@ -118,7 +122,6 @@ public class QuestionService {
                 .map(name -> new QuestionFile(name, STR."\{srcPrefix}\{question.getId()}/\{name}"))
                 .toList();
         question.setFileList(files);
-        question.setIsNewBadge(question.isNewBadge());
         return question;
     }
 
