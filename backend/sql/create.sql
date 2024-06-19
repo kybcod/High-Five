@@ -213,3 +213,33 @@ CREATE TABLE user_file
     file_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (user_id, file_name)
 );
+
+# 결제 테이블
+CREATE TABLE payment
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    merchant_uid VARCHAR(200) NOT NULL,
+    amount       INT          NOT NULL,
+
+);
+
+
+
+
+
+# 결제 테이블
+# 주문명(product-title), 구매자 이름(user-nickName),
+# 구매자 전화번호(user-phone_number) ,
+# 구매자 이메일(user-email)
+
+# id, 주문번호, 결제금액, 주문명(), 구매자 이름, 구매자 전화번호, 구매자 이메일, 결제 상태
+# id, 주문번호, 결제금액, bid_id(bidList), 결제 상태
+# user_Id((bidList)), product_Id(bidList),
+
+# CREATE TABLE payment
+# (
+#     id           INT PRIMARY KEY AUTO_INCREMENT,
+#     merchant_uid VARCHAR(200) NOT NULL,
+#     amount       INT          NOT NULL,
+#
+# );
