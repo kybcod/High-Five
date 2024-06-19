@@ -24,6 +24,7 @@ export function Comment({ comment }) {
   const account = useContext(LoginContext);
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isEditing, setIsEditing] = useState(false);
 
   // Prop이 제대로 넘어오는지 확인하기 위해 콘솔 로그 추가
   useEffect(() => {
@@ -75,27 +76,29 @@ export function Comment({ comment }) {
   }
 
   function handleModifyClick() {
-    console.log(`${comment.id}번 수정 버튼 클릭함`);
-    // return <CommentEdit comment={comment} />;
-    return <CommentWrite />;
+    setIsEditing(true);
   }
 
   return (
     <>
-      <Flex gap={3}>
-        <Box>
-          <FontAwesomeIcon icon={faUser} style={{ color: "#22c393" }} />
-        </Box>
-        <input value={comment.nickName} />
-        <Textarea value={comment.content} />
-        <Input value={comment.inserted} />
-        {account.hasAccess(comment.userId) && (
-          <>
-            <Button onClick={handleModifyClick}>수정</Button>
-            <Button onClick={onOpen}>삭제</Button>
-          </>
-        )}
-      </Flex>
+      {isEditing ? (
+        <CommentWrite comment={comment} />
+      ) : (
+        <Flex gap={3}>
+          <Box>
+            <FontAwesomeIcon icon={faUser} style={{ color: "#22c393" }} />
+          </Box>
+          <input value={comment.nickName} readOnly />
+          <Textarea value={comment.content} readOnly />
+          <Input value={comment.inserted} readOnly />
+          {account.hasAccess(comment.userId) && (
+            <>
+              <Button onClick={handleModifyClick}>수정</Button>
+              <Button onClick={onOpen}>삭제</Button>
+            </>
+          )}
+        </Flex>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

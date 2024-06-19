@@ -166,11 +166,13 @@ export function QuestionList() {
           </Tooltip>
           {pageInfo.prevPageNumber && (
             <>
-              <Button
-                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleLeft} />
-              </Button>
+              <Tooltip label="이전 페이지" placement="bottom">
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+                >
+                  <FontAwesomeIcon icon={faAngleLeft} />
+                </Button>
+              </Tooltip>
             </>
           )}
 
@@ -188,11 +190,13 @@ export function QuestionList() {
 
           {pageInfo.nextPageNumber && (
             <>
-              <Button
-                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleRight} />
-              </Button>
+              <Tooltip label="다음 페이지" placement="bottom">
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+                >
+                  <FontAwesomeIcon icon={faAngleRight} />
+                </Button>
+              </Tooltip>
             </>
           )}
           <Tooltip label="맨 끝 페이지" placement="bottom">

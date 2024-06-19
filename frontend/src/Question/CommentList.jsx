@@ -28,15 +28,17 @@ export function CommentList({ questionId }) {
 
   return (
     <Box>
-      <Card>
-        <CardBody>
-          <Stack divider={<StackDivider />} spacing={4}>
-            {commentList.map((comment) => (
-              <Comment key={comment.id} comment={comment} />
-            ))}
-          </Stack>
-        </CardBody>
-      </Card>
+      {commentList.length > 0 && (
+        <Card>
+          <CardBody>
+            <Stack divider={<StackDivider />} spacing={4}>
+              {commentList.map((comment) => (
+                <Comment key={comment.id} comment={comment} />
+              ))}
+            </Stack>
+          </CardBody>
+        </Card>
+      )}
     </Box>
   );
 }

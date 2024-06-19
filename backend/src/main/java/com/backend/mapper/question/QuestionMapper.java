@@ -63,7 +63,7 @@ public interface QuestionMapper {
                     </trim>
                 GROUP BY qb.id
                 ORDER BY qb.id DESC
-                LIMIT #{offset},5
+                LIMIT #{offset},10
             </script>
             """)
     List<Question> selectUsingPageable(int offset, String searchType, String keyword);

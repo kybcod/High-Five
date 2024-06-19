@@ -8,6 +8,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  HStack,
   Image,
   Input,
   Modal,
@@ -17,6 +18,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Stack,
+  StackDivider,
   Text,
   Textarea,
   useDisclosure,
@@ -37,14 +40,12 @@ export function QuestionView() {
   const toast = useToast();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
-  // const [isNewBadge, setIsNewBadge] = useState("");
 
   useEffect(() => {
     axios
       .get(`/api/question/${id}`)
       .then((res) => {
         setQuestion(res.data);
-        // setIsNewBadge(res.data);
       })
       .catch((err) => {
         if (err.response.status === 404) {
@@ -54,7 +55,7 @@ export function QuestionView() {
             position: "top",
             duration: 2500,
           });
-          // navigate("/question/list");
+          navigate("/question/list");
         }
       });
   }, [id]);
@@ -97,7 +98,7 @@ export function QuestionView() {
   }
 
   return (
-    <Box>
+    <Box m={8}>
       <Box mt={2}>
         <Text value={question.id} />
       </Box>
@@ -109,9 +110,16 @@ export function QuestionView() {
               w={8}
               h={8}
               color="blue.500"
+              cursor="pointer"
               onClick={() => navigate(`/question/edit/${id}`)}
             />
-            <DeleteIcon w={8} h={8} color="red.500" onClick={onOpen} />
+            <DeleteIcon
+              w={8}
+              h={8}
+              color="red.500"
+              onClick={onOpen}
+              cursor="pointer"
+            />
           </Flex>
         </Box>
       )}
@@ -123,17 +131,21 @@ export function QuestionView() {
         </FormControl>
       </Box>
 
-      <Box mt={2}>
-        <Flex justify={"space-between"}>
-          <Box w="10%">작성자</Box>
-          <Input w="30%" value={question.nickName} readOnly />
-          <Box w="10%">작성시간</Box>
-          <Input w="30%" value={question.insertedAll} readOnly />
-          <Box>
-            {question.isNewBadge && <Badge colorScheme="green">New</Badge>}
-          </Box>
-        </Flex>
-      </Box>
+      <Flex mt={5} gap={20}>
+        {/*<HStack spacing="24px">*/}
+        <HStack divider={<StackDivider borderColor="gray.200" />} spacing={2}>
+          <Box>작성자</Box>
+          <Text>{question.nickName}</Text>
+          {/*<Input value={question.nickName} readOnly />*/}
+        </HStack>
+        <HStack divider={<StackDivider borderColor="gray.200" />} spacing={2}>
+          <Text w={"100px"}>작성시간</Text>
+          <Input value={question.insertedAll} readOnly />
+        </HStack>
+        <Box>
+          {question.isNewBadge && <Badge colorScheme="green">New</Badge>}
+        </Box>
+      </Flex>
 
       <Box>
         <Box mt={5}>

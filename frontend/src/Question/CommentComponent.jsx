@@ -3,22 +3,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComments } from "@fortawesome/free-solid-svg-icons";
 import { CommentWrite } from "./CommentWrite.jsx";
 import { CommentList } from "./CommentList.jsx";
-import { LoginContext } from "../component/LoginProvider.jsx";
 import React, { useContext, useState } from "react";
 
 export function CommentComponent({ questionId }) {
   return (
     <Box>
-      <Box mb={5} mt={15}>
+      <Box mt={20}>
         <Heading>
           <FontAwesomeIcon icon={faComments} />
           관리자 댓글
         </Heading>
       </Box>
-      <Box mt={5}>
+      <Box mt={10}>
         <CommentList questionId={questionId} />
       </Box>
-      <Box mt={5}>
+      <Box mt={10}>
         <CommentWrite questionId={questionId} />
       </Box>
     </Box>

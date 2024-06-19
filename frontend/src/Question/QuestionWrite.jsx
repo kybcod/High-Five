@@ -84,7 +84,7 @@ export function QuestionWrite() {
   }
 
   return (
-    <Box>
+    <Box m={8}>
       <Box mt={5}>
         <Heading>문의 글 작성</Heading>
       </Box>
