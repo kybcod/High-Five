@@ -46,10 +46,12 @@ public class QuestionController {
     @GetMapping("{id}")
     public ResponseEntity getQuestion(@PathVariable Integer id) {
         Question question = service.get(id);
+//        System.out.println("question = " + question);
         if (question != null) {
             return ResponseEntity.ok().body(question);
         } else
             return ResponseEntity.notFound().build();
+
     }
 
     @DeleteMapping("{id}")

@@ -2,7 +2,9 @@ package com.backend.domain.question;
 
 import lombok.Data;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -14,15 +16,34 @@ public class Question {
     private String content;
     private String nickName;
     private LocalDateTime inserted;
+    private LocalDateTime insertedAll;
 
     private List<QuestionFile> fileList;
 
     private Integer numberOfCount;
+    private Integer numberOfFiles;
+    private Integer numberOfComments;
+    private Boolean isNewBadge;
 
     public String getInserted() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
-        return inserted.format(formatter);
+        LocalDateTime midnightToday = LocalDateTime.now().with(LocalTime.MIDNIGHT);
+
+        if (inserted.isBefore(midnightToday)) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            return inserted.format(formatter);
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시 mm분");
+            return inserted.format(formatter);
+        }
     }
 
+    public Boolean getIsNewBadge() {
+        Duration duration = Duration.between(inserted, LocalDateTime.now());
+        return duration.toHours() < 24;
+    }
 
+    public String getInsertedAll() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return inserted.format(formatter);
+    }
 }

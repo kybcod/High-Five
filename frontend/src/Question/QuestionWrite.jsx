@@ -49,7 +49,6 @@ export function QuestionWrite() {
       })
       .catch((e) => {
         const code = e.response.status;
-
         if (code === 400) {
           toast({
             description: "등록되지 않았습니다. 내용을 확인해 주세요.",
@@ -85,7 +84,7 @@ export function QuestionWrite() {
   }
 
   return (
-    <Box>
+    <Box m={8}>
       <Box mt={5}>
         <Heading>문의 글 작성</Heading>
       </Box>
