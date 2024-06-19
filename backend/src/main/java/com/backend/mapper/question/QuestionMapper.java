@@ -99,7 +99,7 @@ public interface QuestionMapper {
     void deleteByIdFile(Integer id);
 
     @Update("""
-            UPDATE question_board SET title=#{title}, content=#{content}, inserted = now() WHERE id=#{id}
+            UPDATE question_board SET title=#{title}, content=#{content} WHERE id=#{id}
             """)
     void updateById(Question question);
 

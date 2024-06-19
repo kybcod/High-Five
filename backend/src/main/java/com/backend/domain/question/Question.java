@@ -16,6 +16,7 @@ public class Question {
     private String content;
     private String nickName;
     private LocalDateTime inserted;
+    private LocalDateTime insertedAll;
 
     private List<QuestionFile> fileList;
 
@@ -31,7 +32,7 @@ public class Question {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             return inserted.format(formatter);
         } else {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시 mm분");
             return inserted.format(formatter);
         }
     }
@@ -41,8 +42,8 @@ public class Question {
         return duration.toHours() < 24;
     }
 
-//    public String getInserted() {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
-//        return inserted.format(formatter);
-//    }
+    public String getInsertedAll() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return inserted.format(formatter);
+    }
 }

@@ -128,9 +128,9 @@ export function QuestionView() {
           <Box w="10%">작성자</Box>
           <Input w="30%" value={question.nickName} readOnly />
           <Box w="10%">작성시간</Box>
-          <Input w="30%" value={question.inserted} readOnly />
+          <Input w="30%" value={question.insertedAll} readOnly />
           <Box>
-            {/*{question.isNewBadge && <Badge colorScheme="green">New</Badge>}*/}
+            {question.isNewBadge && <Badge colorScheme="green">New</Badge>}
           </Box>
         </Flex>
       </Box>
