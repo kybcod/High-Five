@@ -1,7 +1,6 @@
 import {
   Box,
   Heading,
-  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -14,6 +13,7 @@ import { MyShop } from "./MyShop.jsx";
 import { LikeList } from "./LikeList.jsx";
 import axios from "axios";
 import { UserInfo } from "./UserInfo.jsx";
+import { BidList } from "./BidList.jsx";
 
 export function MyPage({ tab }) {
   const [userNickName, setUserNickName] = useState("");
@@ -43,7 +43,6 @@ export function MyPage({ tab }) {
 
   useEffect(() => {
     axios.get(`/api/products/user/${userId}`).then((res) => {
-      console.log(res.data);
       setUserNickName(res.data.userNickName);
     });
 
@@ -122,7 +121,9 @@ export function MyPage({ tab }) {
             </Box>
           </TabPanel>
           <TabPanel>
-            <Box>입찰 내역</Box>
+            <Box>
+              <BidList />
+            </Box>
           </TabPanel>
           <TabPanel>
             <Box>받은 후기</Box>

@@ -3,6 +3,7 @@ package com.backend.service.product;
 import com.backend.domain.auction.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
+import com.backend.mapper.auction.AuctionMapper;
 import com.backend.mapper.product.ProductMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class ProductService {
 
     private final ProductMapper mapper;
+    private final AuctionMapper auctionMapper;
     private final S3Client s3Client;
 
     @Value("${aws.s3.bucket.name}")
@@ -231,14 +233,6 @@ public class ProductService {
         return mapper.selectLikeByUserId(userId);
     }
 
-    public void upsertBidPrice(BidList bid) {
-        if (mapper.existsBid(bid.getProductId(), bid.getUserId())) {
-            mapper.updateBidPrice(bid);
-        } else {
-            mapper.insertBidPrice(bid);
-        }
-    }
-
 
     public boolean validate(Product product) {
         if (product.getTitle() == null || product.getTitle().isBlank()) {
@@ -274,12 +268,19 @@ public class ProductService {
         for (Product product : productList) {
             if (product.getEndTime().isBefore(currentTime) && product.getStatus()) {
                 product.setStatus(false);
-                mapper.updateStatus(product);
-                mapper.updateBidStatusByProductId(product.getId(), true);
+                mapper.updateStatus(product); //판매 종료
+                updateBidStatus(product.getId()); // 낙찰
             }
             System.out.println("currentTime = " + currentTime);
             System.out.println(STR."\{product.getTitle()} : 끝나는 시간(\{product.getEndTime()}) , 상품 상태 : \{product.getStatus()}");
 
+        }
+    }
+
+    private void updateBidStatus(Integer productId) {
+        BidList maxBid = auctionMapper.selectMaxPriceByProductId(productId);
+        if (maxBid != null) {
+            auctionMapper.updateBidStatusByProductId(maxBid.getId(), true);
         }
     }
 

@@ -7,6 +7,7 @@ export function LoginProvider({ children }) {
   const [id, setId] = useState("");
   const [email, setEmail] = useState("");
   const [nickName, setNickName] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
   const [expired, setExpired] = useState(0);
   const [authority, setAuthority] = useState([]);
 
@@ -39,6 +40,7 @@ export function LoginProvider({ children }) {
     setId(payload.sub);
     setNickName(payload.nickName);
     setAuthority(payload.scope.split(" "));
+    setProfileImage(payload.profileImage);
   }
 
   function logout() {
@@ -55,6 +57,7 @@ export function LoginProvider({ children }) {
         id: id,
         nickName: nickName,
         email: email,
+        profileImage: profileImage,
         authority: authority,
         login: login,
         logout: logout,

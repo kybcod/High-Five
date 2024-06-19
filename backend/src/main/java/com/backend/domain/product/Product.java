@@ -1,5 +1,6 @@
 package com.backend.domain.product;
 
+import com.backend.domain.auction.BidList;
 import lombok.Data;
 
 import java.time.Duration;
@@ -25,11 +26,14 @@ public class Product {
     private Boolean reviewStatus;
 
     // TODO:지우기
+    private List<BidList> productBidList;
     private List<ProductFile> productFileList;
     private Integer numberOfJoin;
     private String userNickName;
     private String maxBidPrice;
 
+
+    // 시간 포맷
     public String getTimeFormat() {
         LocalDateTime now = LocalDateTime.now();
         Duration duration = Duration.between(startTime, now);
@@ -54,12 +58,12 @@ public class Product {
     }
 
     public String getEndTimeFormat() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH시 mm분 까지");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH시 까지");
         return endTime.format(formatter);
     }
 
     public String getEndTimeDetailsFormat() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 까지");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 까지");
         return endTime.format(formatter);
     }
 
