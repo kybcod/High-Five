@@ -43,8 +43,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
       .delete(`/api/board/comment/${commentId}`)
       .then((res) => {
         successToast(`댓글이 삭제되었습니다`);
-        setBoardCommentList(res.data.boardCommentList);
-        setUpdatedContent(res.data.updatedContent);
+        setBoardCommentList(res.data);
         navigate(`/board/${boardId}`);
       })
       .catch(() => {

@@ -49,15 +49,16 @@ public class BoardCommentController {
     }
 
     @PutMapping("/modify/{id}")
-    public ResponseEntity modifyComment(@PathVariable Integer id, Authentication authentication) {
-        BoardComment boardComment = service.getCommentById(id);
+    public ResponseEntity modifyComment(@PathVariable Integer id, @RequestBody BoardComment boardComment, Authentication authentication) {
+        BoardComment updateDb = service.getCommentById(id);
 
-        if (!boardComment.getId().equals(id)) {
+        if (!updateDb.getId().equals(id)) {
             return ResponseEntity.badRequest().build();
         }
-
-        if (service.hasAccess(boardComment, authentication)) {
-            service.modify(boardComment);
+        System.out.println("boardComment.getId() = " + boardComment.getId());
+        System.out.println("boardComment = " + boardComment.getContent());
+        if (service.hasAccess(updateDb, authentication)) {
+            service.modify(boardComment.getContent(), boardComment.getId());
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

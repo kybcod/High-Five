@@ -13,8 +13,8 @@ export function BoardCommentEdit({
   function handleClickSave(id) {
     axios
       .put(`/api/board/comment/modify/${id}`, {
+        id: boardComment.id,
         content: updatedContent,
-        inserted: boardComment.inserted,
       })
       .then(() => {
         successToast(`댓글 수정이 완료되었습니다`);
@@ -31,7 +31,7 @@ export function BoardCommentEdit({
       <Flex>
         <Textarea
           defaultValue={boardComment.content}
-          onChange={(e) => updatedContent(e.target.value)}
+          onChange={(e) => setUpdatedContent(e.target.value)}
         />
         <Stack>
           <Button
