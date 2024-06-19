@@ -70,7 +70,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @PutMapping("users/{id}")
     public ResponseEntity updateUser(User user, Authentication authentication,
-                                     @RequestParam(value = "profileImage[]", required = false) MultipartFile profileImage) throws IOException {
+                                     @RequestParam(value = "profileImages[]", required = false) MultipartFile profileImage) throws IOException {
         if (service.identificationToModify(user)) {
             Map<String, Object> token = service.updateUser(user, authentication, profileImage);
             return ResponseEntity.ok(token);
