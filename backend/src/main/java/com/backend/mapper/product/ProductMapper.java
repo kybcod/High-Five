@@ -158,7 +158,7 @@ public interface ProductMapper {
                    p.content,
                    p.start_time,
                    p.end_time,
-                   bl.status
+                   bl.bid_status
             FROM product p
                      LEFT JOIN bid_list bl
                                ON p.id = bl.product_id
@@ -173,12 +173,6 @@ public interface ProductMapper {
             """)
     int updateStatus(Product product);
 
-    @Update("""
-            UPDATE bid_list
-            SET status = #{status}
-            WHERE product_id = #{productId}
-            """)
-    int updateBidStatusByProductId(Integer productId, boolean status);
 
     // -- ChatService
     @Select("""
@@ -314,4 +308,6 @@ public interface ProductMapper {
             WHERE id = #{productId}
             """)
     Product selectProductTitleById(ChatRoom chatRoom);
+
+
 }

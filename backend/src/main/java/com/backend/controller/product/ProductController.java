@@ -100,9 +100,10 @@ public class ProductController {
 
     //    // TODO :  나중에 실행할 때 주석 풀기
 //    @Scheduled(cron = "0 0 0/1 * * *", zone = "Asia/Seoul") //1시간
-//    public void checkEndTimeAndProductState() {
-//        service.updateProductState();
-//    }
+//    @Scheduled(fixedRate = 100000, zone = "Asia/Seoul")
+    public void checkEndTimeAndProductState() {
+        service.updateProductState();
+    }
 
     // User와 Product 관련 Controller
     @GetMapping("user/{userId}")

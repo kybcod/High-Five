@@ -64,7 +64,7 @@ export function UserInfo() {
     return <Spinner />;
   }
 
-  console.log(user.profileImage.src);
+  // console.log(user.profileImage.src);
 
   return (
     <Box>

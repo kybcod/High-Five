@@ -3,16 +3,16 @@ package com.backend.controller.auction;
 import com.backend.domain.auction.BidList;
 import com.backend.service.auction.AuctionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.Map;
+
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/bids")
 public class AuctionController {
@@ -31,4 +31,8 @@ public class AuctionController {
         }
     }
 
+    @GetMapping("{userId}/list")
+    public Map<String, Object> getBids(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page) {
+        return service.getBidListByUserId(userId, PageRequest.of(page - 1, 9));
+    }
 }
