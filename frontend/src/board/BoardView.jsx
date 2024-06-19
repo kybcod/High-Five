@@ -135,7 +135,7 @@ export function BoardView() {
         <Textarea value={board.content} readOnly />
       </Box>
 
-      <BoardCommentComponent boardId={board.id} />
+      <BoardCommentComponent boardId={board_id} />
     </Box>
   );
 }
