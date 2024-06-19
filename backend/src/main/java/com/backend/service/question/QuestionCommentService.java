@@ -36,7 +36,7 @@ public class QuestionCommentService {
         return false;
     }
 
-    public void edit(Integer id) {
-        mapper.updateById(id);
+    public void edit(String content, Integer id) {
+        mapper.updateById(content, id);
     }
 }

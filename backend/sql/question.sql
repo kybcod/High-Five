@@ -77,4 +77,8 @@ FROM question_board qb
                     GROUP BY question_id) qbc ON qb.id = qbc.question_id
 WHERE qb.id = 28;
 
+UPDATE question_board_comment
+SET content='잘 안되시면 다시 글 남겨주세요',
+    inserted=now()
+WHERE id = 47;
 
