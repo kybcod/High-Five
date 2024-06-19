@@ -15,7 +15,7 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
@@ -30,9 +30,10 @@ export function UserInfo() {
   const [isLoading, setIsLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
+  const { userId } = useParams();
 
   useEffect(() => {
-    axios.get(`/api/users/${account.id}`).then((res) => {
+    axios.get(`/api/users/${userId}`).then((res) => {
       setUser(res.data);
     });
   }, []);
@@ -63,8 +64,6 @@ export function UserInfo() {
   if (user === null) {
     return <Spinner />;
   }
-
-  console.log(user.profileImage.src);
 
   return (
     <Box>

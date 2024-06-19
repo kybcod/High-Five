@@ -1,7 +1,6 @@
 import {
   Box,
   Heading,
-  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -43,7 +42,6 @@ export function MyPage({ tab }) {
 
   useEffect(() => {
     axios.get(`/api/products/user/${userId}`).then((res) => {
-      console.log(res.data);
       setUserNickName(res.data.userNickName);
     });
 

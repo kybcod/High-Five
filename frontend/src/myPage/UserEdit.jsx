@@ -28,7 +28,7 @@ export function UserEdit() {
   const [oldPassword, setOldPassword] = useState("");
   const [isCheckedNickName, setIsCheckedNickName] = useState(false);
   const [passwordCheck, setPasswordCheck] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImages, setProfileImages] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
   const { onClose, isOpen, onOpen } = useDisclosure();
@@ -43,11 +43,13 @@ export function UserEdit() {
 
   function handleUserUpdate() {
     setIsLoading(true);
+    const userCopy = { ...user };
+    delete userCopy.profileImage;
     axios
       .putForm(`/api/users/${account.id}`, {
-        ...user,
+        ...userCopy,
         oldPassword,
-        profileImage,
+        profileImages,
       })
       .then((res) => {
         account.logout;
@@ -112,7 +114,7 @@ export function UserEdit() {
           <Input
             type={"file"}
             accept="image/*"
-            onChange={(e) => setProfileImage(e.target.files)}
+            onChange={(e) => setProfileImages(e.target.files)}
           />
         </FormControl>
         <FormControl>

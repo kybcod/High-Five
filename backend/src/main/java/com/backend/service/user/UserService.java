@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -230,8 +231,24 @@ public class UserService {
     }
 
     public Map<String, Object> updateUser(User user, Authentication authentication, MultipartFile profileImage) throws IOException {
+        String fileSrc = "";
         if (profileImage != null) {
-            mapper.insertProfileImage(user.getId(), profileImage.getOriginalFilename());
+            // jwt 토큰에 넣을 ec2 file path
+            fileSrc = STR."\{srcPrefix}user/\{user.getId()}/\{profileImage}";
+
+            String dbFileName = mapper.selectFileNameByUserId(user.getId());
+
+            if (dbFileName == null) {
+                mapper.insertProfileImage(user.getId(), profileImage.getOriginalFilename());
+            } else {
+                mapper.updateProfileImage(user.getId(), profileImage.getOriginalFilename());
+                String key = STR."prj3/user/\{user.getId()}/\{dbFileName}";
+                DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .build();
+                s3Client.deleteObject(deleteObjectRequest);
+            }
 
             String key = STR."prj3/user/\{user.getId()}/\{profileImage.getOriginalFilename()}";
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -259,6 +276,9 @@ public class UserService {
         JwtClaimsSet.Builder jwtClaimsSetBuilder = JwtClaimsSet.builder();
         claims.forEach(jwtClaimsSetBuilder::claim);
         jwtClaimsSetBuilder.claim("nickName", user.getNickName());
+        if (!fileSrc.equals("")) {
+            jwtClaimsSetBuilder.claim("profileImage", fileSrc);
+        }
 
         JwtClaimsSet jwtClaimsSet = jwtClaimsSetBuilder.build();
 
