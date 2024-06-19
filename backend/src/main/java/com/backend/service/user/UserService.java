@@ -6,6 +6,7 @@ import com.backend.domain.user.UserFile;
 import com.backend.mapper.user.UserMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,6 +35,7 @@ import java.util.Map;
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
+@Log4j2
 public class UserService {
     private final UserMapper mapper;
     private final SmsUtil sms;
@@ -76,14 +78,13 @@ public class UserService {
     }
 
     public Map<String, Object> issueToken(User user) {
-
         Map<String, Object> result = new HashMap<>();
 
         User db = mapper.selectUserByEmail(user.getEmail());
         String fileSrc = "";
-        String fileName = mapper.selectFileNameByUserId(user.getId());
+        String fileName = mapper.selectFileNameByUserId(db.getId());
         if (fileName != null) {
-            fileSrc = STR."\{srcPrefix}user/\{user.getId()}/\{fileName}";
+            fileSrc = STR."\{srcPrefix}user/\{db.getId()}/\{fileName}";
         }
 
         if (db != null) {

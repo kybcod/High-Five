@@ -1,4 +1,4 @@
-import { Center, Flex, Image, Spacer, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Image, Spacer, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
@@ -59,12 +59,14 @@ export function Navbar() {
       {account.isLoggedIn() ? (
         <>
           <Center mx={2}>
-            <Image
-              src={account.profileImage}
-              fallbackSrc="https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800"
-              borderRadius="full"
-              boxSize="150px"
-            />
+            <Box mx={1}>
+              <Image
+                boxSize="50px"
+                src={account.profileImage}
+                fallbackSrc="https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800"
+                borderRadius="full"
+              />
+            </Box>
             <Text ml={2}>{account.nickName} 님</Text>
           </Center>
           <Center

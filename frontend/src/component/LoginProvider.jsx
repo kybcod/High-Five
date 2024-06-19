@@ -40,7 +40,6 @@ export function LoginProvider({ children }) {
     setId(payload.sub);
     setNickName(payload.nickName);
     setAuthority(payload.scope.split(" "));
-    console.log(payload.profileImage);
     setProfileImage(payload.profileImage);
   }
 
