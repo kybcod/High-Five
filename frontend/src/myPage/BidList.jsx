@@ -34,7 +34,6 @@ export function BidList() {
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("page") || "1");
 
-    // Fetch bid list
     axios.get(`/api/bids/${userId}/list?page=${currentPage}`).then((res) => {
       console.log(res.data);
       setBidList(res.data.productList);
@@ -42,6 +41,8 @@ export function BidList() {
       setHasNextPage(res.data.hasNextPage);
 
       axios.get(`/api/products/like/${userId}`).then((initLike) => {
+        // initLike : 좋아요 상태인 productId들
+        console.log(initLike);
         const likeData = initLike.data.reduce((acc, productId) => {
           acc[productId] = true;
           return acc;
