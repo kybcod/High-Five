@@ -6,6 +6,7 @@ import com.backend.domain.user.UserFile;
 import com.backend.mapper.user.UserMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -34,6 +36,7 @@ import java.util.Map;
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
+@Log4j2
 public class UserService {
     private final UserMapper mapper;
     private final SmsUtil sms;
@@ -76,10 +79,14 @@ public class UserService {
     }
 
     public Map<String, Object> issueToken(User user) {
-
         Map<String, Object> result = new HashMap<>();
 
         User db = mapper.selectUserByEmail(user.getEmail());
+        String fileSrc = "";
+        String fileName = mapper.selectFileNameByUserId(db.getId());
+        if (fileName != null) {
+            fileSrc = STR."\{srcPrefix}user/\{db.getId()}/\{fileName}";
+        }
 
         if (db != null) {
             if (passwordEncoder.matches(user.getPassword(), db.getPassword())) {
@@ -103,6 +110,7 @@ public class UserService {
                             .claim("nickName", db.getNickName())
                             .claim("scope", authorityString)
                             .claim("email", db.getEmail())
+                            .claim("profileImage", fileSrc)
                             .build();
 
                     token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -223,8 +231,24 @@ public class UserService {
     }
 
     public Map<String, Object> updateUser(User user, Authentication authentication, MultipartFile profileImage) throws IOException {
+        String fileSrc = "";
         if (profileImage != null) {
-            mapper.insertProfileImage(user.getId(), profileImage.getOriginalFilename());
+            // jwt 토큰에 넣을 ec2 file path
+            fileSrc = STR."\{srcPrefix}user/\{user.getId()}/\{profileImage}";
+
+            String dbFileName = mapper.selectFileNameByUserId(user.getId());
+
+            if (dbFileName == null) {
+                mapper.insertProfileImage(user.getId(), profileImage.getOriginalFilename());
+            } else {
+                mapper.updateProfileImage(user.getId(), profileImage.getOriginalFilename());
+                String key = STR."prj3/user/\{user.getId()}/\{dbFileName}";
+                DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .build();
+                s3Client.deleteObject(deleteObjectRequest);
+            }
 
             String key = STR."prj3/user/\{user.getId()}/\{profileImage.getOriginalFilename()}";
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -252,6 +276,9 @@ public class UserService {
         JwtClaimsSet.Builder jwtClaimsSetBuilder = JwtClaimsSet.builder();
         claims.forEach(jwtClaimsSetBuilder::claim);
         jwtClaimsSetBuilder.claim("nickName", user.getNickName());
+        if (!fileSrc.equals("")) {
+            jwtClaimsSetBuilder.claim("profileImage", fileSrc);
+        }
 
         JwtClaimsSet jwtClaimsSet = jwtClaimsSetBuilder.build();
 

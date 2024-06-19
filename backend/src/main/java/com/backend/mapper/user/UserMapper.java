@@ -163,4 +163,11 @@ public interface UserMapper {
                 WHERE user_id = #{userId}
             """)
     String selectFileNameByUserId(Integer userId);
+
+    @Update("""
+                UPDATE user_file
+                SET file_name = #{fileName}
+                WHERE user_id = #{userId}
+            """)
+    int updateProfileImage(Integer userId, String fileName);
 }
