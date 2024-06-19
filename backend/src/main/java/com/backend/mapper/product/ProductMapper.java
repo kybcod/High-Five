@@ -1,6 +1,5 @@
 package com.backend.mapper.product;
 
-import com.backend.domain.auction.BidList;
 import com.backend.domain.chat.ChatProduct;
 import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.product.Product;
@@ -145,30 +144,10 @@ public interface ProductMapper {
     @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId}")
     int selectCountLikeByProductId(Integer id);
 
-    @Insert("""
-            INSERT INTO bid_list (product_id, user_id, bid_price)
-            VALUES (#{productId}, #{userId}, #{bidPrice})
-            """)
-    void insertBidPrice(BidList bid);
 
     @Delete("DELETE FROM product_like WHERE product_id=#{productId}")
     int deleteLikeByProductId(Integer productId);
 
-    @Select("""
-            SELECT COUNT(*)
-            FROM bid_list
-            WHERE product_id = #{productId}
-            AND user_id = #{userId}
-            """)
-    boolean existsBid(Integer productId, Integer userId);
-
-    @Update("""
-            UPDATE bid_list
-            SET bid_price = #{bidPrice}
-            WHERE product_id = #{productId}
-            AND user_id = #{userId}
-            """)
-    int updateBidPrice(BidList bid);
 
     @Select("""
             SELECT p.id,
@@ -179,7 +158,7 @@ public interface ProductMapper {
                    p.content,
                    p.start_time,
                    p.end_time,
-                   bl.status
+                   bl.bid_status
             FROM product p
                      LEFT JOIN bid_list bl
                                ON p.id = bl.product_id
@@ -194,12 +173,6 @@ public interface ProductMapper {
             """)
     int updateStatus(Product product);
 
-    @Update("""
-            UPDATE bid_list
-            SET status = #{status}
-            WHERE product_id = #{productId}
-            """)
-    int updateBidStatusByProductId(Integer productId, boolean status);
 
     // -- ChatService
     @Select("""
@@ -335,4 +308,6 @@ public interface ProductMapper {
             WHERE id = #{productId}
             """)
     Product selectProductTitleById(ChatRoom chatRoom);
+
+
 }
