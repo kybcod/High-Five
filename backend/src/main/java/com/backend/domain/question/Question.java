@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -23,20 +24,15 @@ public class Question {
     private Integer numberOfComments;
     private Boolean isNewBadge;
 
-//    public String getInserted() {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
-//        return inserted.format(formatter);
-//    }
-
     public String getInserted() {
-        LocalDateTime beforeOneDay = LocalDateTime.now().minusDays(1);
+        LocalDateTime midnightToday = LocalDateTime.now().with(LocalTime.MIDNIGHT);
 
-        if (inserted.isBefore(beforeOneDay)) {
+        if (inserted.isBefore(midnightToday)) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            return inserted.format(formatter).toString();
+            return inserted.format(formatter);
         } else {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            return inserted.format(formatter).toString();
+            return inserted.format(formatter);
         }
     }
 
@@ -44,4 +40,9 @@ public class Question {
         Duration duration = Duration.between(inserted, LocalDateTime.now());
         return duration.toHours() < 24;
     }
+
+//    public String getInserted() {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
+//        return inserted.format(formatter);
+//    }
 }
