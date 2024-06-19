@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   Center,
@@ -6,6 +7,7 @@ import {
   Heading,
   Input,
   Select,
+  Spacer,
   Table,
   Tbody,
   Td,
@@ -23,10 +25,11 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
-  faEye,
+  faCamera,
+  faComment,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { ViewIcon } from "@chakra-ui/icons";
+import { faComments } from "@fortawesome/free-regular-svg-icons";
 
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
@@ -98,7 +101,26 @@ export function QuestionList() {
                 key={question.id}
               >
                 <Td>{question.id}</Td>
-                <Td>{question.title}</Td>
+                <Td>
+                  <Flex gap={2}>
+                    {question.title}
+                    {question.isNewBadge && (
+                      <Badge colorScheme="green">New</Badge>
+                    )}
+                    {question.numberOfFiles > 0 && (
+                      <Box ml={2}>
+                        <FontAwesomeIcon icon={faCamera} />
+                        {question.numberOfFiles}
+                      </Box>
+                    )}
+                    {question.numberOfComments > 0 && (
+                      <Box ml={2}>
+                        <FontAwesomeIcon icon={faComment} />
+                        {question.numberOfComments}
+                      </Box>
+                    )}
+                  </Flex>
+                </Td>
                 <Td>{question.nickName}</Td>
                 <Td>{question.numberOfCount}</Td>
                 <Td>{question.inserted}</Td>
@@ -144,11 +166,13 @@ export function QuestionList() {
           </Tooltip>
           {pageInfo.prevPageNumber && (
             <>
-              <Button
-                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleLeft} />
-              </Button>
+              <Tooltip label="이전 페이지" placement="bottom">
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+                >
+                  <FontAwesomeIcon icon={faAngleLeft} />
+                </Button>
+              </Tooltip>
             </>
           )}
 
@@ -166,11 +190,13 @@ export function QuestionList() {
 
           {pageInfo.nextPageNumber && (
             <>
-              <Button
-                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-              >
-                <FontAwesomeIcon icon={faAngleRight} />
-              </Button>
+              <Tooltip label="다음 페이지" placement="bottom">
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+                >
+                  <FontAwesomeIcon icon={faAngleRight} />
+                </Button>
+              </Tooltip>
             </>
           )}
           <Tooltip label="맨 끝 페이지" placement="bottom">

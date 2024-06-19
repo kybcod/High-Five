@@ -125,6 +125,7 @@ CREATE TABLE review_list
 # 입찰 내역 테이블
 CREATE TABLE bid_list
 (
+    id         INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT     NOT NULL REFERENCES product (id),
     user_id    INT     NOT NULL REFERENCES user (id),
     bid_price  INT     NOT NULL DEFAULT 0,

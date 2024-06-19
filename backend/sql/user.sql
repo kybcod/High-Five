@@ -12,7 +12,7 @@ DESC user;
 
 INSERT INTO authority
     (user_id, name)
-VALUES (14, 'admin');
+VALUES (57, 'admin');
 
 SELECT *
 FROM authority;

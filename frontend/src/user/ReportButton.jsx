@@ -12,6 +12,8 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 function ReportButton({ userId }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,7 +29,13 @@ function ReportButton({ userId }) {
 
   return (
     <Box>
-      <Button onClick={onOpen}>신고하기</Button>
+      <Button
+        colorScheme="red"
+        leftIcon={<FontAwesomeIcon icon={faExclamationTriangle} />}
+        onClick={onOpen}
+      >
+        신고하기
+      </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

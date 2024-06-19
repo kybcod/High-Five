@@ -78,15 +78,16 @@ public class QuestionService {
 //    }
 
     public Map<String, Object> list(Integer page, String searchType, String keyword) {
-        Map pageInfo = new HashMap();
+        Map pageInfo = new HashMap<>();
+
         Integer countAll = mapper.countAllWithSearch(searchType, keyword);
 
-        Integer offset = (page - 1) * 5;
-        Integer lastPageNumber = (countAll - 1) / 5 + 1;
-        Integer leftPageNumber = (page - 1) / 3 * 3 + 1;
-        Integer rightPageNumber = leftPageNumber + 2;
+        Integer offset = (page - 1) * 10;
+        Integer lastPageNumber = (countAll - 1) / 10 + 1;
+        Integer leftPageNumber = (page - 1) / 5 * 5 + 1;
+        Integer rightPageNumber = leftPageNumber + 4;
         rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
-        leftPageNumber = rightPageNumber - 2;
+        leftPageNumber = rightPageNumber - 4;
         leftPageNumber = Math.max(leftPageNumber, 1);
         Integer prevPageNumber = leftPageNumber - 1;
         Integer nextPageNumber = rightPageNumber + 1;
@@ -103,8 +104,11 @@ public class QuestionService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
+        List<Question> questions = mapper.selectUsingPageable(offset, searchType, keyword);
+        questions.forEach(q -> q.setIsNewBadge(q.getIsNewBadge()));
+
         return Map.of("pageInfo", pageInfo,
-                "content", mapper.selectUsingPageable(offset, searchType, keyword));
+                "content", questions);// "content" 키의 값으로 questions 리스트 반환
     }
 
     public Question get(Integer id) {

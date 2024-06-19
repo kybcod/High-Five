@@ -1,11 +1,18 @@
 import { Button, Flex, Textarea } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export function CommentEdit({ comment }) {
   const navigate = useNavigate();
   function handleSaveClick() {
-    return console.log("저장 버튼 누름");
+    axios
+      .put(`/api/question/comment/${comment.id}`, {
+        content: comment.content,
+      })
+      .then()
+      .catch()
+      .finally();
   }
 
   return (

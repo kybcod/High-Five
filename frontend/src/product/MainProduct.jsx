@@ -86,6 +86,7 @@ export function MainProduct() {
         {productList.map((product) => (
           <GridItem key={product.id}>
             <Card
+              cursor={"pointer"}
               maxW="sm"
               h="100%"
               borderWidth="1px"
@@ -155,7 +156,6 @@ export function MainProduct() {
                   <Flex justifyContent="space-between" alignItems="center">
                     <Text
                       onClick={() => navigate(`/product/${product.id}`)}
-                      cursor={"pointer"}
                       fontSize="lg"
                       fontWeight="bold"
                       noOfLines={1}

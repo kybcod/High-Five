@@ -91,6 +91,7 @@ export function ProductList() {
         {productList.map((product) => (
           <GridItem key={product.id}>
             <Card
+              cursor={"pointer"}
               maxW="sm"
               h="100%"
               borderWidth="1px"
@@ -158,7 +159,12 @@ export function ProductList() {
                 </Box>
                 <Stack mt="4" spacing="2">
                   <Flex justifyContent="space-between" alignItems="center">
-                    <Text fontSize="lg" fontWeight="bold" noOfLines={1}>
+                    <Text
+                      fontSize="lg"
+                      fontWeight="bold"
+                      noOfLines={1}
+                      onClick={() => navigate(`/product/${product.id}`)}
+                    >
                       {product.title}
                     </Text>
                     {account.isLoggedIn() && (
