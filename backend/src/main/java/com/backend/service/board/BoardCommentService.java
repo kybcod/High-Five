@@ -42,4 +42,26 @@ public class BoardCommentService {
 
         return boardCommentList;
     }
+
+    public boolean hasAccess(BoardComment boardComment, Authentication authentication) {
+        // 작성자만 삭제 가능함
+        Integer userId = boardComment.getUserId();
+        BoardComment accessId = mapper.selectById(boardComment.getId());
+
+        if (accessId == null) {
+            return false;
+        }
+        if (!authentication.getName().equals(userId.toString())) {
+            return false;
+        }
+        return true;
+    }
+
+    public void deleteComment(BoardComment boardComment) {
+        mapper.deleteByCommentId(boardComment.getId());
+    }
+
+    public BoardComment getCommentById(Integer commentId) {
+        return mapper.selectById(commentId);
+    }
 }

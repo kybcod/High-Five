@@ -7,6 +7,7 @@ FROM board_like;
 SELECT *
 FROM board_comment;
 
+
 ALTER TABLE board
     MODIFY user_id INT NOT NULL;
 

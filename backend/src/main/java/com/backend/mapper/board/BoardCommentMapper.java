@@ -1,6 +1,7 @@
 package com.backend.mapper.board;
 
 import com.backend.domain.board.BoardComment;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -23,4 +24,17 @@ public interface BoardCommentMapper {
             WHERE board_id = #{boardId}
             """)
     List<BoardComment> selectAllComment(Integer boardId);
+
+    @Select("""
+            SELECT *
+            FROM board_comment
+            WHERE id = #{id}
+            """)
+    BoardComment selectById(Integer id);
+
+    @Delete("""
+             DELETE FROM board_comment
+             WHERE id = #{id}
+            """)
+    void deleteByCommentId(Integer id);
 }
