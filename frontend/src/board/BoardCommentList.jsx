@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   Flex,
+  Stack,
   Text,
   Textarea,
 } from "@chakra-ui/react";
@@ -11,9 +12,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
+import { BoardCommentEdit } from "./BoardCommentEdit.jsx";
 
 export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   const [boardCommentList, setBoardCommentList] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedContent, setUpdatedContent] = useState("");
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
 
@@ -39,7 +43,8 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
       .delete(`/api/board/comment/${commentId}`)
       .then((res) => {
         successToast(`댓글이 삭제되었습니다`);
-        setBoardCommentList(res.data);
+        setBoardCommentList(res.data.boardCommentList);
+        setUpdatedContent(res.data.updatedContent);
         navigate(`/board/${boardId}`);
       })
       .catch(() => {
@@ -53,24 +58,37 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
 
   return (
     <Card>
-      {boardCommentList &&
-        boardCommentList.length > 0 &&
-        boardCommentList.map((boardComment) => (
-          <CardBody key={boardComment.id}>
-            <Box>
-              <Flex>
-                <Text>{boardComment.userId}</Text>
-                <Textarea defaultValue={boardComment.content} readOnly />
-                <Button
-                  onClick={() => handleClickCommentDelete(boardComment.id)}
-                >
-                  삭제
-                </Button>
-              </Flex>
+      <CardBody>
+        {boardCommentList &&
+          boardCommentList.length > 0 &&
+          boardCommentList.map((boardComment) => (
+            <Box key={boardComment.id}>
+              {isEditing || (
+                <Flex>
+                  <Text>{boardComment.userId}</Text>
+                  <Textarea defaultValue={boardComment.content} readOnly />
+                  <Stack>
+                    <Button
+                      onClick={() => handleClickCommentDelete(boardComment.id)}
+                    >
+                      삭제
+                    </Button>
+                    <Button onClick={() => setIsEditing(true)}>수정</Button>
+                  </Stack>
+                </Flex>
+              )}
+              {isEditing && (
+                <BoardCommentEdit
+                  boardComment={boardComment}
+                  setIsEditing={setIsEditing}
+                  updatedContent={updatedContent}
+                  setUpdatedContent={setUpdatedContent}
+                />
+              )}
               <Text>{boardComment.inserted}</Text>
             </Box>
-          </CardBody>
-        ))}
+          ))}
+      </CardBody>
     </Card>
   );
 }

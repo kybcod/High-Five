@@ -44,7 +44,7 @@ public class BoardCommentService {
     }
 
     public boolean hasAccess(BoardComment boardComment, Authentication authentication) {
-        // 작성자만 삭제 가능함
+        // 작성자만 삭제, 수정 가능함
         Integer userId = boardComment.getUserId();
         BoardComment accessId = mapper.selectById(boardComment.getId());
 
@@ -61,7 +61,12 @@ public class BoardCommentService {
         mapper.deleteByCommentId(boardComment.getId());
     }
 
-    public BoardComment getCommentById(Integer commentId) {
-        return mapper.selectById(commentId);
+    public BoardComment getCommentById(Integer id) {
+        return mapper.selectById(id);
+    }
+
+    public void modify(BoardComment boardComment) {
+        mapper.updateByCommentId(boardComment);
+        System.out.println(boardComment);
     }
 }

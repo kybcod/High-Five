@@ -47,4 +47,20 @@ public class BoardCommentController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
+    @PutMapping("/modify/{id}")
+    public ResponseEntity modifyComment(@PathVariable Integer id, Authentication authentication) {
+        BoardComment boardComment = service.getCommentById(id);
+
+        if (!boardComment.getId().equals(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (service.hasAccess(boardComment, authentication)) {
+            service.modify(boardComment);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 }
