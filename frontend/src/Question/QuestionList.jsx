@@ -26,9 +26,10 @@ import {
   faAnglesLeft,
   faAnglesRight,
   faCamera,
-  faImage,
+  faComment,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import { faComments } from "@fortawesome/free-regular-svg-icons";
 
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
@@ -110,6 +111,12 @@ export function QuestionList() {
                       <Box ml={2}>
                         <FontAwesomeIcon icon={faCamera} />
                         {question.numberOfFiles}
+                      </Box>
+                    )}
+                    {question.numberOfComments > 0 && (
+                      <Box ml={2}>
+                        <FontAwesomeIcon icon={faComment} />
+                        {question.numberOfComments}
                       </Box>
                     )}
                   </Flex>
