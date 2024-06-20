@@ -1,4 +1,4 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import {
   createBrowserRouter,
   Navigate,
@@ -40,6 +40,16 @@ axios.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+});
+
+const theme = extendTheme({
+  colors: {
+    brand: {
+      100: "#f7fafc",
+      // ...
+      900: "#1a202c",
+    },
+  },
 });
 
 const router = createBrowserRouter([
@@ -96,7 +106,7 @@ function App() {
   return (
     <LoginProvider>
       <SignupCodeProvider>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <RouterProvider router={router} />
         </ChakraProvider>
       </SignupCodeProvider>
