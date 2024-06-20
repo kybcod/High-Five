@@ -41,20 +41,27 @@ import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 export function ChatRoom() {
   const { productId, buyerId } = useParams();
   const account = useContext(LoginContext);
-  // -- axios.get
+  // -- previous axios.get
   const [roomInfo, setRoomInfo] = useState(null);
   const [productInfo, setProductInfo] = useState(null);
   const [roomId, setRoomId] = useState(null);
+  // -- axios.get
+  const [bidder, setBidder] = useState({});
+  const [chatRoom, setChatRoom] = useState({});
+  const [product, setProduct] = useState({});
+  const [seller, setSeller] = useState({});
+  const [user, setUser] = useState({});
+
   // -- chat
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState(""); // 입력된 채팅 내용
-  const [messages, setMessages] = useState([]); // 채팅 리스트
+  const [messages, setMessages] = useState([]); // 채팅 리스트 - previousChatList
   // -- review
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [reviewList, setReviewList] = useState([]);
   const [reviewId, setReviewId] = useState([]);
-  const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -65,6 +72,16 @@ export function ChatRoom() {
       .get(`/api/chats/products/${productId}/buyer/${buyerId}`)
       .then((res) => {
         console.log(res.data);
+        // TODO : res.data 있는지 확인
+        if (res.data.length > 0) {
+          setUser({ ...res.data.user });
+        }
+        // bidder
+        // chatRoom
+        // previousChatList
+        // product
+        // seller
+        // user
         // setRoomInfo(res.data.chatRoom);
         // setProductInfo(res.data.chatProduct);
         // setRoomId(res.data.chatRoom.id);
@@ -72,10 +89,19 @@ export function ChatRoom() {
         //   setMessages(res.data.messageList);
         // }
       })
-      .catch()
+      .catch(() => {
+        toast({
+          status: "warning",
+          description: "채팅방 조회 중 문제가 발생하였습니다.",
+          position: "top",
+          duration: 1000,
+        });
+        navigate(-1);
+      })
       .finally();
   }, []);
 
+  console.log("user : ", user);
   // -- stomp
   useEffect(() => {
     const client = new StompJs.Client({
