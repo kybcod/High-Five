@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   Flex,
+  Spacer,
   Stack,
   Text,
   Textarea,
@@ -13,11 +14,13 @@ import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
 import { BoardCommentEdit } from "./BoardCommentEdit.jsx";
+import { BoardReCommentWrite } from "./BoardReCommentWrite.jsx";
 
 export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   const [boardCommentList, setBoardCommentList] = useState([]);
   const [isEditingId, setIsEditingId] = useState(null);
   const [updatedContent, setUpdatedContent] = useState("");
+  const [showReCommentId, setShowReCommentId] = useState(null);
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
 
@@ -60,6 +63,10 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
     setUpdatedContent("");
   }
 
+  function handleClickReComment(id) {
+    setShowReCommentId(id);
+  }
+
   return (
     <Card>
       <CardBody>
@@ -91,7 +98,25 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                   setUpdatedContent={setUpdatedContent}
                 />
               )}
-              <Text>{boardComment.inserted}</Text>
+              <Flex>
+                {showReCommentId === boardComment.id || (
+                  <Box>
+                    <Text onClick={() => handleClickReComment(boardComment.id)}>
+                      답글쓰기
+                    </Text>
+                  </Box>
+                )}
+                {showReCommentId === boardComment.id && (
+                  <BoardReCommentWrite
+                    boardComment={boardComment}
+                    setShowReCommentId={setShowReCommentId}
+                  />
+                )}
+                <Spacer />
+                <Box>
+                  <Text>{boardComment.inserted}</Text>
+                </Box>
+              </Flex>
             </Box>
           ))}
       </CardBody>

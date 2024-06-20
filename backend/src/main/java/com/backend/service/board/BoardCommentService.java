@@ -33,7 +33,21 @@ public class BoardCommentService {
 
     public void add(BoardComment boardComment, Authentication authentication) {
         boardComment.setUserId(Integer.valueOf(authentication.getName()));
+        boardComment.setCommentId(1);
 
+        int sequence = 1;
+        sequence++;
+        boardComment.setCommentSeq(sequence);
+
+        if (boardComment.getRefId() == null || boardComment.getCommentId() == null || boardComment.getCommentSeq() == null) {
+            boardComment.setRefId(0);
+            boardComment.setCommentId(0);
+            boardComment.setCommentSeq(0);
+        }
+
+        System.out.println(boardComment.getCommentId());
+        System.out.println(boardComment.getCommentSeq());
+        System.out.println(boardComment.getRefId());
         mapper.addComment(boardComment);
     }
 
