@@ -56,16 +56,16 @@ public class ChatService {
             } else {
                 System.out.println("chatRoom get fail");
             }
-            // -- 신규 메세지
-            result.put("firstChat", "채팅방 입장을 환영합니다.");
 
             chatRoom = newChatRoom;
-        } else { // -- 이전 ChatData
-            List<Chat> previousChatList = mapper.selectChatListByChatRoomId(chatRoom.getId());
-            Collections.reverse(previousChatList);
-            result.put("previousChatList", previousChatList);
         }
         result.put("chatRoom", chatRoom);
+
+        // -- 이전 ChatData
+        List<Chat> previousChatList = mapper.selectChatListByChatRoomId(chatRoom.getId());
+        Collections.reverse(previousChatList);
+        result.put("previousChatList", previousChatList);
+
 
         // userName 추가
         User user = userMapper.selectUserById(chatRoom.getUserId());
@@ -74,19 +74,16 @@ public class ChatService {
         user = userMapper.selectUserById(chatRoom.getSellerId());
         result.put("seller", user.getUserIdAndNickName());
 
-        // -- chat product info
+        // -- product
         // status = false (판매종료), reivewStatus = true (후기 등록됨)
         Product product = productMapper.selectChatProductInfo(productId);
         result.put("product", product.getProductStatusInfo());
-        if (!(Boolean) product.getProductStatusInfo().get("status")) {
-            // 판매 종료 상품의 낙찰자 가져오기
-            BidList bidder = bidMapper.selectBidderByProductId(productId);
-            if (bidder == null) {
-                result.put("bidder", 0);
-            } else {
-                result.put("bidder", bidder);
-            }
-        }
+
+        // -- bidder
+        BidList bidder = bidMapper.selectBidderByProductId(productId, tokenUserId);
+        result.put("bidder", bidder);
+
+
         return result;
     }
 
