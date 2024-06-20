@@ -1,6 +1,6 @@
 package com.backend.config;
 
-import com.backend.domain.user.Oauth2UserService;
+import com.backend.service.user.Oauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

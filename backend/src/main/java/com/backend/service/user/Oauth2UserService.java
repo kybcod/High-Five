@@ -1,5 +1,6 @@
-package com.backend.domain.user;
+package com.backend.service.user;
 
+import com.backend.domain.user.*;
 import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
