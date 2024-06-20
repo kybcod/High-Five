@@ -80,7 +80,7 @@ public class ChatService {
         result.put("product", product.getProductStatusInfo());
 
         // -- bidder
-        BidList bidder = bidMapper.selectBidderByProductId(productId, tokenUserId);
+        BidList bidder = bidMapper.selectBidderByProductId(productId, user.getId());
         result.put("bidder", bidder);
 
 

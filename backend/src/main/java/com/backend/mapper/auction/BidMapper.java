@@ -9,7 +9,7 @@ public interface BidMapper {
     @Select("""
             SELECT *
             FROM bid_list
-            WHERE product_id = #{productId} AND user_id = #{tokenUserId}
+            WHERE product_id = #{productId} AND user_id = #{userId}
             """)
-    BidList selectBidderByProductId(Integer productId, Integer tokenUserId);
+    BidList selectBidderByProductId(Integer productId, Integer userId);
 }
