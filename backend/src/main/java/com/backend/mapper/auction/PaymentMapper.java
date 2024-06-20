@@ -10,7 +10,7 @@ public interface PaymentMapper {
 
     @Select("""
             SELECT p.id             AS productId,
-                   p.user_id        AS userId,
+                   u.id        AS userId,
                    u.nick_name      AS buyerName,
                    u.phone_number   AS buyerTel,
                    u.email          AS buyerEmail,

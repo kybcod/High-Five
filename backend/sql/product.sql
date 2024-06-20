@@ -12,7 +12,13 @@ SELECT *
 FROM product_like;
 
 SELECT *
-FROM bid_list;
+FROM bid_list
+WHERE product_id = 18;
+
+UPDATE bid_list
+SET bid_price = 90
+WHERE product_id = 18
+  AND user_id = 10;
 
 SELECT *
 FROM user;
@@ -31,7 +37,6 @@ FROM product
 WHERE id = 18;
 
 
-
 # 123가 파워에이드 낙찰
 # userId : 20, productId : 18, title(주문자명 : name)
 # product 테이블 : product_id, user_id 가져오기
@@ -41,7 +46,7 @@ WHERE id = 18;
 # bidList 에는 입찰에 참여한 사람의 userId가 있음 하지만 우리가 필요한 것은 상품의 주인 userId
 
 SELECT p.id              AS productId,
-       p.user_id         AS userId,
+       bl.user_id        AS userId,
        u.nick_name       AS buyerName,
        u.phone_number    AS buyerTel,
        u.email           AS buyerEmail,
@@ -50,7 +55,6 @@ SELECT p.id              AS productId,
 FROM product p
          JOIN bid_list bl ON bl.product_id = p.id
          JOIN user u ON bl.user_id = u.id
-         JOIN payment pay ON p.id = bl.id = pay.bid_list_id
 WHERE u.id = 20
   AND p.id = 18
 GROUP BY p.id;

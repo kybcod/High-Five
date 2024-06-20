@@ -28,9 +28,27 @@ export function Payment() {
   useEffect(() => {
     axios.get(`/api/payments/${userId}/${productId}`).then((res) => {
       console.log(res.data);
-      // const productList = res.data.productList;
+      setAmount(res.data.amount);
+      setName(res.data.name);
+      setBuyerName(res.data.buyerName);
+      setBuyerTel(res.data.buyerTel);
+      setBuyerEmail(res.data.buyerEmail);
+      generateMerchantUid();
     });
   }, []);
+
+  // 주문번호 랜덤으로 받기
+  function generateMerchantUid() {
+    const date = new Date();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    let orderNum = month + day;
+    for (let i = 0; i < 10; i++) {
+      orderNum += Math.floor(Math.random() * 8);
+    }
+    setMerchantUid(orderNum);
+  }
 
   function onClickPayment() {
     const { IMP } = window;
@@ -55,9 +73,10 @@ export function Payment() {
 
       if (success) {
         //post 요청 : payment (merchant_uid, bid_id, 결제 상태 : true)
-        alert("결제 성공");
+
+        alert(`결제 성공 : ${merchantUid}`);
       } else {
-        alert(`결제 실패: ${error_msg}`);
+        alert(`결제 실패: ${error_msg}, ${merchantUid}`);
       }
     }
   }
