@@ -65,8 +65,7 @@ public class BoardCommentService {
         return mapper.selectById(id);
     }
 
-    public void modify(BoardComment boardComment) {
-        mapper.updateByCommentId(boardComment);
-        System.out.println(boardComment);
+    public void modify(String content, Integer id) {
+        mapper.updateByCommentId(content, id);
     }
 }

@@ -93,11 +93,14 @@ const router = createBrowserRouter([
       { path: "myPage/:userId/reviews", element: <MyPage tab="reviews" /> },
 
       // chat
-      { path: "chat/:productId", element: <ChatRoom /> },
+      {
+        path: "chat/product/:productId/buyer/:buyerId",
+        element: <ChatRoom />,
+      },
       { path: "chat/list", element: <ChatRoomList /> },
 
       //pay
-      { path: "pay", element: <Payment /> },
+      { path: "pay/buyer/:userId/product/:productId", element: <Payment /> },
     ],
   },
 ]);

@@ -13,7 +13,8 @@ export function CommentWrite({ questionId, comment }) {
     setIsProcessing(true);
     const request = comment
       ? axios.put(`/api/question/comment/${comment.id}`, {
-          content: comment.content,
+          content: content,
+          id: comment.id,
         })
       : axios.post(`/api/question/comment`, {
           content,
