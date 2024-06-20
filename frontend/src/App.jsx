@@ -100,7 +100,7 @@ const router = createBrowserRouter([
       { path: "chat/list", element: <ChatRoomList /> },
 
       //pay
-      { path: "pay", element: <Payment /> },
+      { path: "pay/buyer/:userId/product/:productId", element: <Payment /> },
     ],
   },
 ]);
