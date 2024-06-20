@@ -1,7 +1,18 @@
 import { Box, Button } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 export function Payment() {
+  const { userId, productId } = useParams();
+  const [bidList, setBidList] = useState(null);
+  const [merchantUid, setMerchantUid] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [name, setName] = useState("");
+  const [buyerName, setBuyerName] = useState("");
+  const [buyerTel, setBuyerTel] = useState("");
+  const [buyerEmail, setBuyerEmail] = useState("");
+
   useEffect(() => {
     const iamport = document.createElement("script");
     iamport.src = "https://cdn.iamport.kr/v1/iamport.js";
@@ -12,7 +23,14 @@ export function Payment() {
   }, []);
 
   // get 요청 : bidList : bid_id로 받아오기: 상세 페이지 처럼 bid_list 관련 정보 가져오기
-  // 상태로 setXXX() 받아오기
+  // productId랑 해당 상품을 올린 판매자의 userId
+
+  useEffect(() => {
+    axios.get(`/api/payments/${userId}/${productId}`).then((res) => {
+      console.log(res.data);
+      // const productList = res.data.productList;
+    });
+  }, []);
 
   function onClickPayment() {
     const { IMP } = window;
@@ -21,12 +39,12 @@ export function Payment() {
     const data = {
       pg: "html5_inicis", // PG사
       pay_method: "card", // 결제수단
-      merchant_uid: `merchant_${new Date().getTime()}`, // 주문번호
-      amount: 100, // 결제금액
-      name: "아임포트 결제 데이터 분석", // 주문명
-      buyer_name: "홍길동", // 구매자 이름
-      buyer_tel: "01012341234", // 구매자 전화번호
-      buyer_email: "example@example", // 구매자 이메일
+      merchant_uid: merchantUid, // 주문번호
+      amount: amount, // 결제금액
+      name: name, // 주문명
+      buyer_name: buyerName, // 구매자 이름
+      buyer_tel: buyerTel, // 구매자 전화번호
+      buyer_email: buyerEmail, // 구매자 이메일
       m_redirect_url: "", // 모바일 결제 후 리디렉션될 URL
     };
 
