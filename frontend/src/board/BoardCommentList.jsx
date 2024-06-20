@@ -16,7 +16,7 @@ import { BoardCommentEdit } from "./BoardCommentEdit.jsx";
 
 export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   const [boardCommentList, setBoardCommentList] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingId, setIsEditingId] = useState(null);
   const [updatedContent, setUpdatedContent] = useState("");
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
@@ -55,6 +55,11 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
     console.log(commentId);
   }
 
+  function handleEditClick(id) {
+    setIsEditingId(id);
+    setUpdatedContent("");
+  }
+
   return (
     <Card>
       <CardBody>
@@ -62,7 +67,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
           boardCommentList.length > 0 &&
           boardCommentList.map((boardComment) => (
             <Box key={boardComment.id}>
-              {isEditing || (
+              {isEditingId === boardComment.id || (
                 <Flex>
                   <Text>{boardComment.userId}</Text>
                   <Textarea defaultValue={boardComment.content} readOnly />
@@ -72,14 +77,16 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                     >
                       삭제
                     </Button>
-                    <Button onClick={() => setIsEditing(true)}>수정</Button>
+                    <Button onClick={() => handleEditClick(boardComment.id)}>
+                      수정
+                    </Button>
                   </Stack>
                 </Flex>
               )}
-              {isEditing && (
+              {isEditingId === boardComment.id && (
                 <BoardCommentEdit
                   boardComment={boardComment}
-                  setIsEditing={setIsEditing}
+                  setIsEditingId={setIsEditingId}
                   updatedContent={updatedContent}
                   setUpdatedContent={setUpdatedContent}
                 />

@@ -48,11 +48,11 @@ public class BoardCommentController {
         }
     }
 
-    @PutMapping("/modify/{id}")
-    public ResponseEntity modifyComment(@PathVariable Integer id, @RequestBody BoardComment boardComment, Authentication authentication) {
-        BoardComment updateDb = service.getCommentById(id);
+    @PutMapping("/modify")
+    public ResponseEntity modifyComment(@RequestBody BoardComment boardComment, Authentication authentication) {
+        BoardComment updateDb = service.getCommentById(boardComment.getId());
 
-        if (!updateDb.getId().equals(id)) {
+        if (!updateDb.getId().equals(boardComment.getId())) {
             return ResponseEntity.badRequest().build();
         }
         System.out.println("boardComment.getId() = " + boardComment.getId());
