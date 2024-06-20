@@ -1,6 +1,10 @@
 package com.backend.domain.user;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +14,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class User {
     private Integer id;
     private String email;
@@ -38,6 +45,7 @@ public class User {
     }
 
     // -- chatList
+    @JsonIgnore
     public Map<String, Object> getUserIdAndNickName() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", getId());

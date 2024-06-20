@@ -130,6 +130,7 @@ export function ProductDetails() {
         >
           {product.userNickName}
         </Heading>
+
         <Flex justifyContent={"space-around"}>
           <SimpleSlider
             images={existingFilePreviews}

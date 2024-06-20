@@ -213,3 +213,15 @@ CREATE TABLE user_file
     file_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (user_id, file_name)
 );
+
+# 결제 테이블
+# 주문번호, 결제금액, bid_id(bidList), 결제 상태
+CREATE TABLE payment
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    merchant_uid VARCHAR(200) NOT NULL,
+    amount       INT          NOT NULL,
+    bid_list_id  INT          NOT NULL,
+    paid_status  BOOLEAN      NOT NULL,
+    inserted     DATETIME     NOT NULL DEFAULT NOW()
+);

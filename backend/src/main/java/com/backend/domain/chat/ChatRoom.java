@@ -1,5 +1,6 @@
 package com.backend.domain.chat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class ChatRoom {
     private LocalDateTime inserted;
 
     // -- chatList
+    @JsonIgnore
     public Map<String, Object> getChatRoomIdAndBuyerId() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", getId());

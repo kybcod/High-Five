@@ -41,29 +41,27 @@ import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 export function ChatRoom() {
   const { productId, buyerId } = useParams();
   const account = useContext(LoginContext);
-  // -- previous axios.get
-  const [roomInfo, setRoomInfo] = useState(null);
-  const [productInfo, setProductInfo] = useState(null);
-  const [roomId, setRoomId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  const navigate = useNavigate();
   // -- axios.get
-  const [bidder, setBidder] = useState({});
-  const [chatRoom, setChatRoom] = useState({});
-  const [product, setProduct] = useState({});
-  const [seller, setSeller] = useState({});
-  const [user, setUser] = useState({});
-
+  const [data, setData] = useState({
+    seller: {},
+    product: {},
+    bidder: {},
+    previousChatList: [],
+    user: {},
+    chatRoom: {},
+  });
+  const [roomId, setRoomId] = useState(null);
   // -- chat
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState(""); // 입력된 채팅 내용
-  const [messages, setMessages] = useState([]); // 채팅 리스트 - previousChatList
+  const [messageList, setMessageList] = useState([]);
   // -- review
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [reviewList, setReviewList] = useState([]);
   const [reviewId, setReviewId] = useState([]);
-
-  const [loading, setLoading] = useState(false);
-  const toast = useToast();
-  const navigate = useNavigate();
 
   // -- axios.get
   useEffect(() => {
@@ -73,21 +71,20 @@ export function ChatRoom() {
       .then((res) => {
         console.log(res.data);
         // TODO : res.data 있는지 확인
-        if (res.data.length > 0) {
-          setUser({ ...res.data.user });
+        const { user, seller, product, chatRoom, bidder, previousChatList } =
+          res.data;
+        if (res.data != null) {
+          setData({
+            seller: seller || {},
+            product: product || {},
+            bidder: bidder || {},
+            previousChatList: previousChatList || {},
+            user: user || {},
+            chatRoom: chatRoom || {},
+          });
         }
-        // bidder
-        // chatRoom
-        // previousChatList
-        // product
-        // seller
-        // user
-        // setRoomInfo(res.data.chatRoom);
-        // setProductInfo(res.data.chatProduct);
-        // setRoomId(res.data.chatRoom.id);
-        // if (!res.data.firstChat) {
-        //   setMessages(res.data.messageList);
-        // }
+        setMessageList(res.data.previousChatList);
+        setRoomId(res.data.chatRoom.id);
       })
       .catch(() => {
         toast({
@@ -100,8 +97,11 @@ export function ChatRoom() {
       })
       .finally();
   }, []);
+  console.log("previousChatList", data.previousChatList);
+  if (data.previousChatList == null) {
+    console.log("null!!!!");
+  }
 
-  console.log("user : ", user);
   // -- stomp
   useEffect(() => {
     const client = new StompJs.Client({
@@ -119,7 +119,7 @@ export function ChatRoom() {
       onConnect: function () {
         console.log("Connected to WebSocket");
         client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
-        client.subscribe(`/topic/chat/${roomId}`, callback, {
+        client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
           ack: "client",
         }); // 본인
       },
@@ -141,13 +141,15 @@ export function ChatRoom() {
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
-    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+    // 전송 시간 추가
+    receivedMessage.inserted = new Date().toLocaleTimeString();
+    setMessageList((prevMessages) => [...prevMessages, receivedMessage]);
     message.ack();
   };
 
   const sendMessage = () => {
     let chatMessage = {
-      chatRoomId: roomInfo.id,
+      chatRoomId: data.chatRoom.id,
       userId: account.id,
       message: message,
     };
@@ -157,12 +159,6 @@ export function ChatRoom() {
       body: JSON.stringify(chatMessage),
     });
 
-    // 전송 시간 추가
-    chatMessage.inserted = new Date().toLocaleTimeString();
-
-    // -- 내가 보낸 거
-    let formattedMessage = chatMessage;
-    setMessages((prevMessages) => [...prevMessages, formattedMessage]);
     setMessage("");
   };
 
@@ -199,7 +195,7 @@ export function ChatRoom() {
     setLoading(true);
     axios
       .post(`/api/reviews`, {
-        productId: roomInfo.productId,
+        productId: data.product.id,
         userId: account.id,
         reviewId,
       })
@@ -238,7 +234,7 @@ export function ChatRoom() {
   };
 
   // spinner
-  if (roomInfo == null) {
+  if (data.chatRoom == null) {
     return <Spinner />;
   }
 
@@ -260,17 +256,15 @@ export function ChatRoom() {
           {/* 상대방 상점 */}
           <Center cursor={"pointer"} w={"80%"} border={"1px solid blue"}>
             <Box fontSize={"xl"}>
-              {roomInfo.sellerId === Number(account.id) ? (
-                <Text
-                  onClick={() => navigate(`/myPage/${roomInfo.userId}/shop`)}
-                >
-                  {roomInfo.userName}
+              {data.seller.id === Number(account.id) ? (
+                <Text onClick={() => navigate(`/myPage/${data.user.id}/shop`)}>
+                  {data.user.nickName}
                 </Text>
               ) : (
                 <Text
-                  onClick={() => navigate(`/myPage/${roomInfo.sellerId}/shop`)}
+                  onClick={() => navigate(`/myPage/${data.seller.id}/shop`)}
                 >
-                  {roomInfo.sellerName}
+                  {data.seller.nickName}
                 </Text>
               )}
             </Box>
@@ -290,7 +284,7 @@ export function ChatRoom() {
                 <MenuItem
                   color={"red"}
                   gap={2}
-                  onClick={() => navigate(`/api/chats/@{chatRoom.id}`)}
+                  onClick={() => navigate(`/api/chats/${data.chatRoom.id}`)}
                 >
                   <FontAwesomeIcon icon={faTrashCan} />
                   채팅방 나가기
@@ -304,19 +298,19 @@ export function ChatRoom() {
         <Flex>
           <Box
             cursor={"pointer"}
-            onClick={() => navigate(`/product/${productInfo.id}`)}
+            onClick={() => navigate(`/product/${data.product.id}`)}
             w={"80%"}
             border={"1px solid blue"}
           >
-            <Text>{productInfo.title}</Text>
+            <Text>{data.product.title}</Text>
           </Box>
           <Box w={"20%"} border={"1px solid red"}>
             {/* 상품 상태 */}
-            {/* 0 현재 판매 종료, 1 판매 중*/}
+            {/* false 현재 판매 종료, true 판매 중*/}
             {/* TODO : Notion 정리 */}
-            {productInfo.status === 0 &&
-            productInfo.buyerId === Number(account.id) &&
-            productInfo.reviewStatus === 0 ? (
+            {data.product.status === false &&
+            data.bidder.userId === Number(account.id) &&
+            data.product.reviewStatus === false ? (
               <Button
                 onClick={() => {
                   onOpen();
@@ -325,19 +319,22 @@ export function ChatRoom() {
               >
                 후기 등록
               </Button>
-            ) : productInfo.status === 0 &&
-              productInfo.buyerId === Number(account.id) &&
-              productInfo.reviewStatus === 1 ? (
+            ) : data.product.status === false &&
+              data.bidder.userId === Number(account.id) &&
+              data.product.reviewStatus === true ? (
               <Button
                 onClick={() => {
                   onOpen();
                   handleGetReviewButtonClick();
                 }}
               >
-                작성 후기 확인
+                후기 확인
               </Button>
-            ) : productInfo.status === 1 ? (
-              <Button onClick={() => navigate(`/product/${productInfo.id}`)}>
+            ) : data.product.status === false &&
+              data.bidder.userId === Number(account.id) ? (
+              <Button>입찰 실패</Button>
+            ) : data.product.status === 1 ? (
+              <Button onClick={() => navigate(`/product/${data.product.id}`)}>
                 입찰 가능 상품
               </Button>
             ) : (
@@ -349,7 +346,7 @@ export function ChatRoom() {
       <Box>
         <Box>
           <Box h={"500px"} overflow={"auto"}>
-            {messages.map((msg, index) => (
+            {messageList.map((msg, index) => (
               <Box
                 key={index}
                 border={"1px solid red"}
@@ -359,10 +356,10 @@ export function ChatRoom() {
                 <Flex>
                   <Text>
                     {/* 변수의 형식까지 비교하기 위해 account.id 문자열을 숫자로 변경 */}
-                    {msg.userId == account.id ? (
-                      <>{roomInfo.userName}</>
+                    {msg.userId == data.user.id ? (
+                      <>{data.user.nickName}</>
                     ) : (
-                      <>{roomInfo.sellerName}</>
+                      <>{data.seller.nickName}</>
                     )}
                   </Text>
                   <Text> : {msg.message}</Text>
@@ -393,7 +390,7 @@ export function ChatRoom() {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>판매자님에게 보내는 후기</ModalHeader>
-          {productInfo.reviewStatus === 0 ? (
+          {data.product.reviewStatus === false ? (
             <ModalBody>
               <Stack>
                 {reviewList.map((review) => (
@@ -425,7 +422,7 @@ export function ChatRoom() {
               isLoading={loading}
               isDisabled={reviewId.length === 0}
               onClick={handleSaveReviewButtonClick}
-              hidden={productInfo.reviewStatus === 1}
+              hidden={data.product.reviewStatus === 1}
             >
               후기 보내기
             </Button>

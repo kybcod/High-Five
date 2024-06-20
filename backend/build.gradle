@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
     implementation 'software.amazon.awssdk:s3:2.25.60'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -36,6 +37,7 @@ dependencies {
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'net.nurigo:sdk:4.3.0'
+    implementation 'com.github.iamport:iamport-rest-client-java:0.1.6'
 }
 
 tasks.named('test') {
@@ -44,4 +46,9 @@ tasks.named('test') {
 
 compileJava {
     options.compilerArgs += ['--enable-preview']
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
 }

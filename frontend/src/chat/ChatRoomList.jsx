@@ -23,13 +23,11 @@ export function ChatRoomList() {
     axios
       .get(`/api/chats/list`)
       .then((res) => {
-        console.log(res.data);
         setChatRoomList(res.data);
       })
       .catch()
       .finally();
   }, []);
-
   // -- spinner
   if (chatRoomList == null) {
     return <Spinner />;
