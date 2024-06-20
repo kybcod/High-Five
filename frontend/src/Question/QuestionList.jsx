@@ -91,7 +91,7 @@ export function QuestionList() {
               <Th>제목</Th>
               <Th>작성자</Th>
               <Th>조회수</Th>
-              <Th>작성시간</Th>
+              <Th>작성일시</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -211,19 +211,17 @@ export function QuestionList() {
         </Flex>
       </Center>
 
-      {account.hasAccess &
-      (
-        <Box>
-          <Flex justify={"flex-end"} mr={10}>
-            <Button
-              colorScheme={"blue"}
-              onClick={() => navigate("/question/write")}
-            >
-              글쓰기
-            </Button>
-          </Flex>
-        </Box>
-      )}
+      {/*{account.hasAccess &*/}
+      {/*(*/}
+      <Flex justify={"flex-end"} mr={10}>
+        <Button
+          colorScheme={"blue"}
+          onClick={() => navigate("/question/write")}
+        >
+          글쓰기
+        </Button>
+      </Flex>
+      {/*)}*/}
     </Box>
   );
 }

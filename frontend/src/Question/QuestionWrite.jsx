@@ -20,15 +20,16 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function QuestionWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { successToast, errorToast } = CustomToast();
 
   const navigate = useNavigate();
-  const toast = useToast();
 
   function handleSaveClick() {
     setLoading(true);
@@ -39,32 +40,15 @@ export function QuestionWrite() {
         files,
       })
       .then(() => {
-        toast({
-          description: "새 글이 등록되었습니다.",
-          status: "success",
-          position: "bottom",
-          duration: 2000,
-        });
+        successToast("글이 등록되었습니다");
         navigate("/question/list");
       })
-      .catch((e) => {
-        const code = e.response.status;
-        if (code === 400) {
-          toast({
-            description: "등록되지 않았습니다. 내용을 확인해 주세요.",
-            status: "error",
-            position: "bottom",
-            duration: 2500,
-          });
-        }
-        if (code === 413) {
-          toast({
-            description: "파일 크기가 허용된 용량을 초과하였습니다.",
-            status: "error",
-            position: "top",
-            duration: 3000,
-          });
-        }
+      .catch((err) => {
+        err.response.status === 413
+          ? errorToast("파일 크기가 허용된 용량을 초과하였습니다.")
+          : err.response.status === 403
+            ? errorToast("권한이 없습니다.")
+            : errorToast("등록되지 않았습니다.");
       })
       .finally(() => setLoading(false));
   }
