@@ -28,14 +28,14 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
         OAuth2UserInfo response = null;
         if (platform.equals("naver")) {
-//            System.out.println("네이버 로그인 요청");
-//            response = new NaverMemberInfo((Map) oAuth2User.getAttributes().get("response")); //네이버에 있는 사용자 정보 추출
-//            System.out.println(response);
+            System.out.println("네이버 로그인 요청");
+            response = new NaverUserInfo((Map) oAuth2User.getAttributes().get("response")); //네이버에 있는 사용자 정보 추출
+            System.out.println(response);
         } else if (platform.equals("kakao")) {
             System.out.println("카카오 로그인 요청");
             response = new KakaoUserInfo((Map) oAuth2User.getAttributes());//카카오에 있는 사용자 정보 추출
         }
-        
+
         // DB에 저장
         User user = mapper.selectUserByEmail(response.getEmail());
         if (user == null) {
@@ -44,6 +44,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                     .email(response.getEmail())
                     .nickName(response.getNickName())
                     .password(userRequest.getAccessToken().getTokenValue())
+                    .phoneNumber(response.getPhoneNumber())
                     .build();
 
             // 네이버에서 받은 이메일 조회 후 해당 이메일이 없는 경우 insert

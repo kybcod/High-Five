@@ -8,4 +8,6 @@ public interface OAuth2UserInfo {
     String getProviderId();
 
     String getNickName();
+
+    String getPhoneNumber();
 }

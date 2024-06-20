@@ -18,7 +18,7 @@ public class CustomOauth2UserDetails implements OAuth2User {
 
     @Override
     public String getName() {
-        return null;
+        return String.valueOf(user.getId());
     }
 
     @Override
