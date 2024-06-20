@@ -34,9 +34,7 @@ export function Comment({ comment }) {
   // comment id 넘겨주기
   function handleRemoveClick() {
     axios
-      .delete(`/api/question/comment`, {
-        data: { id: comment.id },
-      })
+      .delete(`/api/question/comment/${comment.id}`)
       .then(() => {
         toast({
           status: "success",

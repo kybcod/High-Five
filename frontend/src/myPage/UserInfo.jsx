@@ -34,6 +34,7 @@ export function UserInfo() {
 
   useEffect(() => {
     axios.get(`/api/users/${userId}`).then((res) => {
+      console.log(res.data);
       setUser(res.data);
     });
   }, []);

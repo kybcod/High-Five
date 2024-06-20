@@ -46,7 +46,7 @@ public class QuestionController {
     @GetMapping("{id}")
     public ResponseEntity getQuestion(@PathVariable Integer id) {
         Question question = service.get(id);
-//        System.out.println("question = " + question);
+
         if (question != null) {
             return ResponseEntity.ok().body(question);
         } else
@@ -66,11 +66,11 @@ public class QuestionController {
 
     @PutMapping("{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity update(Question question, Authentication authentication,
+    public ResponseEntity update(@PathVariable Integer id, Question question, Authentication authentication,
                                  @RequestParam(required = false, value = "addFileList[]") MultipartFile[] addFileList,
                                  @RequestParam(required = false, value = "removeFileList[]") List<String> removeFileList
     ) throws IOException {
-        if (!service.hasAccess(question.getId(), authentication)) {
+        if (!service.hasAccess(id, authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         if (service.validate(question)) {
