@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
@@ -30,6 +30,7 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
@@ -38,6 +39,7 @@ export function QuestionList() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
 
   useEffect(() => {
     axios.get(`/api/question/list?${searchParams}`).then((res) => {
@@ -209,16 +211,19 @@ export function QuestionList() {
         </Flex>
       </Center>
 
-      <Box>
-        <Flex justify={"flex-end"} mr={10}>
-          <Button
-            colorScheme={"blue"}
-            onClick={() => navigate("/question/write")}
-          >
-            글쓰기
-          </Button>
-        </Flex>
-      </Box>
+      {account.hasAccess &
+      (
+        <Box>
+          <Flex justify={"flex-end"} mr={10}>
+            <Button
+              colorScheme={"blue"}
+              onClick={() => navigate("/question/write")}
+            >
+              글쓰기
+            </Button>
+          </Flex>
+        </Box>
+      )}
     </Box>
   );
 }

@@ -26,6 +26,7 @@ public class QuestionController {
                               @RequestParam(value = "files[]", required = false) MultipartFile[] files,
                               Authentication authentication
     ) throws IOException {
+        // todo : 로그인 안한 사람이 글을 썼을 때 응답번호 403반환되게. 로그인 안한 사람이 글을 쓰면 로그인에서 304반환되고 있음
         if (service.validate(question)) {
             service.add(question, files, authentication);
             return ResponseEntity.ok().build();
