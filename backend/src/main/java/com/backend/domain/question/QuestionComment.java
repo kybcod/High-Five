@@ -15,6 +15,6 @@ public class QuestionComment {
     private String nickName;
 
     public String getInserted() {
-        return inserted.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        return inserted.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }

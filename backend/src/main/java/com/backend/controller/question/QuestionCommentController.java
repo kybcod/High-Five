@@ -52,9 +52,9 @@ public class QuestionCommentController {
 
     @PutMapping("{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity edit(QuestionComment comment, Authentication authentication) {
+    public ResponseEntity edit(@RequestBody QuestionComment comment, Authentication authentication) {
         if (service.hasAccess(comment.getId(), authentication)) {
-            service.edit(comment.getId());
+            service.edit(comment.getContent(), comment.getId());
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
