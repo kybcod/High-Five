@@ -13,17 +13,17 @@ import java.util.List;
 public interface ChatMapper {
 
     @Select("""
-            SELECT id
+            SELECT *
             FROM chat_room
-            WHERE product_id = #{productId} AND user_id = #{userId}
+            WHERE product_id = #{productId} AND user_id = #{buyerId}
             """)
-    Integer selectRoomId(Integer productId, Integer userId);
+    ChatRoom selectChatRoomByIds(Integer productId, Integer buyerId);
 
     @Insert("""
             INSERT INTO chat_room (product_id, seller_id, user_id)
             VALUES (#{productId}, #{sellerId}, #{userId})           
             """)
-    int insertChatRoom(Integer productId, Integer sellerId, Integer userId);
+    int insertChatRoom(ChatRoom newChatRoom);
 
     @Select("""
             SELECT *
@@ -62,4 +62,13 @@ public interface ChatMapper {
             LIMIT 1
             """)
     Chat selectMessageByRoomId(ChatRoom chatRoom);
+
+    @Select("""
+            SELECT *
+            FROM chat
+            WHERE chat_room_id = #{id}
+            ORDER BY id DESC
+            LIMIT 20
+            """)
+    List<Chat> selectChatListByChatRoomId(Integer id);
 }
