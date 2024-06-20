@@ -68,9 +68,9 @@ export function ChatRoom() {
         // setRoomInfo(res.data.chatRoom);
         // setProductInfo(res.data.chatProduct);
         // setRoomId(res.data.chatRoom.id);
-        if (!res.data.firstChat) {
-          setMessages(res.data.messageList);
-        }
+        // if (!res.data.firstChat) {
+        //   setMessages(res.data.messageList);
+        // }
       })
       .catch()
       .finally();
@@ -261,7 +261,11 @@ export function ChatRoom() {
                   신고하기
                 </MenuItem>
                 {/* TODO : 채팅방 나가기 */}
-                <MenuItem color={"red"} gap={2}>
+                <MenuItem
+                  color={"red"}
+                  gap={2}
+                  onClick={() => navigate(`/api/chats/@{chatRoom.id}`)}
+                >
                   <FontAwesomeIcon icon={faTrashCan} />
                   채팅방 나가기
                 </MenuItem>
