@@ -79,4 +79,12 @@ public class Product {
         map.put("title", getTitle());
         return map;
     }
+
+    // -- chatRoom
+    public Map<String, Object> getProductStatusInfo() {
+        Map<String, Object> map = new HashMap<>(getProductIdAndTitle());
+        map.put("status", getStatus());
+        map.put("reviewStatus", getReviewStatus());
+        return map;
+    }
 }

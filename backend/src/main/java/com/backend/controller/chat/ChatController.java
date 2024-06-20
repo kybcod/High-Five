@@ -21,12 +21,13 @@ public class ChatController {
 
     ///api/chat/${productId}?userId=${account.id}
     // 채팅방 첫 입장 시 룸 정보 조회
-    @GetMapping("{productId}")
+    @GetMapping("/products/{productId}/buyer/{buyerId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity getChatRoomInfo(
-            @PathVariable Integer productId, Authentication authentication) {
-        // TODO : 로직 전부 변경 예정
-        Map<String, Object> result = service.selectChatRoomId(productId, authentication);
+            @PathVariable Integer productId, @PathVariable Integer buyerId, Authentication authentication) {
+
+        // TODO : 로직 전부 변경 예정 후 status 추가
+        Map<String, Object> result = service.selectChatRoomId(productId, buyerId, authentication);
         return ResponseEntity.ok().body(result);
     }
 
