@@ -7,21 +7,12 @@ SHOW VARIABLES LIKE 'wait_timeout'; #28800
 SET GLOBAL MAX_CONNECTIONS = 300;
 
 
-
 SELECT *
 FROM product_like;
 
 SELECT *
 FROM bid_list
-WHERE product_id = 18;
-
-UPDATE bid_list
-SET bid_price = 90
-WHERE product_id = 18
-  AND user_id = 10;
-
-SELECT *
-FROM user;
+ORDER BY product_id;
 
 SELECT *
 FROM product;
@@ -31,11 +22,6 @@ FROM chat;
 
 SELECT *
 FROM chat_room;
-
-SELECT *
-FROM product
-WHERE id = 18;
-
 
 # 123가 파워에이드 낙찰
 # userId : 20, productId : 18, title(주문자명 : name)
@@ -59,5 +45,7 @@ WHERE u.id = 20
   AND p.id = 18
 GROUP BY p.id;
 
+SELECT *
+FROM payment;
 
 

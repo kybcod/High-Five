@@ -1,10 +1,19 @@
-import { Box, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Divider,
+  Image,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
 export function Payment() {
   const { userId, productId } = useParams();
+  const [product, setProduct] = useState(null);
   const [bidList, setBidList] = useState(null);
   const [merchantUid, setMerchantUid] = useState("");
   const [amount, setAmount] = useState(0);
@@ -12,6 +21,7 @@ export function Payment() {
   const [buyerName, setBuyerName] = useState("");
   const [buyerTel, setBuyerTel] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
+  const [bidListId, setBidListId] = useState(0);
 
   useEffect(() => {
     const iamport = document.createElement("script");
@@ -33,7 +43,13 @@ export function Payment() {
       setBuyerName(res.data.buyerName);
       setBuyerTel(res.data.buyerTel);
       setBuyerEmail(res.data.buyerEmail);
+      setBidListId(res.data.bidListId);
       generateMerchantUid();
+    });
+
+    axios.get(`/api/products/${productId}`).then((res) => {
+      console.log(res.data.product);
+      setProduct(res.data.product);
     });
   }, []);
 
@@ -63,8 +79,9 @@ export function Payment() {
       buyer_name: buyerName, // 구매자 이름
       buyer_tel: buyerTel, // 구매자 전화번호
       buyer_email: buyerEmail, // 구매자 이메일
-      m_redirect_url: "", // 모바일 결제 후 리디렉션될 URL
+      m_redirect_url: "", // 모바일 결제 후 리디렉션될 URL : 채팅방으로
     };
+    // TODO : redirect_url : 채팅방으로 연결
 
     IMP.request_pay(data, callback);
 
@@ -73,17 +90,92 @@ export function Payment() {
 
       if (success) {
         //post 요청 : payment (merchant_uid, bid_id, 결제 상태 : true)
-
-        alert(`결제 성공 : ${merchantUid}`);
+        axios
+          .post(`/api/payments/insert`, {
+            merchantUid,
+            amount,
+            bidListId,
+          })
+          .then(() => alert(`결제 성공 : ${merchantUid}`));
       } else {
         alert(`결제 실패: ${error_msg}, ${merchantUid}`);
       }
     }
   }
 
+  if (product === null) {
+    return <Spinner />;
+  }
+
   return (
-    <Box>
-      <Button onClick={onClickPayment}>결제하기</Button>
+    <Box
+      maxW="600px"
+      mx="auto"
+      p={5}
+      boxShadow="xl"
+      borderRadius="lg"
+      bg="white"
+    >
+      <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb={5}>
+        주문 정보
+      </Text>
+      <Divider mb={5} />
+      <VStack spacing={4} align="stretch">
+        <Box>
+          <Text mb={4} fontSize="lg" fontWeight="semibold">
+            주문상품
+          </Text>
+          <Box
+            maxH="400px"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            mb={7}
+          >
+            <Image
+              src={product.productFileList[0].filePath}
+              alt={name}
+              borderRadius="md"
+              mt={2}
+              objectFit="contain"
+              maxW="100%"
+              maxH="100%"
+            />
+          </Box>
+        </Box>
+        <Box>
+          <Text mb={4} fontSize="lg" fontWeight="semibold">
+            판매자 명:
+          </Text>
+          <Text mb={4} fontSize="md">
+            {buyerName}
+          </Text>
+        </Box>
+        <Box>
+          <Text mb={4} fontSize="lg" fontWeight="semibold">
+            주문명:
+          </Text>
+          <Text mb={4} fontSize="md">
+            {name}
+          </Text>
+        </Box>
+        <Box>
+          <Text mb={4} fontSize="lg" fontWeight="semibold">
+            결제 가격:
+          </Text>
+          <Text fontSize="md">{amount.toLocaleString()} 원</Text>
+        </Box>
+        <Button
+          onClick={onClickPayment}
+          colorScheme="teal"
+          size="lg"
+          mt={5}
+          boxShadow="lg"
+          _hover={{ bg: "teal.600" }}
+        >
+          결제하기
+        </Button>
+      </VStack>
     </Box>
   );
 }

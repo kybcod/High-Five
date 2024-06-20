@@ -1,12 +1,10 @@
 package com.backend.controller.auction;
 
+import com.backend.domain.auction.Payment;
 import com.backend.service.auction.PaymentService;
 import com.siot.IamportRestClient.IamportClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -22,4 +20,10 @@ public class PaymentController {
     public Map<String, Object> getPaymentInfo(@PathVariable Integer userId, @PathVariable Integer productId) {
         return service.getPayment(userId, productId);
     }
+
+    @PostMapping("insert")
+    public Payment insertPayment(@RequestBody Payment payment) {
+        return service.insertPayment(payment);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.backend.service.auction;
 
+import com.backend.domain.auction.Payment;
 import com.backend.mapper.auction.PaymentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,5 +16,11 @@ public class PaymentService {
 
     public Map<String, Object> getPayment(Integer userId, Integer productId) {
         return mapper.selectPaymentInfo(userId, productId);
+    }
+
+    public Payment insertPayment(Payment payment) {
+        payment.setPaidStatus(true);
+        mapper.insert(payment);
+        return payment;
     }
 }
