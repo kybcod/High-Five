@@ -1,6 +1,7 @@
 package com.backend.domain.product;
 
 import com.backend.domain.auction.BidList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.time.Duration;
@@ -73,6 +74,7 @@ public class Product {
     }
 
     // -- chatList
+    @JsonIgnore
     public Map<String, Object> getProductIdAndTitle() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", getId());
@@ -81,6 +83,7 @@ public class Product {
     }
 
     // -- chatRoom
+    @JsonIgnore
     public Map<String, Object> getProductStatusInfo() {
         Map<String, Object> map = new HashMap<>(getProductIdAndTitle());
         map.put("status", getStatus());

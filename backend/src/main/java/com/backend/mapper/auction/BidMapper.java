@@ -7,9 +7,9 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface BidMapper {
     @Select("""
-            SELECT product_id, user_id, bid_price, bid_status status
+            SELECT *
             FROM bid_list
-            WHERE product_id =#{productId} AND bid_status = true
+            WHERE product_id = #{productId} AND user_id = #{userId}
             """)
-    BidList selectBidderByProductId(Integer productId);
+    BidList selectBidderByProductId(Integer productId, Integer userId);
 }
