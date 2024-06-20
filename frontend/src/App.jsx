@@ -1,4 +1,4 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import {
   createBrowserRouter,
   Navigate,
@@ -32,6 +32,7 @@ import { UserEdit } from "./myPage/UserEdit.jsx";
 import { UserEmail } from "./user/UserEmail.jsx";
 import SignupCodeProvider from "./component/SignupCodeProvider.jsx";
 import { UserPassword } from "./user/UserPassword.jsx";
+import { Payment } from "./pay/Payment.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -39,6 +40,16 @@ axios.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+});
+
+const theme = extendTheme({
+  colors: {
+    brand: {
+      100: "#f7fafc",
+      // ...
+      900: "#1a202c",
+    },
+  },
 });
 
 const router = createBrowserRouter([
@@ -87,6 +98,9 @@ const router = createBrowserRouter([
         element: <ChatRoom />,
       },
       { path: "chat/list", element: <ChatRoomList /> },
+
+      //pay
+      { path: "pay", element: <Payment /> },
     ],
   },
 ]);
@@ -95,7 +109,7 @@ function App() {
   return (
     <LoginProvider>
       <SignupCodeProvider>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <RouterProvider router={router} />
         </ChakraProvider>
       </SignupCodeProvider>

@@ -26,7 +26,6 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   faCommentDots,
-  faExclamationTriangle,
   faEye,
   faHeart as fullHeart,
   faMoneyBillAlt,
@@ -39,6 +38,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { Category } from "../component/Category.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+import ReportButton from "../user/ReportButton.jsx";
 
 export function ProductDetails() {
   const { id } = useParams();
@@ -73,7 +73,7 @@ export function ProductDetails() {
     if (parseInt(bidPrice) > product.startPrice) {
       setIsProcessing(true);
       axios
-        .post("/api/products/join", {
+        .post("/api/bids/join", {
           productId: id,
           userId: account.id,
           bidPrice: bidPrice,
@@ -180,50 +180,71 @@ export function ProductDetails() {
 
             <Divider mb={2} />
 
-            <Flex mb={5} justifyContent={"space-between"} alignItems={"center"}>
-              <Flex alignItems={"center"} mr={4}>
-                <Box mr={2}>찜</Box>
-                {account.isLoggedIn() && (
-                  <Button
-                    onClick={handleLikeClick}
-                    leftIcon={
-                      <FontAwesomeIcon
-                        icon={like.like ? fullHeart : emptyHeart}
-                        size={"lg"}
-                      />
-                    }
-                    colorScheme={like.like ? "red" : "gray"}
-                    variant="outline"
-                  >
-                    {like.count}
-                  </Button>
-                )}
+            {/*로그인이 되어 있고 내 상품 아닐 때*/}
+            {account.isLoggedIn() && !account.hasAccess(product.userId) && (
+              <Flex
+                mb={5}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
+                <Flex alignItems={"center"} mr={4}>
+                  <Box mr={2}>찜</Box>
+                  {account.isLoggedIn() && (
+                    <Button
+                      onClick={handleLikeClick}
+                      leftIcon={
+                        <FontAwesomeIcon
+                          icon={like.like ? fullHeart : emptyHeart}
+                          size={"lg"}
+                        />
+                      }
+                      colorScheme={like.like ? "red" : "gray"}
+                      variant="outline"
+                    >
+                      {like.count}
+                    </Button>
+                  )}
+                </Flex>
+                <Flex alignItems={"center"} mr={4}>
+                  <Box mr={2}>
+                    <FontAwesomeIcon icon={faEye} size={"lg"} />
+                  </Box>
+                  <Box>{product.viewCount}</Box>
+                </Flex>
+                <Flex>
+                  <Box>
+                    <Button
+                      colorScheme="teal"
+                      leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
+                      onClick={handleEnterChatRoom}
+                      mr={4}
+                    >
+                      문의하기
+                    </Button>
+                  </Box>
+                  <Box>
+                    <ReportButton userId={product.userId} />
+                  </Box>
+                </Flex>
               </Flex>
-              <Flex alignItems={"center"} mr={4}>
-                <Box mr={2}>
-                  <FontAwesomeIcon icon={faEye} size={"lg"} />
-                </Box>
-                <Box>{product.viewCount}</Box>
+            )}
+
+            {/*로그인이 되어 있지 않거나 내 상품일 때*/}
+            {(!account.isLoggedIn() || account.hasAccess(product.userId)) && (
+              <Flex mb={5} alignItems={"center"} justifyContent={"center"}>
+                <Flex alignItems={"center"} mr={10}>
+                  <Box mr={3}>찜</Box>
+                  {like.count}
+                </Flex>
+                <Flex alignItems={"center"} mr={4}>
+                  <Box mr={2}>
+                    <FontAwesomeIcon icon={faEye} size={"lg"} />
+                  </Box>
+                  <Box>{product.viewCount}</Box>
+                </Flex>
               </Flex>
-              {account.hasAccess(product.userId) || (
-                <Box>
-                  <Button
-                    colorScheme="teal"
-                    leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
-                    onClick={handleEnterChatRoom}
-                    mr={4}
-                  >
-                    문의하기
-                  </Button>
-                  <Button
-                    colorScheme="red"
-                    leftIcon={<FontAwesomeIcon icon={faExclamationTriangle} />}
-                  >
-                    신고하기
-                  </Button>
-                </Box>
-              )}
-            </Flex>
+            )}
+
             <Box
               mb={5}
               display={"flex"}

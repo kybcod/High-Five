@@ -19,9 +19,15 @@ public class QuestionCommentController {
     private final QuestionCommentService service;
 
     @PostMapping("")
-    @PreAuthorize("isAuthenticated()")
-    public void add(@RequestBody QuestionComment comment, Authentication authentication) {
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    public ResponseEntity add(@RequestBody QuestionComment comment, Authentication authentication) {
         service.addComment(comment, authentication);
+        if (authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("SCOPE_admin"))) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @GetMapping("{questionId}")
@@ -33,7 +39,6 @@ public class QuestionCommentController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity delete(@RequestBody Map<String, Integer> request, Authentication authentication) {
         Integer id = request.get("id");
-        System.out.println("id = " + id);
         if (id == null) {
             return ResponseEntity.badRequest().body("ID is required");
         }
@@ -47,9 +52,9 @@ public class QuestionCommentController {
 
     @PutMapping("{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity edit(QuestionComment comment, Authentication authentication) {
+    public ResponseEntity edit(@RequestBody QuestionComment comment, Authentication authentication) {
         if (service.hasAccess(comment.getId(), authentication)) {
-            service.edit(comment.getId());
+            service.edit(comment.getContent(), comment.getId());
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

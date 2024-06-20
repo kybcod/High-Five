@@ -9,7 +9,7 @@ import java.util.List;
 public interface QuestionMapper {
 
     @Insert("""
-            INSERT INTO question_board(title,content,user_id) VALUES (#{title},#{content},#{userId})
+            INSERT INTO question_board( title,content,user_id) VALUES (#{title},#{content},#{userId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Question question);
@@ -39,9 +39,17 @@ public interface QuestionMapper {
 
     @Select("""
             <script>
-                SELECT qb.id, qb.title, user.nick_name as nickName, qb.number_of_count, qb.inserted
+                SELECT qb.id, qb.title, user.nick_name as nickName, qb.number_of_count, qb.inserted,
+                       qbf.numberOfFiles,
+                       qbc.numberOfComments
                 FROM question_board qb
                 JOIN user ON qb.user_id = user.id
+                     LEFT JOIN (SELECT question_id, COUNT(*) AS numberOfFiles
+                                                   FROM question_board_file
+                                                   GROUP BY question_id) qbf ON qb.id = qbf.question_id
+                        LEFT JOIN (SELECT question_id, COUNT(*) AS numberOfComments
+                                                      FROM question_board_comment
+                                                      GROUP BY question_id) qbc ON qb.id= qbc.question_id
                     <trim prefix="WHERE" prefixOverrides="OR">
                         <if test="searchType != null">
                             <bind name="pattern" value="'%' + keyword + '%'" />
@@ -55,7 +63,7 @@ public interface QuestionMapper {
                     </trim>
                 GROUP BY qb.id
                 ORDER BY qb.id DESC
-                LIMIT #{offset},5
+                LIMIT #{offset},10
             </script>
             """)
     List<Question> selectUsingPageable(int offset, String searchType, String keyword);
@@ -91,7 +99,7 @@ public interface QuestionMapper {
     void deleteByIdFile(Integer id);
 
     @Update("""
-            UPDATE question_board SET title=#{title}, content=#{content}, inserted = now() WHERE id=#{id}
+            UPDATE question_board SET title=#{title}, content=#{content} WHERE id=#{id}
             """)
     void updateById(Question question);
 

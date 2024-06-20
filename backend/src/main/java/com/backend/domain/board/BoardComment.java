@@ -15,5 +15,4 @@ public class BoardComment {
     private Integer userId;
     private String content;
     private LocalDateTime inserted;
-    private Integer commentId;
 }

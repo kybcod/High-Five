@@ -4,6 +4,10 @@ FROM board;
 SELECT *
 FROM board_like;
 
+SELECT *
+FROM board_comment;
+
+
 ALTER TABLE board
     MODIFY user_id INT NOT NULL;
 
@@ -33,3 +37,6 @@ FROM board;
 
 
 
+SELECT board_id, user_id, content, inserted
+FROM board_comment
+WHERE board_id = '88';

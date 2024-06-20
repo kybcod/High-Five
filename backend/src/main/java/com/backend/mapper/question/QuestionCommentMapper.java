@@ -36,7 +36,7 @@ public interface QuestionCommentMapper {
     QuestionComment selectUserById(Integer id);
 
     @Update("""
-            UPDATE question_board_comment SET content=#{content}, inserted=now() WHERE id=#{id}
+            UPDATE question_board_comment SET content=#{content} WHERE id=#{id}
             """)
-    int updateById(Integer id);
+    int updateById(String content, Integer id);
 }
