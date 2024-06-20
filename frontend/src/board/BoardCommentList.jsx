@@ -55,7 +55,6 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
       .finally(() => {
         setIsProcessing(false);
       });
-    console.log(commentId);
   }
 
   function handleEditClick(id) {
@@ -73,51 +72,86 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
         {boardCommentList &&
           boardCommentList.length > 0 &&
           boardCommentList.map((boardComment) => (
-            <Box key={boardComment.id}>
-              {isEditingId === boardComment.id || (
-                <Flex>
-                  <Text>{boardComment.userId}</Text>
-                  <Textarea defaultValue={boardComment.content} readOnly />
-                  <Stack>
-                    <Button
-                      onClick={() => handleClickCommentDelete(boardComment.id)}
-                    >
-                      삭제
-                    </Button>
-                    <Button onClick={() => handleEditClick(boardComment.id)}>
-                      수정
-                    </Button>
-                  </Stack>
-                </Flex>
-              )}
-              {isEditingId === boardComment.id && (
-                <BoardCommentEdit
-                  boardComment={boardComment}
-                  setIsEditingId={setIsEditingId}
-                  updatedContent={updatedContent}
-                  setUpdatedContent={setUpdatedContent}
-                />
-              )}
-              <Flex>
-                {showReCommentId === boardComment.id || (
-                  <Box>
-                    <Text onClick={() => handleClickReComment(boardComment.id)}>
-                      답글쓰기
-                    </Text>
-                  </Box>
+            <Stack key={boardComment.id}>
+              <Box>
+                {isEditingId === boardComment.id || (
+                  <Flex>
+                    <Text>{boardComment.userId}</Text>
+                    <Textarea defaultValue={boardComment.content} readOnly />
+                    <Stack>
+                      <Button
+                        onClick={() =>
+                          handleClickCommentDelete(boardComment.id)
+                        }
+                      >
+                        삭제
+                      </Button>
+                      <Button onClick={() => handleEditClick(boardComment.id)}>
+                        수정
+                      </Button>
+                    </Stack>
+                  </Flex>
                 )}
-                {showReCommentId === boardComment.id && (
-                  <BoardReCommentWrite
+                {isEditingId === boardComment.id && (
+                  <BoardCommentEdit
                     boardComment={boardComment}
-                    setShowReCommentId={setShowReCommentId}
+                    setIsEditingId={setIsEditingId}
+                    updatedContent={updatedContent}
+                    setUpdatedContent={setUpdatedContent}
                   />
                 )}
-                <Spacer />
-                <Box>
-                  <Text>{boardComment.inserted}</Text>
-                </Box>
-              </Flex>
-            </Box>
+                <Flex>
+                  {showReCommentId === boardComment.id || (
+                    <Box>
+                      <Text
+                        onClick={() => handleClickReComment(boardComment.id)}
+                      >
+                        답글쓰기
+                      </Text>
+                    </Box>
+                  )}
+                  {showReCommentId === boardComment.id && (
+                    <BoardReCommentWrite
+                      boardComment={boardComment}
+                      setShowReCommentId={setShowReCommentId}
+                    />
+                  )}
+                  <Spacer />
+                  <Box>
+                    <Text>{boardComment.inserted}</Text>
+                  </Box>
+                </Flex>
+              </Box>
+              {boardCommentList.map(
+                (subComment) =>
+                  subComment.refId === boardComment.id && (
+                    <Box key={subComment.commentSeq} ml="4" width="80%">
+                      <Flex>
+                        <Text>{subComment.userId}</Text>
+                        <Textarea
+                          defaultValue={subComment.content}
+                          readOnly
+                          size="sm"
+                        />
+                        <Stack>
+                          <Button
+                            onClick={() =>
+                              handleClickCommentDelete(subComment.id)
+                            }
+                          >
+                            삭제
+                          </Button>
+                          <Button
+                            onClick={() => handleEditClick(subComment.id)}
+                          >
+                            수정
+                          </Button>
+                        </Stack>
+                      </Flex>
+                    </Box>
+                  ),
+              )}
+            </Stack>
           ))}
       </CardBody>
     </Card>
