@@ -1,5 +1,6 @@
 package com.backend.domain.chat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class Chat {
     private LocalDateTime inserted;
 
     // -- chatList
+    @JsonIgnore
     public Map<String, Object> getChatMessageAndInserted() {
         Map<String, Object> map = new HashMap<>();
         map.put("message", getMessage());
