@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,13 +34,9 @@ public class QuestionCommentController {
         return service.get(questionId);
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity delete(@RequestBody Map<String, Integer> request, Authentication authentication) {
-        Integer id = request.get("id");
-        if (id == null) {
-            return ResponseEntity.badRequest().body("ID is required");
-        }
+    public ResponseEntity delete(@PathVariable Integer id, Authentication authentication) {
         if (service.hasAccess(id, authentication)) {
             service.delete(id);
             return ResponseEntity.ok().build();
