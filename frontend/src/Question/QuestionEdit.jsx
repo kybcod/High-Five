@@ -141,7 +141,7 @@ export function QuestionEdit() {
             <Box w="10%">작성자</Box>
             <Input w="35%" value={question.nickName} readOnly />
             <Box w="10%">작성시간</Box>
-            <Input w="35%" value={question.inserted} readOnly />
+            <Input w="35%" value={question.insertedAll} readOnly />
           </Flex>
         </Box>
 

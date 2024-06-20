@@ -47,7 +47,15 @@ public class QuestionCommentController {
 
     @PutMapping("{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity edit(@RequestBody QuestionComment comment, Authentication authentication) {
+    public ResponseEntity edit(@PathVariable Integer id, @RequestBody QuestionComment comment, Authentication authentication) {
+        if (comment == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Request body is missing or malformed.");
+        }
+
+        if (!id.equals(comment.getId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Path ID and Comment ID do not match.");
+        }
+
         if (service.hasAccess(comment.getId(), authentication)) {
             service.edit(comment.getContent(), comment.getId());
             return ResponseEntity.ok().build();
