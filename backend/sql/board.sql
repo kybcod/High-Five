@@ -35,8 +35,14 @@ INSERT INTO board (title, content, user_id, inserted)
 SELECT title, content, user_id, inserted
 FROM board;
 
-
-
 SELECT board_id, user_id, content, inserted
 FROM board_comment
 WHERE board_id = '88';
+
+# board_comment 대댓글 기능
+# ALTER TABLE board_comment ADD reference_id INT NOT NULL DEFAULT
+ALTER TABLE board_comment
+    ADD comment_sequence INT NOT NULL DEFAULT 0;
+
+ALTER TABLE board_comment
+    ADD reference_id INT NOT NULL DEFAULT 0;
