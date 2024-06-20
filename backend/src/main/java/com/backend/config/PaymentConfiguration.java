@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PaymentConfiguration {
 
-    private IamportClient iamportClient;
 
     @Value("${imp.api.key}")
     private String apiKey;
