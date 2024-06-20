@@ -40,5 +40,5 @@ public interface BoardCommentMapper {
             SET content = #{content}, inserted = NOW()
             WHERE id = #{id}
             """)
-    void updateByCommentId(BoardComment boardComment);
+    void updateByCommentId(String content, Integer id);
 }
