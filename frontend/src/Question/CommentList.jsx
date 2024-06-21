@@ -8,7 +8,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
-import { LoginContext } from "../component/LoginProvider.jsx";
 import { Comment } from "./Comment.jsx";
 
 export function CommentList({ questionId }) {
@@ -21,7 +20,7 @@ export function CommentList({ questionId }) {
       axios
         .get(`/api/question/comment/${questionId}`)
         .then((res) => setCommentList(res.data))
-        .catch((err) => console("comment error!!!", err));
+        .catch(() => {});
       // }
     }
   }, []);

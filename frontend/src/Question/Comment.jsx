@@ -19,12 +19,14 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { CommentWrite } from "./CommentWrite.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function Comment({ comment }) {
   const account = useContext(LoginContext);
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEditing, setIsEditing] = useState(false);
+  const { successToast, errorToast } = CustomToast();
 
   // Prop이 제대로 넘어오는지 확인하기 위해 콘솔 로그 추가
   useEffect(() => {
@@ -36,39 +38,15 @@ export function Comment({ comment }) {
     axios
       .delete(`/api/question/comment/${comment.id}`)
       .then(() => {
-        toast({
-          status: "success",
-          description: `댓글이 삭제 되었습니다.`,
-          position: "bottom",
-          duration: 2000,
-        });
+        successToast("댓글이 삭제 되었습니다");
         onClose();
       })
       .catch((err) => {
-        const code = err.response.status;
-        if (code === 403) {
-          toast({
-            status: "error",
-            description: `삭제 권한이 없습니다`,
-            position: "bottom",
-            duration: 2000,
-          });
-        }
-        if (code === 404) {
-          toast({
-            status: "error",
-            description: `id가 없습니다.`,
-            position: "bottom",
-            duration: 2000,
-          });
-        } else {
-          toast({
-            status: "error",
-            description: `삭제되지 않았습니다`,
-            position: "bottom",
-            duration: 2000,
-          });
-        }
+        err.response.status === 403
+          ? errorToast("삭제 권한이 없습니다")
+          : err.response.status === 404
+            ? errorToast("id가 없습니다")
+            : errorToast("삭제되지 않았습니다.");
       })
       .finally();
   }

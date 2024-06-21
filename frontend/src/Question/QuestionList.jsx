@@ -29,7 +29,6 @@ import {
   faComment,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function QuestionList() {
@@ -211,17 +210,16 @@ export function QuestionList() {
         </Flex>
       </Center>
 
-      {/*{account.hasAccess &*/}
-      {/*(*/}
-      <Flex justify={"flex-end"} mr={10}>
-        <Button
-          colorScheme={"blue"}
-          onClick={() => navigate("/question/write")}
-        >
-          글쓰기
-        </Button>
-      </Flex>
-      {/*)}*/}
+      {account.isLoggedIn && (
+        <Flex justify={"flex-end"} mr={10}>
+          <Button
+            colorScheme={"blue"}
+            onClick={() => navigate("/question/write")}
+          >
+            글쓰기
+          </Button>
+        </Flex>
+      )}
     </Box>
   );
 }

@@ -32,6 +32,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { CommentComponent } from "./CommentComponent.jsx";
 import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
 import { QuestionList } from "./QuestionList.jsx";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function QuestionView() {
   const { id } = useParams();
@@ -40,6 +41,7 @@ export function QuestionView() {
   const toast = useToast();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
+  const { successToast, errorToast } = CustomToast();
 
   useEffect(() => {
     axios
@@ -47,16 +49,9 @@ export function QuestionView() {
       .then((res) => {
         setQuestion(res.data);
       })
-      .catch((err) => {
-        if (err.response.status === 404) {
-          toast({
-            status: "error",
-            description: "해당 게시글이 없습니다",
-            position: "top",
-            duration: 2500,
-          });
-          navigate("/question/list");
-        }
+      .catch(() => {
+        errorToast("해당 게시글이 없습니다.");
+        navigate("/question/list");
       });
   }, [id]);
 
@@ -66,30 +61,13 @@ export function QuestionView() {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then(() => {
-        toast({
-          status: "success",
-          description: `${id}번 게시물이 삭제되었습니다.`,
-          position: "top",
-          duration: 2500,
-        });
+        successToast(`${id}번 게시물이 삭제되었습니다.`);
         navigate("/question/list");
       })
-      .catch((res) => {
-        if (res.response.status === 403) {
-          toast({
-            status: "error",
-            description: `권한이 없는 사용자입니다`,
-            position: "top",
-            duration: 2500,
-          });
-        } else {
-          toast({
-            status: "error",
-            description: `${id}번 게시물 삭제 중 오류가 발생하였습니다.`,
-            position: "top",
-            duration: 2500,
-          });
-        }
+      .catch((err) => {
+        err.response.status === 403
+          ? errorToast("권한이 없는 사용자입니다")
+          : errorToast("게시물 삭제 중 오류가 발생하였습니다.");
       });
   }
 
