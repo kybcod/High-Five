@@ -69,8 +69,6 @@ export function ChatRoom() {
     axios
       .get(`/api/chats/products/${productId}/buyer/${buyerId}`)
       .then((res) => {
-        console.log(res.data);
-        // TODO : res.data 있는지 확인
         const { user, seller, product, chatRoom, bidder, previousChatList } =
           res.data;
         if (res.data != null) {
@@ -170,7 +168,9 @@ export function ChatRoom() {
     axios
       .get(`/api/reviews/list`)
       .then((res) => {
-        setReviewList(res.data);
+        if (res.data != null) {
+          setReviewList(res.data);
+        }
       })
       .catch()
       .finally();
@@ -209,7 +209,6 @@ export function ChatRoom() {
       })
       .catch((e) => {
         const code = e.response.status;
-
         if (code === 400) {
           toast({
             status: "error",
@@ -223,11 +222,15 @@ export function ChatRoom() {
         setReviewId([]);
       });
   };
+
+  // -- 후기 조회
   const handleGetReviewButtonClick = () => {
     axios
       .get(`/api/reviews/${data.product.id}`)
       .then((res) => {
-        setReviewList(res.data.reviewList);
+        if (res.data != null) {
+          setReviewList(res.data.reviewList);
+        }
       })
       .catch()
       .finally();
@@ -476,7 +479,7 @@ export function ChatRoom() {
               isLoading={loading}
               isDisabled={reviewId.length === 0}
               onClick={handleSaveReviewButtonClick}
-              hidden={data.product.reviewStatus === 1}
+              hidden={data.product.reviewStatus === false}
             >
               후기 보내기
             </Button>
