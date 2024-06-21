@@ -19,7 +19,7 @@ public class SecurityConfig {
     private final OAuth2SuccessHandler oauth2SuccessHandler;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // deprecated 된 것들 람다식으로 변경
         http.csrf(csrf -> csrf.disable());
 

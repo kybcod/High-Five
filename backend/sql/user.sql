@@ -63,3 +63,6 @@ FROM user_file;
 
 # ALTER TABLE user_file
 #     CHANGE file_name file_src VARCHAR(500);
+
+# ALTER TABLE user_file
+#     CHANGE file_src file_name VARCHAR(500);

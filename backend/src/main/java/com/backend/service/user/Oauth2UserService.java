@@ -35,25 +35,32 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
         } else if (platform.equals("kakao")) {
             System.out.println("카카오 로그인 요청");
             response = new KakaoUserInfo((Map) oAuth2User.getAttributes());//카카오에 있는 사용자 정보 추출
+        } else if (platform.equals("google")) {
+            System.out.println("구글 로그인 요청");
+            response = new GoogleUserInfo((Map) oAuth2User.getAttributes());
+            System.out.println("response = " + response);
         }
+        // TODO. sns login
+        // test 중 ... db에 저장하는 부분 주석 처리
+//
+//        // DB에 저장
+//        User user = mapper.selectUserByEmail(response.getEmail());
+//        if (user == null) {
+//            user = User
+//                    .builder()
+//                    .email(response.getEmail())
+//                    .nickName(response.getNickName())
+//                    .password(userRequest.getAccessToken().getTokenValue())
+//                    .phoneNumber(response.getPhoneNumber())
+//                    .build();
+//
+//            // 네이버에서 받은 이메일 조회 후 해당 이메일이 없는 경우 insert
+//            System.out.println("최초");
+//            mapper.insertUser(user);
+////            mapper.insertProfileImage(user.getId(), response.getProfileImage());
+//        }
 
-        // DB에 저장
-        User user = mapper.selectUserByEmail(response.getEmail());
-        if (user == null) {
-            user = User
-                    .builder()
-                    .email(response.getEmail())
-                    .nickName(response.getNickName())
-                    .password(userRequest.getAccessToken().getTokenValue())
-                    .phoneNumber(response.getPhoneNumber())
-                    .build();
-
-            // 네이버에서 받은 이메일 조회 후 해당 이메일이 없는 경우 insert
-            System.out.println("최초");
-            mapper.insertUser(user);
-//            mapper.insertProfileImage(user.getId(), response.getProfileImage());
-        }
-
-        return new CustomOauth2UserDetails(user, oAuth2User.getAttributes());
+//        return new CustomOauth2UserDetails(user, oAuth2User.getAttributes());
+        return new CustomOauth2UserDetails(null, oAuth2User.getAttributes());
     }
 }
