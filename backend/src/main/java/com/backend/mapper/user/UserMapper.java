@@ -1,6 +1,5 @@
 package com.backend.mapper.user;
 
-import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.user.User;
 import org.apache.ibatis.annotations.*;
 
@@ -44,18 +43,10 @@ public interface UserMapper {
             """)
     String selectEmailById(Integer userId);
 
-    // -- ChatService
-    @Select("""
-            SELECT nick_name
-            FROM user
-            WHERE id = #{sellerId}
-            """)
-    String selectSellerName(ChatRoom chatRoom);
-
     @Select("""
                 SELECT *
                 FROM user
-                WHERE id = #{userId}
+                WHERE id = #{id}
             """)
     User selectUserById(Integer id);
 
