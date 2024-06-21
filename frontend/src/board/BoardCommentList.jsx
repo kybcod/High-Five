@@ -61,6 +61,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   function handleEditClick(id) {
     setIsEditingId(id);
     setUpdatedContent("");
+    console.log("대댓글 수정");
   }
 
   function handleClickReComment(id) {
@@ -130,26 +131,38 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
               )}
               {boardComment.refId > 0 && (
                 <Box key={boardComment.commentSeq} ml="5" width="90%">
-                  <Flex>
-                    <Text>{boardComment.userId}</Text>
-                    <Textarea
-                      defaultValue={boardComment.content}
-                      readOnly
-                      size="sm"
+                  {isEditingId === boardComment.id || (
+                    <Flex>
+                      <Text>{boardComment.userId}</Text>
+                      <Textarea
+                        defaultValue={boardComment.content}
+                        readOnly
+                        size="sm"
+                      />
+                      <Stack>
+                        <Button
+                          onClick={() =>
+                            handleClickCommentDelete(boardComment.id)
+                          }
+                        >
+                          삭제
+                        </Button>
+                        <Button
+                          onClick={() => handleEditClick(boardComment.id)}
+                        >
+                          수정
+                        </Button>
+                      </Stack>
+                    </Flex>
+                  )}
+                  {isEditingId === boardComment.id && (
+                    <BoardCommentEdit
+                      boardComment={boardComment}
+                      setIsEditingId={setIsEditingId}
+                      updatedContent={updatedContent}
+                      setUpdatedContent={setUpdatedContent}
                     />
-                    <Stack>
-                      <Button
-                        onClick={() =>
-                          handleClickCommentDelete(boardComment.id)
-                        }
-                      >
-                        삭제
-                      </Button>
-                      <Button onClick={() => handleEditClick(boardComment.id)}>
-                        수정
-                      </Button>
-                    </Stack>
-                  </Flex>
+                  )}
                 </Box>
               )}
             </Stack>
