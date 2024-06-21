@@ -23,7 +23,6 @@ import { CustomToast } from "../component/CustomToast.jsx";
 
 export function Comment({ comment }) {
   const account = useContext(LoginContext);
-  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEditing, setIsEditing] = useState(false);
   const { successToast, errorToast } = CustomToast();
@@ -58,7 +57,7 @@ export function Comment({ comment }) {
   return (
     <>
       {isEditing ? (
-        <CommentWrite comment={comment} />
+        <CommentWrite comment={comment} setIsEditing={setIsEditing} />
       ) : (
         <Flex gap={3}>
           <Box>

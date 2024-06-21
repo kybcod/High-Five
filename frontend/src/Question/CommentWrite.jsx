@@ -3,12 +3,14 @@ import { Box, Button, Flex, Input, Textarea, useToast } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { useNavigate } from "react-router-dom";
 
-export function CommentWrite({ questionId, comment }) {
+export function CommentWrite({ questionId, comment, setIsEditing }) {
   const [content, setContent] = useState(comment ? comment.content : "");
   const [isProcessing, setIsProcessing] = useState(false);
   const account = useContext(LoginContext);
   const { successToast, errorToast } = CustomToast();
+  const navigate = useNavigate();
 
   function handleWriteClick() {
     setIsProcessing(true);
@@ -30,6 +32,7 @@ export function CommentWrite({ questionId, comment }) {
         successToast(
           comment ? "댓글이 수정되었습니다." : "댓글이 등록되었습니다.",
         );
+        setIsEditing(false);
       })
       .catch((err) => {
         err.response.status === 403
@@ -57,6 +60,9 @@ export function CommentWrite({ questionId, comment }) {
             >
               {comment ? "수정" : "등록"}
             </Button>
+            {comment && (
+              <Button onClick={() => setIsEditing(false)}>취소</Button>
+            )}
           </Flex>
         </>
       )}
