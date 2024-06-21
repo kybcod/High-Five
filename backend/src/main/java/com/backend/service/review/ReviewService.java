@@ -26,8 +26,7 @@ public class ReviewService {
     }
 
     public boolean insertReview(Review review) throws JsonProcessingException {
-        String reviewIds = objectMapper.writeValueAsString(review.getReviewId());
-        review.setReviewIds(reviewIds);
+        review.setReviewIds(objectMapper.writeValueAsString(review.getReviewId()));
         int createSuccess = mapper.insertReview(review);
         if (createSuccess == 1) {
             int productSuccess = productMapper.updateReviewStatusById(review.getProductId());
@@ -51,16 +50,17 @@ public class ReviewService {
         return true;
     }
 
-    public Review selectReviewById(Integer productId) throws JsonProcessingException {
-        Review review = mapper.selectReviewById(productId);
-        System.out.println("review = " + review);
-        // Jackson 라이브러리를 사용하여 JSON 문자열을 자바 객체로 변환 후 reviewId 필드에 설정
-        review.setReviewId(objectMapper.readValue(review.getReviewIds(), List.class));
-        List<Map<String, Object>> reviewList = new ArrayList<>();
-        for (Integer id : review.getReviewId()) {
-            reviewList.add(mapper.selectReviewListById(id));
+    public List<Map<String, Object>> selectReviewById(Integer productId) throws JsonProcessingException {
+        String reviewIds = mapper.selectReviewById(productId);
+        if (reviewIds != null) {
+            // Jackson 라이브러리를 사용하여 JSON 문자열을 자바 객체로 변환
+            List<Integer> reviewIdList = (objectMapper.readValue(reviewIds, List.class));
+            List<Map<String, Object>> reviewList = new ArrayList<>();
+            for (Integer id : reviewIdList) {
+                reviewList.add(mapper.selectReviewListById(id));
+            }
+            return reviewList;
         }
-        review.setReviewList(reviewList);
-        return review;
+        return null;
     }
 }
