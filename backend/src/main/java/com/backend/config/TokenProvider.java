@@ -23,7 +23,8 @@ public class TokenProvider {
     public String generateToken(Authentication authentication) {
 
         CustomOauth2UserDetails details = (CustomOauth2UserDetails) authentication.getPrincipal();
-        Map<String, Object> attributes = details.getAttributes();
+        Map<String, Object> attributes = (Map<String, Object>) details.getAttributes().get("response");
+        System.out.println("attributes = " + attributes);
 
         User db = userMapper.selectUserByEmail(attributes.get("email").toString());
         List<String> authorities = userMapper.selectAuthoritiesByUserId(db.getId());

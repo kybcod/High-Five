@@ -9,7 +9,7 @@ import {
   InputGroup,
   InputLeftAddon,
 } from "@chakra-ui/react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,6 +23,8 @@ export function Login() {
   const account = useContext(LoginContext);
   const navigate = useNavigate();
   const { errorToast } = CustomToast();
+
+  useEffect(() => {}, []);
 
   function handleLogin() {
     axios

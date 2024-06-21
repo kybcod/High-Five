@@ -7,11 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
+@EnableWebSecurity
 public class SecurityConfig {
     private final Oauth2UserService oauth2UserService;
     private final OAuth2SuccessHandler oauth2SuccessHandler;

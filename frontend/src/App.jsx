@@ -33,6 +33,7 @@ import { UserEmail } from "./user/UserEmail.jsx";
 import SignupCodeProvider from "./component/SignupCodeProvider.jsx";
 import { UserPassword } from "./user/UserPassword.jsx";
 import { Payment } from "./pay/Payment.jsx";
+import { UserAuthSuccess } from "./user/UserAuthSuccess.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -70,6 +71,7 @@ const router = createBrowserRouter([
       { path: "user/list", element: <UserList /> },
       { path: "user/email", element: <UserEmail /> },
       { path: "user/password", element: <UserPassword /> },
+      { path: "user/auth/success", element: <UserAuthSuccess /> },
 
       //question
       { path: "question/write", element: <QuestionWrite /> },

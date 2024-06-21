@@ -51,6 +51,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             // 네이버에서 받은 이메일 조회 후 해당 이메일이 없는 경우 insert
             System.out.println("최초");
             mapper.insertUser(user);
+//            mapper.insertProfileImage(user.getId(), response.getProfileImage());
         }
 
         return new CustomOauth2UserDetails(user, oAuth2User.getAttributes());
