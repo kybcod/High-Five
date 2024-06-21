@@ -46,7 +46,11 @@ public class ReviewController {
 
     @GetMapping("{productId}")
     public ResponseEntity getReviewById(@PathVariable Integer productId) throws Exception {
-        Review review = service.selectReviewById(productId);
-        return ResponseEntity.ok().body(review);
+        List<Map<String, Object>> reviewList = service.selectReviewById(productId);
+        if (reviewList == null || reviewList.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.ok().body(reviewList);
+        }
     }
 }
