@@ -186,6 +186,10 @@ export function ChatRoom() {
     }
   };
 
+  const handleProductDetailPage = () => {
+    navigate(`/product/${data.product.id}`);
+  };
+
   const handleSaveReviewButtonClick = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -221,7 +225,7 @@ export function ChatRoom() {
   };
   const handleGetReviewButtonClick = () => {
     axios
-      .get(`/api/reviews/${productId}`)
+      .get(`/api/reviews/${data.product.id}`)
       .then((res) => {
         setReviewList(res.data.reviewList);
       })
@@ -234,19 +238,17 @@ export function ChatRoom() {
     if (data.user.id === Number(account.id)) {
       // 구매자
       if (data.product.status) {
-        // 판매중
         return {
           label: "입찰 가능 상품",
-          action: () => navigate(`/product/${data.product.id}`),
+          action: () => handleProductDetailPage(),
         };
       } else {
-        // 판매종료
         if (data.bidder.bidStatus) {
           if (!data.product.paymentStatus) {
             return {
               label: "결제 하러 가기",
               // TODO : 결제 페이지로 경로 수정
-              action: () => navigate(`/product/${data.product.id}`),
+              action: () => handleProductDetailPage(),
             };
           }
           if (data.product.paymentStatus && !data.product.reviewStatus) {
@@ -275,7 +277,7 @@ export function ChatRoom() {
       if (data.product.status) {
         return {
           label: "입찰 진행 상품",
-          action: () => navigate(`/product/${data.product.id}`),
+          action: () => handleProductDetailPage(),
         };
       } else {
         if (data.user.id === data.product.buyerId) {
@@ -311,7 +313,7 @@ export function ChatRoom() {
   };
   const buttonConfig = determineButton();
 
-  // spinner
+  // -- spinner
   if (data.chatRoom == null) {
     return <Spinner />;
   }
