@@ -26,7 +26,6 @@ public class Product {
     private Boolean reviewStatus;
     private List<ProductFile> productFileList;
 
-    // TODO:지우기
     private Integer numberOfJoin;
     private String userNickName;
     private String maxBidPrice;

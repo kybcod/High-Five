@@ -137,17 +137,6 @@ public interface ProductMapper {
             """)
     int updateViewCount(Integer id);
 
-    @Delete("DELETE FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
-    int deleteLikeByProductIdAndUserId(Integer productId, Integer userId);
-
-    @Insert("""
-            INSERT INTO product_like (product_id, user_id)
-            VALUES (#{productId}, #{userId})
-            """)
-    int insertLikeByProductIdAndUserId(Integer productId, Integer userId);
-
-    @Select("SELECT product_id FROM product_like WHERE user_id=#{userId}")
-    List<Integer> selectLikeByUserId(Integer userId);
 
     @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
     int selectLikeByProductIdAndUserId(Integer productId, String userId);
@@ -327,4 +316,12 @@ public interface ProductMapper {
             WHERE id = #{productId}
             """)
     Product selectProductTitleById(ChatRoom chatRoom);
+
+    @Update("""
+            UPDATE product
+            SET payment_status = #{paymentStatus}
+            WHERE id = #{productId}
+            """)
+    int updatePaymentStatus(Integer productId, boolean paymentStatus);
+
 }

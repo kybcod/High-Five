@@ -19,7 +19,7 @@ public class PaymentController {
         return service.getPayment(userId, productId);
     }
 
-    @PostMapping("insert")
+    @PostMapping
     public Payment insertPayment(@RequestBody Payment payment) {
         return service.insertPayment(payment);
     }

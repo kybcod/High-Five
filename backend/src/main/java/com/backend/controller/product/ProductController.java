@@ -37,12 +37,11 @@ public class ProductController {
     }
 
     @GetMapping
-    @Description("상품조회 - 조건x")
+    @Description("상품조회 - 메인 페이지")
     public List<Product> list() {
         return service.list();
     }
 
-    //    @GetMapping("list")
     @GetMapping("search")
     @Description("상품조회 - 페이징, 키워드, 카테고리 검색")
     public Map<String, Object> getListProduct(@RequestParam(defaultValue = "1") int page,

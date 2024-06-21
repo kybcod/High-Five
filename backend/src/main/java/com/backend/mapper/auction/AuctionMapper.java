@@ -70,13 +70,6 @@ public interface AuctionMapper {
     int selectTotalCountBidsByUserId(Integer userId);
 
     @Select("""
-            SELECT *
-            FROM bid_list
-            WHERE user_id=#{userId} AND product_id=#{productId}
-            """)
-    List<BidList> selectBidsByUserIdAndProductId(@Param("userId") Integer userId, @Param("productId") Integer productId);
-
-    @Select("""
             SELECT id, user_id, product_id, bid_price, bid_status
             FROM bid_list
             WHERE product_id = #{productId}
@@ -91,4 +84,5 @@ public interface AuctionMapper {
             WHERE id = #{id}
             """)
     int updateBidStatusByProductId(Integer id, boolean bidStatus);
+
 }

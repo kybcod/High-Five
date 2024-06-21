@@ -36,7 +36,6 @@ public class AuctionService {
     String srcPrefix;
 
 
-    //TODO:hasAccess 수정하기
     //userId 받고 있는지 확인하기 위해 즉 로그인 했는지
     public boolean hasAccess(Integer id, Authentication authentication) {
         Product product = productMapper.selectById(id);
@@ -53,7 +52,7 @@ public class AuctionService {
 
     public Map<String, Object> getBidListByUserId(Integer userId, Pageable pageable) {
 
-        // 해당 userId가 입찰에 참여한 bid주 부 productList
+        // 해당 userId가 입찰에 참여한 bid(productList)
         List<BidList> bidList = mapper.selectBidListByUserIdWithPagination(userId, pageable);
         productService.settingFilePath(bidList.stream().map(BidList::getProduct).toList());
 

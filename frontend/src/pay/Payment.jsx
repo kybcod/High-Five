@@ -48,7 +48,6 @@ export function Payment() {
     });
 
     axios.get(`/api/products/${productId}`).then((res) => {
-      console.log(res.data.product);
       setProduct(res.data.product);
     });
   }, []);
@@ -91,7 +90,7 @@ export function Payment() {
       if (success) {
         //post 요청 : payment (merchant_uid, bid_id, 결제 상태 : true)
         axios
-          .post(`/api/payments/insert`, {
+          .post(`/api/payments`, {
             merchantUid,
             amount,
             bidListId,
