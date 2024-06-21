@@ -82,9 +82,9 @@ export function ChatRoom() {
             user: user || {},
             chatRoom: chatRoom || {},
           });
+          setMessageList(res.data.previousChatList);
+          setRoomId(res.data.chatRoom.id);
         }
-        setMessageList(res.data.previousChatList);
-        setRoomId(res.data.chatRoom.id);
       })
       .catch(() => {
         toast({
@@ -97,10 +97,6 @@ export function ChatRoom() {
       })
       .finally();
   }, []);
-  console.log("previousChatList", data.previousChatList);
-  if (data.previousChatList == null) {
-    console.log("null!!!!");
-  }
 
   // -- stomp
   useEffect(() => {
@@ -233,6 +229,88 @@ export function ChatRoom() {
       .finally();
   };
 
+  // -- productStatusButton
+  const determineButton = () => {
+    if (data.user.id === Number(account.id)) {
+      // 구매자
+      if (data.product.status) {
+        // 판매중
+        return {
+          label: "입찰 가능 상품",
+          action: () => navigate(`/product/${data.product.id}`),
+        };
+      } else {
+        // 판매종료
+        if (data.bidder.bidStatus) {
+          if (!data.product.paymentStatus) {
+            return {
+              label: "결제 하러 가기",
+              // TODO : 결제 페이지로 경로 수정
+              action: () => navigate(`/product/${data.product.id}`),
+            };
+          }
+          if (data.product.paymentStatus && !data.product.reviewStatus) {
+            return {
+              label: "후기 작성 하기",
+              action: () => {
+                onOpen();
+                handleReviewButtonClick();
+              },
+            };
+          }
+          if (data.product.reviewStatus) {
+            return {
+              label: "작성 후기 확인",
+              action: () => {
+                onOpen();
+                handleGetReviewButtonClick();
+              },
+            };
+          }
+        }
+        return { label: "입찰 종료 상품", action: null, disabled: true };
+      }
+    } else {
+      // 판매자
+      if (data.product.status) {
+        return {
+          label: "입찰 진행 상품",
+          action: () => navigate(`/product/${data.product.id}`),
+        };
+      } else {
+        if (data.user.id === data.product.buyerId) {
+          if (!data.product.paymentStatus) {
+            return {
+              label: "결제 대기 상품",
+              action: null,
+            };
+          }
+          if (data.product.paymentStatus && !data.product.reviewStatus) {
+            return {
+              label: "결제 완료 상품",
+              action: null,
+            };
+          }
+          if (data.product.reviewStatus) {
+            return {
+              label: "받은 후기 확인",
+              action: () => {
+                onOpen();
+                handleGetReviewButtonClick();
+              },
+            };
+          }
+        }
+        return {
+          label: "입찰 종료 상품",
+          action: null,
+          disabled: true,
+        };
+      }
+    }
+  };
+  const buttonConfig = determineButton();
+
   // spinner
   if (data.chatRoom == null) {
     return <Spinner />;
@@ -306,39 +384,13 @@ export function ChatRoom() {
           </Box>
           <Box w={"20%"} border={"1px solid red"}>
             {/* 상품 상태 */}
-            {/* false 현재 판매 종료, true 판매 중*/}
-            {/* TODO : Notion 정리 */}
-            {data.product.status === false &&
-            data.bidder.userId === Number(account.id) &&
-            data.product.reviewStatus === false ? (
+            {buttonConfig && (
               <Button
-                onClick={() => {
-                  onOpen();
-                  handleReviewButtonClick();
-                }}
+                onClick={buttonConfig.action}
+                isDisabled={buttonConfig.disabled}
               >
-                후기 등록
+                {buttonConfig.label}
               </Button>
-            ) : data.product.status === false &&
-              data.bidder.userId === Number(account.id) &&
-              data.product.reviewStatus === true ? (
-              <Button
-                onClick={() => {
-                  onOpen();
-                  handleGetReviewButtonClick();
-                }}
-              >
-                후기 확인
-              </Button>
-            ) : data.product.status === false &&
-              data.bidder.userId === Number(account.id) ? (
-              <Button>입찰 실패</Button>
-            ) : data.product.status === 1 ? (
-              <Button onClick={() => navigate(`/product/${data.product.id}`)}>
-                입찰 가능 상품
-              </Button>
-            ) : (
-              <Button isDisabled={true}>판매 종료 상품</Button>
             )}
           </Box>
         </Flex>
