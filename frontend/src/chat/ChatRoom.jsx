@@ -319,6 +319,17 @@ export function ChatRoom() {
   };
   const buttonConfig = determineButton();
 
+  const handleBlackUser = () => {
+    const blackUser =
+      data.user.id === Number(account.id) ? data.seller.id : data.user.id;
+    axios
+      .put(`/api/users/black/${blackUser}`)
+      // TODO : status 추가 예정
+      .then(() => {})
+      .catch()
+      .finally();
+  };
+
   // -- spinner
   if (data.chatRoom == null) {
     return <Spinner />;
@@ -361,8 +372,7 @@ export function ChatRoom() {
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </MenuButton>
               <MenuList>
-                {/* TODO : 채팅방 신고하기 */}
-                <MenuItem gap={2}>
+                <MenuItem gap={2} onClick={handleBlackUser}>
                   <FontAwesomeIcon icon={faCircleExclamation} />
                   신고하기
                 </MenuItem>
