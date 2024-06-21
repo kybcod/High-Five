@@ -122,34 +122,33 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                   </Box>
                 </Flex>
               </Box>
-              {boardCommentList.map(
-                (subComment) =>
-                  subComment.refId === boardComment.id && (
-                    <Box key={subComment.commentSeq} ml="4" width="80%">
-                      <Flex>
-                        <Text>{subComment.userId}</Text>
-                        <Textarea
-                          defaultValue={subComment.content}
-                          readOnly
-                          size="sm"
-                        />
-                        <Stack>
-                          <Button
-                            onClick={() =>
-                              handleClickCommentDelete(subComment.id)
-                            }
-                          >
-                            삭제
-                          </Button>
-                          <Button
-                            onClick={() => handleEditClick(subComment.id)}
-                          >
-                            수정
-                          </Button>
-                        </Stack>
-                      </Flex>
-                    </Box>
-                  ),
+              {boardComment.commentId === 1 && (
+                <Box
+                  key={`${boardComment.id}-${boardComment.commentSeq}`}
+                  ml="4"
+                  width="80%"
+                >
+                  <Flex>
+                    <Text>{boardComment.userId}</Text>
+                    <Textarea
+                      defaultValue={boardComment.content}
+                      readOnly
+                      size="sm"
+                    />
+                    <Stack>
+                      <Button
+                        onClick={() =>
+                          handleClickCommentDelete(boardComment.id)
+                        }
+                      >
+                        삭제3
+                      </Button>
+                      <Button onClick={() => handleEditClick(boardComment.id)}>
+                        수정
+                      </Button>
+                    </Stack>
+                  </Flex>
+                </Box>
               )}
             </Stack>
           ))}

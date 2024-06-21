@@ -39,14 +39,13 @@ public class BoardCommentService {
 //        int sequence = 0;
 //        sequence++;
 //        boardComment.setCommentSeq(sequence);
-        int maxSeq = mapper.getMaxCommentSeq(boardComment.getBoardId());
-        boardComment.setCommentSeq(maxSeq + 1);
 
-
-        if (boardComment.getRefId() == null || boardComment.getCommentId() == null || boardComment.getCommentSeq() == null) {
-            boardComment.setRefId(0);
+        if (boardComment.getRefId() != null && boardComment.getRefId() > 0) {
+            int maxSeq = mapper.getMaxCommentSeq(boardComment.getBoardId());
+            boardComment.setCommentSeq(maxSeq + 1);
+            boardComment.setCommentId(1);
+        } else {
             boardComment.setCommentId(0);
-            boardComment.setCommentSeq(0);
         }
 
         System.out.println(boardComment.getCommentId());

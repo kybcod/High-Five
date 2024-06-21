@@ -23,7 +23,7 @@ public interface BoardCommentMapper {
     int getMaxCommentSeq(int boardId);
 
     @Select("""
-            SELECT id, board_id, user_id, content, inserted
+            SELECT id, board_id, user_id, content, inserted, comment_id, comment_sequence commentSeq, reference_id refId
             FROM board_comment
             WHERE board_id = #{boardId}
             """)
