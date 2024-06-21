@@ -87,4 +87,19 @@ public interface AuctionMapper {
             WHERE id = #{id}
             """)
     int updateBidStatusByProductId(Integer id, boolean bidStatus);
+
+    // -- chatService
+    @Select("""
+            SELECT *
+            FROM bid_list
+            WHERE product_id = #{productId} AND user_id = #{userId}
+            """)
+    BidList selectBidderByProductId(Integer productId, Integer userId);
+
+    @Select("""
+            SELECT user_id
+            FROM bid_list
+            WHERE product_id = #{productId} AND bid_status = true
+            """)
+    Integer selectBuyerIdByProductId(Integer productId);
 }
