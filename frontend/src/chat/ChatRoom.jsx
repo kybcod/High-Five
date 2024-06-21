@@ -63,6 +63,7 @@ export function ChatRoom() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [reviewList, setReviewList] = useState([]);
   const [reviewId, setReviewId] = useState([]);
+  const tokenUserId = Number(account.id);
 
   // -- axios.get
   useEffect(() => {
@@ -124,7 +125,7 @@ export function ChatRoom() {
     });
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    client.activate(); // 활성화
+    // client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
@@ -239,7 +240,7 @@ export function ChatRoom() {
 
   // -- productStatusButton
   const determineButton = () => {
-    if (data.user.id === Number(account.id)) {
+    if (data.user.id === tokenUserId) {
       // 구매자
       if (data.product.status) {
         return {
@@ -321,7 +322,7 @@ export function ChatRoom() {
 
   const handleBlackUser = () => {
     const blackUser =
-      data.user.id === Number(account.id) ? data.seller.id : data.user.id;
+      data.user.id === tokenUserId ? data.seller.id : data.user.id;
     axios
       .put(`/api/users/black/${blackUser}`)
       // TODO : status 추가 예정
@@ -353,7 +354,7 @@ export function ChatRoom() {
           {/* 상대방 상점 */}
           <Center cursor={"pointer"} w={"80%"} border={"1px solid blue"}>
             <Box fontSize={"xl"}>
-              {data.seller.id === Number(account.id) ? (
+              {data.seller.id === tokenUserId ? (
                 <Text onClick={() => navigate(`/myPage/${data.user.id}/shop`)}>
                   {data.user.nickName}
                 </Text>
@@ -427,7 +428,7 @@ export function ChatRoom() {
               <Flex
                 key={index}
                 justifyContent={
-                  msg.userId === Number(account.id) ? "flex-end" : "flex-start"
+                  msg.userId === tokenUserId ? "flex-end" : "flex-start"
                 }
                 w="full"
                 mb={1}
@@ -435,20 +436,12 @@ export function ChatRoom() {
                 <Flex
                   flexDirection="column"
                   alignItems={
-                    msg.userId === Number(account.id)
-                      ? "flex-end"
-                      : "flex-start"
+                    msg.userId === tokenUserId ? "flex-end" : "flex-start"
                   }
                 >
                   <Box
-                    textAlign={
-                      msg.userId === Number(account.id) ? "right" : "left"
-                    }
-                    bg={
-                      msg.userId === Number(account.id)
-                        ? "green.200"
-                        : "gray.100"
-                    }
+                    textAlign={msg.userId === tokenUserId ? "right" : "left"}
+                    bg={msg.userId === tokenUserId ? "green.200" : "gray.100"}
                     borderRadius="18px"
                     p={2}
                     maxW="100%"
