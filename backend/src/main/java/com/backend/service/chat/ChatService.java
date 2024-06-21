@@ -2,7 +2,6 @@ package com.backend.service.chat;
 
 import com.backend.domain.auction.BidList;
 import com.backend.domain.chat.Chat;
-import com.backend.domain.chat.ChatMessage;
 import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.product.Product;
 import com.backend.domain.user.User;
@@ -93,13 +92,12 @@ public class ChatService {
         // -- bidder
         BidList bidder = auctionMapper.selectBidderByProductId(productId, tokenUserId);
         result.put("bidder", bidder);
-
-
+        
         return result;
     }
 
-    public void insertMessage(ChatMessage chatMessage) {
-        int success = mapper.insertMessage(chatMessage);
+    public void insertMessage(Chat chat) {
+        mapper.insertMessage(chat);
     }
 
     public List<Map<String, Object>> getChatRoomList(Authentication authentication) {
