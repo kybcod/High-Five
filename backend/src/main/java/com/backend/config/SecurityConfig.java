@@ -17,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private final Oauth2UserService oauth2UserService;
     private final OAuth2SuccessHandler oauth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -32,7 +33,9 @@ public class SecurityConfig {
                 // 사용자 정보 엔드포인트에 대한 설정 추가
                 .userInfoEndpoint(infoEndpoint ->
                         // 사용자 서비스 구성(로그인 성공 후 사용자 정보 처리)
-                        infoEndpoint.userService(oauth2UserService)).successHandler(oauth2SuccessHandler));
+                        infoEndpoint.userService(oauth2UserService)).successHandler(oauth2SuccessHandler)
+                .failureHandler(oAuth2FailureHandler)
+        );
 
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 

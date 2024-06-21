@@ -2,12 +2,16 @@ package com.backend.service.user;
 
 import com.backend.domain.user.*;
 import com.backend.mapper.user.UserMapper;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Map;
 
@@ -41,26 +45,36 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             System.out.println("response = " + response);
         }
         // TODO. sns login
-        // test 중 ... db에 저장하는 부분 주석 처리
-//
-//        // DB에 저장
-//        User user = mapper.selectUserByEmail(response.getEmail());
-//        if (user == null) {
-//            user = User
-//                    .builder()
-//                    .email(response.getEmail())
-//                    .nickName(response.getNickName())
-//                    .password(userRequest.getAccessToken().getTokenValue())
-//                    .phoneNumber(response.getPhoneNumber())
-//                    .build();
-//
-//            // 네이버에서 받은 이메일 조회 후 해당 이메일이 없는 경우 insert
-//            System.out.println("최초");
-//            mapper.insertUser(user);
-////            mapper.insertProfileImage(user.getId(), response.getProfileImage());
-//        }
 
-//        return new CustomOauth2UserDetails(user, oAuth2User.getAttributes());
-        return new CustomOauth2UserDetails(null, oAuth2User.getAttributes());
+        // DB에 저장
+        User user = mapper.selectUserByEmail(response.getEmail());
+        if (user == null) {
+            user = User
+                    .builder()
+                    .email(response.getEmail())
+                    .nickName(response.getNickName())
+                    .password(userRequest.getAccessToken().getTokenValue())
+                    .build();
+
+            String profileImage = response.getProfileImage();
+            if (profileImage != null) {
+                // TODO. user 정보 변경 후 주석 해제
+//                user.setProfileImage(profileImage);
+            }
+
+            // 네이버에서 받은 이메일 조회 후 해당 이메일이 없는 경우 insert
+            if (platform.equals("naver")) {
+                System.out.println("최초");
+                user.setPhoneNumber(response.getPhoneNumber());
+                mapper.insertUser(user);
+//            mapper.insertProfileImage(user.getId(), response.getProfileImage());
+            } else {
+                HttpSession httpSession = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession();
+                httpSession.setAttribute("user", user);
+                throw new OAuth2AuthenticationException(new OAuth2Error("phone_number_required", "Phone number is required", ""));
+            }
+        }
+
+        return new CustomOauth2UserDetails(user, oAuth2User.getAttributes());
     }
 }
