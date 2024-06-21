@@ -21,6 +21,7 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,28 +70,27 @@ public class ProductService {
 
     public List<Product> list() {
         List<Product> products = mapper.selectAll();
-
-        // 각 product에 모든 파일을 설정
-        for (Product product : products) {
-            List<String> productFiles = mapper.selectFileByProductId(product.getId());
-            List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                    .toList();
-            product.setProductFileList(files);
-        }
+        settingFilePath(products);
         return products;
+    }
+
+    public void settingFilePath(List<Product> products) {
+        products.forEach(product -> product.getProductFileList().forEach(
+                productFile -> productFile.setFilePath(srcPrefix)
+        ));
     }
 
     public Map<String, Object> getList(Pageable pageable, String keyword, String category) {
         List<Product> content = mapper.selectWithPageable(pageable, keyword, category);
+        settingFilePath(content);
 
         // 각 product에 모든 파일을 설정
         for (Product product : content) {
-            List<String> productFiles = mapper.selectFileByProductId(product.getId());
-            List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                    .toList();
-            product.setProductFileList(files);
+//            List<String> productFiles = mapper.selectFileByProductId(product.getId());
+//            List<ProductFile> files = productFiles.stream()
+//                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+//                    .toList();
+//            product.setProductFileList(files);
         }
 
         int total = mapper.selectTotalCount(keyword, category);
@@ -105,12 +105,13 @@ public class ProductService {
         mapper.updateViewCount(id);
 
         Product product = mapper.selectById(id);
+        settingFilePath(Collections.singletonList(product));
 
-        List<String> productFiles = mapper.selectFileByProductId(product.getId());
-        List<ProductFile> files = productFiles.stream()
-                .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                .toList();
-        product.setProductFileList(files);
+//        List<String> productFiles = mapper.selectFileByProductId(product.getId());
+//        List<ProductFile> files = productFiles.stream()
+//                .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+//                .toList();
+//        product.setProductFileList(files);
 
         //좋아요
         Map<String, Object> like = new HashMap<>();
@@ -144,7 +145,8 @@ public class ProductService {
         }
 
         if (newFileList != null && newFileList.length > 0) {
-            List<String> fileNameList = mapper.selectFileByProductId(product.getId());
+            List<ProductFile> productFileList = mapper.selectFileByProductId(product.getId());
+            List<String> fileNameList = productFileList.stream().map(ProductFile::getFileName).toList();
 
             for (MultipartFile file : newFileList) {
                 String name = file.getOriginalFilename();
@@ -183,15 +185,15 @@ public class ProductService {
 
 
         // s3에서 파일(이미지) 삭제
-//        List<String> fileNameList = mapper.selectFileByProductId(id);
-//        for (String fileName : fileNameList) {
-//            String key = STR."prj3/\{id}/\{fileName}";
-//            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-//                    .bucket(bucketName)
-//                    .key(key)
-//                    .build();
-//            s3Client.deleteObject(deleteObjectRequest);
-//        }
+        List<ProductFile> productFileList = mapper.selectFileByProductId(id);
+        for (ProductFile productFile : productFileList) {
+            String key = STR."prj3/\{id}/\{productFile.getFileName()}";
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+            s3Client.deleteObject(deleteObjectRequest);
+        }
 
         // 입찰 내역 삭제
         mapper.deleteBidListByProductId(id);
@@ -232,15 +234,15 @@ public class ProductService {
     public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
         List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
         String userNickName = mapper.selectUserNickName(userId);
+        settingFilePath(productList);
 
-
-        for (Product product : productList) {
-            List<String> productFiles = mapper.selectFileByProductId(product.getId());
-            List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                    .toList();
-            product.setProductFileList(files);
-        }
+//        for (Product product : productList) {
+//            List<String> productFiles = mapper.selectFileByProductId(product.getId());
+//            List<ProductFile> files = productFiles.stream()
+//                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+//                    .toList();
+//            product.setProductFileList(files);
+//        }
 
         // 더보기 : 페이지
         int total = mapper.selectTotalCountByUserId(userId);
@@ -256,14 +258,15 @@ public class ProductService {
     public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable) {
         // 좋아요
         List<Product> likeProductList = mapper.selectLikeSelectByUserId(userId, pageable);
+        settingFilePath(likeProductList);
 
-        for (Product product : likeProductList) {
-            List<String> productFiles = mapper.selectFileByProductId(product.getId());
-            List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                    .toList();
-            product.setProductFileList(files);
-        }
+//        for (Product product : likeProductList) {
+//            List<String> productFiles = mapper.selectFileByProductId(product.getId());
+//            List<ProductFile> files = productFiles.stream()
+//                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
+//                    .toList();
+//            product.setProductFileList(files);
+//        }
 
         int total = mapper.selectCountLikeByUserId(userId);
 

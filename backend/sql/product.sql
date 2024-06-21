@@ -46,6 +46,9 @@ WHERE u.id = 20
 GROUP BY p.id;
 
 SELECT *
-FROM payment;
+FROM product_file;
 
 
+DESC product_file;
+
+S

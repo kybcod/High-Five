@@ -2,9 +2,9 @@ package com.backend.service.auction;
 
 import com.backend.domain.auction.BidList;
 import com.backend.domain.product.Product;
-import com.backend.domain.product.ProductFile;
 import com.backend.mapper.auction.AuctionMapper;
 import com.backend.mapper.product.ProductMapper;
+import com.backend.service.product.ProductService;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +26,7 @@ public class AuctionService {
 
     private final AuctionMapper mapper;
     private final ProductMapper productMapper;
+    private final ProductService productService;
     private final S3Client s3Client;
 
     @Value("${aws.s3.bucket.name}")
@@ -52,30 +53,17 @@ public class AuctionService {
 
     public Map<String, Object> getBidListByUserId(Integer userId, Pageable pageable) {
 
-        // 해당 userId가 입찰에 참여한 productList
-        List<Product> productList = mapper.selectBidListByUserIdWithPagination(userId, pageable);
-
-        for (Product product : productList) {
-            // 파일 저장
-            List<String> productFiles = productMapper.selectFileByProductId(product.getId());
-            List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                    .toList();
-            product.setProductFileList(files);
-
-            // BidsList 저장
-            List<BidList> bids = mapper.selectBidsByUserIdAndProductId(product.getUserId(), product.getId());
-            product.setProductBidList(bids);
-        }
-
+        // 해당 userId가 입찰에 참여한 bid주 부 productList
+        List<BidList> bidList = mapper.selectBidListByUserIdWithPagination(userId, pageable);
+        productService.settingFilePath(bidList.stream().map(BidList::getProduct).toList());
 
         // 더보기 : 페이지
         int total = mapper.selectTotalCountBidsByUserId(userId);
-        Page<Product> page = new PageImpl<>(productList, pageable, total);
+        Page<BidList> page = new PageImpl<>(bidList, pageable, total);
         PageInfo pageInfo = new PageInfo().setting(page);
         boolean hasNextPage = pageable.getPageNumber() + 1 < page.getTotalPages();
 
-        return Map.of("productList", productList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
+        return Map.of("bidList", bidList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
 
     }
 

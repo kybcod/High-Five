@@ -1,6 +1,5 @@
 package com.backend.domain.product;
 
-import com.backend.domain.auction.BidList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -25,10 +24,9 @@ public class Product {
     private LocalDateTime endTime;
     private int viewCount;
     private Boolean reviewStatus;
+    private List<ProductFile> productFileList;
 
     // TODO:지우기
-    private List<BidList> productBidList;
-    private List<ProductFile> productFileList;
     private Integer numberOfJoin;
     private String userNickName;
     private String maxBidPrice;

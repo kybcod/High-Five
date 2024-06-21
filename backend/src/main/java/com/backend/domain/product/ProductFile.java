@@ -1,13 +1,14 @@
 package com.backend.domain.product;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductFile {
+    private Integer productId;
     private String fileName;
-    private String filePath;
+    private String filePath; // s3 + filename
+
+    public void setFilePath(String srcPrefix) {
+        this.filePath = STR."\{srcPrefix}\{this.productId}/\{fileName}";
+    }
 }
