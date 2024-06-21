@@ -23,6 +23,7 @@ import {
   Text,
   useDisclosure,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
@@ -123,7 +124,7 @@ export function ChatRoom() {
     });
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    // client.activate(); // 활성화
+    client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
@@ -288,12 +289,14 @@ export function ChatRoom() {
             return {
               label: "결제 대기 상품",
               action: null,
+              disabled: true,
             };
           }
           if (data.product.paymentStatus && !data.product.reviewStatus) {
             return {
               label: "결제 완료 상품",
               action: null,
+              disabled: true,
             };
           }
           if (data.product.reviewStatus) {
@@ -402,29 +405,55 @@ export function ChatRoom() {
       </Box>
       <Box>
         <Box>
-          <Box h={"500px"} overflow={"auto"}>
+          <VStack
+            h={"500px"}
+            // overflow={"auto"}
+            spacing={4}
+            flex={1}
+            overflowY="auto"
+            w={"full"}
+          >
             {messageList.map((msg, index) => (
-              <Box
+              <Flex
                 key={index}
-                border={"1px solid red"}
-                borderRadius={30}
-                pl={3}
+                justifyContent={
+                  msg.userId === Number(account.id) ? "flex-end" : "flex-start"
+                }
+                w="full"
+                mb={1}
               >
-                <Flex>
-                  <Text>
-                    {/* 변수의 형식까지 비교하기 위해 account.id 문자열을 숫자로 변경 */}
-                    {msg.userId == data.user.id ? (
-                      <>{data.user.nickName}</>
-                    ) : (
-                      <>{data.seller.nickName}</>
-                    )}
+                <Flex
+                  flexDirection="column"
+                  alignItems={
+                    msg.userId === Number(account.id)
+                      ? "flex-end"
+                      : "flex-start"
+                  }
+                >
+                  <Box
+                    textAlign={
+                      msg.userId === Number(account.id) ? "right" : "left"
+                    }
+                    bg={
+                      msg.userId === Number(account.id)
+                        ? "green.200"
+                        : "gray.100"
+                    }
+                    borderRadius="18px"
+                    p={2}
+                    maxW="100%"
+                    mb={1}
+                    position="relative"
+                  >
+                    <Text p={1}>{msg.message}</Text>
+                  </Box>
+                  <Text fontSize="xs" color="gray.500">
+                    {msg.inserted}
                   </Text>
-                  <Text> : {msg.message}</Text>
                 </Flex>
-                <Text fontSize={"xs"}>{msg.inserted}</Text>
-              </Box>
+              </Flex>
             ))}
-          </Box>
+          </VStack>
           <Box>
             <Flex>
               <Input
