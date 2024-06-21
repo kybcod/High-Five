@@ -1,6 +1,5 @@
 package com.backend.service.product;
 
-import com.backend.domain.auction.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
 import com.backend.mapper.auction.AuctionMapper;
@@ -22,7 +21,6 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,32 +206,6 @@ public class ProductService {
         mapper.deleteByProductId(id);
     }
 
-    public Map<String, Object> like(Map<String, Object> likeInfo, Authentication authentication) {
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("like", false);
-
-        Integer productId = (Integer) likeInfo.get("productId");
-        Integer userId = Integer.valueOf(authentication.getName());
-
-        // 이미 좋아요가 되어 있다면 delete(count=1)
-        int count = mapper.deleteLikeByProductIdAndUserId(productId, userId);
-
-        // 좋아요 안했으면 insert
-        if (count == 0) {
-            mapper.insertLikeByProductIdAndUserId(productId, userId);
-            result.put("like", true);
-        }
-        result.put("count", mapper.selectCountLikeByProductId(productId));
-
-        return result;
-    }
-
-    public List<Integer> getLike(Integer userId) {
-        return mapper.selectLikeByUserId(userId);
-    }
-
-
     public boolean validate(Product product) {
         if (product.getTitle() == null || product.getTitle().isBlank()) {
             return false;
@@ -255,33 +227,6 @@ public class ProductService {
 
         Product product = mapper.selectById(id);
         return product.getUserId().equals(Integer.valueOf(authentication.getName()));
-    }
-
-    // TODO : Mapper 정리
-    public void updateProductState() {
-        // 0: 판매종료(false)
-        // 1:판매중(true) => 기본값
-
-        LocalDateTime currentTime = LocalDateTime.now();
-        List<Product> productList = mapper.selectProductAndBidList();
-
-        for (Product product : productList) {
-            if (product.getEndTime().isBefore(currentTime) && product.getStatus()) {
-                product.setStatus(false);
-                mapper.updateStatus(product); //판매 종료
-                updateBidStatus(product.getId()); // 낙찰
-            }
-            System.out.println("currentTime = " + currentTime);
-            System.out.println(STR."\{product.getTitle()} : 끝나는 시간(\{product.getEndTime()}) , 상품 상태 : \{product.getStatus()}");
-
-        }
-    }
-
-    private void updateBidStatus(Integer productId) {
-        BidList maxBid = auctionMapper.selectMaxPriceByProductId(productId);
-        if (maxBid != null) {
-            auctionMapper.updateBidStatusByProductId(maxBid.getId(), true);
-        }
     }
 
     public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
@@ -354,6 +299,14 @@ public class ProductService {
 //
 //        return new ProductListResponse(product, like, files);
 //    }
+
+    public List<Product> selectProductAndBidList() {
+        return mapper.selectProductAndBidList();
+    }
+
+    public void updateStatus(Product product) {
+        mapper.updateStatus(product);
+    }
 }
 
 

@@ -78,4 +78,11 @@ public class AuctionService {
         return Map.of("productList", productList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
 
     }
+
+    public void updateBidStatus(Integer productId) {
+        BidList maxBid = mapper.selectMaxPriceByProductId(productId);
+        if (maxBid != null) {
+            mapper.updateBidStatusByProductId(maxBid.getId(), true);
+        }
+    }
 }
