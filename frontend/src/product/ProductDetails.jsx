@@ -73,7 +73,7 @@ export function ProductDetails() {
     if (parseInt(bidPrice) > product.startPrice) {
       setIsProcessing(true);
       axios
-        .post("/api/bids/join", {
+        .post("/api/bids", {
           productId: id,
           userId: account.id,
           bidPrice: bidPrice,
@@ -131,13 +131,12 @@ export function ProductDetails() {
           {product.userNickName}
         </Heading>
 
-        <Flex justifyContent={"space-around"}>
+        <Flex justifyContent={"space-evenly"}>
           <SimpleSlider
             images={existingFilePreviews}
             isBrightness={!product.status}
           />
-
-          <Box ml={10} mb={5}>
+          <Box mb={5}>
             {product.status || (
               <>
                 {product.maxBidPrice !== null ? (
@@ -346,7 +345,7 @@ export function ProductDetails() {
               colorScheme="blue"
               onClick={handleJoinClick}
               isLoading={isProcessing}
-              loadingText="처리중..."
+              loadingText="처리중"
             >
               확인
             </Button>

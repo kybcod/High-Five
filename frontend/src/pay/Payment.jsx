@@ -171,6 +171,8 @@ export function Payment() {
           mt={5}
           boxShadow="lg"
           _hover={{ bg: "teal.600" }}
+          isLoading={false}
+          loadingText={"로딩중"}
         >
           결제하기
         </Button>

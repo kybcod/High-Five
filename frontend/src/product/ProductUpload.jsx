@@ -30,15 +30,18 @@ export function ProductUpload() {
   const toast = useToast();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   function handleSaleClick() {
+    setLoading(true);
     if (files.length === 0) {
       toast({
         status: "warning",
         description: "파일을 업로드 해주세요.",
         position: "top-right",
-        duration: 1000,
+        duration: 3000,
       });
+      setLoading(false);
       return;
     }
 
@@ -47,8 +50,9 @@ export function ProductUpload() {
         status: "warning",
         description: "제목을 입력해주세요.",
         position: "top-right",
-        duration: 1000,
+        duration: 3000,
       });
+      setLoading(false);
       return;
     }
 
@@ -57,8 +61,9 @@ export function ProductUpload() {
         status: "warning",
         description: "카테고리를 선택해주세요.",
         position: "top-right",
-        duration: 1000,
+        duration: 3000,
       });
+      setLoading(false);
       return;
     }
 
@@ -67,8 +72,9 @@ export function ProductUpload() {
         status: "warning",
         description: "입찰 마감 시간을 입력해주세요.",
         position: "top-right",
-        duration: 1000,
+        duration: 3000,
       });
+      setLoading(false);
       return;
     }
 
@@ -77,8 +83,9 @@ export function ProductUpload() {
         status: "warning",
         description: "입찰 시작가를 입력해주세요.",
         position: "top-right",
-        duration: 1000,
+        duration: 3000,
       });
+      setLoading(false);
       return;
     }
 
@@ -101,7 +108,7 @@ export function ProductUpload() {
           description: "새 상품이 등록되었습니다. 지금부터 판매 시작합니다.",
           status: "success",
           position: "top-right",
-          duration: 1000,
+          duration: 3000,
         });
         navigate("/");
       })
@@ -111,15 +118,18 @@ export function ProductUpload() {
             status: "error",
             description: `파일이 너무 큽니다. 다른 파일을 선택해주세요.`,
             position: "top-right",
+            duration: 3000,
           });
         } else {
           toast({
             status: "error",
             description: `서버 오류가 발생했습니다. 다시 시도해주세요.`,
             position: "top-right",
+            duration: 3000,
           });
         }
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   function handleChangeFiles(e) {
@@ -305,7 +315,7 @@ export function ProductUpload() {
       </Box>
       <Box mb={4}>
         <FormControl>
-          <FormLabel>상품 설명</FormLabel>
+          <FormLabel>상품 설명 (선택)</FormLabel>
           <Textarea
             borderColor="gray.400"
             onChange={(e) => setContent(e.target.value)}
@@ -319,7 +329,7 @@ export function ProductUpload() {
           onClick={handleSaleClick}
           colorScheme="blue"
           align="center"
-          isLoading={false}
+          isLoading={loading}
           loadingText={"업로드 중"}
           w={"100%"}
         >

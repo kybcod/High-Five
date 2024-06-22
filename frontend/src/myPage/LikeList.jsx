@@ -19,7 +19,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ArrowDownIcon, ArrowUpIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 export function LikeList() {
   const { userId } = useParams();
@@ -36,6 +36,7 @@ export function LikeList() {
     axios
       .get(`/api/products/user/${userId}/like?page=${currentPage}`)
       .then((res) => {
+        console.log(res.data);
         if (currentPage === 1) {
           setLikeProductList(res.data.likeProductList);
         } else {
@@ -87,10 +88,6 @@ export function LikeList() {
     const currentPage = parseInt(searchParams.get("page") || "1");
     searchParams.set("page", currentPage + 1);
     setSearchParams(searchParams);
-  }
-
-  function handleScrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleFoldClick() {
@@ -224,41 +221,33 @@ export function LikeList() {
           ))}
         </Grid>
       )}
-      <Box display={"flex"} justifyContent={"center"}>
-        {hasNextPage ? (
-          <Button
-            w={"30%"}
-            colorScheme={"blue"}
-            mt={4}
-            onClick={handleMoreClick}
-            rightIcon={<ArrowDownIcon />}
-          >
-            더보기
-          </Button>
-        ) : likeProductList.length > 9 ? (
-          <Button
-            w={"30%"}
-            colorScheme={"blue"}
-            mt={4}
-            rightIcon={<ChevronUpIcon />}
-            onClick={handleFoldClick}
-          >
-            접기
-          </Button>
-        ) : (
-          likeProductList.length > 6 && (
+      {likeProductList.length > 0 && (
+        <Box display={"flex"} justifyContent={"center"}>
+          {hasNextPage ? (
             <Button
               w={"30%"}
               colorScheme={"blue"}
               mt={4}
-              rightIcon={<ArrowUpIcon />}
-              onClick={handleScrollToTop}
+              onClick={handleMoreClick}
+              rightIcon={<ArrowDownIcon />}
             >
-              맨 위로
+              더보기
             </Button>
-          )
-        )}
-      </Box>
+          ) : (
+            likeProductList.length > 10 && (
+              <Button
+                w={"30%"}
+                colorScheme={"blue"}
+                mt={4}
+                rightIcon={<ChevronUpIcon />}
+                onClick={handleFoldClick}
+              >
+                접기
+              </Button>
+            )
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

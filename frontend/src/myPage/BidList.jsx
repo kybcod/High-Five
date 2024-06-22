@@ -15,7 +15,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { ArrowDownIcon, ArrowUpIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
@@ -76,10 +76,6 @@ export function BidList() {
     const currentPage = parseInt(searchParams.get("page") || "1");
     searchParams.set("page", currentPage + 1);
     setSearchParams(searchParams);
-  }
-
-  function handleScrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleFoldClick() {
@@ -216,10 +212,29 @@ export function BidList() {
                       <Text>{bid.product.timeFormat}</Text>
                     </Flex>
                   </Stack>
-                  {bid.product.status || (
+                  {/*{bid.product.status || (*/}
+                  {/*  <Box display="flex" justifyContent="center">*/}
+                  {/*    <Button mt={2} w={"100%"} colorScheme={"green"}>*/}
+                  {/*      상품 후기*/}
+                  {/*    </Button>*/}
+                  {/*  </Box>*/}
+                  {/*)}*/}
+                  {!bid.product.status && bid.bidStatus && (
                     <Box display="flex" justifyContent="center">
-                      <Button mt={2} w={"100%"} colorScheme={"green"}>
-                        상품 후기
+                      <Button
+                        mt={2}
+                        w={"100%"}
+                        colorScheme={"purple"}
+                        onClick={() => {
+                          if (!bid.product.paymentStatus) {
+                            navigate(
+                              `/pay/buyer/${bid.userId}/product/${bid.product.id}`,
+                            );
+                          }
+                        }}
+                        disabled={bid.product.paymentStatus}
+                      >
+                        {bid.product.paymentStatus ? "결제완료" : "거래하기"}
                       </Button>
                     </Box>
                   )}
@@ -229,41 +244,33 @@ export function BidList() {
           ))}
         </Grid>
       )}
-      <Box display={"flex"} justifyContent={"center"}>
-        {hasNextPage ? (
-          <Button
-            w={"30%"}
-            colorScheme={"blue"}
-            mt={4}
-            onClick={handleMoreClick}
-            rightIcon={<ArrowDownIcon />}
-          >
-            더보기
-          </Button>
-        ) : bidList.length > 9 ? (
-          <Button
-            w={"30%"}
-            colorScheme={"blue"}
-            mt={4}
-            rightIcon={<ChevronUpIcon />}
-            onClick={handleFoldClick}
-          >
-            접기
-          </Button>
-        ) : (
-          bidList.length > 6 && (
+      {bidList.length > 0 && (
+        <Box display={"flex"} justifyContent={"center"}>
+          {hasNextPage ? (
             <Button
               w={"30%"}
               colorScheme={"blue"}
               mt={4}
-              rightIcon={<ArrowUpIcon />}
-              onClick={handleScrollToTop}
+              onClick={handleMoreClick}
+              rightIcon={<ArrowDownIcon />}
             >
-              맨 위로
+              더보기
             </Button>
-          )
-        )}
-      </Box>
+          ) : (
+            bidList.length > 10 && (
+              <Button
+                w={"30%"}
+                colorScheme={"blue"}
+                mt={4}
+                rightIcon={<ChevronUpIcon />}
+                onClick={handleFoldClick}
+              >
+                접기
+              </Button>
+            )
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

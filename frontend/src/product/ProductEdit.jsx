@@ -46,6 +46,7 @@ export function ProductEdit() {
   const deleteModal = useDisclosure();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
@@ -63,6 +64,8 @@ export function ProductEdit() {
     const localDate = new Date(`${date}T${time}`);
     localDate.setHours(localDate.getHours() + 9);
     const formattedEndTime = localDate.toISOString().slice(0, -5);
+
+    setLoading(true);
 
     axios
       .putForm("/api/products", {
@@ -94,10 +97,12 @@ export function ProductEdit() {
       })
       .finally(() => {
         updateModal.onClose();
+        setLoading(false);
       });
   }
 
   function handleDeleteClick() {
+    setLoading(true);
     axios
       .delete(`/api/products/${id}`)
       .then(() =>
@@ -118,6 +123,7 @@ export function ProductEdit() {
       })
       .finally(() => {
         deleteModal.onClose();
+        setLoading(false);
       });
   }
 
@@ -342,6 +348,7 @@ export function ProductEdit() {
           w={"100%"}
           mr={4}
           colorScheme={"green"}
+          isLoading={loading}
         >
           수정
         </Button>
@@ -362,6 +369,8 @@ export function ProductEdit() {
               onClick={handleUpdateClick}
               colorScheme="blue"
               leftIcon={<FontAwesomeIcon icon={faCheck} />}
+              isLoading={false}
+              loadingText={"처리중"}
             >
               확인
             </Button>
@@ -369,6 +378,8 @@ export function ProductEdit() {
               mr={3}
               onClick={updateModal.onClose}
               leftIcon={<FontAwesomeIcon icon={faTimes} />}
+              isLoading={false}
+              loadingText={"처리중"}
             >
               취소
             </Button>
@@ -388,6 +399,8 @@ export function ProductEdit() {
               onClick={handleDeleteClick}
               colorScheme="red"
               leftIcon={<FontAwesomeIcon icon={faTrashAlt} />}
+              isLoading={loading}
+              loadingText={"처리중"}
             >
               확인
             </Button>
@@ -395,6 +408,8 @@ export function ProductEdit() {
               mr={3}
               onClick={deleteModal.onClose}
               leftIcon={<FontAwesomeIcon icon={faTimes} />}
+              isLoading={loading}
+              loadingText={"처리중"}
             >
               취소
             </Button>

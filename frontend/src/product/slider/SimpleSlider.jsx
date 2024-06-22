@@ -69,7 +69,7 @@ function SimpleSlider({ images, isBrightness }) {
   };
 
   return (
-    <Box width="40%" height="300px" position="relative">
+    <Box width="500px" height="500px" position="relative">
       <Slider {...settings}>
         {images.map((file, index) => (
           <Box key={index} position="relative" width="100%" height="300px">
