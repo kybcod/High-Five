@@ -119,26 +119,27 @@ export function Payment() {
         주문 정보
       </Text>
       <Divider mb={5} />
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={4} align="stretch" display={"flex"}>
         <Box>
           <Text mb={4} fontSize="lg" fontWeight="semibold">
             주문상품
           </Text>
           <Box
-            maxH="400px"
-            display="flex"
+            height="400px"
+            width="400px"
+            display={"flex"}
             justifyContent="center"
             alignItems="center"
             mb={7}
+            boxSizing="border-box"
+            mx={"auto"}
           >
             <Image
               src={product.productFileList[0].filePath}
               alt={name}
-              borderRadius="md"
-              mt={2}
+              height="100%"
+              width="100%"
               objectFit="contain"
-              maxW="100%"
-              maxH="100%"
             />
           </Box>
         </Box>
