@@ -46,8 +46,9 @@ export function ProductEdit() {
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
+      console.log(res.data);
       setProduct(res.data.product);
-      setExistingFilePreviews(res.data.productFileList || []);
+      setExistingFilePreviews(res.data.product.productFileList);
 
       const endTime = res.data.product.endTime;
       const [datePart, timePart] = endTime.split("T");
@@ -157,18 +158,6 @@ export function ProductEdit() {
     setNewFilePreviews(updatedNewFilePreviews);
   }
 
-  const formattedPrice = (money) => {
-    return money?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  function handleFormattedNumber(e) {
-    const inputValue = e.target.value.replaceAll(",", "");
-    // 숫자가 아닌 문자를 제외하고 필터링
-    const filteredValue = inputValue.replace(/\D/g, "");
-
-    setProduct({ ...product, startPrice: filteredValue });
-  }
-
   return (
     <Box p={4} mx="auto" maxWidth="600px">
       <Box mb={4}>
@@ -245,17 +234,19 @@ export function ProductEdit() {
 
       <FormFields
         title={product.title}
-        setTitle={(value) => setProduct({ ...product, title: value })}
+        setTitle={(title) => setProduct({ ...product, title: title })}
         category={product.category}
-        setCategory={(value) => setProduct({ ...product, category: value })}
+        setCategory={(category) =>
+          setProduct({ ...product, category: category })
+        }
         startPrice={product.startPrice}
-        setStartPrice={(value) => setProduct({ ...product, startPrice: value })}
+        setStartPrice={(price) => setProduct({ ...product, startPrice: price })}
         date={date}
         setDate={setDate}
         time={time}
         setTime={setTime}
         content={product.content}
-        setContent={(value) => setProduct({ ...product, content: value })}
+        setContent={(content) => setProduct({ ...product, content: content })}
       />
 
       <Flex justifyContent="space-between">

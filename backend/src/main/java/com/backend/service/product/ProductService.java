@@ -50,6 +50,7 @@ public class ProductService {
         //파일 추가
         if (files != null) {
             for (MultipartFile file : files) {
+                System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
                 // DB 저장
                 mapper.insertFile(product.getId(), file.getOriginalFilename());
 
@@ -128,6 +129,7 @@ public class ProductService {
             List<String> fileNameList = productFileList.stream().map(ProductFile::getFileName).toList();
 
             for (MultipartFile file : newFileList) {
+                System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
                 String name = file.getOriginalFilename();
                 if (!fileNameList.contains(name)) {
                     mapper.insertFile(product.getId(), name);

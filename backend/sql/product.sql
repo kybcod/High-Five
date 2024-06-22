@@ -18,7 +18,21 @@ FROM bid_list
 WHERE user_id = 20;
 
 SELECT *
+
 FROM chat;
 
 SELECT *
 FROM chat_room;
+
+alter table product_file
+    modify id INT first;
+
+alter table product_file
+    auto_increment = 1;
+
+alter table product_file
+    add constraint product_file_pk
+        primary key (id);
+
+alter table product_file
+    modify id INT auto_increment;

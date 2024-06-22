@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { Home } from "./Home.jsx";
 import { ProductList } from "./product/ProductList.jsx";
-import { ProductUpload } from "./product/ProductUpload.jsx";
+import { ProductUpload } from "./product/Upload/ProductUpload.jsx";
 import { MainProduct } from "./product/MainProduct.jsx";
 import { ProductEdit } from "./product/ProductEdit.jsx";
 import { ProductDetails } from "./product/ProductDetails.jsx";

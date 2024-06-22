@@ -12,17 +12,17 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
     setFiles(updatedFiles);
 
     const filePreviewList = updatedFiles.map((file, index) => {
-      const uniqueKey = file.name + index;
+      const uniqueKey = `${index}-${file.name}`;
       return (
         <Box
           mr={3}
           key={uniqueKey}
           id={uniqueKey}
-          boxSize={"180px"}
+          boxSize="180px"
           position="relative"
           minWidth="180px"
         >
-          <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
+          <Image boxSize="180px" mr={2} src={URL.createObjectURL(file)} />
           <Button
             position="absolute"
             top={1}
@@ -35,6 +35,7 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
         </Box>
       );
     });
+
     setFilePreView(filePreviewList);
 
     // 파일 인풋 초기화(같은 파일 선택 시 초기화)
@@ -66,8 +67,8 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
             alignItems="center"
             justifyContent="center"
             flexDirection="column"
-            minW="180px" // 최소 너비 지정
-            minH="180px" // 최소 높이 지정
+            minW="180px"
+            minH="180px"
           >
             <Box mb={2}>
               <FontAwesomeIcon icon={faCamera} size="2xl" />
@@ -78,7 +79,7 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
               id="file-upload"
               type="file"
               multiple
-              accept={"image/*"}
+              accept="image/*"
               style={{ display: "none" }}
               onChange={handleChangeFiles}
             />

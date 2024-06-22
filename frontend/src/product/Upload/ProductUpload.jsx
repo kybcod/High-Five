@@ -2,8 +2,8 @@ import { Box, Button, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FileUpload } from "./FileUpload";
-import { FormFields } from "./FormFields";
+import { FileUpload } from "./FileUpload.jsx";
+import { FormFields } from "../FormFields.jsx";
 
 export function ProductUpload() {
   const [title, setTitle] = useState("");
@@ -120,39 +120,38 @@ export function ProductUpload() {
 
   return (
     <Box p={4} mx="auto" maxWidth="1000px">
-      <form onSubmit={handleUploadClick}>
-        <FileUpload
-          files={files}
-          setFiles={setFiles}
-          filePreview={filePreview}
-          setFilePreView={setFilePreView}
-        />
-        <FormFields
-          title={title}
-          setTitle={setTitle}
-          category={category}
-          setCategory={setCategory}
-          startPrice={startPrice}
-          setStartPrice={setStartPrice}
-          date={date}
-          setDate={setDate}
-          time={time}
-          setTime={setTime}
-          content={content}
-          setContent={setContent}
-        />
-        <Box mt={6} textAlign="center">
-          <Button
-            w={"100%"}
-            isLoading={loading}
-            type="submit"
-            colorScheme="blue"
-            size="lg"
-          >
-            상품 업로드
-          </Button>
-        </Box>
-      </form>
+      <FileUpload
+        files={files}
+        setFiles={setFiles}
+        filePreview={filePreview}
+        setFilePreView={setFilePreView}
+      />
+      <FormFields
+        title={title}
+        setTitle={setTitle}
+        category={category}
+        setCategory={setCategory}
+        startPrice={startPrice}
+        setStartPrice={setStartPrice}
+        date={date}
+        setDate={setDate}
+        time={time}
+        setTime={setTime}
+        content={content}
+        setContent={setContent}
+      />
+      <Box mt={6} textAlign="center">
+        <Button
+          w={"100%"}
+          isLoading={loading}
+          type="submit"
+          colorScheme="blue"
+          size="lg"
+          onClick={handleUploadClick}
+        >
+          상품 업로드
+        </Button>
+      </Box>
     </Box>
   );
 }
