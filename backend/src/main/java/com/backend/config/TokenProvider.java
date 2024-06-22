@@ -24,7 +24,11 @@ public class TokenProvider {
 
         CustomOauth2UserDetails details = (CustomOauth2UserDetails) authentication.getPrincipal();
         Map<String, Object> attributes = (Map<String, Object>) details.getAttributes().get("response");
-        System.out.println("attributes = " + attributes);
+        if (attributes == null) {
+            attributes = (Map<String, Object>) details.getAttributes();
+        }
+        // TODO. 주석 삭제
+//        System.out.println("attributes = " + attributes);
 
         User db = userMapper.selectUserByEmail(attributes.get("email").toString());
         List<String> authorities = userMapper.selectAuthoritiesByUserId(db.getId());

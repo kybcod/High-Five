@@ -18,22 +18,27 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
-        System.out.println("failure Handler 실행");
+        // TODO. 주석 삭제
+//        System.out.println("failure Handler 실행");
 
         if (exception instanceof OAuth2AuthenticationException) {
 
             OAuth2AuthenticationException authException = (OAuth2AuthenticationException) exception;
             String error = authException.getError().getErrorCode();
-            System.out.println("error = " + error);
+            // TODO. 주석 삭제
+//            System.out.println("error = " + error);
             if ("phone_number_required".equals(authException.getError().getErrorCode())) {
                 HttpSession session = request.getSession(false);
-                System.out.println("session = " + session);
+                // TODO. 주석 삭제
+//                System.out.println("session = " + session);
 
                 if (session != null) {
-                    System.out.println("session이 null이 아님");
+                    // TODO. 주석 삭제
+//                    System.out.println("session이 null이 아님");
                     User user = (User) session.getAttribute("user");
                     if (user != null) {
-                        System.out.println("user가 null이 아님");
+                        // TODO. 주석 삭제
+//                        System.out.println("user가 null이 아님");
                         String email = user.getEmail();
                         String nickName = user.getNickName();
                         String redirectUrl = String.format("http://localhost:5173/signup/phone_number?email=%s&nickName=%s",

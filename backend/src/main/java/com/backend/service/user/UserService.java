@@ -74,6 +74,9 @@ public class UserService {
     }
 
     public void addUser(User user) {
+        if (user.getPassword() == null) {
+            user.setPassword(Integer.toString((int) (Math.random() * 8999) + 1000) + "oauth");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         mapper.insertUser(user);
     }
