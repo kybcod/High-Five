@@ -2,21 +2,16 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
   FormLabel,
   Image,
   Input,
-  InputGroup,
-  InputRightAddon,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   Spinner,
-  Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -31,6 +26,7 @@ import {
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FormFields } from "./FormFields.jsx";
 
 export function ProductEdit() {
   const { id } = useParams();
@@ -247,100 +243,20 @@ export function ProductEdit() {
         </Flex>
       </Box>
 
-      <FormControl mb={4}>
-        <FormLabel>제목</FormLabel>
-        <Input
-          borderColor="gray.400"
-          defaultValue={product.title}
-          onChange={(e) => setProduct({ ...product, title: e.target.value })}
-        />
-      </FormControl>
-
-      <FormControl mb={4}>
-        <FormLabel>카테고리</FormLabel>
-        <Select
-          defaultValue={product.category}
-          onChange={(e) => setProduct({ ...product, category: e.target.value })}
-          placeholder="카테고리 선택"
-          borderWidth="1px"
-          borderColor="gray.400"
-          borderRadius="md"
-          _focus={{ borderColor: "blue.500" }}
-        >
-          <option value="clothes">의류</option>
-          <option value="goods">잡화</option>
-          <option value="food">식품</option>
-          <option value="digital">디지털</option>
-          <option value="sport">스포츠</option>
-          <option value="e-coupon">e-쿠폰</option>
-        </Select>
-      </FormControl>
-
-      <FormControl mb={4}>
-        <FormLabel>입찰 시작가</FormLabel>
-        <InputGroup>
-          <Input
-            borderColor="gray.400"
-            value={formattedPrice(product.startPrice)}
-            onChange={handleFormattedNumber}
-          />
-          <InputRightAddon>원</InputRightAddon>
-        </InputGroup>
-      </FormControl>
-
-      <Flex spacing={3}>
-        <FormControl mr={4}>
-          <FormLabel>날짜</FormLabel>
-          <Input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            borderWidth="1px"
-            borderColor="gray.400"
-            borderRadius="md"
-            _focus={{ borderColor: "blue.500" }}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>시간(AM 8:00 ~ PM 23:00)</FormLabel>
-          <Select
-            placeholder="시간"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            borderWidth="1px"
-            borderColor="gray.400"
-            borderRadius="md"
-            _focus={{ borderColor: "blue.500" }}
-          >
-            <option value="08:00">08:00</option>
-            <option value="09:00">09:00</option>
-            <option value="10:00">10:00</option>
-            <option value="11:00">11:00</option>
-            <option value="12:00">12:00</option>
-            <option value="13:00">13:00</option>
-            <option value="14:00">14:00</option>
-            <option value="15:00">15:00</option>
-            <option value="16:00">16:00</option>
-            <option value="17:00">17:00</option>
-            <option value="18:00">18:00</option>
-            <option value="19:00">19:00</option>
-            <option value="20:00">20:00</option>
-            <option value="21:00">21:00</option>
-            <option value="22:00">22:00</option>
-            <option value="23:00">23:00</option>
-          </Select>
-        </FormControl>
-      </Flex>
-
-      <FormControl mb={4}>
-        <FormLabel>상품 상세내용</FormLabel>
-        <Textarea
-          borderColor="gray.400"
-          defaultValue={product.content}
-          onChange={(e) => setProduct({ ...product, content: e.target.value })}
-          placeholder="상품에 대한 정보를 작성해주세요."
-        />
-      </FormControl>
+      <FormFields
+        title={product.title}
+        setTitle={(value) => setProduct({ ...product, title: value })}
+        category={product.category}
+        setCategory={(value) => setProduct({ ...product, category: value })}
+        startPrice={product.startPrice}
+        setStartPrice={(value) => setProduct({ ...product, startPrice: value })}
+        date={date}
+        setDate={setDate}
+        time={time}
+        setTime={setTime}
+        content={product.content}
+        setContent={(value) => setProduct({ ...product, content: value })}
+      />
 
       <Flex justifyContent="space-between">
         <Button
