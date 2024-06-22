@@ -69,37 +69,35 @@ function SimpleSlider({ images, isBrightness }) {
   };
 
   return (
-    <Box width="500px" height="500px" position="relative">
-      <Slider {...settings}>
-        {images.map((file, index) => (
-          <Box key={index} position="relative" width="100%" height="300px">
-            <Image
-              src={file.filePath}
-              className="slick-custom-image"
-              width="100%"
-              height="100%"
-              objectFit="contain"
-              filter={isBrightness ? "brightness(50%)" : "none"}
-            />
-            {isBrightness && (
-              <Text
-                position="absolute"
-                top="50%"
-                left="50%"
-                transform="translate(-50%, -50%)"
-                color="white"
-                fontSize="2xl"
-                as="b"
-                p={4}
-                borderRadius="md"
-              >
-                판매완료
-              </Text>
-            )}
-          </Box>
-        ))}
-      </Slider>
-    </Box>
+    <Slider {...settings}>
+      {images.map((file, index) => (
+        <Box key={index} position="relative" width="100%" height="300px">
+          <Image
+            src={file.filePath}
+            className="slick-custom-image"
+            width="100%"
+            height="100%"
+            objectFit="contain"
+            filter={isBrightness ? "brightness(50%)" : "none"}
+          />
+          {isBrightness && (
+            <Text
+              position="absolute"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+              color="white"
+              fontSize="2xl"
+              as="b"
+              p={4}
+              borderRadius="md"
+            >
+              판매완료
+            </Text>
+          )}
+        </Box>
+      ))}
+    </Slider>
   );
 }
 
