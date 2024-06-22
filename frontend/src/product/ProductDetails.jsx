@@ -134,7 +134,7 @@ export function ProductDetails() {
       </Box>
 
       <Flex mt={3} alignItems="flex-start">
-        <Box width="500px" height="500px" mr={5}>
+        <Box width="50%" mr={20} border={"1px solid black"}>
           <SimpleSlider
             images={existingFilePreviews}
             isBrightness={!product.status}
@@ -171,8 +171,9 @@ export function ProductDetails() {
 
           <Divider mb={2} />
 
+          {/*다른 user의 상품 일 때*/}
           {account.isLoggedIn() && !account.hasAccess(product.userId) && (
-            <Flex mb={5} justifyContent="space-between" alignItems="center">
+            <Flex mb={5} justifyContent="space-evenly" alignItems="center">
               <Flex alignItems="center" mr={4}>
                 <Box mr={2}>찜</Box>
                 <Button
@@ -194,24 +195,19 @@ export function ProductDetails() {
                 <Box ml={2}>{product.viewCount}</Box>
               </Flex>
               <Flex>
-                <Button
-                  colorScheme="teal"
-                  leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
-                  onClick={handleEnterChatRoom}
-                  mr={4}
-                >
-                  문의하기
-                </Button>
                 <ReportButton userId={product.userId} />
               </Flex>
             </Flex>
           )}
 
+          {/*내 상품 일 때 */}
           {!account.isLoggedIn() ||
             (account.hasAccess(product.userId) && (
-              <Flex mb={5} alignItems="center" justifyContent="center">
-                <Box mr={3}>찜</Box>
-                <Box>{like.count}</Box>
+              <Flex mb={5} alignItems="center" justifyContent="space-evenly">
+                <Flex>
+                  <Text mr={3}>찜</Text>
+                  <Box>{like.count}</Box>
+                </Flex>
                 <Flex alignItems="center" ml={10}>
                   <FontAwesomeIcon icon={faEye} size="lg" />
                   <Box ml={2}>{product.viewCount}</Box>
@@ -231,9 +227,23 @@ export function ProductDetails() {
           {product.status && (
             <Box mb={5}>
               {!account.isLoggedIn() || account.hasAccess(product.userId) || (
-                <Button colorScheme="green" w="100%" onClick={onOpen}>
-                  참여하기
-                </Button>
+                <Flex w={"100%"}>
+                  <Box w={"100%"} mr={4}>
+                    <Button colorScheme="green" w="100%" onClick={onOpen}>
+                      참여하기
+                    </Button>
+                  </Box>
+                  <Box w={"100%"}>
+                    <Button
+                      colorScheme="teal"
+                      w="100%"
+                      leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
+                      onClick={handleEnterChatRoom}
+                    >
+                      문의하기
+                    </Button>
+                  </Box>
+                </Flex>
               )}
               {account.hasAccess(product.userId) && (
                 <Button
