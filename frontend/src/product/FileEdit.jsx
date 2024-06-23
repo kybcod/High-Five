@@ -3,7 +3,18 @@
 // import { faCamera, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 // import { useRef } from "react";
 //
-// export function FileEdit({ files, setFiles, existingFiles, setExistingFiles }) {
+// export function FileEdit({
+//   files,
+//   setFiles,
+//   setExistingFilePreviews,
+//   existingFilePreviews,
+//   existingFiles,
+//   setExistingFiles,
+//   filePreviews,
+//   setFilePreviews,
+//   removedFileList,
+//   setRemovedFileList,
+// }) {
 //   const fileInputRef = useRef(null);
 //
 //   function handleChangeFiles(e) {
@@ -35,14 +46,20 @@
 //
 //   function handleRemoveExistingFile(index) {
 //     const updatedExistingFiles = [...existingFiles];
-//     updatedExistingFiles.splice(index, 1);
+//     const removedFile = updatedExistingFiles.splice(index, 1)[0]; // 삭제된 파일 정보 가져오기
 //     setExistingFiles(updatedExistingFiles);
 //
 //     const updatedExistingFilePreviews = [...existingFilePreviews];
 //     updatedExistingFilePreviews.splice(index, 1);
 //     setExistingFilePreviews(updatedExistingFilePreviews);
-//   }
 //
+//     // 삭제된 파일 리스트 업데이트
+//     const updatedRemovedFileList = [...removedFileList, removedFile];
+//     setRemovedFileList(updatedRemovedFileList);
+//
+//     // 삭제된 파일 리스트 콘솔 로그로 확인
+//     console.log("Removed files:", updatedRemovedFileList);
+//   }
 //   return (
 //     <Box mb={4}>
 //       <Flex alignItems="center">
@@ -59,8 +76,8 @@
 //             alignItems="center"
 //             justifyContent="center"
 //             flexDirection="column"
-//             minW="180px" // 최소 너비 지정
-//             minH="180px" // 최소 높이 지정
+//             minW="180px"
+//             minH="180px"
 //           >
 //             <Box mb={2}>
 //               <FontAwesomeIcon icon={faCamera} size="2xl" />
@@ -84,8 +101,9 @@
 //               boxSize={"180px"}
 //               position="relative"
 //               minWidth="180px"
+//               mr={2}
 //             >
-//               <Image boxSize={"180px"} mr={2} src={file.filePath} />
+//               <Image boxSize={"180px"} src={file.filePath} />
 //               <Button
 //                 position="absolute"
 //                 top={1}
@@ -99,12 +117,13 @@
 //           ))}
 //           {files.map((file, index) => (
 //             <Box
-//               key={index + existingFiles.length} // 고유 키 설정 (기존 파일 다음에 추가된 파일로 설정)
+//               key={index}
 //               boxSize={"180px"}
 //               position="relative"
 //               minWidth="180px"
+//               mr={2}
 //             >
-//               <Image boxSize={"180px"} mr={2} src={URL.createObjectURL(file)} />
+//               <Image boxSize={"180px"} src={URL.createObjectURL(file)} />
 //               <Button
 //                 position="absolute"
 //                 top={1}
