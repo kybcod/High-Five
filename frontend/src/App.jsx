@@ -1,4 +1,4 @@
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import {
   createBrowserRouter,
   Navigate,
@@ -33,6 +33,7 @@ import { UserEmail } from "./user/UserEmail.jsx";
 import SignupCodeProvider from "./component/SignupCodeProvider.jsx";
 import { UserPassword } from "./user/UserPassword.jsx";
 import { Payment } from "./pay/Payment.jsx";
+import { theme } from "./Theme.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -40,16 +41,6 @@ axios.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
-});
-
-const theme = extendTheme({
-  colors: {
-    brand: {
-      100: "#f7fafc",
-      // ...
-      900: "#1a202c",
-    },
-  },
 });
 
 const router = createBrowserRouter([
