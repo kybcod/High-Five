@@ -23,9 +23,25 @@ export function MyPage({ tab }) {
   const { userId } = useParams();
   const account = useContext(LoginContext);
 
-  const [tabIndex, setTabIndex] = useState({});
-  const [indexTab, setIndexTab] = useState({});
-  const [currentTab, setCurrentTab] = useState("userInfo");
+  // 탭 이름 -> 인덱스
+  const tabIndex = {
+    userInfo: 0,
+    like: 1,
+    shop: 2,
+    bids: 3,
+    reviews: 4,
+  };
+
+  // 인덱스 -> 택이름
+  const indexTab = {
+    0: "userInfo",
+    1: "like",
+    2: "shop",
+    3: "bids",
+    4: "reviews",
+  };
+
+  const currentTab = tab || "userInfo";
 
   useEffect(() => {
     axios.get(`/api/products/user/${userId}`).then((res) => {
@@ -33,45 +49,13 @@ export function MyPage({ tab }) {
     });
 
     const tabName = location.pathname.split("/").pop();
-    const initialTab = tabName || "userInfo";
-    setCurrentTab(initialTab);
-  }, [location.pathname, userId]);
-
-  useEffect(() => {
-    const tabMapping = {};
-    const reverseTabMapping = {};
-    let idx = 0;
-
-    if (userId == account.id) {
-      tabMapping["userInfo"] = idx;
-      reverseTabMapping[idx] = "userInfo";
-      idx++;
-      tabMapping["like"] = idx;
-      reverseTabMapping[idx] = "like";
-      idx++;
+    if (!Object.keys(tabIndex).includes(tabName)) {
+      navigate(`/myPage/${userId}`);
     }
-
-    tabMapping["shop"] = idx;
-    reverseTabMapping[idx] = "shop";
-    idx++;
-
-    if (userId == account.id) {
-      tabMapping["bids"] = idx;
-      reverseTabMapping[idx] = "bids";
-      idx++;
-    }
-
-    tabMapping["reviews"] = idx;
-    reverseTabMapping[idx] = "reviews";
-
-    setTabIndex(tabMapping);
-    setIndexTab(reverseTabMapping);
-  }, [userId, account]);
+  }, [location.pathname]);
 
   const handleTabsChange = (index) => {
-    const tabName = indexTab[index];
-    navigate(`/myPage/${userId}/${tabName}`);
-    setCurrentTab(tabName); // 상태 업데이트
+    navigate(`/myPage/${userId}/${indexTab[index]}`);
   };
 
   return (
