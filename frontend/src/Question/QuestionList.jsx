@@ -7,7 +7,6 @@ import {
   Heading,
   Input,
   Select,
-  Spacer,
   Table,
   Tbody,
   Td,
@@ -16,7 +15,7 @@ import {
   Tooltip,
   Tr,
 } from "@chakra-ui/react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

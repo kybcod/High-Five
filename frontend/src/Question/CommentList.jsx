@@ -49,7 +49,7 @@ export function CommentList({ questionId, isProcessing, setIsProcessing }) {
           .catch(() => {});
       }
     }
-  }, [questionId]);
+  }, [isProcessing]);
 
   // 컴포넌트가 마운트될 때와 언마운트될 때 스크롤 이벤트를 등록하고 해제
   useEffect(() => {

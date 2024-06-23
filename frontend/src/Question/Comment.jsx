@@ -9,12 +9,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
-  Textarea,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CommentWrite } from "./CommentWrite.jsx";
@@ -34,7 +31,6 @@ export function Comment({ comment, isProcessing, setIsProcessing }) {
       .delete(`/api/question/comment/${comment.id}`)
       .then(() => {
         successToast("댓글이 삭제 되었습니다");
-        onClose();
       })
       .catch((err) => {
         err.response.status === 403
@@ -43,7 +39,10 @@ export function Comment({ comment, isProcessing, setIsProcessing }) {
             ? errorToast("id가 없습니다")
             : errorToast("삭제되지 않았습니다.");
       })
-      .finally(setIsProcessing(false));
+      .finally(() => {
+        setIsProcessing(false);
+        onClose();
+      });
   }
 
   function handleModifyClick() {
@@ -53,7 +52,11 @@ export function Comment({ comment, isProcessing, setIsProcessing }) {
   return (
     <>
       {isEditing ? (
-        <CommentWrite comment={comment} setIsEditing={setIsEditing} />
+        <CommentWrite
+          comment={comment}
+          setIsEditing={setIsEditing}
+          setIsProcessing={setIsProcessing}
+        />
       ) : (
         <>
           <Flex gap={3} mb={3}>
@@ -80,7 +83,9 @@ export function Comment({ comment, isProcessing, setIsProcessing }) {
             {account.hasAccess(comment.userId) && (
               <>
                 <Button onClick={handleModifyClick}>수정</Button>
-                <Button onClick={onOpen}>삭제</Button>
+                <Button onClick={onOpen} isLoading={isProcessing}>
+                  삭제
+                </Button>
               </>
             )}
           </Flex>

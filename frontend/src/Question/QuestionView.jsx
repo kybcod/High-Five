@@ -38,7 +38,6 @@ export function QuestionView() {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
   const navigate = useNavigate();
-  const toast = useToast();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
   const { successToast, errorToast } = CustomToast();

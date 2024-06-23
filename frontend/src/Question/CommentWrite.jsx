@@ -16,7 +16,7 @@ export function CommentWrite({
   const { successToast, errorToast } = CustomToast();
 
   function handleWriteClick() {
-    // setIsProcessing(true);
+    setIsProcessing(true);
     const request = comment
       ? axios.put(`/api/question/comment/${comment.id}`, {
           content,
@@ -35,7 +35,6 @@ export function CommentWrite({
         successToast(
           comment ? "댓글이 수정되었습니다." : "댓글이 등록되었습니다.",
         );
-        setIsEditing(false);
       })
       .catch((err) => {
         err.response.status === 403
@@ -43,7 +42,8 @@ export function CommentWrite({
           : errorToast("댓글 등록에 실패하였습니다");
       })
       .finally(() => {
-        // setIsProcessing(false);
+        setIsProcessing(false);
+        setIsEditing(false);
       });
   }
 
