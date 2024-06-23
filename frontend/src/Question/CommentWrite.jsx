@@ -1,19 +1,22 @@
 import axios from "axios";
-import { Box, Button, Flex, Input, Textarea, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Textarea } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
-import { useNavigate } from "react-router-dom";
 
-export function CommentWrite({ questionId, comment, setIsEditing }) {
+export function CommentWrite({
+  questionId,
+  comment,
+  setIsEditing,
+  isProcessing,
+  setIsProcessing,
+}) {
   const [content, setContent] = useState(comment ? comment.content : "");
-  const [isProcessing, setIsProcessing] = useState(false);
   const account = useContext(LoginContext);
   const { successToast, errorToast } = CustomToast();
-  const navigate = useNavigate();
 
   function handleWriteClick() {
-    setIsProcessing(true);
+    // setIsProcessing(true);
     const request = comment
       ? axios.put(`/api/question/comment/${comment.id}`, {
           content,
@@ -40,7 +43,7 @@ export function CommentWrite({ questionId, comment, setIsEditing }) {
           : errorToast("댓글 등록에 실패하였습니다");
       })
       .finally(() => {
-        setIsProcessing(false);
+        // setIsProcessing(false);
       });
   }
 

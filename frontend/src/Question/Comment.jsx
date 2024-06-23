@@ -9,6 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -21,19 +22,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { CustomToast } from "../component/CustomToast.jsx";
 
-export function Comment({ comment }) {
+export function Comment({ comment, isProcessing, setIsProcessing }) {
   const account = useContext(LoginContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEditing, setIsEditing] = useState(false);
   const { successToast, errorToast } = CustomToast();
 
-  // Prop이 제대로 넘어오는지 확인하기 위해 콘솔 로그 추가
-  useEffect(() => {
-    console.log("Comment prop:", comment);
-  }, [comment]);
-
-  // comment id 넘겨주기
   function handleRemoveClick() {
+    setIsProcessing(true);
     axios
       .delete(`/api/question/comment/${comment.id}`)
       .then(() => {
@@ -47,7 +43,7 @@ export function Comment({ comment }) {
             ? errorToast("id가 없습니다")
             : errorToast("삭제되지 않았습니다.");
       })
-      .finally();
+      .finally(setIsProcessing(false));
   }
 
   function handleModifyClick() {
@@ -59,20 +55,36 @@ export function Comment({ comment }) {
       {isEditing ? (
         <CommentWrite comment={comment} setIsEditing={setIsEditing} />
       ) : (
-        <Flex gap={3}>
-          <Box>
-            <FontAwesomeIcon icon={faUser} style={{ color: "#22c393" }} />
+        <>
+          <Flex gap={3} mb={3}>
+            <Box>
+              <FontAwesomeIcon icon={faUser} style={{ color: "#44af8f" }} />
+            </Box>
+            <Box
+              whiteSpace="pre"
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+              }}
+            >
+              {comment.nickName}
+            </Box>
+          </Flex>
+          <Box whiteSpace="pre" mt={3} mb={3}>
+            {comment.content}
           </Box>
-          <input value={comment.nickName} readOnly />
-          <Textarea value={comment.content} readOnly />
-          <Input value={comment.inserted} readOnly />
-          {account.hasAccess(comment.userId) && (
-            <>
-              <Button onClick={handleModifyClick}>수정</Button>
-              <Button onClick={onOpen}>삭제</Button>
-            </>
-          )}
-        </Flex>
+          <Flex gap={3}>
+            <Box mt={3} whiteSpace="pre" style={{ color: "grey" }}>
+              {comment.inserted}
+            </Box>
+            {account.hasAccess(comment.userId) && (
+              <>
+                <Button onClick={handleModifyClick}>수정</Button>
+                <Button onClick={onOpen}>삭제</Button>
+              </>
+            )}
+          </Flex>
+        </>
       )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
