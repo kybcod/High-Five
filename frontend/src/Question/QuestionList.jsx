@@ -26,6 +26,7 @@ import {
   faAnglesRight,
   faCamera,
   faComment,
+  faLock,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { LoginContext } from "../component/LoginProvider.jsx";
@@ -36,6 +37,7 @@ export function QuestionList() {
   const [searchType, setSearchType] = useState("titleNick");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [secretCheck, setSecretCheck] = useState(false);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
 
@@ -44,11 +46,13 @@ export function QuestionList() {
       setQuestionList(res.data.content);
       setPageInfo(res.data.pageInfo);
     });
+
     setSearchType("titleNick");
     setSearchKeyword("");
 
     const typeParam = searchParams.get("type");
     const keywordParam = searchParams.get("keyword");
+
     if (typeParam) {
       setSearchType(typeParam);
     }
@@ -74,6 +78,14 @@ export function QuestionList() {
     navigate(`/question/list?type=${searchType}&keyword=${searchKeyword}`);
   }
 
+  const handleSecretTextClick = (question) => {
+    if (secretCheck && !account.hasAccess(question.userId)) {
+      alert("비밀글에 접근할 권한이 없습니다.");
+    } else {
+      navigate(`/question/${question.id}`);
+    }
+  };
+
   return (
     <Box>
       <Box mt={5} mb={5}>
@@ -97,12 +109,13 @@ export function QuestionList() {
               <Tr
                 _hover={{ bgColor: "gray.300" }}
                 cursor={"pointer"}
-                onClick={() => navigate(`/question/${question.id}`)}
+                onClick={() => handleSecretTextClick(question)}
                 key={question.id}
               >
                 <Td>{question.id}</Td>
                 <Td>
                   <Flex gap={2}>
+                    {secretCheck && <FontAwesomeIcon icon={faLock} />}
                     {question.title}
                     {question.isNewBadge && (
                       <Badge colorScheme="green">New</Badge>

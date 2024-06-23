@@ -39,7 +39,7 @@ public interface QuestionMapper {
 
     @Select("""
             <script>
-                SELECT qb.id, qb.title, user.nick_name as nickName, qb.number_of_count, qb.inserted,
+                SELECT qb.id, qb.title, user.nick_name as nickName, user.id as userId, qb.number_of_count, qb.inserted,
                        qbf.numberOfFiles,
                        qbc.numberOfComments
                 FROM question_board qb

@@ -18,20 +18,17 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  Stack,
   StackDivider,
   Text,
   Textarea,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CommentComponent } from "./CommentComponent.jsx";
-import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
-import { QuestionList } from "./QuestionList.jsx";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { CustomToast } from "../component/CustomToast.jsx";
 
 export function QuestionView() {
@@ -113,7 +110,6 @@ export function QuestionView() {
         <HStack divider={<StackDivider borderColor="gray.200" />} spacing={2}>
           <Box>작성자</Box>
           <Text>{question.nickName}</Text>
-          {/*<Input value={question.nickName} readOnly />*/}
         </HStack>
         <HStack divider={<StackDivider borderColor="gray.200" />} spacing={2}>
           <Text w={"100px"}>작성시간</Text>

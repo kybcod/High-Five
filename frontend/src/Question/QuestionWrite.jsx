@@ -5,6 +5,7 @@ import {
   CardBody,
   CardHeader,
   Center,
+  Checkbox,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -27,6 +28,7 @@ export function QuestionWrite() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
+  const [secretCheck, setSecretCheck] = useState(false);
 
   const navigate = useNavigate();
 
@@ -66,6 +68,12 @@ export function QuestionWrite() {
     );
   }
 
+  function handleSecretCheck() {
+    setSecretCheck(!secretCheck);
+  }
+
+  console.log(secretCheck);
+
   return (
     <Box m={8}>
       <Box mt={5}>
@@ -81,6 +89,9 @@ export function QuestionWrite() {
           ></Input>
         </FormControl>
       </Box>
+      <Checkbox isChecked={secretCheck} onChange={handleSecretCheck} mt={2}>
+        비밀글
+      </Checkbox>
 
       <Box mt={5}>
         <FormControl>
