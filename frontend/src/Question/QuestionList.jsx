@@ -118,22 +118,48 @@ export function QuestionList() {
                 <Td>{question.id}</Td>
                 <Td>
                   <Flex gap={2}>
-                    {question.secretWrite && <FontAwesomeIcon icon={faLock} />}
-                    {question.title}
+                    {question.secretWrite && (
+                      <Box style={{ display: "flex", alignItems: "center" }}>
+                        <FontAwesomeIcon
+                          icon={faLock}
+                          style={{ marginRight: "4px" }}
+                        />
+                        <span style={{ color: "675F60FF" }}>비밀글</span>
+                      </Box>
+                    )}
+                    {question.secretWrite || question.title}
                     {question.isNewBadge && (
                       <Badge colorScheme="green">New</Badge>
                     )}
                     {question.numberOfFiles > 0 && (
                       <Box ml={2}>
-                        <FontAwesomeIcon icon={faCamera} />
+                        <FontAwesomeIcon
+                          icon={faCamera}
+                          style={{ marginRight: "2px" }}
+                        />
                         {question.numberOfFiles}
                       </Box>
                     )}
                     {question.numberOfComments > 0 && (
-                      <Box ml={2}>
-                        <FontAwesomeIcon icon={faComment} />
-                        {question.numberOfComments}
-                      </Box>
+                      <>
+                        {" "}
+                        {/*<Box ml={2}>*/}
+                        {/*<Badge variant="outline" colorScheme="green">*/}
+                        {/*  답변완료*/}
+                        {/*</Badge>*/}
+                        {/*</Box>*/}
+                        <Box
+                          style={{
+                            color: "#ff354d",
+                            display: "flex",
+                            alignItems: "center",
+                            fontSize: "0.8rem",
+                            fontWeight: "600",
+                          }}
+                        >
+                          +{question.numberOfComments}
+                        </Box>
+                      </>
                     )}
                   </Flex>
                 </Td>
