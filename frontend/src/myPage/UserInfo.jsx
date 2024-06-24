@@ -20,7 +20,6 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
-import ReportButton from "../user/ReportButton.jsx";
 
 export function UserInfo() {
   const account = useContext(LoginContext);
@@ -69,7 +68,6 @@ export function UserInfo() {
   return (
     <Box>
       <Box>
-        <ReportButton userId={user.id} />
         <Image
           fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
           borderRadius="full"
