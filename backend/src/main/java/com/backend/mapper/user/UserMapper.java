@@ -8,6 +8,7 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("""
                 INSERT INTO user
                 (email, password, nick_name, phone_number)
