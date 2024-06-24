@@ -2,6 +2,7 @@ package com.backend.controller.auction;
 
 import com.backend.domain.auction.BidList;
 import com.backend.service.auction.AuctionService;
+import com.backend.service.product.AuctionStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class AuctionController {
 
     private final AuctionService service;
+    private final AuctionStatusService auctionStatusService;
 
     @Description("경매 참여하기")
     @PostMapping
@@ -37,6 +39,12 @@ public class AuctionController {
     @GetMapping("{userId}/list")
     public Map<String, Object> getBids(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page) {
         return service.getBidListByUserId(userId, PageRequest.of(page - 1, 9));
+    }
+
+    //    @Scheduled(cron = "0 0 0/1 * * *", zone = "Asia/Seoul") //1시간
+//    @Scheduled(fixedRate = 100000, zone = "Asia/Seoul")
+    public void checkEndTimeAndProductState() {
+        auctionStatusService.updateProductState();
     }
 
 //    @GetMapping("{userId}/list")

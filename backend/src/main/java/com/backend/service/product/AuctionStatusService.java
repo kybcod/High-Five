@@ -17,8 +17,6 @@ public class AuctionStatusService {
     private final AuctionService auctionService;
     private final ProductService productService;
 
-
-    // TODO : Mapper 정리
     public void updateProductState() {
         // 0: 판매종료(false)
         // 1:판매중(true) => 기본값
