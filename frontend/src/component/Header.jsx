@@ -14,8 +14,8 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
 
 export function Header() {
@@ -23,9 +23,18 @@ export function Header() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
 
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    const keyword1 = searchParams.get("keyword");
+    if (keyword1) {
+      setKeyword(keyword1);
+    } else {
+      setKeyword("");
+    }
+  }, [searchParams]);
+
   function handleSearchClick(keyword) {
     navigate(`/list?keyword=${keyword}`);
-    setKeyword("");
   }
 
   return (
@@ -43,6 +52,7 @@ export function Header() {
                   <Input
                     w={"300px"}
                     placeholder={"검색어를 입력하세요."}
+                    value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                   />
                   <InputRightAddon>
