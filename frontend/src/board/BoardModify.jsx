@@ -56,7 +56,7 @@ export function BoardModify() {
       })
       .then(() => {
         successToast("게시물 수정이 완료되었습니다");
-        navigate("/board/list");
+        navigate(`/board/${board_id}`);
       })
       .catch((err) => {
         if (err.response.status === 400) {

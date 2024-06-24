@@ -4,6 +4,7 @@ package com.backend.controller.product;
 import com.backend.domain.product.Product;
 import com.backend.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
+    @Description("상품 업로드")
     public ResponseEntity upload(Product product, Authentication authentication,
                                  @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
         if (service.validate(product)) {
@@ -35,11 +37,13 @@ public class ProductController {
     }
 
     @GetMapping
+    @Description("상품조회 - 메인 페이지")
     public List<Product> list() {
         return service.list();
     }
 
-    @GetMapping("list")
+    @GetMapping("search")
+    @Description("상품조회 - 페이징, 키워드, 카테고리 검색")
     public Map<String, Object> getListProduct(@RequestParam(defaultValue = "1") int page,
                                               @RequestParam(defaultValue = "") String keyword,
                                               @RequestParam(defaultValue = "") String category
@@ -48,6 +52,7 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
+    @Description("상품상세")
     public ResponseEntity getProduct(@PathVariable Integer id, Authentication authentication) {
         Map<String, Object> result = service.get(id, authentication);
         if (result.get("product") == null) {
@@ -58,6 +63,7 @@ public class ProductController {
 
     @PutMapping
     @PreAuthorize("isAuthenticated()")
+    @Description("상품수정")
     public ResponseEntity updateProduct(Product product, Authentication authentication,
                                         @RequestParam(value = "removedFileList[]", required = false) List<String> removedFileList,
                                         @RequestParam(value = "newFileList[]", required = false) MultipartFile[] newFileList
@@ -76,6 +82,7 @@ public class ProductController {
 
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
+    @Description("상품삭제")
     public ResponseEntity deleteProduct(@PathVariable Integer id, Authentication authentication) {
         if (service.hasAccess(id, authentication)) {
             service.remove(id);
@@ -84,29 +91,9 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-
-    // 좋아요 Controller
-    @PutMapping("like")
-    @PreAuthorize("isAuthenticated()")
-    public Map<String, Object> likeProduct(@RequestBody Map<String, Object> likeInfo, Authentication authentication) {
-        return service.like(likeInfo, authentication);
-    }
-
-    @GetMapping("like/{userId}")
-    public List<Integer> getLike(@PathVariable Integer userId) {
-        return service.getLike(userId);
-    }
-
-
-    //    // TODO :  나중에 실행할 때 주석 풀기
-//    @Scheduled(cron = "0 0 0/1 * * *", zone = "Asia/Seoul") //1시간
-//    @Scheduled(fixedRate = 100000, zone = "Asia/Seoul")
-    public void checkEndTimeAndProductState() {
-        service.updateProductState();
-    }
-
     // User와 Product 관련 Controller
     @GetMapping("user/{userId}")
+    @Description("상품조회 - 사용자별")
     public Map<String, Object> getUserProducts(@PathVariable Integer userId,
                                                @RequestParam(defaultValue = "1") int page) {
         return service.getProductsByUserId(userId, PageRequest.of(page - 1, 9));
@@ -114,6 +101,7 @@ public class ProductController {
 
     // MyPage
     @GetMapping("user/{userId}/like")
+    @Description("상품조회 + 좋아요 - 사용자별")
     public Map<String, Object> getUserProductsLike(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page) {
         return service.getProductsLikeByUserId(userId, PageRequest.of(page - 1, 9));
     }

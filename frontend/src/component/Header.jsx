@@ -22,6 +22,7 @@ export function Header() {
 
   function handleSearchClick(keyword) {
     navigate(`/list?keyword=${keyword}`);
+    setKeyword("");
   }
 
   return (

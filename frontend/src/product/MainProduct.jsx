@@ -31,6 +31,7 @@ export function MainProduct() {
   useEffect(() => {
     axios.get(`/api/products`).then((res) => {
       const products = res.data;
+      console.log(products);
       const initialLikes = products.reduce((acc, product) => {
         acc[product.id] = product.like || false;
         return acc;
