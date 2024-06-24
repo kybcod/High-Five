@@ -230,11 +230,9 @@ export function BidList() {
                         w={"100%"}
                         colorScheme={"purple"}
                         onClick={() => {
-                          if (!bid.product.paymentStatus) {
-                            navigate(
-                              `/chat/product/${bid.product.id}/buyer/${bid.userId}`,
-                            );
-                          }
+                          navigate(
+                            `/chat/product/${bid.product.id}/buyer/${bid.userId}`,
+                          );
                         }}
                         disabled={bid.product.paymentStatus}
                       >
