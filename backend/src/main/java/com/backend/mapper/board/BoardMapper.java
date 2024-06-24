@@ -26,7 +26,7 @@ public interface BoardMapper {
             SELECT b.id,
                     b.title,
                     b.content,
-                    b.user_id,
+                    u.nick_name nickName,
                     b.inserted,
                     COUNT(DISTINCT f.file_name) AS number_of_images,
                     COUNT(DISTINCT l.user_id) AS number_of_likes,
@@ -34,6 +34,7 @@ public interface BoardMapper {
             FROM board b LEFT JOIN board_file f ON b.id = f.board_id
                          LEFT JOIN board_like l ON b.id = l.board_id
                          LEFT JOIN board_comment c ON b.id = c.board_id
+                         LEFT JOIN user u ON b.user_id = u.id
             <where>
                 <if test="keyword != null and keyword != ''">
                     <bind name="pattern" value="'%' + keyword + '%'"/>
@@ -58,9 +59,9 @@ public interface BoardMapper {
     List<Board> selectAll(int offset, String searchType, String keyword);
 
     @Select("""
-            SELECT id, title, user_id, inserted, content
-            FROM board
-            WHERE id = #{id}
+            SELECT b.id, b.title, b.user_id, u.nick_name nickName, b.inserted, b.content
+            FROM board b JOIN user u ON b.user_id = u.id
+            WHERE b.id = #{id}
             """)
     Board selectById(Integer id);
 

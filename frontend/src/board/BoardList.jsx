@@ -107,7 +107,7 @@ export function BoardList() {
                     </Badge>
                   )}
                 </Td>
-                <Td>{board.userId}</Td>
+                <Td>{board.nickName}</Td>
                 <Td>
                   <FontAwesomeIcon icon={faComment} size={"sm"} />
                   {board.numberOfComments}

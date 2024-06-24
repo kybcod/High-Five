@@ -77,17 +77,13 @@ export function BoardView() {
         </Box>
         <Spacer />
         {isLikeProcess || (
-          <Flex>
-            <Box onClick={handleClickLike}>
+          <Box onClick={handleClickLike}>
+            <Flex>
               {boardLike.boardLike && <FontAwesomeIcon icon={fullHeart} />}
               {boardLike.boardLike || <FontAwesomeIcon icon={emptyHeart} />}
-              {boardLike.count > 0 && (
-                <Box mx={3} fontSize={"3xl"}>
-                  {boardLike.count}
-                </Box>
-              )}
-            </Box>
-          </Flex>
+              {boardLike.count > 0 && <Box>{boardLike.count}</Box>}
+            </Flex>
+          </Box>
         )}
         {isLikeProcess && (
           <Box>
@@ -96,14 +92,6 @@ export function BoardView() {
         )}
       </Flex>
       <Flex>
-        <Flex>
-          <Box>
-            <Text>{board.userId}</Text>
-          </Box>
-          <Box>
-            <Text>{board.inserted}</Text>
-          </Box>
-        </Flex>
         <Spacer />
         {account.hasAccess(board.userId) && (
           <Flex>
@@ -117,6 +105,15 @@ export function BoardView() {
             </Box>
           </Flex>
         )}
+      </Flex>
+      <Flex>
+        <Box>
+          <Text>{board.nickName}</Text>
+        </Box>
+        <Spacer />
+        <Box>
+          <Text>{board.inserted}</Text>
+        </Box>
       </Flex>
       <Box mt={3}>
         <Flex>

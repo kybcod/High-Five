@@ -12,6 +12,7 @@ public class Board {
     private String title;
     private String content;
     private LocalDateTime inserted;
+    private String nickName;
 
     private List<BoardFile> boardFileList;
     private Integer numberOfImages;

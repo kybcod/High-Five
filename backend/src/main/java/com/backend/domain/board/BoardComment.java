@@ -13,6 +13,8 @@ public class BoardComment {
     private Integer id;
     private Integer boardId;
     private Integer userId;
+    private String nickName;
+
     private String content;
     private LocalDateTime inserted;
     private Integer commentId;

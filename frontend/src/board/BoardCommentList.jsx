@@ -80,7 +80,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                 <Box>
                   {isEditingId === boardComment.id || (
                     <Flex>
-                      <Text>{boardComment.userId}</Text>
+                      <Text>{boardComment.nickName}</Text>
                       <Textarea defaultValue={boardComment.content} readOnly />
                       {account.hasAccess(boardComment.userId) && (
                         <Stack>
@@ -138,7 +138,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                   <Box key={subComment.commentSeq} ml="5" width="90%">
                     {isEditingId === subComment.id || (
                       <Flex>
-                        <Text>{subComment.userId}</Text>
+                        <Text>{subComment.nickName}</Text>
                         <Textarea
                           defaultValue={subComment.content}
                           readOnly
