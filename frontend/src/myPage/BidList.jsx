@@ -232,7 +232,7 @@ export function BidList() {
                         onClick={() => {
                           if (!bid.product.paymentStatus) {
                             navigate(
-                              `/pay/buyer/${bid.userId}/product/${bid.product.id}`,
+                              `/chat/product/${bid.product.id}/buyer/${bid.userId}`,
                             );
                           }
                         }}
