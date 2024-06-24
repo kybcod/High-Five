@@ -78,7 +78,11 @@ export function QuestionList() {
   }
 
   const handleSecretTextClick = (question) => {
-    if (question.secretWrite && !account.hasAccess(question.userId)) {
+    if (
+      question.secretWrite &&
+      !account.isAdmin(account.userId) &&
+      !account.hasAccess(question.userId)
+    ) {
       alert("비밀글에 접근할 권한이 없습니다.");
     } else {
       navigate(`/question/${question.id}`);

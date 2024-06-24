@@ -30,6 +30,8 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { CommentComponent } from "./CommentComponent.jsx";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock } from "@fortawesome/free-solid-svg-icons";
 
 export function QuestionView() {
   const { id } = useParams();
@@ -100,7 +102,12 @@ export function QuestionView() {
 
       <Box mt={2}>
         <FormControl>
-          <FormLabel>제목</FormLabel>
+          <FormLabel>
+            {question.secretWrite && (
+              <FontAwesomeIcon icon={faLock} style={{ marginRight: "8px" }} />
+            )}
+            제목
+          </FormLabel>
           <Input value={question.title} readOnly></Input>
         </FormControl>
       </Box>
