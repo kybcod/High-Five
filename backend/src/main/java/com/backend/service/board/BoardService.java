@@ -2,6 +2,7 @@ package com.backend.service.board;
 
 import com.backend.domain.board.Board;
 import com.backend.domain.board.BoardFile;
+import com.backend.mapper.board.BoardCommentMapper;
 import com.backend.mapper.board.BoardMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class BoardService {
 
     private final BoardMapper mapper;
     final S3Client s3Client;
+    private final BoardCommentMapper boardCommentMapper;
 
     @Value("${aws.s3.bucket.name}")
     String bucketName;
@@ -139,6 +141,7 @@ public class BoardService {
     }
 
     public int deleteById(Integer id) {
+        boardCommentMapper.deleteByBoardId(id);
         return mapper.deleteById(id);
     }
 

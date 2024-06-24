@@ -50,4 +50,10 @@ public interface BoardCommentMapper {
             WHERE id = #{id}
             """)
     void updateByCommentId(String content, Integer id);
+
+    @Delete("""
+            DELETE FROM board_comment
+            WHERE board_id = #{boardId}
+            """)
+    void deleteByBoardId(Integer boardId);
 }
