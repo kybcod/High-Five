@@ -86,6 +86,9 @@ export function QuestionList() {
     }
   };
 
+  console.log(account.isLoggedIn(), "로그인 했는가");
+  console.log(account.isLoggedIn());
+
   return (
     <Box>
       <Box mt={5} mb={5}>
@@ -222,7 +225,7 @@ export function QuestionList() {
         </Flex>
       </Center>
 
-      {account.isLoggedIn && (
+      {account.isLoggedIn() && (
         <Flex justify={"flex-end"} mr={10}>
           <Button
             colorScheme={"blue"}
