@@ -40,13 +40,13 @@ public interface BoardMapper {
                     <bind name="pattern" value="'%' + keyword + '%'"/>
                     <choose>
                         <when test="searchType == 'all'">
+                            (b.title LIKE #{pattern} OR b.content LIKE #{pattern} OR u.nick_name LIKE #{pattern})
+                        </when>
+                        <when test="searchType == 'text'">
                             (b.title LIKE #{pattern} OR b.content LIKE #{pattern})
                         </when>
-                        <when test="searchType == 'title'">
-                            b.title LIKE #{pattern}
-                        </when>
-                        <when test="searchType == 'content'">
-                            b.content LIKE #{pattern}
+                        <when test="searchType == 'nickName'">
+                            u.nick_name LIKE #{pattern}
                         </when>
                     </choose>
                 </if>

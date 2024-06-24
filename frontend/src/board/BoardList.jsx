@@ -15,7 +15,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -47,6 +47,7 @@ export function BoardList() {
     axios.get(`/api/board/list?${searchParams}`).then((res) => {
       setBoardList(res.data.boardList);
       setPageInfo(res.data.pageInfo);
+      setSearchKeyword("");
     });
   }, [searchParams]);
 
@@ -81,41 +82,52 @@ export function BoardList() {
             </Tr>
           </Thead>
           <Tbody>
-            {boardList.map((board) => (
-              <Tr onClick={() => navigate(`/board/${board.id}`)} key={board.id}>
-                <Td>{board.id}</Td>
-                <Td>
-                  {board.title}
-                  {board.numberOfImages > 0 && (
-                    <Badge>
-                      <Flex>
-                        <Box>
-                          <FontAwesomeIcon icon={faImage} />
-                        </Box>
-                        <Box>{board.numberOfImages}</Box>
-                      </Flex>
-                    </Badge>
-                  )}
-                  {board.numberOfLikes > 0 && (
-                    <Badge>
-                      <Flex>
-                        <Box>
-                          <FontAwesomeIcon icon={fullHeart} />
-                        </Box>
-                        <Box>{board.numberOfLikes}</Box>
-                      </Flex>
-                    </Badge>
-                  )}
+            {boardList.length === 0 && (
+              <Tr>
+                <Td colSpan={5}>
+                  <Center>검색 결과가 없습니다.</Center>
                 </Td>
-                <Td>{board.nickName}</Td>
-                <Td>
-                  <FontAwesomeIcon icon={faComment} size={"sm"} />
-                  {board.numberOfComments}
-                </Td>
-                <Td>{board.inserted}</Td>
-                <Td hidden>{board.content}</Td>
               </Tr>
-            ))}
+            )}
+            {boardList.length > 0 &&
+              boardList.map((board) => (
+                <Tr
+                  onClick={() => navigate(`/board/${board.id}`)}
+                  key={board.id}
+                >
+                  <Td>{board.id}</Td>
+                  <Td>
+                    {board.title}
+                    {board.numberOfImages > 0 && (
+                      <Badge>
+                        <Flex>
+                          <Box>
+                            <FontAwesomeIcon icon={faImage} />
+                          </Box>
+                          <Box>{board.numberOfImages}</Box>
+                        </Flex>
+                      </Badge>
+                    )}
+                    {board.numberOfLikes > 0 && (
+                      <Badge>
+                        <Flex>
+                          <Box>
+                            <FontAwesomeIcon icon={fullHeart} />
+                          </Box>
+                          <Box>{board.numberOfLikes}</Box>
+                        </Flex>
+                      </Badge>
+                    )}
+                  </Td>
+                  <Td>{board.nickName}</Td>
+                  <Td>
+                    <FontAwesomeIcon icon={faComment} size={"sm"} />
+                    {board.numberOfComments}
+                  </Td>
+                  <Td>{board.inserted}</Td>
+                  <Td hidden>{board.content}</Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </Box>
@@ -126,8 +138,8 @@ export function BoardList() {
             onChange={(e) => setSearchType(e.target.value)}
           >
             <option value={"all"}>전체</option>
-            <option value={"content"}>내용</option>
-            <option value={"title"}>제목</option>
+            <option value={"text"}>내용+제목</option>
+            <option value={"nickName"}>작성자</option>
           </Select>
           <Input
             value={searchKeyword}
