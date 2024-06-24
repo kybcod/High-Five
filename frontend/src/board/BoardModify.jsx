@@ -7,6 +7,7 @@ import {
   CardFooter,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Heading,
   IconButton,
@@ -85,6 +86,7 @@ export function BoardModify() {
   }
 
   function handleRemoveSwitchChange(fileName, checked) {
+    console.log(fileName);
     if (checked) {
       setRemoveFileList([...removeFileList, fileName]);
     } else {
@@ -137,7 +139,15 @@ export function BoardModify() {
           board.boardFileList.map((file, index) => (
             <Card m={3} key={index} w={"400px"}>
               <CardBody>
-                <Image src={file.filePath} sizes={"100%"} />
+                <Image
+                  src={file.filePath}
+                  sizes={"100%"}
+                  sx={
+                    removeFileList.includes(file.fileName)
+                      ? { filter: "blur(8px)" }
+                      : {}
+                  }
+                />
               </CardBody>
               <CardFooter>
                 <Flex>
@@ -181,6 +191,7 @@ export function BoardModify() {
               }}
             />
           </Flex>
+          <FormHelperText>총 용량은 10MB를 초과할 수 없습니다</FormHelperText>
           {addFileList.length > 0 && (
             <Box mt={2}>
               <Heading size="md" mb={2}>

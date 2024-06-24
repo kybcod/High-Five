@@ -3,6 +3,7 @@ import {
   Button,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Heading,
   IconButton,
@@ -98,6 +99,7 @@ export function BoardWrite() {
             onChange={(e) => setFiles(Array.from(e.target.files))}
           />
         </Flex>
+        <FormHelperText>총 용량은 10MB를 초과할 수 없습니다</FormHelperText>
         {fileNameList.length > 0 && (
           <Box mt={2}>
             <Heading size="md" mb={2}>
