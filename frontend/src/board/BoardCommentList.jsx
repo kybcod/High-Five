@@ -71,10 +71,11 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
 
   return (
     <Card>
-      <CardBody>
-        {boardCommentList &&
-          boardCommentList.length > 0 &&
-          boardCommentList.map((boardComment) => (
+      {boardCommentList &&
+        boardCommentList.length > 0 &&
+        boardCommentList.map((boardComment) => (
+          // eslint-disable-next-line react/jsx-key
+          <CardBody>
             <Stack key={boardComment.id}>
               {boardComment.refId === 0 && (
                 <Box>
@@ -173,8 +174,8 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                   </Box>
                 ))}
             </Stack>
-          ))}
-      </CardBody>
+          </CardBody>
+        ))}
     </Card>
   );
 }
