@@ -68,7 +68,7 @@ FROM user_file;
 #     CHANGE file_src file_name VARCHAR(500);
 
 SELECT *
-FROM user;
+FROM code;
 
 SELECT *
 FROM user_file;

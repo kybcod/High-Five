@@ -30,9 +30,8 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -63,6 +62,17 @@ public class UserService {
         if (response.getStatusCode().equals("2000")) {
             mapper.insertCode(phoneNumber, verificationCode);
         }
+
+        Timer timer = new Timer();
+
+        TimerTask timeOutCodeDelete = new TimerTask() {
+            public void run() {
+                mapper.deleteCodeByVerificationCode(Integer.valueOf(verificationCode));
+            }
+        };
+
+        timer.schedule(timeOutCodeDelete, 180000);
+
         return verificationCode;
     }
 
