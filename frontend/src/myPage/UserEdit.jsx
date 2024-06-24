@@ -27,7 +27,7 @@ export function UserEdit() {
   const [user, setUser] = useState(null);
   const [oldNickName, setOldNickName] = useState("");
   const [oldPassword, setOldPassword] = useState("");
-  const [isCheckedNickName, setIsCheckedNickName] = useState(false);
+  const [isCheckedNickName, setIsCheckedNickName] = useState(true);
   const [passwordCheck, setPasswordCheck] = useState("");
   const [profileImages, setProfileImages] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
