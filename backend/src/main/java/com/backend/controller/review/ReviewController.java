@@ -18,8 +18,11 @@ public class ReviewController {
     private final ReviewService service;
 
     @GetMapping("/list")
-    public ResponseEntity loadReviewList() {
+    public ResponseEntity getReviewList() {
         List<Map<String, Object>> result = service.selectReviewList();
+        if (result == null || result.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok().body(result);
     }
 
@@ -28,16 +31,26 @@ public class ReviewController {
     public ResponseEntity createReview(@RequestBody Review review, Authentication authentication) throws Exception {
         if (review.getUserId() == Integer.valueOf(authentication.getName())) {
             if (service.validate(review)) {
-                service.insertReview(review);
-                return ResponseEntity.ok().build();
+                boolean success = service.insertReview(review);
+                if (success) {
+                    return ResponseEntity.ok().build();
+                } else {
+                    return ResponseEntity.badRequest().build();
+                }
+            } else {
+                return ResponseEntity.badRequest().body("Invalid review data.");
             }
         }
         return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("{productId}")
-    public ResponseEntity findReviewById(@PathVariable Integer productId) throws Exception {
-        Review review = service.findReviewById(productId);
-        return ResponseEntity.ok().body(review);
+    public ResponseEntity getReviewById(@PathVariable Integer productId) throws Exception {
+        List<Map<String, Object>> reviewList = service.selectReviewById(productId);
+        if (reviewList == null || reviewList.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.ok().body(reviewList);
+        }
     }
 }

@@ -33,6 +33,8 @@ import { UserEmail } from "./user/UserEmail.jsx";
 import SignupCodeProvider from "./component/SignupCodeProvider.jsx";
 import { UserPassword } from "./user/UserPassword.jsx";
 import { Payment } from "./pay/Payment.jsx";
+import { UserAuthSuccess } from "./user/UserAuthSuccess.jsx";
+import { SignupPhoneNumber } from "./user/SignupPhoneNumber.jsx";
 import { theme } from "./Theme.jsx";
 
 axios.interceptors.request.use((config) => {
@@ -61,6 +63,8 @@ const router = createBrowserRouter([
       { path: "user/list", element: <UserList /> },
       { path: "user/email", element: <UserEmail /> },
       { path: "user/password", element: <UserPassword /> },
+      { path: "user/auth/success", element: <UserAuthSuccess /> },
+      { path: "signup/phone_number", element: <SignupPhoneNumber /> },
 
       //question
       { path: "question/write", element: <QuestionWrite /> },

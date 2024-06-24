@@ -9,7 +9,7 @@ import {
   InputGroup,
   InputLeftAddon,
 } from "@chakra-ui/react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,6 +23,8 @@ export function Login() {
   const account = useContext(LoginContext);
   const navigate = useNavigate();
   const { errorToast } = CustomToast();
+
+  useEffect(() => {}, []);
 
   function handleLogin() {
     axios
@@ -98,6 +100,9 @@ export function Login() {
           </a>
           <a href="http://localhost:8080/oauth2/authorization/naver">
             네이버 로그인
+          </a>
+          <a href="http://localhost:8080/oauth2/authorization/google">
+            구글 로그인
           </a>
         </Box>
       </Box>

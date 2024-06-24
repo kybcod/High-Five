@@ -23,6 +23,7 @@ import {
   Text,
   useDisclosure,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
@@ -62,6 +63,7 @@ export function ChatRoom() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [reviewList, setReviewList] = useState([]);
   const [reviewId, setReviewId] = useState([]);
+  const tokenUserId = Number(account.id);
 
   // -- axios.get
   useEffect(() => {
@@ -69,8 +71,6 @@ export function ChatRoom() {
     axios
       .get(`/api/chats/products/${productId}/buyer/${buyerId}`)
       .then((res) => {
-        console.log(res.data);
-        // TODO : res.data 있는지 확인
         const { user, seller, product, chatRoom, bidder, previousChatList } =
           res.data;
         if (res.data != null) {
@@ -82,9 +82,9 @@ export function ChatRoom() {
             user: user || {},
             chatRoom: chatRoom || {},
           });
+          setMessageList(res.data.previousChatList);
+          setRoomId(res.data.chatRoom.id);
         }
-        setMessageList(res.data.previousChatList);
-        setRoomId(res.data.chatRoom.id);
       })
       .catch(() => {
         toast({
@@ -97,10 +97,6 @@ export function ChatRoom() {
       })
       .finally();
   }, []);
-  console.log("previousChatList", data.previousChatList);
-  if (data.previousChatList == null) {
-    console.log("null!!!!");
-  }
 
   // -- stomp
   useEffect(() => {
@@ -174,7 +170,9 @@ export function ChatRoom() {
     axios
       .get(`/api/reviews/list`)
       .then((res) => {
-        setReviewList(res.data);
+        if (res.data != null) {
+          setReviewList(res.data);
+        }
       })
       .catch()
       .finally();
@@ -188,6 +186,10 @@ export function ChatRoom() {
     } else {
       setReviewId([reviewId.filter((reviewId) => reviewId !== id)]);
     }
+  };
+
+  const handleProductDetailPage = () => {
+    navigate(`/product/${data.product.id}`);
   };
 
   const handleSaveReviewButtonClick = (event) => {
@@ -209,7 +211,6 @@ export function ChatRoom() {
       })
       .catch((e) => {
         const code = e.response.status;
-
         if (code === 400) {
           toast({
             status: "error",
@@ -223,17 +224,114 @@ export function ChatRoom() {
         setReviewId([]);
       });
   };
+
+  // -- 후기 조회
   const handleGetReviewButtonClick = () => {
     axios
-      .get(`/api/reviews/${productId}`)
+      .get(`/api/reviews/${data.product.id}`)
       .then((res) => {
-        setReviewList(res.data.reviewList);
+        if (res.data != null) {
+          setReviewList(res.data.reviewList);
+        }
       })
       .catch()
       .finally();
   };
 
-  // spinner
+  // -- productStatusButton
+  const determineButton = () => {
+    if (data.user.id === tokenUserId) {
+      // 구매자
+      if (data.product.status) {
+        return {
+          label: "입찰 가능 상품",
+          action: () => handleProductDetailPage(),
+        };
+      } else {
+        if (data.bidder.bidStatus) {
+          if (!data.product.paymentStatus) {
+            return {
+              label: "결제 하러 가기",
+              // TODO : 결제 페이지로 경로 수정
+              action: () => handleProductDetailPage(),
+            };
+          }
+          if (data.product.paymentStatus && !data.product.reviewStatus) {
+            return {
+              label: "후기 작성 하기",
+              action: () => {
+                onOpen();
+                handleReviewButtonClick();
+              },
+            };
+          }
+          if (data.product.reviewStatus) {
+            return {
+              label: "작성 후기 확인",
+              action: () => {
+                onOpen();
+                handleGetReviewButtonClick();
+              },
+            };
+          }
+        }
+        return { label: "입찰 종료 상품", action: null, disabled: true };
+      }
+    } else {
+      // 판매자
+      if (data.product.status) {
+        return {
+          label: "입찰 진행 상품",
+          action: () => handleProductDetailPage(),
+        };
+      } else {
+        if (data.user.id === data.product.buyerId) {
+          if (!data.product.paymentStatus) {
+            return {
+              label: "결제 대기 상품",
+              action: null,
+              disabled: true,
+            };
+          }
+          if (data.product.paymentStatus && !data.product.reviewStatus) {
+            return {
+              label: "결제 완료 상품",
+              action: null,
+              disabled: true,
+            };
+          }
+          if (data.product.reviewStatus) {
+            return {
+              label: "받은 후기 확인",
+              action: () => {
+                onOpen();
+                handleGetReviewButtonClick();
+              },
+            };
+          }
+        }
+        return {
+          label: "입찰 종료 상품",
+          action: null,
+          disabled: true,
+        };
+      }
+    }
+  };
+  const buttonConfig = determineButton();
+
+  const handleBlackUser = () => {
+    const blackUser =
+      data.user.id === tokenUserId ? data.seller.id : data.user.id;
+    axios
+      .put(`/api/users/black/${blackUser}`)
+      // TODO : status 추가 예정
+      .then(() => {})
+      .catch()
+      .finally();
+  };
+
+  // -- spinner
   if (data.chatRoom == null) {
     return <Spinner />;
   }
@@ -256,7 +354,7 @@ export function ChatRoom() {
           {/* 상대방 상점 */}
           <Center cursor={"pointer"} w={"80%"} border={"1px solid blue"}>
             <Box fontSize={"xl"}>
-              {data.seller.id === Number(account.id) ? (
+              {data.seller.id === tokenUserId ? (
                 <Text onClick={() => navigate(`/myPage/${data.user.id}/shop`)}>
                   {data.user.nickName}
                 </Text>
@@ -275,8 +373,7 @@ export function ChatRoom() {
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </MenuButton>
               <MenuList>
-                {/* TODO : 채팅방 신고하기 */}
-                <MenuItem gap={2}>
+                <MenuItem gap={2} onClick={handleBlackUser}>
                   <FontAwesomeIcon icon={faCircleExclamation} />
                   신고하기
                 </MenuItem>
@@ -306,68 +403,60 @@ export function ChatRoom() {
           </Box>
           <Box w={"20%"} border={"1px solid red"}>
             {/* 상품 상태 */}
-            {/* false 현재 판매 종료, true 판매 중*/}
-            {/* TODO : Notion 정리 */}
-            {data.product.status === false &&
-            data.bidder.userId === Number(account.id) &&
-            data.product.reviewStatus === false ? (
+            {buttonConfig && (
               <Button
-                onClick={() => {
-                  onOpen();
-                  handleReviewButtonClick();
-                }}
+                onClick={buttonConfig.action}
+                isDisabled={buttonConfig.disabled}
               >
-                후기 등록
+                {buttonConfig.label}
               </Button>
-            ) : data.product.status === false &&
-              data.bidder.userId === Number(account.id) &&
-              data.product.reviewStatus === true ? (
-              <Button
-                onClick={() => {
-                  onOpen();
-                  handleGetReviewButtonClick();
-                }}
-              >
-                후기 확인
-              </Button>
-            ) : data.product.status === false &&
-              data.bidder.userId === Number(account.id) ? (
-              <Button>입찰 실패</Button>
-            ) : data.product.status === 1 ? (
-              <Button onClick={() => navigate(`/product/${data.product.id}`)}>
-                입찰 가능 상품
-              </Button>
-            ) : (
-              <Button isDisabled={true}>판매 종료 상품</Button>
             )}
           </Box>
         </Flex>
       </Box>
       <Box>
         <Box>
-          <Box h={"500px"} overflow={"auto"}>
+          <VStack
+            h={"500px"}
+            // overflow={"auto"}
+            spacing={4}
+            flex={1}
+            overflowY="auto"
+            w={"full"}
+          >
             {messageList.map((msg, index) => (
-              <Box
+              <Flex
                 key={index}
-                border={"1px solid red"}
-                borderRadius={30}
-                pl={3}
+                justifyContent={
+                  msg.userId === tokenUserId ? "flex-end" : "flex-start"
+                }
+                w="full"
+                mb={1}
               >
-                <Flex>
-                  <Text>
-                    {/* 변수의 형식까지 비교하기 위해 account.id 문자열을 숫자로 변경 */}
-                    {msg.userId == data.user.id ? (
-                      <>{data.user.nickName}</>
-                    ) : (
-                      <>{data.seller.nickName}</>
-                    )}
+                <Flex
+                  flexDirection="column"
+                  alignItems={
+                    msg.userId === tokenUserId ? "flex-end" : "flex-start"
+                  }
+                >
+                  <Box
+                    textAlign={msg.userId === tokenUserId ? "right" : "left"}
+                    bg={msg.userId === tokenUserId ? "green.200" : "gray.100"}
+                    borderRadius="18px"
+                    p={2}
+                    maxW="100%"
+                    mb={1}
+                    position="relative"
+                  >
+                    <Text p={1}>{msg.message}</Text>
+                  </Box>
+                  <Text fontSize="xs" color="gray.500">
+                    {msg.inserted}
                   </Text>
-                  <Text> : {msg.message}</Text>
                 </Flex>
-                <Text fontSize={"xs"}>{msg.inserted}</Text>
-              </Box>
+              </Flex>
             ))}
-          </Box>
+          </VStack>
           <Box>
             <Flex>
               <Input
@@ -422,7 +511,7 @@ export function ChatRoom() {
               isLoading={loading}
               isDisabled={reviewId.length === 0}
               onClick={handleSaveReviewButtonClick}
-              hidden={data.product.reviewStatus === 1}
+              hidden={data.product.reviewStatus === false}
             >
               후기 보내기
             </Button>

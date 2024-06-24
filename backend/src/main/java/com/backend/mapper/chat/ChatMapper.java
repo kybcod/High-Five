@@ -1,7 +1,6 @@
 package com.backend.mapper.chat;
 
 import com.backend.domain.chat.Chat;
-import com.backend.domain.chat.ChatMessage;
 import com.backend.domain.chat.ChatRoom;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -25,27 +24,11 @@ public interface ChatMapper {
             """)
     int insertChatRoom(ChatRoom newChatRoom);
 
-    @Select("""
-            SELECT *
-            FROM chat_room
-            WHERE id = #{roomId}
-            """)
-    ChatRoom selectChatRoomInfo(Integer roomId);
-
     @Insert("""
             INSERT INTO chat (chat_room_id, user_id, message)
             VALUES (#{chatRoomId}, #{userId}, #{message})
             """)
-    int insertMessage(ChatMessage chatMessage);
-
-    @Select("""
-            SELECT *
-            FROM chat
-            WHERE chat_room_id = #{roomId}
-            ORDER BY id DESC
-            LIMIT 20
-            """)
-    List<ChatMessage> selectMessage(Integer roomId);
+    int insertMessage(Chat chat);
 
     @Select("""
             SELECT *
