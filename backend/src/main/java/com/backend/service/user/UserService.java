@@ -208,11 +208,13 @@ public class UserService {
 
         // 권한 지우기
         mapper.deleteAuthorityById(id);
+        // 프로필 사진 지우기
+        mapper.deleteProfileImageById(id);
 
         // chatMapper
         // 채팅룸 지우기
         // 메시지 지우기
-        // 경매내역 지우기
+        // TODO.입찰내역 지우기
 
         // boardMapper
         // 자유 게시물 파일 지우기
@@ -231,6 +233,7 @@ public class UserService {
         // 상품 파일 지우기
         // 상품 리뷰 지우기
         // 상품 게시물 지우기
+        // 결제 내역 지우기
 
         // 회원 지우기
         mapper.deleteUserById(id);

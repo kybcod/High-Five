@@ -70,6 +70,9 @@ FROM user_file;
 SELECT *
 FROM user;
 
+SELECT *
+FROM user_file;
+
 DELETE
 FROM user
 WHERE id = 72;
