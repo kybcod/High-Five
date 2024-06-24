@@ -192,6 +192,10 @@ export function ChatRoom() {
     navigate(`/product/${data.product.id}`);
   };
 
+  const handlePayDetailPage = () => {
+    navigate(`/pay/buyer/${data.user.id}/product/${data.product.id}`);
+  };
+
   const handleSaveReviewButtonClick = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -252,8 +256,7 @@ export function ChatRoom() {
           if (!data.product.paymentStatus) {
             return {
               label: "결제 하러 가기",
-              // TODO : 결제 페이지로 경로 수정
-              action: () => handleProductDetailPage(),
+              action: () => handlePayDetailPage(),
             };
           }
           if (data.product.paymentStatus && !data.product.reviewStatus) {
