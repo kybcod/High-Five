@@ -33,6 +33,7 @@ export function BoardReCommentWrite({
       })
       .then(() => {
         successToast("답글이 작성되었습니다");
+        setContent("");
       })
       .catch((err) => {
         if (err.response.status === 400) {
@@ -54,6 +55,7 @@ export function BoardReCommentWrite({
               ? "답글을 작성해 보세요"
               : "답글을 작성하시려면 로그인 하세요"
           }
+          value={content}
           onChange={(e) => setContent(e.target.value)}
         />
         <Stack>

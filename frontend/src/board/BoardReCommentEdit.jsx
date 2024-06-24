@@ -18,6 +18,7 @@ export function BoardReCommentEdit({
       })
       .then(() => {
         successToast(`답글 수정이 완료되었습니다`);
+        subComment.content = updatedContent;
         setIsEditingId(null);
       })
       .catch(() => {

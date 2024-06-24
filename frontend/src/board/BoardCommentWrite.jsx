@@ -29,6 +29,7 @@ export function BoardCommentWrite({ boardId, setIsProcessing, isProcessing }) {
       })
       .then(() => {
         successToast("댓글이 작성되었습니다");
+        setContent("");
       })
       .catch((err) => {
         if (err.response.status === 400) {
@@ -48,7 +49,7 @@ export function BoardCommentWrite({ boardId, setIsProcessing, isProcessing }) {
               ? "댓글을 작성해 보세요"
               : "댓글을 작성하시려면 로그인 하세요"
           }
-          value={content.content}
+          value={content}
           onChange={(e) => setContent(e.target.value)}
         />
         <Button isLoading={isProcessing} onClick={handleClickComment}>

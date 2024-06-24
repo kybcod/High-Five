@@ -20,6 +20,7 @@ export function BoardCommentEdit({
       })
       .then(() => {
         successToast(`댓글 수정이 완료되었습니다`);
+        boardComment.content = updatedContent;
         setIsEditingId(null);
       })
       .catch(() => {
