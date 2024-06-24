@@ -82,3 +82,14 @@ SET content='잘 안되시면 다시 글 남겨주세요',
     inserted=now()
 WHERE id = 47;
 
+ALTER TABLE question_board
+    ADD COLUMN secretWrite INT DEFAULT 0 NOT NULL;
+
+ALTER TABLE question_board
+    CHANGE COLUMN secretWrite secret_write BOOLEAN DEFAULT FALSE NOT NULL;
+
+
+ALTER TABLE question_board
+    MODIFY COLUMN secretWrite BOOLEAN DEFAULT false NOT NULL;
+
+desc question_board;

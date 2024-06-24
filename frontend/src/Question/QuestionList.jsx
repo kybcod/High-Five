@@ -37,7 +37,6 @@ export function QuestionList() {
   const [searchType, setSearchType] = useState("titleNick");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
-  const [secretCheck, setSecretCheck] = useState(false);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
 
@@ -79,15 +78,12 @@ export function QuestionList() {
   }
 
   const handleSecretTextClick = (question) => {
-    if (secretCheck && !account.hasAccess(question.userId)) {
+    if (question.secretWrite && !account.hasAccess(question.userId)) {
       alert("비밀글에 접근할 권한이 없습니다.");
     } else {
       navigate(`/question/${question.id}`);
     }
   };
-
-  console.log(account.isLoggedIn(), "로그인 했는가");
-  console.log(account.isLoggedIn());
 
   return (
     <Box>
@@ -118,7 +114,7 @@ export function QuestionList() {
                 <Td>{question.id}</Td>
                 <Td>
                   <Flex gap={2}>
-                    {secretCheck && <FontAwesomeIcon icon={faLock} />}
+                    {question.secretWrite && <FontAwesomeIcon icon={faLock} />}
                     {question.title}
                     {question.isNewBadge && (
                       <Badge colorScheme="green">New</Badge>

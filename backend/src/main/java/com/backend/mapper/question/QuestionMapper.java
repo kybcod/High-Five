@@ -9,7 +9,7 @@ import java.util.List;
 public interface QuestionMapper {
 
     @Insert("""
-            INSERT INTO question_board( title,content,user_id) VALUES (#{title},#{content},#{userId})
+            INSERT INTO question_board( title,content,user_id,secret_write) VALUES (#{title},#{content},#{userId},#{secretWrite})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Question question);
@@ -39,7 +39,7 @@ public interface QuestionMapper {
 
     @Select("""
             <script>
-                SELECT qb.id, qb.title, user.nick_name as nickName, user.id as userId, qb.number_of_count, qb.inserted,
+                SELECT qb.id, qb.title, user.nick_name as nickName, user.id as userId, qb.number_of_count, qb.inserted, qb.secret_write,
                        qbf.numberOfFiles,
                        qbc.numberOfComments
                 FROM question_board qb
