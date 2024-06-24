@@ -170,10 +170,7 @@ export function UserEdit() {
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button
-          onClick={onOpen}
-          // isDisabled={disabled}
-        >
+        <Button onClick={onOpen} isDisabled={disabled}>
           수정
         </Button>
       </Box>

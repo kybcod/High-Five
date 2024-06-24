@@ -55,9 +55,8 @@ FROM user
 ;
 
 UPDATE user
-SET black_count  = 0,
-    phone_number = 9384
-WHERE id = 62;
+SET black_count = 0
+WHERE id = 57;
 
 SELECT *
 FROM user_file;

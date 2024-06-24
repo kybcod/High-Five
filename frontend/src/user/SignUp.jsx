@@ -221,7 +221,7 @@ export function SignUp() {
             colorScheme={"green"}
             onClick={handleSignUp}
             isLoading={isLoading}
-            // isDisabled={isDisabled}
+            isDisabled={isDisabled}
           >
             SignUp
           </Button>
