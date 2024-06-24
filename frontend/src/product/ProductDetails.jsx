@@ -223,6 +223,16 @@ export function ProductDetails() {
               현재 참여 인원 {product.numberOfJoin}명
             </Heading>
           </Box>
+          <Box w={"100%"}>
+            <Button
+              colorScheme="teal"
+              w="100%"
+              leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
+              onClick={handleEnterChatRoom}
+            >
+              문의하기
+            </Button>
+          </Box>
 
           {product.status && (
             <Box mb={5}>
@@ -233,16 +243,16 @@ export function ProductDetails() {
                       참여하기
                     </Button>
                   </Box>
-                  <Box w={"100%"}>
-                    <Button
-                      colorScheme="teal"
-                      w="100%"
-                      leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
-                      onClick={handleEnterChatRoom}
-                    >
-                      문의하기
-                    </Button>
-                  </Box>
+                  {/*<Box w={"100%"}>*/}
+                  {/*  <Button*/}
+                  {/*    colorScheme="teal"*/}
+                  {/*    w="100%"*/}
+                  {/*    leftIcon={<FontAwesomeIcon icon={faCommentDots} />}*/}
+                  {/*    onClick={handleEnterChatRoom}*/}
+                  {/*  >*/}
+                  {/*    문의하기*/}
+                  {/*  </Button>*/}
+                  {/*</Box>*/}
                 </Flex>
               )}
               {account.hasAccess(product.userId) && (
