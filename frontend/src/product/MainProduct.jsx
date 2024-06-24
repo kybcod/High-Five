@@ -5,7 +5,6 @@ import {
   Box,
   Card,
   CardBody,
-  Center,
   Flex,
   Grid,
   GridItem,
@@ -21,7 +20,6 @@ import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { Category } from "../component/Category.jsx";
-import { MainSlider } from "./slider/MainSlider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
@@ -74,11 +72,9 @@ export function MainProduct() {
     <Box>
       {/* 네브바, 헤더, 카테고리, 이미지 배너 등 추가 */}
       <Category />
-      <Center w="100%">
-        <Box mt={2} w="100%">
-          <MainSlider />
-        </Box>
-      </Center>
+      <Box mt={10} h="400px" w="100%" mb={10} boxSizing="border-box" mx="auto">
+        {/*<MainSlider />*/}
+      </Box>
       <Heading my={4}>오늘의 상품</Heading>
       <Grid
         templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(5, 1fr)" }}

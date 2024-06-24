@@ -1,9 +1,9 @@
 // MainSlider.jsx
 import React from "react";
+import Slider from "react-slick";
 import { Box, Image } from "@chakra-ui/react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Styled_Slide } from "./Styled_Slide";
 
 const bannerData = [
   {
@@ -16,15 +16,15 @@ const bannerData = [
   },
   {
     id: 3,
-    src: "https://product-image.kurly.com/hdims/resize/%3E1900x%3E370/quality/85/src/banner/main/pc/img/93b644d1-ec1e-4026-9ebc-d79c1817d2ed.jpg",
+    src: "https://media.bunjang.co.kr/images/nocrop/1200638310_w1197.jpg",
   },
   {
     id: 4,
-    src: "https://product-image.kurly.com/hdims/resize/%3E1900x%3E370/quality/85/src/banner/main/pc/img/93b644d1-ec1e-4026-9ebc-d79c1817d2ed.jpg",
+    src: "https://media.bunjang.co.kr/images/nocrop/1200637633_w1197.jpg",
   },
   {
-    id: 4,
-    src: "https://product-image.kurly.com/hdims/resize/%3E1900x%3E370/quality/85/src/banner/main/pc/img/93b644d1-ec1e-4026-9ebc-d79c1817d2ed.jpg",
+    id: 5,
+    src: "https://media.bunjang.co.kr/images/nocrop/1200637633_w1197.jpg",
   },
 ];
 
@@ -42,19 +42,17 @@ export function MainSlider() {
   };
 
   return (
-    <Box width="100%" mt={10} mb={10}>
-      <Styled_Slide {...settings}>
-        {bannerData.map((banner) => (
-          <Box key={banner.id} width="100%" height="500px" boxSize={"full"}>
-            <Image
-              src={banner.src}
-              width="100%"
-              height="100%"
-              objectFit="cover"
-            />
-          </Box>
-        ))}
-      </Styled_Slide>
-    </Box>
+    <Slider {...settings} style={{ width: "100%", height: "100%" }}>
+      {bannerData.map((banner) => (
+        <Box key={banner.id} width="100%" height="100%">
+          <Image
+            src={banner.src}
+            width="100%"
+            height="100%"
+            objectFit="contain"
+          />
+        </Box>
+      ))}
+    </Slider>
   );
 }
