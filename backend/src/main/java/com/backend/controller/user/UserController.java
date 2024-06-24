@@ -128,6 +128,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    // TODO. 나중에 admin 권한 추가 && 프론트에도 권한 추가
     // user 리스트 조회
     @GetMapping("/users/list")
     public Map<String, Object> list(@RequestParam(required = false, defaultValue = "1") int page,

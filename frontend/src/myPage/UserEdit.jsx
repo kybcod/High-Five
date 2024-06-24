@@ -129,6 +129,7 @@ export function UserEdit() {
         <FormControl>
           <FormLabel>비밀번호</FormLabel>
           <Input
+            type={"password"}
             variant="flushed"
             placeholder={"변경 시에만 입력해주세요"}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
@@ -137,6 +138,7 @@ export function UserEdit() {
         <FormControl>
           <FormLabel>비밀번호 확인</FormLabel>
           <Input
+            type={"password"}
             variant="flushed"
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
@@ -180,6 +182,7 @@ export function UserEdit() {
           <ModalBody>비밀번호를 입력해주세요</ModalBody>
           <ModalFooter>
             <Input
+              type={"password"}
               variant="flushed"
               onChange={(e) => setOldPassword(e.target.value)}
             />
