@@ -108,8 +108,10 @@ export function ProductEdit() {
         });
       })
       .finally(() => {
-        deleteModal.onClose();
+        // deleteModal.onClose();
+        setDeleteModal({ isOpen: false });
         setLoading(false);
+        navigate("/");
       });
   }
 

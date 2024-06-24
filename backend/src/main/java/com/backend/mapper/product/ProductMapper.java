@@ -207,7 +207,8 @@ public interface ProductMapper {
                    p.end_time,
                    p.content,
                    p.view_count,
-                   p.status
+                   p.status,
+                p.review_status
             FROM product p
                      JOIN user u
                           ON p.user_id = u.id
@@ -237,7 +238,8 @@ public interface ProductMapper {
                    p.end_time,
                    p.content,
                    p.status,
-                   p.user_id
+                   p.user_id,
+                   p.review_status
             FROM product p
                      JOIN product_like pl ON p.id = pl.product_id
             WHERE pl.user_id = #{userId}

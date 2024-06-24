@@ -152,27 +152,16 @@ public class ProductService {
 
         Product product = mapper.selectById(id);
 
-        // chat 삭제
-        // chat_room_id 가져오기
-        List<Integer> chatRoomIds = mapper.selectChatByChatRoomId(id);
-        for (Integer chatRoomId : chatRoomIds) {
-            mapper.deleteChatByChatRoomId(chatRoomId);
+//         s3에서 파일(이미지) 삭제
+        List<ProductFile> productFileList = mapper.selectFileByProductId(id);
+        for (ProductFile productFile : productFileList) {
+            String key = STR."prj3/\{id}/\{productFile.getFileName()}";
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+            s3Client.deleteObject(deleteObjectRequest);
         }
-        // chat_room 삭제
-        mapper.deleteChatRoomBySellerId(product.getUserId());
-        mapper.deleteChatRoomByProductId(id);
-
-
-        // s3에서 파일(이미지) 삭제
-//        List<ProductFile> productFileList = mapper.selectFileByProductId(id);
-//        for (ProductFile productFile : productFileList) {
-//            String key = STR."prj3/\{id}/\{productFile.getFileName()}";
-//            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-//                    .bucket(bucketName)
-//                    .key(key)
-//                    .build();
-//            s3Client.deleteObject(deleteObjectRequest);
-//        }
 
         // 입찰 내역 삭제
         mapper.deleteBidListByProductId(id);
@@ -217,31 +206,6 @@ public class ProductService {
 
         return Map.of("likeProductList", likeProductList, "pageInfo", pageInfo, "hasNextPage", hasNextPage);
     }
-
-    // TODO : 코드 정리
-//    public ProductListResponse getById(Integer id, Authentication authentication) {
-//        mapper.updateViewCount(id);
-//
-//        ProductWithUserDTO product = mapper.selectById2(id);
-//
-//        List<String> productFiles = mapper.selectFileByProductId(product.getId());
-//        List<ProductFile> files = productFiles.stream()
-//                .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-//                .toList();
-////        product.setProductFileList(files);
-//
-//        //좋아요
-//        Like like = new Like();
-//        if (authentication == null) {
-//            like.setLike(false);
-//        } else {
-//            int i = mapper.selectLikeByProductIdAndUserId(id, authentication.getName());
-//            like.setLike(i == 1);
-//        }
-//        like.setCount(mapper.selectCountLikeByProductId(id));
-//
-//        return new ProductListResponse(product, like, files);
-//    }
 
     public List<Product> selectProductAndBidList() {
         return mapper.selectProductAndBidList();

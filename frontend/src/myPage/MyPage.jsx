@@ -93,7 +93,7 @@ export function MyPage({ tab }) {
             borderRadius="3px"
             _selected={{ borderColor: "green.500", fontWeight: "bold" }}
           >
-            내 상점
+            판매 목록
           </Tab>
           {userId == account.id && (
             <Tab

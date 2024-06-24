@@ -53,10 +53,10 @@ export function ProductUpload() {
       return;
     }
 
-    if (!date || !time) {
+    if (!startPrice) {
       toast({
         status: "warning",
-        description: "입찰 마감 시간을 입력해주세요.",
+        description: "입찰 시작가를 입력해주세요.",
         position: "top-right",
         duration: 3000,
       });
@@ -64,10 +64,10 @@ export function ProductUpload() {
       return;
     }
 
-    if (!startPrice) {
+    if (!date || !time) {
       toast({
         status: "warning",
-        description: "입찰 시작가를 입력해주세요.",
+        description: "입찰 마감 시간을 입력해주세요.",
         position: "top-right",
         duration: 3000,
       });

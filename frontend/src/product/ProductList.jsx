@@ -196,53 +196,57 @@ export function ProductList() {
 
       {/*페이지네이션*/}
       <Center>
-        <Box mt={"30px"}>
-          {pageInfo.currentPageNumber == 0 || (
-            <Button
-              mr={"10px"}
-              onClick={() => handlePageButtonClick(pageInfo.firstPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAnglesLeft} />
-            </Button>
-          )}
-          {pageInfo.leftPageNumber > 10 && (
-            <Button
-              mr={"10px"}
-              onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAngleLeft} />
-            </Button>
-          )}
+        {productList.length === 0 ? (
+          <Text>해당 상품의 검색 결과가 없습니다.</Text>
+        ) : (
+          <Box mt={"30px"}>
+            {pageInfo.currentPageNumber == 0 || (
+              <Button
+                mr={"10px"}
+                onClick={() => handlePageButtonClick(pageInfo.firstPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAnglesLeft} />
+              </Button>
+            )}
+            {pageInfo.leftPageNumber > 10 && (
+              <Button
+                mr={"10px"}
+                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAngleLeft} />
+              </Button>
+            )}
 
-          {pageNumbers.map((pageNumber) => (
-            <Button
-              mr={"10px"}
-              onClick={() => handlePageButtonClick(pageNumber)}
-              key={pageNumber}
-              colorScheme={
-                pageNumber - 1 == pageInfo.currentPageNumber ? "teal" : "gray"
-              }
-            >
-              {pageNumber}
-            </Button>
-          ))}
+            {pageNumbers.map((pageNumber) => (
+              <Button
+                mr={"10px"}
+                onClick={() => handlePageButtonClick(pageNumber)}
+                key={pageNumber}
+                colorScheme={
+                  pageNumber - 1 == pageInfo.currentPageNumber ? "teal" : "gray"
+                }
+              >
+                {pageNumber}
+              </Button>
+            ))}
 
-          {pageInfo.nextPageNumber < pageInfo.lastPageNumber && (
-            <Button
-              mr={"10px"}
-              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAngleRight} />
-            </Button>
-          )}
-          {pageInfo.currentPageNumber === pageInfo.lastPageNumber - 1 || (
-            <Button
-              onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAnglesRight} />
-            </Button>
-          )}
-        </Box>
+            {pageInfo.nextPageNumber < pageInfo.lastPageNumber && (
+              <Button
+                mr={"10px"}
+                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAngleRight} />
+              </Button>
+            )}
+            {pageInfo.currentPageNumber === pageInfo.lastPageNumber - 1 || (
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAnglesRight} />
+              </Button>
+            )}
+          </Box>
+        )}
       </Center>
     </Box>
   );

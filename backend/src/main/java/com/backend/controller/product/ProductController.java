@@ -106,11 +106,4 @@ public class ProductController {
         return service.getProductsLikeByUserId(userId, PageRequest.of(page - 1, 9));
     }
 
-
-// TODO: 코드 정리
-
-//    @GetMapping("/test/{id}")
-//    public ProductListResponse getProductById(@PathVariable Integer id, Authentication authentication) {
-//        return service.getById(id, authentication);
-//    }
 }

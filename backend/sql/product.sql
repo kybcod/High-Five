@@ -29,6 +29,8 @@ FROM chat;
 SELECT *
 FROM chat_room;
 
+SHOW CREATE TABLE chat_room;
+
 alter table product_file
     modify id INT first;
 
