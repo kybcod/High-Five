@@ -8,7 +8,6 @@ import {
   faQuestionCircle,
   faSignInAlt,
   faSignOutAlt,
-  faUser,
   faUserPlus,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -26,12 +25,13 @@ export function Navbar() {
       align="center"
       h={20}
       fontSize={"lg"}
+      cursor={"pointer"}
     >
-      <Center onClick={() => navigate("/")} cursor="pointer" mx={2}>
+      <Center onClick={() => navigate("/")} mx={2}>
         <FontAwesomeIcon icon={faHome} />
         <Text ml={2}>HOME</Text>
       </Center>
-      <Center onClick={() => navigate("/board/list")} cursor="pointer" mx={2}>
+      <Center onClick={() => navigate("/board/list")} mx={2}>
         <FontAwesomeIcon icon={faClipboardList} />
         <Text ml={2}>자유게시판</Text>
       </Center>
@@ -43,22 +43,15 @@ export function Navbar() {
         <FontAwesomeIcon icon={faQuestionCircle} />
         <Text ml={2}>QnA</Text>
       </Center>
-      <Center
-        onClick={() => navigate(`/myPage/${account.id}`)}
-        cursor="pointer"
-        mx={2}
-      >
-        <FontAwesomeIcon icon={faUser} />
-        <Text ml={2}>MyPage</Text>
-      </Center>
-      <Center onClick={() => navigate("/user/list")} cursor="pointer" mx={2}>
+
+      <Center onClick={() => navigate("/user/list")} mx={2}>
         <FontAwesomeIcon icon={faUsers} />
         <Text ml={2}>USER LIST</Text>
       </Center>
       <Spacer />
       {account.isLoggedIn() ? (
         <>
-          <Center mx={2}>
+          <Center mx={2} onClick={() => navigate(`/myPage/${account.id}`)}>
             <Box mx={1}>
               <Image
                 boxSize="50px"
@@ -83,11 +76,11 @@ export function Navbar() {
         </>
       ) : (
         <>
-          <Center onClick={() => navigate("/login")} cursor="pointer" mx={2}>
+          <Center onClick={() => navigate("/login")} mx={2}>
             <FontAwesomeIcon icon={faSignInAlt} />
             <Text ml={2}>LOGIN</Text>
           </Center>
-          <Center onClick={() => navigate("/signup")} cursor="pointer" mx={2}>
+          <Center onClick={() => navigate("/signup")} mx={2}>
             <FontAwesomeIcon icon={faUserPlus} />
             <Text ml={2}>SIGNUP</Text>
           </Center>

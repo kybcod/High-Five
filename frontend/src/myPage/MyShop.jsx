@@ -15,7 +15,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowDownIcon, ArrowUpIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 export function MyShop() {
   const { userId } = useParams();
@@ -31,6 +31,7 @@ export function MyShop() {
     axios
       .get(`/api/products/user/${userId}?page=${currentPage}`)
       .then((res) => {
+        console.log(res.data);
         if (currentPage === 1) {
           // 첫 번째 페이지
           setProductList(res.data.productList);
@@ -61,10 +62,6 @@ export function MyShop() {
       setSearchParams(searchParams);
     }, scrollDuration);
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function handleScrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -173,41 +170,33 @@ export function MyShop() {
           ))}
         </Grid>
       )}
-      <Box display={"flex"} justifyContent={"center"}>
-        {hasNextPage ? (
-          <Button
-            w={"30%"}
-            colorScheme={"blue"}
-            mt={4}
-            onClick={handleMoreClick}
-            rightIcon={<ArrowDownIcon />}
-          >
-            더보기
-          </Button>
-        ) : productList.length > 9 ? (
-          <Button
-            w={"30%"}
-            colorScheme={"blue"}
-            mt={4}
-            rightIcon={<ChevronUpIcon />}
-            onClick={handleFoldClick}
-          >
-            접기
-          </Button>
-        ) : (
-          productList.length > 6 && (
+      {productList.length > 0 && (
+        <Box display={"flex"} justifyContent={"center"}>
+          {hasNextPage ? (
             <Button
               w={"30%"}
               colorScheme={"blue"}
               mt={4}
-              rightIcon={<ArrowUpIcon />}
-              onClick={handleScrollToTop}
+              onClick={handleMoreClick}
+              rightIcon={<ArrowDownIcon />}
             >
-              맨 위로
+              더보기
             </Button>
-          )
-        )}
-      </Box>
+          ) : (
+            productList.length > 10 && (
+              <Button
+                w={"30%"}
+                colorScheme={"blue"}
+                mt={4}
+                rightIcon={<ChevronUpIcon />}
+                onClick={handleFoldClick}
+              >
+                접기
+              </Button>
+            )
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

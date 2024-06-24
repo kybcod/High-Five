@@ -1,9 +1,8 @@
 package com.backend.mapper.product;
 
-import com.backend.domain.chat.ChatProduct;
-import com.backend.domain.auction.BidList;
 import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.product.Product;
+import com.backend.domain.product.ProductFile;
 import com.backend.domain.product.ProductWithUserDTO;
 import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Pageable;
@@ -36,15 +35,19 @@ public interface ProductMapper {
                    p.content,
                    p.status
             FROM product p
-            ORDER BY CASE WHEN p.status = true THEN 0 ELSE 1 END, p.end_time
+            ORDER BY p.status DESC, p.end_time
             """)
+    @Results(id = "productList", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
     List<Product> selectAll();
 
     @Select("""
-            SELECT file_name FROM product_file
+            SELECT product_id, file_name FROM product_file
             WHERE product_id = #{productId}
             """)
-    List<String> selectFileByProductId(Integer productId);
+    List<ProductFile> selectFileByProductId(Integer productId);
 
     @Select("""
             SELECT p.id,
@@ -66,8 +69,11 @@ public interface ProductMapper {
                      JOIN user u ON u.id = p.user_id
             WHERE p.id = #{id};
             """)
+    @Results(id = "productDetail", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
     Product selectById(Integer id);
-
 
     @Select("""
             <script>
@@ -85,10 +91,14 @@ public interface ProductMapper {
             <if test="category != null and category != ''">
                 AND p.category = #{category}
             </if>
-            ORDER BY CASE WHEN p.status = true THEN 0 ELSE 1 END, p.end_time
+            ORDER BY p.status DESC, p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             </script>
             """)
+    @Results(id = "productSearchList", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
     List<Product> selectWithPageable(Pageable pageable, String keyword, String category);
 
     @Select("""
@@ -127,17 +137,6 @@ public interface ProductMapper {
             """)
     int updateViewCount(Integer id);
 
-    @Delete("DELETE FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
-    int deleteLikeByProductIdAndUserId(Integer productId, Integer userId);
-
-    @Insert("""
-            INSERT INTO product_like (product_id, user_id)
-            VALUES (#{productId}, #{userId})
-            """)
-    int insertLikeByProductIdAndUserId(Integer productId, Integer userId);
-
-    @Select("SELECT product_id FROM product_like WHERE user_id=#{userId}")
-    List<Integer> selectLikeByUserId(Integer userId);
 
     @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId} AND user_id=#{userId}")
     int selectLikeByProductIdAndUserId(Integer productId, String userId);
@@ -216,6 +215,10 @@ public interface ProductMapper {
             ORDER BY p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
+    @Results(id = "productListByUserId", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
     List<Product> selectProductsByUserIdWithPagination(Integer userId, Pageable pageable);
 
     @Select("""
@@ -240,6 +243,10 @@ public interface ProductMapper {
             WHERE pl.user_id = #{userId}
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
+    @Results(id = "productAndProductLikeList", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
     List<Product> selectLikeSelectByUserId(Integer userId, Pageable pageable);
 
     @Select("""
@@ -309,4 +316,12 @@ public interface ProductMapper {
             WHERE id = #{productId}
             """)
     Product selectProductTitleById(ChatRoom chatRoom);
+
+    @Update("""
+            UPDATE product
+            SET payment_status = #{paymentStatus}
+            WHERE id = #{productId}
+            """)
+    int updatePaymentStatus(Integer productId, boolean paymentStatus);
+
 }

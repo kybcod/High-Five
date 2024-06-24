@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductListResponse {
     private ProductWithUserDTO product;
-    private Like like;
+    private ProductLike productLike;
     private List<ProductFile> productFileList;
 }

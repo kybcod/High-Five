@@ -73,7 +73,7 @@ export function ProductDetails() {
     if (parseInt(bidPrice) > product.startPrice) {
       setIsProcessing(true);
       axios
-        .post("/api/bids/join", {
+        .post("/api/bids", {
           productId: id,
           userId: account.id,
           bidPrice: bidPrice,
@@ -121,186 +121,157 @@ export function ProductDetails() {
   return (
     <Box>
       <Category />
-      <Box mt={3}>
+
+      <Box display={"inline-block"}>
         <Heading
+          color="blue"
+          cursor="pointer"
           mb={3}
-          color={"blue"}
-          cursor={"pointer"}
           onClick={() => navigate(`/myPage/${product.userId}/shop`)}
         >
           {product.userNickName}
         </Heading>
+      </Box>
 
-        <Flex justifyContent={"space-around"}>
+      <Flex mt={3} alignItems="flex-start">
+        <Box width="50%" mr={20} border={"1px solid black"}>
           <SimpleSlider
             images={existingFilePreviews}
             isBrightness={!product.status}
           />
+        </Box>
 
-          <Box ml={10} mb={5}>
-            {product.status || (
-              <>
-                {product.maxBidPrice !== null ? (
-                  <Box
-                    mb={5}
-                    display={"flex"}
-                    alignContent={"center"}
-                    justifyContent={"center"}
-                  >
-                    <Box fontWeight={"bold"} fontSize={"3xl"} color={"red"}>
-                      낙찰 금액 : {formattedPrice(product.maxBidPrice)}원
-                    </Box>
+        <Box flex="1">
+          {product.status || (
+            <>
+              {product.maxBidPrice !== null ? (
+                <Box mb={5}>
+                  <Box fontWeight="bold" fontSize="3xl" color="red">
+                    낙찰 금액 : {formattedPrice(product.maxBidPrice)}원
                   </Box>
-                ) : (
-                  <Box
-                    mb={5}
-                    display={"flex"}
-                    alignContent={"center"}
-                    justifyContent={"center"}
-                  >
-                    <Box fontWeight={"bold"} fontSize={"3xl"} color={"red"}>
-                      낙찰된 금액이 없습니다.
-                    </Box>
+                </Box>
+              ) : (
+                <Box mb={5}>
+                  <Box fontWeight="bold" fontSize="3xl" color="red">
+                    낙찰된 금액이 없습니다.
                   </Box>
-                )}
-              </>
-            )}
-            <Box mb={5}>
-              <Heading> {product.title} </Heading>
-            </Box>
-            <Flex mb={5} justifyContent={"space-between"}>
-              <Box>
-                <Text fontSize={"xl"}>
-                  {formattedPrice(product.startPrice)}원
-                </Text>
-              </Box>
-              <Box>
-                <Text fontSize={"xl"}>{product.timeFormat}</Text>
-              </Box>
+                </Box>
+              )}
+            </>
+          )}
+
+          <Box mb={5}>
+            <Heading>{product.title}</Heading>
+          </Box>
+
+          <Flex mb={5} justifyContent="space-between">
+            <Text fontSize="xl">{formattedPrice(product.startPrice)}원</Text>
+            <Text fontSize="xl">{product.timeFormat}</Text>
+          </Flex>
+
+          <Divider mb={2} />
+
+          {/*다른 user의 상품 일 때*/}
+          {account.isLoggedIn() && !account.hasAccess(product.userId) && (
+            <Flex mb={5} justifyContent="space-evenly" alignItems="center">
+              <Flex alignItems="center" mr={4}>
+                <Box mr={2}>찜</Box>
+                <Button
+                  onClick={handleLikeClick}
+                  leftIcon={
+                    <FontAwesomeIcon
+                      icon={like.like ? fullHeart : emptyHeart}
+                      size="lg"
+                    />
+                  }
+                  colorScheme={like.like ? "red" : "gray"}
+                  variant="outline"
+                >
+                  {like.count}
+                </Button>
+              </Flex>
+              <Flex alignItems="center" mr={4}>
+                <FontAwesomeIcon icon={faEye} size="lg" />
+                <Box ml={2}>{product.viewCount}</Box>
+              </Flex>
+              <Flex>
+                <ReportButton userId={product.userId} />
+              </Flex>
             </Flex>
+          )}
 
-            <Divider mb={2} />
-
-            {/*로그인이 되어 있고 내 상품 아닐 때*/}
-            {account.isLoggedIn() && !account.hasAccess(product.userId) && (
-              <Flex
-                mb={5}
-                justifyContent={"space-between"}
-                alignItems={"center"}
-              >
-                <Flex alignItems={"center"} mr={4}>
-                  <Box mr={2}>찜</Box>
-                  {account.isLoggedIn() && (
-                    <Button
-                      onClick={handleLikeClick}
-                      leftIcon={
-                        <FontAwesomeIcon
-                          icon={like.like ? fullHeart : emptyHeart}
-                          size={"lg"}
-                        />
-                      }
-                      colorScheme={like.like ? "red" : "gray"}
-                      variant="outline"
-                    >
-                      {like.count}
-                    </Button>
-                  )}
-                </Flex>
-                <Flex alignItems={"center"} mr={4}>
-                  <Box mr={2}>
-                    <FontAwesomeIcon icon={faEye} size={"lg"} />
-                  </Box>
-                  <Box>{product.viewCount}</Box>
-                </Flex>
+          {/*내 상품 일 때 */}
+          {!account.isLoggedIn() ||
+            (account.hasAccess(product.userId) && (
+              <Flex mb={5} alignItems="center" justifyContent="space-evenly">
                 <Flex>
-                  <Box>
+                  <Text mr={3}>찜</Text>
+                  <Box>{like.count}</Box>
+                </Flex>
+                <Flex alignItems="center" ml={10}>
+                  <FontAwesomeIcon icon={faEye} size="lg" />
+                  <Box ml={2}>{product.viewCount}</Box>
+                </Flex>
+              </Flex>
+            ))}
+
+          <Box mb={5} textAlign="center">
+            <Heading fontSize="2xl">{product.endTimeDetailsFormat}</Heading>
+          </Box>
+          <Box mb={5} textAlign="center">
+            <Heading color="skyblue">
+              현재 참여 인원 {product.numberOfJoin}명
+            </Heading>
+          </Box>
+
+          {product.status && (
+            <Box mb={5}>
+              {!account.isLoggedIn() || account.hasAccess(product.userId) || (
+                <Flex w={"100%"}>
+                  <Box w={"100%"} mr={4}>
+                    <Button colorScheme="green" w="100%" onClick={onOpen}>
+                      참여하기
+                    </Button>
+                  </Box>
+                  <Box w={"100%"}>
                     <Button
                       colorScheme="teal"
+                      w="100%"
                       leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
                       onClick={handleEnterChatRoom}
-                      mr={4}
                     >
                       문의하기
                     </Button>
                   </Box>
-                  <Box>
-                    <ReportButton userId={product.userId} />
-                  </Box>
                 </Flex>
-              </Flex>
-            )}
-
-            {/*로그인이 되어 있지 않거나 내 상품일 때*/}
-            {(!account.isLoggedIn() || account.hasAccess(product.userId)) && (
-              <Flex mb={5} alignItems={"center"} justifyContent={"center"}>
-                <Flex alignItems={"center"} mr={10}>
-                  <Box mr={3}>찜</Box>
-                  {like.count}
-                </Flex>
-                <Flex alignItems={"center"} mr={4}>
-                  <Box mr={2}>
-                    <FontAwesomeIcon icon={faEye} size={"lg"} />
-                  </Box>
-                  <Box>{product.viewCount}</Box>
-                </Flex>
-              </Flex>
-            )}
-
-            <Box
-              mb={5}
-              display={"flex"}
-              justifyContent={"center"}
-              alignItems={"center"}
-            >
-              <Heading fontSize={"2xl"}>
-                {product.endTimeDetailsFormat}{" "}
-              </Heading>
+              )}
+              {account.hasAccess(product.userId) && (
+                <Button
+                  colorScheme="green"
+                  w="100%"
+                  onClick={() => navigate(`/edit/${product.id}`)}
+                >
+                  상품수정
+                </Button>
+              )}
             </Box>
-            <Box
-              mb={5}
-              display={"flex"}
-              justifyContent={"center"}
-              alignItems={"center"}
-            >
-              <Heading color={"skyblue"}>
-                현재 참여 인원 {product.numberOfJoin}명
-              </Heading>
-            </Box>
-            {product.status && (
-              <Box mb={5}>
-                {!account.isLoggedIn() || account.hasAccess(product.userId) || (
-                  <Box>
-                    <Button colorScheme={"green"} w={"100%"} onClick={onOpen}>
-                      참여하기
-                    </Button>
-                  </Box>
-                )}
-                {account.hasAccess(product.userId) && (
-                  <Box>
-                    <Button
-                      colorScheme={"green"}
-                      w={"100%"}
-                      onClick={() => navigate(`/edit/${product.id}`)}
-                    >
-                      상품수정
-                    </Button>
-                  </Box>
-                )}
-              </Box>
-            )}
-          </Box>
-        </Flex>
-      </Box>
+          )}
+        </Box>
+      </Flex>
 
       <Divider mb={5} />
 
       <Box>
         <FormControl>
           <FormLabel mb={5}>
-            <Heading fontSize={"2xl"}>상품 정보</Heading>
+            <Heading fontSize="2xl">상품 정보</Heading>
           </FormLabel>
           {product.content !== null && product.content !== "" ? (
-            <Textarea defaultValue={product.content} whiteSpace={"pre-wrap"} />
+            <Textarea
+              readOnly
+              defaultValue={product.content}
+              whiteSpace="pre-wrap"
+            />
           ) : (
             <Text>상품 설명이 없습니다.</Text>
           )}
@@ -335,7 +306,7 @@ export function ProductDetails() {
                 <InputRightAddon>원</InputRightAddon>
               </InputGroup>
               {parseInt(bidPrice) <= product.startPrice && (
-                <FormHelperText color={"red"} mt={2}>
+                <FormHelperText color="red" mt={2}>
                   입찰 금액이 시작가보다 작습니다.
                 </FormHelperText>
               )}
@@ -346,7 +317,7 @@ export function ProductDetails() {
               colorScheme="blue"
               onClick={handleJoinClick}
               isLoading={isProcessing}
-              loadingText="처리중..."
+              loadingText="처리중"
             >
               확인
             </Button>
