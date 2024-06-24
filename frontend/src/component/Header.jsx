@@ -9,7 +9,10 @@ import {
   InputRightAddon,
   Spacer,
 } from "@chakra-ui/react";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faComments,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -69,7 +72,7 @@ export function Header() {
         <Center>
           {account.isLoggedIn() && (
             <Box onClick={() => navigate("/chat/list")} cursor={"pointer"}>
-              채팅방
+              <FontAwesomeIcon icon={faComments} />
             </Box>
           )}
         </Center>

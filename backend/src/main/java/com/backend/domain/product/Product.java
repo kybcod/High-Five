@@ -1,5 +1,6 @@
 package com.backend.domain.product;
 
+import com.backend.domain.auction.BidList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -24,8 +25,11 @@ public class Product {
     private LocalDateTime endTime;
     private int viewCount;
     private Boolean reviewStatus;
-    private List<ProductFile> productFileList;
     private Boolean paymentStatus;
+
+    // TODO:지우기
+    private List<BidList> productBidList;
+    private List<ProductFile> productFileList;
 
     private Integer numberOfJoin;
     private String userNickName;
@@ -86,6 +90,7 @@ public class Product {
         Map<String, Object> map = new HashMap<>(getProductIdAndTitle());
         map.put("status", getStatus());
         map.put("reviewStatus", getReviewStatus());
+        map.put("paymentStatus", getPaymentStatus());
         return map;
     }
 }

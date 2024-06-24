@@ -25,15 +25,16 @@ public class ReviewService {
         return mapper.selectReviewList();
     }
 
-    public void insertReview(Review review) throws JsonProcessingException {
-        String reviewIds = objectMapper.writeValueAsString(review.getReviewId());
-        review.setReviewIds(reviewIds);
+    public boolean insertReview(Review review) throws JsonProcessingException {
+        review.setReviewIds(objectMapper.writeValueAsString(review.getReviewId()));
         int createSuccess = mapper.insertReview(review);
         if (createSuccess == 1) {
-            Integer productId = review.getProductId();
-            int productSuccess = productMapper.updateReviewStatusById(productId);
-        } else {
+            int productSuccess = productMapper.updateReviewStatusById(review.getProductId());
+            if (productSuccess == 1) {
+                return true;
+            }
         }
+        return false;
     }
 
     public boolean validate(Review review) {
@@ -49,15 +50,17 @@ public class ReviewService {
         return true;
     }
 
-    public Review findReviewById(Integer productId) throws JsonProcessingException {
-        Review review = mapper.selectReviewById(productId);
-        String reviewIdsJson = review.getReviewIds();
-        review.setReviewId(objectMapper.readValue(reviewIdsJson, List.class));
-        List<Map<String, Object>> reviewList = new ArrayList<>();
-        for (Integer id : review.getReviewId()) {
-            reviewList.add(mapper.selectReviewListById(id));
+    public List<Map<String, Object>> selectReviewById(Integer productId) throws JsonProcessingException {
+        String reviewIds = mapper.selectReviewById(productId);
+        if (reviewIds != null) {
+            // Jackson 라이브러리를 사용하여 JSON 문자열을 자바 객체로 변환
+            List<Integer> reviewIdList = (objectMapper.readValue(reviewIds, List.class));
+            List<Map<String, Object>> reviewList = new ArrayList<>();
+            for (Integer id : reviewIdList) {
+                reviewList.add(mapper.selectReviewListById(id));
+            }
+            return reviewList;
         }
-        review.setReviewList(reviewList);
-        return review;
+        return null;
     }
 }

@@ -23,11 +23,11 @@ public interface ReviewMapper {
     int insertReview(Review review);
 
     @Select("""
-            SELECT product_id, user_id, review_id reviewIds, inserted
+            SELECT review_id reviewIds
             FROM review
             WHERE product_id = #{productId}
             """)
-    Review selectReviewById(Integer productId);
+    String selectReviewById(Integer productId);
 
     @Select("""
             SELECT * FROM review_list WHERE id = #{id}
