@@ -318,7 +318,7 @@ export function ProductDetails() {
                 />
                 <InputRightAddon>원</InputRightAddon>
               </InputGroup>
-              {parseInt(bidPrice) <= product.startPrice && (
+              {parseInt(bidPrice) < product.startPrice && (
                 <FormHelperText color="red" mt={2}>
                   입찰 금액이 시작가보다 작습니다.
                 </FormHelperText>
