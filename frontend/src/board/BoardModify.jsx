@@ -20,7 +20,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
@@ -33,6 +33,7 @@ export function BoardModify() {
   const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
   const [removeFileList, setRemoveFileList] = useState([]);
   const [addFileList, setAddFileList] = useState([]);
+  const fileInputRef = useRef(null);
   const { successToast, errorToast } = CustomToast();
   const { board_id } = useParams();
   const navigate = useNavigate();
@@ -166,10 +167,15 @@ export function BoardModify() {
           <Flex>
             <FormLabel>상품 상세 내용</FormLabel>
             <Spacer />
+            <Button onClick={() => fileInputRef.current.click()}>
+              파일첨부
+            </Button>
             <Input
               multiple
               type={"file"}
               accept={"image/*"}
+              display={"none"}
+              ref={fileInputRef}
               onChange={(e) => {
                 setAddFileList(e.target.files);
               }}

@@ -13,7 +13,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
@@ -25,6 +25,7 @@ export function BoardWrite() {
   const [files, setFiles] = useState([]);
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
+  const fileInputRef = useRef(null);
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
@@ -57,7 +58,7 @@ export function BoardWrite() {
   const fileNameList = [];
   for (let i = 0; i < files.length; i++) {
     fileNameList.push(
-      <Box key={i}>
+      <Flex key={i}>
         <ListItem display="flex" alignItems="center">
           <Text flex="1">{files[i].name}</Text>
         </ListItem>
@@ -70,7 +71,7 @@ export function BoardWrite() {
             setFiles(newFiles);
           }}
         />
-      </Box>,
+      </Flex>,
     );
   }
 
@@ -87,9 +88,12 @@ export function BoardWrite() {
         <Flex>
           <FormLabel>상품 상세 내용</FormLabel>
           <Spacer />
+          <Button onClick={() => fileInputRef.current.click()}>파일첨부</Button>
           <Input
             multiple
             type={"file"}
+            ref={fileInputRef}
+            display={"none"}
             accept={"image/*"}
             onChange={(e) => setFiles(Array.from(e.target.files))}
           />
