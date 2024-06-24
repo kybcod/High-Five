@@ -22,31 +22,19 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // TODO. 주석 삭제
-//        System.out.println("userRequest.getAccessToken().getTokenValue() = " + userRequest.getAccessToken().getTokenValue());
-//        System.out.println("userRequest.getClientRegistration() = " + userRequest.getClientRegistration());
-//        System.out.println("userRequest.getClientRegistration().getRegistrationId() = " + userRequest.getClientRegistration().getRegistrationId());
 
         OAuth2User oAuth2User = super.loadUser(userRequest); //네이버 사용자 정보 로드
-        // TODO. 주석 삭제
-//        System.out.println("oAuth2User = " + oAuth2User.getAttributes());
 
         String platform = userRequest.getClientRegistration().getRegistrationId(); //로그인한 클라이언트의 등록 ID
 
         // TODO. 주석 삭제
         OAuth2UserInfo response = null;
         if (platform.equals("naver")) {
-//            System.out.println("네이버 로그인 요청");
             response = new NaverUserInfo((Map) oAuth2User.getAttributes().get("response")); //네이버에 있는 사용자 정보 추출
-//            System.out.println(response);
         } else if (platform.equals("kakao")) {
-//            System.out.println("카카오 로그인 요청");
             response = new KakaoUserInfo((Map) oAuth2User.getAttributes());//카카오에 있는 사용자 정보 추출
-            System.out.println("response = " + response);
         } else if (platform.equals("google")) {
-//            System.out.println("구글 로그인 요청");
             response = new GoogleUserInfo((Map) oAuth2User.getAttributes());
-//            System.out.println("response = " + response);
         }
         // TODO. sns login
 
@@ -69,7 +57,6 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             // 네이버에서 받은 이메일 조회 후 해당 이메일이 없는 경우 insert
             if (platform.equals("naver")) {
                 // TODO. 주석 삭제
-//                System.out.println("최초");
                 user.setPhoneNumber(response.getPhoneNumber());
                 mapper.insertUser(user);
 //            mapper.insertProfileImage(user.getId(), response.getProfileImage());

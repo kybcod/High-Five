@@ -68,9 +68,8 @@ FROM user_file;
 #     CHANGE file_src file_name VARCHAR(500);
 
 SELECT *
-FROM user
-WHERE id = 68;
+FROM user;
 
 DELETE
 FROM user
-WHERE id = 68;
+WHERE id = 71;
