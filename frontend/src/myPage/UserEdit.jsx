@@ -4,6 +4,7 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -109,6 +110,7 @@ export function UserEdit() {
   return (
     <Box>
       <Box>
+        <Heading>회원정보 수정</Heading>
         <FormControl>
           <FormLabel>프로필 사진</FormLabel>
           <Input
