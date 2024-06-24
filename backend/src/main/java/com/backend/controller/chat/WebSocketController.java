@@ -1,6 +1,6 @@
 package com.backend.controller.chat;
 
-import com.backend.domain.chat.ChatMessage;
+import com.backend.domain.chat.Chat;
 import com.backend.service.chat.ChatService;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,14 +20,14 @@ public class WebSocketController {
     }
 
     @MessageMapping("/chat") // /app/chatroom
-    public void receiveMessage(ChatMessage chatMessage) throws Exception {
-        String chatRoomId = String.valueOf(chatMessage.getChatRoomId());
+    public void receiveMessage(Chat chat) throws Exception {
+        String chatRoomId = String.valueOf(chat.getChatRoomId());
         // 메세지를 보낸 사용자에게 응답을 보냄(채팅 전송)
-        template.convertAndSendToUser(chatRoomId, "/queue/chat", chatMessage);
+        template.convertAndSendToUser(chatRoomId, "/queue/chat", chat);
         // 메시지를 채팅방의 다른 사용자에게 보냄(채팅방 조회)
-        template.convertAndSend("/topic/chat/" + chatRoomId, chatMessage);
+        template.convertAndSend("/topic/chat/" + chatRoomId, chat);
         // ChatMessage save
-        service.insertMessage(chatMessage);
+        service.insertMessage(chat);
     }
 
     @MessageExceptionHandler

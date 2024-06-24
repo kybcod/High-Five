@@ -7,19 +7,21 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { MyShop } from "./MyShop.jsx";
 import { LikeList } from "./LikeList.jsx";
 import axios from "axios";
 import { UserInfo } from "./UserInfo.jsx";
 import { BidList } from "./BidList.jsx";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function MyPage({ tab }) {
   const [userNickName, setUserNickName] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { userId } = useParams();
+  const account = useContext(LoginContext);
 
   // 탭 이름 -> 인덱스
   const tabIndex = {
@@ -50,7 +52,7 @@ export function MyPage({ tab }) {
     if (!Object.keys(tabIndex).includes(tabName)) {
       navigate(`/myPage/${userId}`);
     }
-  }, []);
+  }, [location.pathname]);
 
   const handleTabsChange = (index) => {
     navigate(`/myPage/${userId}/${indexTab[index]}`);
@@ -68,20 +70,24 @@ export function MyPage({ tab }) {
         onChange={handleTabsChange}
       >
         <TabList w={"30%"} m={3} mr={20}>
-          <Tab
-            border={"1px solid #eee"}
-            borderRadius="3px"
-            _selected={{ borderColor: "green.500", fontWeight: "bold" }}
-          >
-            내 정보 확인
-          </Tab>
-          <Tab
-            border={"1px solid #eee"}
-            borderRadius="3px"
-            _selected={{ borderColor: "green.500", fontWeight: "bold" }}
-          >
-            찜 목록
-          </Tab>
+          {userId == account.id && (
+            <>
+              <Tab
+                border={"1px solid #eee"}
+                borderRadius="3px"
+                _selected={{ borderColor: "green.500", fontWeight: "bold" }}
+              >
+                내 정보 확인
+              </Tab>
+              <Tab
+                border={"1px solid #eee"}
+                borderRadius="3px"
+                _selected={{ borderColor: "green.500", fontWeight: "bold" }}
+              >
+                찜 목록
+              </Tab>
+            </>
+          )}
           <Tab
             border={"1px solid #eee"}
             borderRadius="3px"
@@ -89,13 +95,15 @@ export function MyPage({ tab }) {
           >
             내 상점
           </Tab>
-          <Tab
-            border={"1px solid #eee"}
-            borderRadius="3px"
-            _selected={{ borderColor: "green.500", fontWeight: "bold" }}
-          >
-            입찰 내역
-          </Tab>
+          {userId == account.id && (
+            <Tab
+              border={"1px solid #eee"}
+              borderRadius="3px"
+              _selected={{ borderColor: "green.500", fontWeight: "bold" }}
+            >
+              입찰 내역
+            </Tab>
+          )}
           <Tab
             border={"1px solid #eee"}
             borderRadius="3px"
@@ -105,26 +113,32 @@ export function MyPage({ tab }) {
           </Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>
-            <Box>
-              <UserInfo />
-            </Box>
-          </TabPanel>
-          <TabPanel>
-            <Box>
-              <LikeList />
-            </Box>
-          </TabPanel>
+          {userId == account.id && (
+            <TabPanel>
+              <Box>
+                <UserInfo />
+              </Box>
+            </TabPanel>
+          )}
+          {userId == account.id && (
+            <TabPanel>
+              <Box>
+                <LikeList />
+              </Box>
+            </TabPanel>
+          )}
           <TabPanel>
             <Box>
               <MyShop />
             </Box>
           </TabPanel>
-          <TabPanel>
-            <Box>
-              <BidList />
-            </Box>
-          </TabPanel>
+          {userId == account.id && (
+            <TabPanel>
+              <Box>
+                <BidList />
+              </Box>
+            </TabPanel>
+          )}
           <TabPanel>
             <Box>받은 후기</Box>
           </TabPanel>

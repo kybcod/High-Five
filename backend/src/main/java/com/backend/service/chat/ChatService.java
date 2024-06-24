@@ -2,15 +2,15 @@ package com.backend.service.chat;
 
 import com.backend.domain.auction.BidList;
 import com.backend.domain.chat.Chat;
-import com.backend.domain.chat.ChatMessage;
 import com.backend.domain.chat.ChatRoom;
 import com.backend.domain.product.Product;
 import com.backend.domain.user.User;
-import com.backend.mapper.auction.BidMapper;
+import com.backend.mapper.auction.AuctionMapper;
 import com.backend.mapper.chat.ChatMapper;
 import com.backend.mapper.product.ProductMapper;
 import com.backend.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,8 @@ public class ChatService {
     private final ChatMapper mapper;
     private final ProductMapper productMapper;
     private final UserMapper userMapper;
-    private final BidMapper bidMapper;
+    private final AuctionMapper auctionMapper;
+    private final PropertyPlaceholderAutoConfiguration propertyPlaceholderAutoConfiguration;
 
     public Map<String, Object> selectChatRoomId(Integer productId, Integer buyerId, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();
@@ -77,18 +78,26 @@ public class ChatService {
         // -- product
         // status = false (판매종료), reivewStatus = true (후기 등록됨)
         Product product = productMapper.selectChatProductInfo(productId);
-        result.put("product", product.getProductStatusInfo());
+        if (product.getStatus() == false) {
+            // 판매 종료 상품 입찰자 아이디 받아오기
+            buyerId = auctionMapper.selectBuyerIdByProductId(productId);
+        } else {
+            // 없으면 0
+            buyerId = 0;
+        }
+        Map<String, Object> productMap = product.getProductStatusInfo();
+        productMap.put("buyerId", buyerId);
+        result.put("product", productMap);
 
         // -- bidder
-        BidList bidder = bidMapper.selectBidderByProductId(productId, user.getId());
+        BidList bidder = auctionMapper.selectBidderByProductId(productId, tokenUserId);
         result.put("bidder", bidder);
-
-
+        
         return result;
     }
 
-    public void insertMessage(ChatMessage chatMessage) {
-        int success = mapper.insertMessage(chatMessage);
+    public void insertMessage(Chat chat) {
+        mapper.insertMessage(chat);
     }
 
     public List<Map<String, Object>> getChatRoomList(Authentication authentication) {

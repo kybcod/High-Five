@@ -1,6 +1,5 @@
 package com.backend.service.product;
 
-import com.backend.domain.auction.BidList;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
 import com.backend.mapper.auction.AuctionMapper;
@@ -22,7 +21,7 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,32 +67,16 @@ public class ProductService {
         }
     }
 
-
     public List<Product> list() {
         List<Product> products = mapper.selectAll();
-
-        // 각 product에 모든 파일을 설정
-        for (Product product : products) {
-            List<String> productFiles = mapper.selectFileByProductId(product.getId());
-            List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                    .toList();
-            product.setProductFileList(files);
-        }
+        settingFilePath(products);
         return products;
     }
 
+
     public Map<String, Object> getList(Pageable pageable, String keyword, String category) {
         List<Product> content = mapper.selectWithPageable(pageable, keyword, category);
-
-        // 각 product에 모든 파일을 설정
-        for (Product product : content) {
-            List<String> productFiles = mapper.selectFileByProductId(product.getId());
-            List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                    .toList();
-            product.setProductFileList(files);
-        }
+        settingFilePath(content);
 
         int total = mapper.selectTotalCount(keyword, category);
         Page<Product> page = new PageImpl<>(content, pageable, total);
@@ -107,12 +90,7 @@ public class ProductService {
         mapper.updateViewCount(id);
 
         Product product = mapper.selectById(id);
-
-        List<String> productFiles = mapper.selectFileByProductId(product.getId());
-        List<ProductFile> files = productFiles.stream()
-                .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                .toList();
-        product.setProductFileList(files);
+        settingFilePath(Collections.singletonList(product));
 
         //좋아요
         Map<String, Object> like = new HashMap<>();
@@ -146,7 +124,8 @@ public class ProductService {
         }
 
         if (newFileList != null && newFileList.length > 0) {
-            List<String> fileNameList = mapper.selectFileByProductId(product.getId());
+            List<ProductFile> productFileList = mapper.selectFileByProductId(product.getId());
+            List<String> fileNameList = productFileList.stream().map(ProductFile::getFileName).toList();
 
             for (MultipartFile file : newFileList) {
                 String name = file.getOriginalFilename();
@@ -185,9 +164,9 @@ public class ProductService {
 
 
         // s3에서 파일(이미지) 삭제
-//        List<String> fileNameList = mapper.selectFileByProductId(id);
-//        for (String fileName : fileNameList) {
-//            String key = STR."prj3/\{id}/\{fileName}";
+//        List<ProductFile> productFileList = mapper.selectFileByProductId(id);
+//        for (ProductFile productFile : productFileList) {
+//            String key = STR."prj3/\{id}/\{productFile.getFileName()}";
 //            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
 //                    .bucket(bucketName)
 //                    .key(key)
@@ -208,94 +187,11 @@ public class ProductService {
         mapper.deleteByProductId(id);
     }
 
-    public Map<String, Object> like(Map<String, Object> likeInfo, Authentication authentication) {
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("like", false);
-
-        Integer productId = (Integer) likeInfo.get("productId");
-        Integer userId = Integer.valueOf(authentication.getName());
-
-        // 이미 좋아요가 되어 있다면 delete(count=1)
-        int count = mapper.deleteLikeByProductIdAndUserId(productId, userId);
-
-        // 좋아요 안했으면 insert
-        if (count == 0) {
-            mapper.insertLikeByProductIdAndUserId(productId, userId);
-            result.put("like", true);
-        }
-        result.put("count", mapper.selectCountLikeByProductId(productId));
-
-        return result;
-    }
-
-    public List<Integer> getLike(Integer userId) {
-        return mapper.selectLikeByUserId(userId);
-    }
-
-
-    public boolean validate(Product product) {
-        if (product.getTitle() == null || product.getTitle().isBlank()) {
-            return false;
-        }
-        if (product.getCategory() == null || product.getCategory().isBlank()) {
-            return false;
-        }
-        if (product.getStartPrice() == null || product.getStartPrice().isBlank()) {
-            return false;
-        }
-        if (product.getEndTime() == null) {
-            return false;
-        }
-        return true;
-    }
-
-    //userId 받고 있는지 확인하기 위해 즉 로그인 했는지
-    public boolean hasAccess(Integer id, Authentication authentication) {
-
-        Product product = mapper.selectById(id);
-        return product.getUserId().equals(Integer.valueOf(authentication.getName()));
-    }
-
-    // TODO : Mapper 정리
-    public void updateProductState() {
-        // 0: 판매종료(false)
-        // 1:판매중(true) => 기본값
-
-        LocalDateTime currentTime = LocalDateTime.now();
-        List<Product> productList = mapper.selectProductAndBidList();
-
-        for (Product product : productList) {
-            if (product.getEndTime().isBefore(currentTime) && product.getStatus()) {
-                product.setStatus(false);
-                mapper.updateStatus(product); //판매 종료
-                updateBidStatus(product.getId()); // 낙찰
-            }
-            System.out.println("currentTime = " + currentTime);
-            System.out.println(STR."\{product.getTitle()} : 끝나는 시간(\{product.getEndTime()}) , 상품 상태 : \{product.getStatus()}");
-
-        }
-    }
-
-    private void updateBidStatus(Integer productId) {
-        BidList maxBid = auctionMapper.selectMaxPriceByProductId(productId);
-        if (maxBid != null) {
-            auctionMapper.updateBidStatusByProductId(maxBid.getId(), true);
-        }
-    }
 
     public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
         List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
         String userNickName = mapper.selectUserNickName(userId);
-
-
-        for (Product product : productList) {
-            List<String> productFiles = mapper.selectFileByProductId(product.getId());
-            List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                    .toList();
-            product.setProductFileList(files);
-        }
+        settingFilePath(productList);
 
         // 더보기 : 페이지
         int total = mapper.selectTotalCountByUserId(userId);
@@ -305,20 +201,12 @@ public class ProductService {
 
 
         return Map.of("productList", productList, "pageInfo", pageInfo, "hasNextPage", hasNextPage, "userNickName", userNickName);
-
     }
 
     public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable) {
         // 좋아요
         List<Product> likeProductList = mapper.selectLikeSelectByUserId(userId, pageable);
-
-        for (Product product : likeProductList) {
-            List<String> productFiles = mapper.selectFileByProductId(product.getId());
-            List<ProductFile> files = productFiles.stream()
-                    .map(fileName -> new ProductFile(fileName, STR."\{srcPrefix}\{product.getId()}/\{fileName}"))
-                    .toList();
-            product.setProductFileList(files);
-        }
+        settingFilePath(likeProductList);
 
         int total = mapper.selectCountLikeByUserId(userId);
 
@@ -354,6 +242,45 @@ public class ProductService {
 //
 //        return new ProductListResponse(product, like, files);
 //    }
+
+    public List<Product> selectProductAndBidList() {
+        return mapper.selectProductAndBidList();
+    }
+
+    public void updateStatus(Product product) {
+        mapper.updateStatus(product);
+    }
+
+    // s3에 파일 조회
+    public void settingFilePath(List<Product> products) {
+        products.forEach(product -> product.getProductFileList().forEach(
+                productFile -> productFile.setFilePath(srcPrefix)
+        ));
+    }
+
+
+    public boolean validate(Product product) {
+        if (product.getTitle() == null || product.getTitle().isBlank()) {
+            return false;
+        }
+        if (product.getCategory() == null || product.getCategory().isBlank()) {
+            return false;
+        }
+        if (product.getStartPrice() == null || product.getStartPrice().isBlank()) {
+            return false;
+        }
+        if (product.getEndTime() == null) {
+            return false;
+        }
+        return true;
+    }
+
+    //userId 받고 있는지 확인하기 위해 즉 로그인 했는지
+    public boolean hasAccess(Integer id, Authentication authentication) {
+
+        Product product = mapper.selectById(id);
+        return product.getUserId().equals(Integer.valueOf(authentication.getName()));
+    }
 }
 
 

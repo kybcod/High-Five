@@ -1,5 +1,6 @@
 package com.backend.mapper.auction;
 
+import com.backend.domain.auction.BidList;
 import com.backend.domain.auction.Payment;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -33,4 +34,12 @@ public interface PaymentMapper {
             VALUES (#{merchantUid}, #{amount}, #{bidListId}, #{paidStatus})
             """)
     int insert(Payment payment);
+
+    @Select("""
+            SELECT bl.product_id
+            FROM payment pay
+                     JOIN bid_list bl ON pay.bid_list_id = bl.id
+            WHERE bid_list_id = #{bidListId};
+            """)
+    BidList selectBidListProductIdById(Integer bidListId);
 }

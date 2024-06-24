@@ -25,10 +25,12 @@ public class Product {
     private LocalDateTime endTime;
     private int viewCount;
     private Boolean reviewStatus;
+    private Boolean paymentStatus;
 
     // TODO:지우기
     private List<BidList> productBidList;
     private List<ProductFile> productFileList;
+
     private Integer numberOfJoin;
     private String userNickName;
     private String maxBidPrice;
@@ -88,6 +90,7 @@ public class Product {
         Map<String, Object> map = new HashMap<>(getProductIdAndTitle());
         map.put("status", getStatus());
         map.put("reviewStatus", getReviewStatus());
+        map.put("paymentStatus", getPaymentStatus());
         return map;
     }
 }

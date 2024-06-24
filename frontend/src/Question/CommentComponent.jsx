@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComments } from "@fortawesome/free-solid-svg-icons";
 import { CommentWrite } from "./CommentWrite.jsx";
 import { CommentList } from "./CommentList.jsx";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 export function CommentComponent({ questionId }) {
+  const [isProcessing, setIsProcessing] = useState(false);
   return (
     <Box>
       <Box mt={20}>
@@ -15,10 +16,18 @@ export function CommentComponent({ questionId }) {
         </Heading>
       </Box>
       <Box mt={10}>
-        <CommentList questionId={questionId} />
+        <CommentList
+          questionId={questionId}
+          isProcessing={isProcessing}
+          setIsProcessing={setIsProcessing}
+        />
       </Box>
       <Box mt={10}>
-        <CommentWrite questionId={questionId} />
+        <CommentWrite
+          questionId={questionId}
+          isProcessing={isProcessing}
+          setIsProcessing={setIsProcessing}
+        />
       </Box>
     </Box>
   );

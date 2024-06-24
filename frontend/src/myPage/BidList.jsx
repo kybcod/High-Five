@@ -15,7 +15,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { ArrowDownIcon, ArrowUpIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
@@ -36,7 +36,7 @@ export function BidList() {
 
     axios.get(`/api/bids/${userId}/list?page=${currentPage}`).then((res) => {
       console.log(res.data);
-      setBidList(res.data.productList);
+      setBidList(res.data.bidList);
       setPageInfo(res.data.pageInfo);
       setHasNextPage(res.data.hasNextPage);
 
@@ -78,10 +78,6 @@ export function BidList() {
     setSearchParams(searchParams);
   }
 
-  function handleScrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
   function handleFoldClick() {
     const scrollDuration = 500;
     setTimeout(() => {
@@ -89,6 +85,10 @@ export function BidList() {
       setSearchParams(searchParams);
     }, scrollDuration);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  if (bidList === null) {
+    return <Spinner />;
   }
 
   return (
@@ -102,8 +102,8 @@ export function BidList() {
           templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
           gap={6}
         >
-          {bidList.map((product) => (
-            <GridItem key={product.id}>
+          {bidList.map((bid) => (
+            <GridItem key={bid.id}>
               <Card
                 maxW="sm"
                 h="100%"
@@ -114,27 +114,26 @@ export function BidList() {
               >
                 <CardBody position="relative" h="100%">
                   <Box mt={2} w="100%">
-                    {/* Render badges based on bid status */}
-                    {product.productBidList.map((bid) => (
-                      <Badge
-                        key={bid.id}
-                        position="absolute"
-                        top="1"
-                        left="1"
-                        colorScheme={bid.bidStatus ? "blue" : "red"}
-                      >
-                        <Text fontWeight={"bold"}>
-                          {bid.bidStatus ? "낙찰 성공" : "낙찰 실패"}
-                        </Text>
-                      </Badge>
-                    ))}
+                    <Badge
+                      key={bid.product.id}
+                      position="absolute"
+                      top="1"
+                      left="1"
+                      colorScheme={bid.bidStatus ? "blue" : "red"}
+                    >
+                      <Text fontWeight={"bold"}>
+                        {bid.bidStatus ? "낙찰 성공" : "낙찰 실패"}
+                      </Text>
+                    </Badge>
 
-                    {product.status ? (
+                    {bid.product.status ? (
                       <>
-                        {product.productFileList && (
+                        {bid.product.productFileList && (
                           <Image
-                            onClick={() => navigate(`/product/${product.id}`)}
-                            src={product.productFileList[0].filePath}
+                            onClick={() =>
+                              navigate(`/product/${bid.product.id}`)
+                            }
+                            src={bid.product.productFileList[0].filePath}
                             borderRadius="lg"
                             w="100%"
                             h="200px"
@@ -147,13 +146,13 @@ export function BidList() {
                           left="1"
                           colorScheme="teal"
                         >
-                          {product.endTimeFormat}
+                          {bid.product.endTimeFormat}
                         </Badge>
                       </>
                     ) : (
                       <Box position={"relative"} w={"100%"} h={"200px"}>
                         <Image
-                          src={product.productFileList[0].filePath}
+                          src={bid.product.productFileList[0].filePath}
                           borderRadius="lg"
                           w="100%"
                           h="200px"
@@ -163,7 +162,7 @@ export function BidList() {
                           left="0"
                         />
                         <Text
-                          onClick={() => navigate(`/product/${product.id}`)}
+                          onClick={() => navigate(`/product/${bid.product.id}`)}
                           cursor={"pointer"}
                           borderRadius="lg"
                           w="100%"
@@ -186,11 +185,11 @@ export function BidList() {
                   <Stack mt="6" spacing="3">
                     <Flex justifyContent={"space-between"}>
                       <Text as={"b"} noOfLines={1} fontSize="lg">
-                        {product.title}
+                        {bid.product.title}
                       </Text>
 
-                      <Box onClick={() => handleLikeClick(product.id)}>
-                        {likes[product.id] ? (
+                      <Box onClick={() => handleLikeClick(bid.product.id)}>
+                        {likes[bid.product.id] ? (
                           <FontAwesomeIcon
                             icon={fullHeart}
                             style={{ color: "red" }}
@@ -209,18 +208,37 @@ export function BidList() {
                     </Flex>
                     <Flex justifyContent={"space-between"}>
                       <Text color="blue.600" fontSize="xl">
-                        {product.startPrice
+                        {bid.product.startPrice
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         원
                       </Text>
-                      <Text>{product.timeFormat}</Text>
+                      <Text>{bid.product.timeFormat}</Text>
                     </Flex>
                   </Stack>
-                  {product.status || (
+                  {/*{bid.product.status || (*/}
+                  {/*  <Box display="flex" justifyContent="center">*/}
+                  {/*    <Button mt={2} w={"100%"} colorScheme={"green"}>*/}
+                  {/*      상품 후기*/}
+                  {/*    </Button>*/}
+                  {/*  </Box>*/}
+                  {/*)}*/}
+                  {!bid.product.status && bid.bidStatus && (
                     <Box display="flex" justifyContent="center">
-                      <Button mt={2} w={"100%"} colorScheme={"green"}>
-                        상품 후기
+                      <Button
+                        mt={2}
+                        w={"100%"}
+                        colorScheme={"purple"}
+                        onClick={() => {
+                          if (!bid.product.paymentStatus) {
+                            navigate(
+                              `/pay/buyer/${bid.userId}/product/${bid.product.id}`,
+                            );
+                          }
+                        }}
+                        disabled={bid.product.paymentStatus}
+                      >
+                        {bid.product.paymentStatus ? "결제완료" : "거래하기"}
                       </Button>
                     </Box>
                   )}
@@ -230,41 +248,33 @@ export function BidList() {
           ))}
         </Grid>
       )}
-      <Box display={"flex"} justifyContent={"center"}>
-        {hasNextPage ? (
-          <Button
-            w={"30%"}
-            colorScheme={"blue"}
-            mt={4}
-            onClick={handleMoreClick}
-            rightIcon={<ArrowDownIcon />}
-          >
-            더보기
-          </Button>
-        ) : bidList.length > 9 ? (
-          <Button
-            w={"30%"}
-            colorScheme={"blue"}
-            mt={4}
-            rightIcon={<ChevronUpIcon />}
-            onClick={handleFoldClick}
-          >
-            접기
-          </Button>
-        ) : (
-          bidList.length > 6 && (
+      {bidList.length > 0 && (
+        <Box display={"flex"} justifyContent={"center"}>
+          {hasNextPage ? (
             <Button
               w={"30%"}
               colorScheme={"blue"}
               mt={4}
-              rightIcon={<ArrowUpIcon />}
-              onClick={handleScrollToTop}
+              onClick={handleMoreClick}
+              rightIcon={<ArrowDownIcon />}
             >
-              맨 위로
+              더보기
             </Button>
-          )
-        )}
-      </Box>
+          ) : (
+            bidList.length > 10 && (
+              <Button
+                w={"30%"}
+                colorScheme={"blue"}
+                mt={4}
+                rightIcon={<ChevronUpIcon />}
+                onClick={handleFoldClick}
+              >
+                접기
+              </Button>
+            )
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

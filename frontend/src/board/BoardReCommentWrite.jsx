@@ -23,7 +23,7 @@ export function BoardReCommentWrite({ boardComment, setShowReCommentId }) {
         content,
         userId,
         commentId: boardComment.commentId,
-        commentSeq: boardComment.commentSequence,
+        commentSeq: boardComment.commentSeq,
         refId: id,
       })
       .then(() => {

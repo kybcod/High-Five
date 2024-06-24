@@ -22,6 +22,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function QuestionEdit() {
   const [question, setQuestion] = useState({});
@@ -30,7 +31,7 @@ export function QuestionEdit() {
   const [addFileList, setAddFileList] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
-  const toast = useToast();
+  const { successToast, errorToast } = CustomToast();
 
   useEffect(() => {
     axios.get(`/api/question/${id}`).then((res) => setQuestion(res.data));
@@ -45,41 +46,15 @@ export function QuestionEdit() {
         removeFileList,
       })
       .then(() => {
-        toast({
-          status: "success",
-          description: `${id}번 게시물이 수정되었습니다.`,
-          position: "bottom",
-          duration: 2000,
-        });
+        successToast(`${id}번 게시물이 수정되었습니다.`);
         navigate(`/question/${id}`);
       })
-      .catch((e) => {
-        const code = e.response.status;
-
-        if (code === 400) {
-          toast({
-            description: "등록되지 않았습니다. 내용을 확인해 주세요.",
-            status: "error",
-            position: "bottom",
-            duration: 2500,
-          });
-        }
-        if (code === 403) {
-          toast({
-            description: "권한이 없는 사용자입니다",
-            status: "error",
-            position: "top-right",
-            duration: 2500,
-          });
-        }
-        if (code === 413) {
-          toast({
-            description: "파일 크기가 허용된 용량을 초과하였습니다.",
-            status: "error",
-            position: "top",
-            duration: 3000,
-          });
-        }
+      .catch((err) => {
+        err.response.status === 413
+          ? errorToast("파일 크기가 허용된 용량을 초과하였습니다.")
+          : err.response.status === 403
+            ? errorToast("권한이 없는 사용자입니다.")
+            : errorToast("등록되지 않았습니다. 내용을 확인해 주세요");
       })
       .finally(() => {});
   }

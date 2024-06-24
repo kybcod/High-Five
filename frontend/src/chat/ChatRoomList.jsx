@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 export function ChatRoomList() {
   const account = useContext(LoginContext);
   const [chatRoomList, setChatRoomList] = useState([]);
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
 
   // -- axios.get
@@ -23,13 +24,16 @@ export function ChatRoomList() {
     axios
       .get(`/api/chats/list`)
       .then((res) => {
-        setChatRoomList(res.data);
+        if (res.data != null) {
+          setData(res.data);
+        }
       })
       .catch()
       .finally();
   }, []);
+
   // -- spinner
-  if (chatRoomList == null) {
+  if (data == null) {
     return <Spinner />;
   }
 
@@ -38,7 +42,7 @@ export function ChatRoomList() {
       <Heading>채팅방 목록</Heading>
 
       {/* 상품 제목, 닉네임, 대화내용, 대화시간 */}
-      {chatRoomList.map((item, index) => (
+      {data.map((item, index) => (
         <Box key={index} border={"1px solid gray"} height={"110px"}>
           <Box m={2}>
             <Button
