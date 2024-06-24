@@ -79,13 +79,12 @@ const router = createBrowserRouter([
       { path: "board/modify/:board_id", element: <BoardModify /> },
 
       //my page
-      { path: "myPage/:userId", element: <Navigate to="userInfo" /> },
+      { path: "myPage/:userId", element: <Navigate to="shop" /> },
+      { path: "myPage/:userId/shop", element: <MyPage tab="shop" /> },
+      { path: "myPage/:userId/likes", element: <MyPage tab="likes" /> },
+      { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },
       { path: "myPage/:userId/userInfo", element: <MyPage tab="userInfo" /> },
       { path: "myPage/:userId/userEdit", element: <UserEdit /> },
-      { path: "myPage/:userId/like", element: <MyPage tab="like" /> },
-      { path: "myPage/:userId/shop", element: <MyPage tab="shop" /> },
-      { path: "myPage/:userId/bids", element: <MyPage tab="bids" /> },
-      { path: "myPage/:userId/reviews", element: <MyPage tab="reviews" /> },
 
       // chat
       {

@@ -51,6 +51,22 @@ export function ProductEdit() {
     localDate.setHours(localDate.getHours() + 9);
     const formattedEndTime = localDate.toISOString().slice(0, -5);
 
+    // 오늘 시간
+    const today = new Date();
+
+    console.log("today", today);
+    console.log("localDate", localDate);
+
+    if (localDate < today) {
+      toast({
+        status: "warning",
+        description: "현재 시간 이후로 설정해주세요.",
+        position: "top-right",
+        duration: 3000,
+      });
+      return;
+    }
+
     setLoading(true);
 
     axios

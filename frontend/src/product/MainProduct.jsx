@@ -21,6 +21,7 @@ import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { Category } from "../component/Category.jsx";
+import { MainSlider } from "./slider/MainSlider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
@@ -31,7 +32,6 @@ export function MainProduct() {
   useEffect(() => {
     axios.get(`/api/products`).then((res) => {
       const products = res.data;
-      console.log(products);
       const initialLikes = products.reduce((acc, product) => {
         acc[product.id] = product.like || false;
         return acc;
@@ -76,7 +76,7 @@ export function MainProduct() {
       <Category />
       <Center w="100%">
         <Box mt={2} w="100%">
-          {/*<MainSlider />*/}
+          <MainSlider />
         </Box>
       </Center>
       <Heading my={4}>오늘의 상품</Heading>
