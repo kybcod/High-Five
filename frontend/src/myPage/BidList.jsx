@@ -36,7 +36,13 @@ export function BidList() {
 
     axios.get(`/api/bids/${userId}/list?page=${currentPage}`).then((res) => {
       console.log(res.data);
-      setBidList(res.data.bidList);
+      if (currentPage === 1) {
+        // 첫 번째 페이지
+        setBidList(res.data.bidList);
+      } else {
+        // 이후 페이지 : 기존 리스트에 추가
+        setBidList((prevList) => [...prevList, ...res.data.bidList]);
+      }
       setPageInfo(res.data.pageInfo);
       setHasNextPage(res.data.hasNextPage);
 
@@ -87,10 +93,6 @@ export function BidList() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  if (bidList === null) {
-    return <Spinner />;
-  }
-
   return (
     <Box>
       {bidList.length === 0 ? (
@@ -105,12 +107,16 @@ export function BidList() {
           {bidList.map((bid) => (
             <GridItem key={bid.id}>
               <Card
+                cursor={"pointer"}
                 maxW="sm"
                 h="100%"
                 borderWidth="1px"
                 borderColor={"#eee"}
                 borderRadius="lg"
                 overflow="hidden"
+                boxShadow="md"
+                transition="transform 0.2s"
+                _hover={{ transform: "scale(1.05)" }}
               >
                 <CardBody position="relative" h="100%">
                   <Box mt={2} w="100%">
@@ -216,30 +222,64 @@ export function BidList() {
                       <Text>{bid.product.timeFormat}</Text>
                     </Flex>
                   </Stack>
-                  {/*{bid.product.status || (*/}
-                  {/*  <Box display="flex" justifyContent="center">*/}
-                  {/*    <Button mt={2} w={"100%"} colorScheme={"green"}>*/}
-                  {/*      상품 후기*/}
-                  {/*    </Button>*/}
-                  {/*  </Box>*/}
+                  {/*{!bid.product.status && bid.bidStatus && (*/}
+                  {/*    <Box display="flex" justifyContent="center">*/}
+                  {/*      <Button*/}
+                  {/*          mt={2}*/}
+                  {/*          w={"100%"}*/}
+                  {/*          colorScheme={"purple"}*/}
+                  {/*          onClick={() => {*/}
+                  {/*            navigate(*/}
+                  {/*                `/chat/product/${bid.product.id}/buyer/${bid.userId}`,*/}
+                  {/*            );*/}
+                  {/*          }}*/}
+                  {/*      >*/}
+                  {/*        {bid.product.paymentStatus ? "결제완료" : "거래하기"}*/}
+                  {/*      </Button>*/}
+                  {/*    </Box>*/}
                   {/*)}*/}
-                  {!bid.product.status && bid.bidStatus && (
-                    <Box display="flex" justifyContent="center">
-                      <Button
-                        mt={2}
-                        w={"100%"}
-                        colorScheme={"purple"}
-                        onClick={() => {
-                          navigate(
-                            `/chat/product/${bid.product.id}/buyer/${bid.userId}`,
-                          );
-                        }}
-                        disabled={bid.product.paymentStatus}
-                      >
-                        {bid.product.paymentStatus ? "결제완료" : "거래하기"}
-                      </Button>
-                    </Box>
-                  )}
+                  {!bid.product.status &&
+                    bid.bidStatus &&
+                    bid.product.paymentStatus && (
+                      <Box display="flex" justifyContent="center">
+                        <Button
+                          mt={2}
+                          w={"100%"}
+                          borderColor={"gray"}
+                          borderWidth={"2px"}
+                          colorScheme={"whiteAlpha"}
+                          color={"gray"}
+                          onClick={() => {
+                            navigate(
+                              `/chat/product/${bid.product.id}/buyer/${bid.userId}`,
+                            );
+                          }}
+                        >
+                          결제완료
+                        </Button>
+                      </Box>
+                    )}
+                  {!bid.product.status &&
+                    bid.bidStatus &&
+                    !bid.product.paymentStatus && (
+                      <Box display="flex" justifyContent="center">
+                        <Button
+                          mt={2}
+                          w={"100%"}
+                          borderColor={"purple"}
+                          borderWidth={"2px"}
+                          colorScheme={"whiteAlpha"}
+                          color={"purple"}
+                          onClick={() => {
+                            navigate(
+                              `/chat/product/${bid.product.id}/buyer/${bid.userId}`,
+                            );
+                          }}
+                        >
+                          거래하기
+                        </Button>
+                      </Box>
+                    )}
                 </CardBody>
               </Card>
             </GridItem>
@@ -259,7 +299,7 @@ export function BidList() {
               더보기
             </Button>
           ) : (
-            bidList.length > 10 && (
+            bidList.length > 9 && (
               <Button
                 w={"30%"}
                 colorScheme={"blue"}

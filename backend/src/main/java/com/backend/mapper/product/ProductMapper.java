@@ -175,22 +175,6 @@ public interface ProductMapper {
     int updateStatus(Product product);
 
 
-    // -- ChatService
-    @Select("""
-            SELECT user_id
-            FROM product
-            WHERE id = #{productId}
-            """)
-    Integer selectProductSellerId(Integer productId);
-
-    @Select("""
-            SELECT id, title, status, review_status, payment_status
-            FROM product
-            WHERE id =#{productId}
-            """)
-    Product selectChatProductInfo(Integer productId);
-
-
     @Select("""
             SELECT p.id,
                    p.user_id,
@@ -329,4 +313,19 @@ public interface ProductMapper {
               AND bid_status = TRUE
             """)
     List<Map<String, Object>> selectSuccessBidList(Integer productId);
+
+    // -- ChatService
+    @Select("""
+            SELECT user_id
+            FROM product
+            WHERE id = #{productId}
+            """)
+    Integer selectProductSellerId(Integer productId);
+
+    @Select("""
+            SELECT id, title, status, review_status, payment_status
+            FROM product
+            WHERE id =#{productId}
+            """)
+    Product selectChatProductInfo(Integer productId);
 }

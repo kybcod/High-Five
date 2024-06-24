@@ -40,7 +40,7 @@ public interface AuctionMapper {
             ORDER BY p.status DESC, p.end_time, p.id
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
-    @Results(id = "bidList", value = {
+    @Results(id = "productBidList", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "product", column = "product_id", one = @One(select = "selectProductByProductId")),
     })

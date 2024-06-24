@@ -83,12 +83,16 @@ export function MyShop() {
           {productList.map((product) => (
             <GridItem key={product.id}>
               <Card
+                cursor={"pointer"}
                 maxW="sm"
                 h="100%"
                 borderWidth="1px"
                 borderColor={"#eee"}
                 borderRadius="lg"
                 overflow="hidden"
+                boxShadow="md"
+                transition="transform 0.2s"
+                _hover={{ transform: "scale(1.05)" }}
               >
                 <CardBody position={"relative"} h={"100%"}>
                   <Box mt={2} w="30%%">
@@ -214,7 +218,7 @@ export function MyShop() {
               더보기
             </Button>
           ) : (
-            productList.length > 10 && (
+            productList.length > 9 && (
               <Button
                 w={"30%"}
                 colorScheme={"blue"}
