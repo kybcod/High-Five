@@ -28,7 +28,11 @@ export function SignupPhoneNumber() {
 
   function handleOauthSignup() {
     axios
-      .post("/api/users", { ...user, phoneNumber: codeInfo.phoneNumber })
+      .post("/api/users", {
+        ...user,
+        phoneNumber: "010" + codeInfo.phoneNumber,
+        password: "oauth",
+      })
       .then(() => {
         successToast("회원 가입 되었습니다.");
         navigate("/");

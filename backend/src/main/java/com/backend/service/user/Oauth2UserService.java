@@ -42,6 +42,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
         } else if (platform.equals("kakao")) {
 //            System.out.println("카카오 로그인 요청");
             response = new KakaoUserInfo((Map) oAuth2User.getAttributes());//카카오에 있는 사용자 정보 추출
+            System.out.println("response = " + response);
         } else if (platform.equals("google")) {
 //            System.out.println("구글 로그인 요청");
             response = new GoogleUserInfo((Map) oAuth2User.getAttributes());
@@ -79,6 +80,11 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             }
         }
 
-        return new CustomOauth2UserDetails(user, oAuth2User.getAttributes());
+        if (platform.equals("naver")) {
+            return new CustomOauth2UserDetails(user, (Map<String, Object>) oAuth2User.getAttributes().get("response"));
+        } else {
+            System.out.println("카카오, 또는 구글 로그인 실행");
+            return new CustomOauth2UserDetails(user, oAuth2User.getAttributes());
+        }
     }
 }

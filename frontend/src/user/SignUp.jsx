@@ -33,7 +33,12 @@ export function SignUp() {
     setIsLoading(true);
     const phoneNumber = codeInfo.phoneNumber;
     axios
-      .post("/api/users", { email, password, nickName, phoneNumber })
+      .post("/api/users", {
+        email,
+        password,
+        nickName,
+        phoneNumber: "010" + phoneNumber,
+      })
       .then(() => {
         successToast("회원가입이 완료되었습니다");
         navigate("/login");

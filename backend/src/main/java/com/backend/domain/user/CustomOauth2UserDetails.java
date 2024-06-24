@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class CustomOauth2UserDetails implements OAuth2User {
     private User user;
-    private Map<String, Object> attributes; // 네이버에서 받아온 정보
+    private Map<String, Object> attributes; // sns로그인 에서 받아온 정보
 
     public CustomOauth2UserDetails(User user, Map<String, Object> attributes) {
         this.user = user;

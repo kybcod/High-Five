@@ -55,8 +55,9 @@ FROM user
 ;
 
 UPDATE user
-SET black_count = 0
-WHERE id = 37;
+SET black_count  = 0,
+    phone_number = 9384
+WHERE id = 62;
 
 SELECT *
 FROM user_file;
@@ -66,3 +67,11 @@ FROM user_file;
 
 # ALTER TABLE user_file
 #     CHANGE file_src file_name VARCHAR(500);
+
+SELECT *
+FROM user
+WHERE id = 68;
+
+DELETE
+FROM user
+WHERE id = 68;

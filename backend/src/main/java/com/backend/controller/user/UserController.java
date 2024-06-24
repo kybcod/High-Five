@@ -36,7 +36,6 @@ public class UserController {
     // user 회원 가입
     @PostMapping("users")
     public ResponseEntity addUser(@RequestBody User user) {
-        //TODO:나중에 주석 풀기
         if (service.signUpVerification(user)) {
             service.addUser(user);
             return ResponseEntity.ok().build();
@@ -46,7 +45,6 @@ public class UserController {
 
 
     // 회원가입 시 인증코드 받기
-    // TODO. 나중에 활성화
     @GetMapping("users/codes")
     public ResponseEntity sendCode(String phoneNumber) {
         if (phoneNumber.length() == 11) {
