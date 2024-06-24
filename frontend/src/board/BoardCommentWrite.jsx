@@ -22,6 +22,9 @@ export function BoardCommentWrite({ boardId, setIsProcessing, isProcessing }) {
         boardId,
         content,
         userId,
+        commentId: 0,
+        commentSeq: 0,
+        refId: 0,
       })
       .then(() => {
         successToast("댓글이 작성되었습니다");

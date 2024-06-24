@@ -16,7 +16,14 @@ public interface BoardCommentMapper {
     void addComment(BoardComment boardComment);
 
     @Select("""
-            SELECT id, board_id, user_id, content, inserted
+            SELECT COALESCE(MAX(comment_sequence), 0)
+            FROM board_comment
+            WHERE board_id = #{boardId}
+            """)
+    int getMaxCommentSeq(int boardId);
+
+    @Select("""
+            SELECT id, board_id, user_id, content, inserted, comment_id, comment_sequence commentSeq, reference_id refId
             FROM board_comment
             WHERE board_id = #{boardId}
             """)

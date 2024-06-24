@@ -4,10 +4,6 @@ FROM board;
 SELECT *
 FROM board_like;
 
-SELECT *
-FROM board_comment;
-
-
 ALTER TABLE board
     MODIFY user_id INT NOT NULL;
 
@@ -46,3 +42,14 @@ ALTER TABLE board_comment
 
 ALTER TABLE board_comment
     ADD reference_id INT NOT NULL DEFAULT 0;
+
+SELECT *
+FROM board_comment;
+
+SELECT *
+FROM board_comment
+WHERE comment_id = 1;
+
+DELETE
+FROM board_comment
+WHERE comment_id = 1;
