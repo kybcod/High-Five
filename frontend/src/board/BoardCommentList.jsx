@@ -9,12 +9,13 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
 import { BoardCommentEdit } from "./BoardCommentEdit.jsx";
 import { BoardReCommentWrite } from "./BoardReCommentWrite.jsx";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   const [boardCommentList, setBoardCommentList] = useState([]);
@@ -22,6 +23,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   const [updatedContent, setUpdatedContent] = useState("");
   const [showReCommentId, setShowReCommentId] = useState(null);
   const { successToast, errorToast } = CustomToast();
+  const account = useContext(LoginContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -79,20 +81,22 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                     <Flex>
                       <Text>{boardComment.userId}</Text>
                       <Textarea defaultValue={boardComment.content} readOnly />
-                      <Stack>
-                        <Button
-                          onClick={() =>
-                            handleClickCommentDelete(boardComment.id)
-                          }
-                        >
-                          삭제
-                        </Button>
-                        <Button
-                          onClick={() => handleEditClick(boardComment.id)}
-                        >
-                          수정
-                        </Button>
-                      </Stack>
+                      {account.hasAccess(boardComment.userId) && (
+                        <Stack>
+                          <Button
+                            onClick={() =>
+                              handleClickCommentDelete(boardComment.id)
+                            }
+                          >
+                            삭제
+                          </Button>
+                          <Button
+                            onClick={() => handleEditClick(boardComment.id)}
+                          >
+                            수정
+                          </Button>
+                        </Stack>
+                      )}
                     </Flex>
                   )}
                   {isEditingId === boardComment.id && (

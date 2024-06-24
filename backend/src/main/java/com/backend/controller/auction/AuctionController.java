@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class AuctionController {
         return service.getBidListByUserId(userId, PageRequest.of(page - 1, 9));
     }
 
-    //    @Scheduled(cron = "0 0 0/1 * * *", zone = "Asia/Seoul") //1시간
+    @Scheduled(cron = "0 0 0/1 * * *", zone = "Asia/Seoul") //1시간
 //    @Scheduled(fixedRate = 100000, zone = "Asia/Seoul")
     public void checkEndTimeAndProductState() {
         auctionStatusService.updateProductState();
