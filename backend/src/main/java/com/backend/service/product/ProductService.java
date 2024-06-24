@@ -182,6 +182,12 @@ public class ProductService {
         String userNickName = mapper.selectUserNickName(userId);
         settingFilePath(productList);
 
+        for (Product product : productList) {
+            // 낙찰된 닉네임
+            List<Map<String, Object>> successbidList = mapper.selectSuccessBidList(product.getId());
+            product.setProductBidList(successbidList);
+        }
+
         // 더보기 : 페이지
         int total = mapper.selectTotalCountByUserId(userId);
         Page<Product> page = new PageImpl<>(productList, pageable, total);
@@ -189,7 +195,9 @@ public class ProductService {
         boolean hasNextPage = pageable.getPageNumber() + 1 < page.getTotalPages();
 
 
-        return Map.of("productList", productList, "pageInfo", pageInfo, "hasNextPage", hasNextPage, "userNickName", userNickName);
+        return Map.of("productList", productList,
+                "pageInfo", pageInfo, "hasNextPage", hasNextPage,
+                "userNickName", userNickName);
     }
 
     public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable) {

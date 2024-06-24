@@ -29,17 +29,31 @@ FROM chat;
 SELECT *
 FROM chat_room;
 
-SHOW CREATE TABLE chat_room;
+SELECT p.id,
+       p.user_id,
+       p.title,
+       p.category,
+       p.start_price,
+       p.start_time,
+       p.end_time,
+       p.content,
+       p.view_count,
+       p.status,
+       p.review_status,
+       u.nick_name AS userNickName
+FROM product p
+         JOIN user u ON p.user_id = u.id
+         JOIN bid_list b ON b.user_id = u.id
+WHERE p.user_id = 10
+ORDER BY p.end_time;
 
-alter table product_file
-    modify id INT first;
+# 낙찰자의 id를 가져와야 함
+SELECT u.nick_name AS successBidNickName, bl.user_id AS successBidUserId
+FROM bid_list bl
+         JOIN user u on u.id = bl.user_id
+WHERE product_id = 100
+  AND bid_status = TRUE;
 
-alter table product_file
-    auto_increment = 1;
-
-alter table product_file
-    add constraint product_file_pk
-        primary key (id);
-
-alter table product_file
-    modify id INT auto_increment;
+SELECT *
+FROM product
+WHERE id = 100;

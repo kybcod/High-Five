@@ -41,6 +41,7 @@ public class AuctionController {
         return service.getBidListByUserId(userId, PageRequest.of(page - 1, 9));
     }
 
+
     //    @Scheduled(cron = "0 0 0/1 * * *", zone = "Asia/Seoul") //1시간
 //    @Scheduled(fixedRate = 100000, zone = "Asia/Seoul")
     public void checkEndTimeAndProductState() {

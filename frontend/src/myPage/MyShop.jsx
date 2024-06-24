@@ -92,6 +92,8 @@ export function MyShop() {
               >
                 <CardBody position={"relative"} h={"100%"}>
                   <Box mt={2} w="30%%">
+                    {/*판매 상태 true 이면 이미지, endTime Badge*/}
+                    {/*판매 상태 False 이면 판매완료 이미지, 낙찰자 Badge*/}
                     {product.status ? (
                       <>
                         {product.productFileList && (
@@ -142,6 +144,35 @@ export function MyShop() {
                         >
                           판매완료
                         </Text>
+                        {product.productBidList &&
+                          product.productBidList.length > 0 && (
+                            <Badge
+                              cursor={"pointer"}
+                              position={"absolute"}
+                              top={"1"}
+                              left={"1"}
+                              colorScheme={"teal"}
+                              onClick={() => {
+                                navigate(
+                                  `/chat/product/${product.id}/buyer/${product.productBidList[0].successBidUserId}`,
+                                );
+                              }}
+                            >
+                              낙찰자 :{" "}
+                              {product.productBidList[0].successBidNickName}
+                            </Badge>
+                          )}
+                        {(!product.productBidList ||
+                          product.productBidList.length === 0) && (
+                          <Badge
+                            position={"absolute"}
+                            top={"1"}
+                            left={"1"}
+                            colorScheme={"teal"}
+                          >
+                            <Text>낙찰자가 없습니다.</Text>
+                          </Badge>
+                        )}
                       </Box>
                     )}
                   </Box>
