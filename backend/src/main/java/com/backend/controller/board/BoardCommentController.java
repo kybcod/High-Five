@@ -55,8 +55,6 @@ public class BoardCommentController {
         if (!updateDb.getId().equals(boardComment.getId())) {
             return ResponseEntity.badRequest().build();
         }
-        System.out.println("boardComment.getId() = " + boardComment.getId());
-        System.out.println("boardComment = " + boardComment.getContent());
         if (service.hasAccess(updateDb, authentication)) {
             service.modify(boardComment.getContent(), boardComment.getId());
             return ResponseEntity.ok().build();

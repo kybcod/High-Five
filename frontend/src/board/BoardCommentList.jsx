@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { BoardCommentEdit } from "./BoardCommentEdit.jsx";
 import { BoardReCommentWrite } from "./BoardReCommentWrite.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
+import { BoardReCommentEdit } from "./BoardReCommentEdit.jsx";
 
 export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   const [boardCommentList, setBoardCommentList] = useState([]);
@@ -143,25 +144,27 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                           readOnly
                           size="sm"
                         />
-                        <Stack>
-                          <Button
-                            onClick={() =>
-                              handleClickCommentDelete(subComment.id)
-                            }
-                          >
-                            삭제
-                          </Button>
-                          <Button
-                            onClick={() => handleEditClick(subComment.id)}
-                          >
-                            수정
-                          </Button>
-                        </Stack>
+                        {account.hasAccess(subComment.userId) && (
+                          <Stack>
+                            <Button
+                              onClick={() =>
+                                handleClickCommentDelete(subComment.id)
+                              }
+                            >
+                              삭제
+                            </Button>
+                            <Button
+                              onClick={() => handleEditClick(subComment.id)}
+                            >
+                              수정
+                            </Button>
+                          </Stack>
+                        )}
                       </Flex>
                     )}
-                    {isEditingId === boardComment.id && (
-                      <BoardCommentEdit
-                        boardComment={boardComment}
+                    {isEditingId === subComment.id && (
+                      <BoardReCommentEdit
+                        subComment={subComment}
                         setIsEditingId={setIsEditingId}
                         updatedContent={updatedContent}
                         setUpdatedContent={setUpdatedContent}
