@@ -21,6 +21,9 @@ SELECT *
 FROM product;
 
 SELECT *
+FROM user;
+
+SELECT *
 FROM chat;
 
 SELECT *
