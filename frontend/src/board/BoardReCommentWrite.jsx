@@ -4,7 +4,11 @@ import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
 
-export function BoardReCommentWrite({ boardComment, setShowReCommentId }) {
+export function BoardReCommentWrite({
+  boardComment,
+  setShowReCommentId,
+  setIsProcessing,
+}) {
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
   const { successToast, errorToast } = CustomToast();
@@ -17,6 +21,7 @@ export function BoardReCommentWrite({ boardComment, setShowReCommentId }) {
   }, [account]);
 
   function handleClickSave(id) {
+    setIsProcessing(true);
     axios
       .post(`/api/board/comment`, {
         boardId: boardComment.boardId,
@@ -34,7 +39,9 @@ export function BoardReCommentWrite({ boardComment, setShowReCommentId }) {
           errorToast("답글 작성에 실패했습니다. 다시 시도해주세요");
         }
       })
-      .finally(() => {});
+      .finally(() => {
+        setIsProcessing(false);
+      });
   }
 
   return (

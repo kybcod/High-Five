@@ -33,7 +33,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
         .get(`/api/board/comment/${boardId}`)
         .then((res) => {
           setBoardCommentList(res.data);
-          navigate(`/board/${boardId}`);
+          setUpdatedContent(updatedContent);
         })
         .catch((err) => {
           console.log(err);
@@ -45,6 +45,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   }, [isProcessing]);
 
   function handleClickCommentDelete(commentId) {
+    setIsProcessing(true);
     axios
       .delete(`/api/board/comment/${commentId}`)
       .then((res) => {
@@ -71,11 +72,10 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
 
   return (
     <Card>
-      {boardCommentList &&
-        boardCommentList.length > 0 &&
-        boardCommentList.map((boardComment) => (
-          // eslint-disable-next-line react/jsx-key
-          <CardBody>
+      <CardBody>
+        {boardCommentList &&
+          boardCommentList.length > 0 &&
+          boardCommentList.map((boardComment) => (
             <Stack key={boardComment.id}>
               {boardComment.refId === 0 && (
                 <Box>
@@ -107,6 +107,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                       setIsEditingId={setIsEditingId}
                       updatedContent={updatedContent}
                       setUpdatedContent={setUpdatedContent}
+                      setIsProcessing={setIsProcessing}
                     />
                   )}
                   <Flex>
@@ -124,6 +125,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                       <BoardReCommentWrite
                         boardComment={boardComment}
                         setShowReCommentId={setShowReCommentId}
+                        setIsProcessing={setIsProcessing}
                       />
                     )}
                     <Spacer />
@@ -169,13 +171,14 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                         setIsEditingId={setIsEditingId}
                         updatedContent={updatedContent}
                         setUpdatedContent={setUpdatedContent}
+                        setIsProcessing={setIsProcessing}
                       />
                     )}
                   </Box>
                 ))}
             </Stack>
-          </CardBody>
-        ))}
+          ))}
+      </CardBody>
     </Card>
   );
 }

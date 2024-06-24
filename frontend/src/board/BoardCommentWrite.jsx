@@ -17,6 +17,7 @@ export function BoardCommentWrite({ boardId, setIsProcessing, isProcessing }) {
   }, [account]);
 
   function handleClickComment() {
+    setIsProcessing(true);
     axios
       .post(`/api/board/comment`, {
         boardId,

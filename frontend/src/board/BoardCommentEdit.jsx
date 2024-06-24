@@ -1,18 +1,18 @@
 import { Box, Button, Flex, Stack, Textarea } from "@chakra-ui/react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
-import { useNavigate } from "react-router-dom";
 
 export function BoardCommentEdit({
   boardComment,
   setIsEditingId,
   updatedContent,
   setUpdatedContent,
+  setIsProcessing,
 }) {
   const { successToast, errorToast } = CustomToast();
-  const navigate = useNavigate();
 
   function handleClickSave() {
+    setIsProcessing(true);
     axios
       .put(`/api/board/comment/modify`, {
         id: boardComment.id,
@@ -25,7 +25,9 @@ export function BoardCommentEdit({
       .catch(() => {
         errorToast(`댓글 수정에 실패했습니다. 다시 시도해주세요`);
       })
-      .finally(() => {});
+      .finally(() => {
+        setIsProcessing(false);
+      });
   }
 
   return (
