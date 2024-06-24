@@ -8,6 +8,7 @@ import {
   Heading,
   Input,
   Select,
+  Spacer,
   Table,
   Tbody,
   Td,
@@ -67,9 +68,11 @@ export function BoardList() {
 
   return (
     <Box>
-      <Box>
+      <Flex>
         <Heading>자유게시판 목록</Heading>
-      </Box>
+        <Spacer />
+        <Button onClick={() => navigate(`/board`)}>글쓰기</Button>
+      </Flex>
       <Box>
         <Table>
           <Thead>
@@ -131,7 +134,7 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
-      <Center>
+      <Center mt={"10px"}>
         <Flex>
           <Select
             value={searchType}
@@ -150,7 +153,7 @@ export function BoardList() {
           </Button>
         </Flex>
       </Center>
-      <Center>
+      <Center mt={"10px"}>
         {pageNumbers.map((pageNumber) => (
           <ButtonGroup
             key={pageNumber}
