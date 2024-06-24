@@ -7,7 +7,6 @@ import {
   Heading,
   Input,
   Select,
-  Spacer,
   Table,
   Tbody,
   Td,
@@ -16,9 +15,9 @@ import {
   Tooltip,
   Tr,
 } from "@chakra-ui/react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
@@ -27,9 +26,10 @@ import {
   faAnglesRight,
   faCamera,
   faComment,
+  faLock,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { faComments } from "@fortawesome/free-regular-svg-icons";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
@@ -37,18 +37,22 @@ export function QuestionList() {
   const [searchType, setSearchType] = useState("titleNick");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [secretCheck, setSecretCheck] = useState(false);
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
 
   useEffect(() => {
     axios.get(`/api/question/list?${searchParams}`).then((res) => {
       setQuestionList(res.data.content);
       setPageInfo(res.data.pageInfo);
     });
+
     setSearchType("titleNick");
     setSearchKeyword("");
 
     const typeParam = searchParams.get("type");
     const keywordParam = searchParams.get("keyword");
+
     if (typeParam) {
       setSearchType(typeParam);
     }
@@ -74,6 +78,14 @@ export function QuestionList() {
     navigate(`/question/list?type=${searchType}&keyword=${searchKeyword}`);
   }
 
+  const handleSecretTextClick = (question) => {
+    if (secretCheck && !account.hasAccess(question.userId)) {
+      alert("비밀글에 접근할 권한이 없습니다.");
+    } else {
+      navigate(`/question/${question.id}`);
+    }
+  };
+
   return (
     <Box>
       <Box mt={5} mb={5}>
@@ -89,7 +101,7 @@ export function QuestionList() {
               <Th>제목</Th>
               <Th>작성자</Th>
               <Th>조회수</Th>
-              <Th>작성시간</Th>
+              <Th>작성일시</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -97,12 +109,13 @@ export function QuestionList() {
               <Tr
                 _hover={{ bgColor: "gray.300" }}
                 cursor={"pointer"}
-                onClick={() => navigate(`/question/${question.id}`)}
+                onClick={() => handleSecretTextClick(question)}
                 key={question.id}
               >
                 <Td>{question.id}</Td>
                 <Td>
                   <Flex gap={2}>
+                    {secretCheck && <FontAwesomeIcon icon={faLock} />}
                     {question.title}
                     {question.isNewBadge && (
                       <Badge colorScheme="green">New</Badge>
@@ -209,7 +222,7 @@ export function QuestionList() {
         </Flex>
       </Center>
 
-      <Box>
+      {account.isLoggedIn && (
         <Flex justify={"flex-end"} mr={10}>
           <Button
             colorScheme={"blue"}
@@ -218,7 +231,7 @@ export function QuestionList() {
             글쓰기
           </Button>
         </Flex>
-      </Box>
+      )}
     </Box>
   );
 }
