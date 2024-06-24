@@ -22,7 +22,6 @@ export function SignupCodeProvider({ children }) {
 
   function handleInputPhoneNumber(input) {
     input.replace(/[-\s]/g, "");
-    console.log(input);
     setPhoneNumber(input);
     setIsCheckedCode(false);
   }

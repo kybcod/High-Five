@@ -43,11 +43,12 @@ export function Navbar() {
         <FontAwesomeIcon icon={faQuestionCircle} />
         <Text ml={2}>QnA</Text>
       </Center>
-
-      <Center onClick={() => navigate("/user/list")} mx={2}>
-        <FontAwesomeIcon icon={faUsers} />
-        <Text ml={2}>USER LIST</Text>
-      </Center>
+      {account.isAdmin() && (
+        <Center onClick={() => navigate("/user/list")} mx={2}>
+          <FontAwesomeIcon icon={faUsers} />
+          <Text ml={2}>USER LIST</Text>
+        </Center>
+      )}
       <Spacer />
       {account.isLoggedIn() ? (
         <>

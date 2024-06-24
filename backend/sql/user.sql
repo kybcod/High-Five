@@ -72,4 +72,4 @@ FROM user;
 
 DELETE
 FROM user
-WHERE id = 71;
+WHERE id = 72;
