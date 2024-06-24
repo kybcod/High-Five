@@ -67,7 +67,7 @@ public class UserService {
 
         TimerTask timeOutCodeDelete = new TimerTask() {
             public void run() {
-                mapper.deleteCodeByVerificationCode(Integer.valueOf(verificationCode));
+                mapper.deleteCodeByVerificationCode(Integer.parseInt(verificationCode));
             }
         };
 
@@ -87,7 +87,7 @@ public class UserService {
     public void addUser(User user) {
         // kakao, google Oauth 로그인이면 랜덤 번호로 비밀번호 생성
         if (user.getPassword().equals("oauth")) {
-            user.setPassword(Integer.toString((int) (Math.random() * 8999) + 1000) + "Oauth!");
+            user.setPassword(((Math.random() * 8999) + 1000) + "Oauth!");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         mapper.insertUser(user);
@@ -161,13 +161,13 @@ public class UserService {
             return false;
         }
 
-        if (user.getEmail().trim().length() == 0 && user.getEmail().length() > 30) {
+        if (user.getEmail().trim().isEmpty() || user.getEmail().length() > 30) {
             return false;
         }
-        if (user.getPassword().trim().length() == 0) {
+        if (user.getPassword().trim().isEmpty()) {
             return false;
         }
-        if (user.getNickName().trim().length() == 0 && user.getNickName().length() > 10) {
+        if (user.getNickName().trim().isEmpty() || user.getNickName().length() > 10) {
             return false;
         }
         if (user.getPhoneNumber().trim().length() != 11) {
@@ -186,11 +186,7 @@ public class UserService {
 
         // 회원 가입 시 비밀번호가 정규식 일치하는지 & 혹은 Oauth 로그인인지 확인
         String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
-        if (!user.getPassword().trim().matches(passwordPattern) && !user.getPassword().equals("oauth")) {
-            return false;
-        }
-
-        return true;
+        return user.getPassword().trim().matches(passwordPattern) || user.getPassword().equals("oauth");
     }
 
     // userId로 본인 확인
@@ -280,7 +276,7 @@ public class UserService {
                     RequestBody.fromInputStream(profileImage.getInputStream(), profileImage.getSize()));
         }
 
-        if (user.getPassword() != null && user.getPassword().length() > 0) {
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         } else {
             User db = mapper.selectUserById(user.getId());
@@ -289,7 +285,6 @@ public class UserService {
         mapper.updateUser(user);
 
         Jwt jwt = (Jwt) authentication.getPrincipal();
-        Instant now = Instant.now();
 
         Map<String, Object> claims = jwt.getClaims();
         JwtClaimsSet.Builder jwtClaimsSetBuilder = JwtClaimsSet.builder();
@@ -315,11 +310,7 @@ public class UserService {
         if (user.getId() != db.getId()) {
             return false;
         }
-        if (!passwordEncoder.matches(user.getOldPassword(), db.getPassword())) {
-            return false;
-        }
-
-        return true;
+        return passwordEncoder.matches(user.getOldPassword(), db.getPassword());
     }
 
     public Map<String, Object> getUserList(int page, String type, String keyword) {
