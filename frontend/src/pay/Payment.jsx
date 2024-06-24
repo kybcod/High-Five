@@ -48,7 +48,6 @@ export function Payment() {
     });
 
     axios.get(`/api/products/${productId}`).then((res) => {
-      console.log(res.data.product);
       setProduct(res.data.product);
     });
   }, []);
@@ -91,7 +90,7 @@ export function Payment() {
       if (success) {
         //post 요청 : payment (merchant_uid, bid_id, 결제 상태 : true)
         axios
-          .post(`/api/payments/insert`, {
+          .post(`/api/payments`, {
             merchantUid,
             amount,
             bidListId,
@@ -120,26 +119,27 @@ export function Payment() {
         주문 정보
       </Text>
       <Divider mb={5} />
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={4} align="stretch" display={"flex"}>
         <Box>
           <Text mb={4} fontSize="lg" fontWeight="semibold">
             주문상품
           </Text>
           <Box
-            maxH="400px"
-            display="flex"
+            height="400px"
+            width="400px"
+            display={"flex"}
             justifyContent="center"
             alignItems="center"
             mb={7}
+            boxSizing="border-box"
+            mx={"auto"}
           >
             <Image
               src={product.productFileList[0].filePath}
               alt={name}
-              borderRadius="md"
-              mt={2}
+              height="100%"
+              width="100%"
               objectFit="contain"
-              maxW="100%"
-              maxH="100%"
             />
           </Box>
         </Box>
@@ -172,6 +172,8 @@ export function Payment() {
           mt={5}
           boxShadow="lg"
           _hover={{ bg: "teal.600" }}
+          isLoading={false}
+          loadingText={"로딩중"}
         >
           결제하기
         </Button>

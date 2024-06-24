@@ -26,6 +26,10 @@ public class QuestionController {
                               @RequestParam(value = "files[]", required = false) MultipartFile[] files,
                               Authentication authentication
     ) throws IOException {
+//         인증 객체가 null이거나 인증되지 않은 경우 403 응답 반환
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
+        }
         if (service.validate(question)) {
             service.add(question, files, authentication);
             return ResponseEntity.ok().build();

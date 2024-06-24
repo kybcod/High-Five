@@ -18,28 +18,26 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  Stack,
   StackDivider,
   Text,
   Textarea,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CommentComponent } from "./CommentComponent.jsx";
-import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
-import { QuestionList } from "./QuestionList.jsx";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function QuestionView() {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
   const navigate = useNavigate();
-  const toast = useToast();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
+  const { successToast, errorToast } = CustomToast();
 
   useEffect(() => {
     axios
@@ -47,16 +45,9 @@ export function QuestionView() {
       .then((res) => {
         setQuestion(res.data);
       })
-      .catch((err) => {
-        if (err.response.status === 404) {
-          toast({
-            status: "error",
-            description: "해당 게시글이 없습니다",
-            position: "top",
-            duration: 2500,
-          });
-          navigate("/question/list");
-        }
+      .catch(() => {
+        errorToast("해당 게시글이 없습니다.");
+        navigate("/question/list");
       });
   }, [id]);
 
@@ -66,30 +57,13 @@ export function QuestionView() {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then(() => {
-        toast({
-          status: "success",
-          description: `${id}번 게시물이 삭제되었습니다.`,
-          position: "top",
-          duration: 2500,
-        });
+        successToast(`${id}번 게시물이 삭제되었습니다.`);
         navigate("/question/list");
       })
-      .catch((res) => {
-        if (res.response.status === 403) {
-          toast({
-            status: "error",
-            description: `권한이 없는 사용자입니다`,
-            position: "top",
-            duration: 2500,
-          });
-        } else {
-          toast({
-            status: "error",
-            description: `${id}번 게시물 삭제 중 오류가 발생하였습니다.`,
-            position: "top",
-            duration: 2500,
-          });
-        }
+      .catch((err) => {
+        err.response.status === 403
+          ? errorToast("권한이 없는 사용자입니다")
+          : errorToast("게시물 삭제 중 오류가 발생하였습니다.");
       });
   }
 
@@ -136,7 +110,6 @@ export function QuestionView() {
         <HStack divider={<StackDivider borderColor="gray.200" />} spacing={2}>
           <Box>작성자</Box>
           <Text>{question.nickName}</Text>
-          {/*<Input value={question.nickName} readOnly />*/}
         </HStack>
         <HStack divider={<StackDivider borderColor="gray.200" />} spacing={2}>
           <Text w={"100px"}>작성시간</Text>

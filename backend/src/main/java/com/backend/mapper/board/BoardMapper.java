@@ -29,9 +29,11 @@ public interface BoardMapper {
                     b.user_id,
                     b.inserted,
                     COUNT(DISTINCT f.file_name) AS number_of_images,
-                    COUNT(DISTINCT l.user_id) AS number_of_likes
+                    COUNT(DISTINCT l.user_id) AS number_of_likes,
+                    COUNT(DISTINCT c.id) AS number_of_comments
             FROM board b LEFT JOIN board_file f ON b.id = f.board_id
                          LEFT JOIN board_like l ON b.id = l.board_id
+                         LEFT JOIN board_comment c ON b.id = c.board_id
             <where>
                 <if test="keyword != null and keyword != ''">
                     <bind name="pattern" value="'%' + keyword + '%'"/>

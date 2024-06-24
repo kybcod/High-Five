@@ -37,7 +37,7 @@ export function ProductList() {
   const account = useContext(LoginContext);
 
   useEffect(() => {
-    axios.get(`/api/products/list?${searchParams}`).then((res) => {
+    axios.get(`/api/products/search?${searchParams}`).then((res) => {
       const products = res.data.content;
       const initialLikes = products.reduce((acc, product) => {
         acc[product.id] = product.like || false;
