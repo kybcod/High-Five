@@ -235,7 +235,7 @@ export function ChatRoom() {
       .get(`/api/reviews/${data.product.id}`)
       .then((res) => {
         if (res.data != null) {
-          setReviewList(res.data.reviewList);
+          setReviewList(res.data);
         }
       })
       .catch()
@@ -514,7 +514,7 @@ export function ChatRoom() {
               isLoading={loading}
               isDisabled={reviewId.length === 0}
               onClick={handleSaveReviewButtonClick}
-              hidden={data.product.reviewStatus === false}
+              hidden={data.product.reviewStatus === true}
             >
               후기 보내기
             </Button>
