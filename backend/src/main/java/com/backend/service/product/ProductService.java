@@ -164,15 +164,15 @@ public class ProductService {
 
 
         // s3에서 파일(이미지) 삭제
-        List<ProductFile> productFileList = mapper.selectFileByProductId(id);
-        for (ProductFile productFile : productFileList) {
-            String key = STR."prj3/\{id}/\{productFile.getFileName()}";
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .build();
-            s3Client.deleteObject(deleteObjectRequest);
-        }
+//        List<ProductFile> productFileList = mapper.selectFileByProductId(id);
+//        for (ProductFile productFile : productFileList) {
+//            String key = STR."prj3/\{id}/\{productFile.getFileName()}";
+//            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+//                    .bucket(bucketName)
+//                    .key(key)
+//                    .build();
+//            s3Client.deleteObject(deleteObjectRequest);
+//        }
 
         // 입찰 내역 삭제
         mapper.deleteBidListByProductId(id);

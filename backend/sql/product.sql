@@ -15,10 +15,12 @@ FROM bid_list;
 
 SELECT *
 FROM bid_list
-WHERE user_id = 20;
+WHERE product_id = 100;
 
 SELECT *
+FROM product;
 
+SELECT *
 FROM chat;
 
 SELECT *

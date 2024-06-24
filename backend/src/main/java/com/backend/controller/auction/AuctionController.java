@@ -33,12 +33,12 @@ public class AuctionController {
         }
     }
 
+    @Description("마이페이지 : 입찰 내역")
     @GetMapping("{userId}/list")
     public Map<String, Object> getBids(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page) {
         return service.getBidListByUserId(userId, PageRequest.of(page - 1, 9));
     }
 
-//    @Description("마이페이지 : 입찰 내역")
 //    @GetMapping("{userId}/list")
 //    @PreAuthorize("isAuthenticated()")
 //    public ResponseEntity getBids(@PathVariable Integer userId, Authentication authentication, @RequestParam(defaultValue = "1") int page) {

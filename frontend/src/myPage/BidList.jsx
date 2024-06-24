@@ -87,6 +87,10 @@ export function BidList() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  if (bidList === null) {
+    return <Spinner />;
+  }
+
   return (
     <Box>
       {bidList.length === 0 ? (

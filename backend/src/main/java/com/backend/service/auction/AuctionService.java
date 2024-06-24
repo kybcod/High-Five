@@ -66,6 +66,7 @@ public class AuctionService {
 
     }
 
+    // 경매 참여 시 입찰 상태 true로 업데이트
     public void updateBidStatus(Integer productId) {
         BidList maxBid = mapper.selectMaxPriceByProductId(productId);
         if (maxBid != null) {
