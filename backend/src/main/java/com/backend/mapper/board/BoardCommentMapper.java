@@ -23,7 +23,7 @@ public interface BoardCommentMapper {
     int getMaxCommentSeq(int boardId);
 
     @Select("""
-            SELECT c.id, c.board_id, u.nick_name nickName, 
+            SELECT c.id, c.board_id, u.nick_name nickName, c.user_id,
                     c.content, c.inserted, c.comment_id, 
                     c.comment_sequence commentSeq, c.reference_id refId
             FROM board_comment c JOIN user u ON c.user_id = u.id 
