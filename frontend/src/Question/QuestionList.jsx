@@ -8,6 +8,7 @@ import {
   Input,
   Select,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Th,
@@ -97,14 +98,15 @@ export function QuestionList() {
         </Heading>
       </Box>
       <Box mb={7}>
-        <Table>
+        <Table variant="simple">
           <Thead>
             <Tr>
               <Th>No.</Th>
               <Th>제목</Th>
-              <Th>작성자</Th>
-              <Th>조회수</Th>
-              <Th>작성일시</Th>
+              <Th textAlign="center">답변상태</Th>
+              <Th textAlign="center">작성자</Th>
+              <Th textAlign="center">조회수</Th>
+              <Th textAlign="center">작성일시</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -115,8 +117,8 @@ export function QuestionList() {
                 onClick={() => handleSecretTextClick(question)}
                 key={question.id}
               >
-                <Td>{question.id}</Td>
-                <Td>
+                <Td width="10%">{question.id}</Td>
+                <Td width="40%">
                   <Flex gap={2}>
                     {question.secretWrite && (
                       <Box style={{ display: "flex", alignItems: "center" }}>
@@ -124,7 +126,7 @@ export function QuestionList() {
                           icon={faLock}
                           style={{ marginRight: "4px" }}
                         />
-                        <span style={{ color: "675F60FF" }}>비밀글</span>
+                        <span style={{ color: "gray" }}>비밀글</span>
                       </Box>
                     )}
                     {question.secretWrite || question.title}
@@ -141,31 +143,42 @@ export function QuestionList() {
                       </Box>
                     )}
                     {question.numberOfComments > 0 && (
-                      <>
-                        {" "}
-                        {/*<Box ml={2}>*/}
-                        {/*<Badge variant="outline" colorScheme="green">*/}
-                        {/*  답변완료*/}
-                        {/*</Badge>*/}
-                        {/*</Box>*/}
-                        <Box
-                          style={{
-                            color: "#ff354d",
-                            display: "flex",
-                            alignItems: "center",
-                            fontSize: "0.8rem",
-                            fontWeight: "600",
-                          }}
-                        >
-                          +{question.numberOfComments}
-                        </Box>
-                      </>
+                      <Box
+                        style={{
+                          color: "#ff354d",
+                          display: "flex",
+                          alignItems: "center",
+                          fontSize: "0.8rem",
+                          fontWeight: "600",
+                        }}
+                      >
+                        +{question.numberOfComments}
+                      </Box>
                     )}
                   </Flex>
                 </Td>
-                <Td>{question.nickName}</Td>
-                <Td>{question.numberOfCount}</Td>
-                <Td>{question.inserted}</Td>
+                <Td width="15%" textAlign="center">
+                  {question.numberOfComments > 0 ? (
+                    <Box ml={2}>
+                      <Badge variant="outline" colorScheme="green">
+                        답변완료
+                      </Badge>
+                    </Box>
+                  ) : (
+                    <Box ml={2}>
+                      <Badge variant="outline">답변대기</Badge>
+                    </Box>
+                  )}
+                </Td>
+                <Td width="10%" textAlign="center">
+                  {question.nickName}
+                </Td>
+                <Td width="10%" textAlign="center" fontSize={"sm"}>
+                  {question.numberOfCount}
+                </Td>
+                <Td width="15%" textAlign="center" fontSize={"sm"}>
+                  {question.inserted}
+                </Td>
               </Tr>
             ))}
           </Tbody>
