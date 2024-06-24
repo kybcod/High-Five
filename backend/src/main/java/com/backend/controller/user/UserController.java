@@ -37,11 +37,11 @@ public class UserController {
     @PostMapping("users")
     public ResponseEntity addUser(@RequestBody User user) {
         //TODO:나중에 주석 풀기
-//        if (service.signUpVerification(user)) {
-        service.addUser(user);
-        return ResponseEntity.ok().build();
-//        }
-//        return ResponseEntity.badRequest().build();
+        if (service.signUpVerification(user)) {
+            service.addUser(user);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 
