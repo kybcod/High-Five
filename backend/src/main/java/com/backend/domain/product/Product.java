@@ -1,5 +1,6 @@
 package com.backend.domain.product;
 
+import com.backend.domain.auction.BidList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
