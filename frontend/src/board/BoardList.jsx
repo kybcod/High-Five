@@ -20,6 +20,7 @@ import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faComment,
   faHeart as fullHeart,
   faImage,
   faMagnifyingGlass,
@@ -75,6 +76,7 @@ export function BoardList() {
               <Th>No.</Th>
               <Th>제목</Th>
               <Th>작성자</Th>
+              <Th>댓글수</Th>
               <Th>작성시간</Th>
             </Tr>
           </Thead>
@@ -106,6 +108,10 @@ export function BoardList() {
                   )}
                 </Td>
                 <Td>{board.userId}</Td>
+                <Td>
+                  <FontAwesomeIcon icon={faComment} size={"sm"} />
+                  {board.numberOfComments}
+                </Td>
                 <Td>{board.inserted}</Td>
                 <Td hidden>{board.content}</Td>
               </Tr>
