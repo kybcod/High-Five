@@ -63,6 +63,11 @@ public class ChatService {
         result.put("chatRoom", chatRoom);
 
         // -- 이전 ChatData
+        // read_check TRUE 변경
+        int success = mapper.updateReadCheck(chatRoom);
+        if (success == 1) {
+            System.out.println("success = " + success);
+        }
         List<Chat> previousChatList = mapper.selectChatListByChatRoomId(chatRoom.getId());
         Collections.reverse(previousChatList);
         result.put("previousChatList", previousChatList);
@@ -92,7 +97,7 @@ public class ChatService {
         // -- bidder
         BidList bidder = auctionMapper.selectBidderByProductId(productId, tokenUserId);
         result.put("bidder", bidder);
-        
+
         return result;
     }
 
@@ -111,7 +116,12 @@ public class ChatService {
 
             // -- product : id, title
             Product product = productMapper.selectProductTitleById(chatRoom);
-
+            if (product == null) { // 삭제된 상품일때
+                Product newProduct = new Product();
+                newProduct.setId(chatRoom.getProductId());
+                newProduct.setTitle("삭제된 상품입니다.");
+                product = newProduct;
+            }
             // -- 상대 user : id, nickName
             Integer userId; // 상대방 아이디 얻기
             if (chatRoom.getSellerId() == tokenUserId) { // 로그인 본인이 판매자면
