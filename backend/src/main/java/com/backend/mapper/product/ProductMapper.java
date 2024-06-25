@@ -329,4 +329,12 @@ public interface ProductMapper {
             WHERE id =#{productId}
             """)
     Product selectChatProductInfo(Integer productId);
+
+    @Select("""
+            SELECT COUNT(status) AS totalSalesCount
+            FROM product
+            WHERE user_id = #{userId}
+              AND status = FALSE;
+            """)
+    Integer selectTotalSalesCount(Integer userId);
 }

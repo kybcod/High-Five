@@ -179,15 +179,18 @@ public class ProductService {
 
     public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
         List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
-        String userNickName = mapper.selectUserNickName(userId);
-        settingFilePath(productList);
-
+        
         for (Product product : productList) {
             // 낙찰된 닉네임
             List<Map<String, Object>> successbidList = mapper.selectSuccessBidList(product.getId());
             product.setProductBidList(successbidList);
         }
 
+        // 상품 판매 횟수
+        Integer totalSalesCount = mapper.selectTotalSalesCount(userId);
+
+        //파일
+        settingFilePath(productList);
         // 더보기 : 페이지
         int total = mapper.selectTotalCountByUserId(userId);
         Page<Product> page = new PageImpl<>(productList, pageable, total);
@@ -197,7 +200,7 @@ public class ProductService {
 
         return Map.of("productList", productList,
                 "pageInfo", pageInfo, "hasNextPage", hasNextPage,
-                "userNickName", userNickName);
+                "totalProductCount", total, "totalSalesCount", totalSalesCount);
     }
 
     public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable) {
