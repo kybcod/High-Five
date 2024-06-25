@@ -1,5 +1,7 @@
 package com.backend.service.question;
 
+import com.backend.domain.question.Faq;
+import com.backend.domain.question.FaqCategory;
 import com.backend.domain.question.Question;
 import com.backend.domain.question.QuestionFile;
 import com.backend.mapper.question.QuestionCommentMapper;
@@ -172,5 +174,13 @@ public class QuestionService {
     public boolean hasAccess(Integer id, Authentication authentication) {
         Question question = mapper.selectById(id);
         return question.getUserId().equals(Integer.valueOf(authentication.getName()));
+    }
+
+    public List<Faq> getFaq(String category) {
+        return mapper.getFaqList(category);
+    }
+
+    public List<FaqCategory> getAllCategories() {
+        return mapper.getAllCategories();
     }
 }

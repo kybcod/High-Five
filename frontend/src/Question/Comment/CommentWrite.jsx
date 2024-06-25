@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Box, Button, Flex, Textarea } from "@chakra-ui/react";
 import { useContext, useState } from "react";
-import { LoginContext } from "../component/LoginProvider.jsx";
-import { CustomToast } from "../component/CustomToast.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
+import { CustomToast } from "../../component/CustomToast.jsx";
 
 export function CommentWrite({
   questionId,
