@@ -70,6 +70,10 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
     setShowReCommentId(id);
   }
 
+  function handleClickReReComment(id) {
+    setShowReCommentId(id);
+  }
+
   return (
     boardCommentList &&
     boardCommentList.length > 0 && (
@@ -126,6 +130,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                         boardComment={boardComment}
                         setShowReCommentId={setShowReCommentId}
                         setIsProcessing={setIsProcessing}
+                        refId={boardComment.id}
                       />
                     )}
                     <Spacer />
@@ -138,7 +143,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
               {boardCommentList
                 .filter((subComment) => subComment.refId === boardComment.id)
                 .map((subComment) => (
-                  <Box key={subComment.commentSeq} ml="5" width="90%">
+                  <Box key={subComment.commentId} ml="5" width="90%">
                     {isEditingId === subComment.id || (
                       <Flex>
                         <Text>{subComment.nickName}</Text>
@@ -174,6 +179,32 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                         setIsProcessing={setIsProcessing}
                       />
                     )}
+                    <Flex>
+                      {showReCommentId === subComment.id || (
+                        <Box>
+                          <Text
+                            onClick={() =>
+                              handleClickReReComment(subComment.id)
+                            }
+                            fontSize={"12px"}
+                          >
+                            답글쓰기
+                          </Text>
+                        </Box>
+                      )}
+                      {showReCommentId === subComment.id && (
+                        <BoardReCommentWrite
+                          boardComment={subComment}
+                          setShowReCommentId={setShowReCommentId}
+                          setIsProcessing={setIsProcessing}
+                          refId={subComment.refId}
+                        />
+                      )}
+                      <Spacer />
+                      <Box>
+                        <Text>{subComment.inserted}</Text>
+                      </Box>
+                    </Flex>
                   </Box>
                 ))}
             </Stack>

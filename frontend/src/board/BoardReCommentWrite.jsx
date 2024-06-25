@@ -8,6 +8,7 @@ export function BoardReCommentWrite({
   boardComment,
   setShowReCommentId,
   setIsProcessing,
+  refId,
 }) {
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
@@ -29,7 +30,7 @@ export function BoardReCommentWrite({
         userId,
         commentId: boardComment.commentId,
         commentSeq: boardComment.commentSeq,
-        refId: id,
+        refId,
       })
       .then(() => {
         successToast("답글이 작성되었습니다");

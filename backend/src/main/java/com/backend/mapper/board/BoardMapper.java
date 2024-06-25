@@ -74,9 +74,9 @@ public interface BoardMapper {
 
     @Delete("""
             DELETE FROM board
-            WHERE id = #{id}
+            WHERE id = #{boardId}
             """)
-    int deleteById(Integer id);
+    int deleteById(Integer boardId);
 
     @Select("""
             SELECT file_name FROM board_file
