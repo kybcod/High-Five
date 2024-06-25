@@ -1,5 +1,6 @@
 package com.backend.domain.board;
 
+import com.backend.domain.user.UserFile;
 import lombok.Data;
 
 import java.time.Duration;
@@ -16,6 +17,7 @@ public class Board {
     private String content;
     private LocalDateTime inserted;
     private String nickName;
+    private UserFile profileImage;
 
     private List<BoardFile> boardFileList;
     private Integer numberOfImages;
