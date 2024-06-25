@@ -141,7 +141,10 @@ public class BoardService {
     }
 
     public int deleteById(Integer id) {
-        boardCommentMapper.deleteByBoardId(id);
+        boardCommentMapper.deleteCommentByBoardId(id);
+        mapper.deleteLikeByBoardId(id);
+        mapper.deleteFileByBoardId(id);
+
         return mapper.deleteById(id);
     }
 

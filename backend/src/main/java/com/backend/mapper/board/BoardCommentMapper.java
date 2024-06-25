@@ -55,5 +55,5 @@ public interface BoardCommentMapper {
             DELETE FROM board_comment
             WHERE board_id = #{boardId}
             """)
-    void deleteByBoardId(Integer boardId);
+    void deleteCommentByBoardId(Integer boardId);
 }

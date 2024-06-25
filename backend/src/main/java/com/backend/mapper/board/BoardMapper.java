@@ -140,4 +140,16 @@ public interface BoardMapper {
             </script>
             """)
     int selectTotalBoardCount(@Param("searchType") String searchType, @Param("keyword") String keyword);
+
+    @Delete("""
+            DELETE FROM board_like
+            WHERE board_id = #{id}
+            """)
+    void deleteLikeByBoardId(Integer id);
+
+    @Delete("""
+            DELETE FROM board_file
+            WHERE board_id = #{id}
+            """)
+    void deleteFileByBoardId(Integer id);
 }
