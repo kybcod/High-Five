@@ -13,12 +13,12 @@ export function Home() {
       <Box
         mx={{
           base: 0,
-          lg: 200,
+          lg: 250,
         }}
         mt={10}
         mb={10}
       >
-        <Box>
+        <Box mb={10}>
           <Header />
         </Box>
         <Box>

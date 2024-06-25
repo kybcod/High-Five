@@ -163,7 +163,8 @@ export function ProductEdit() {
   }
 
   return (
-    <Box p={4} mx="auto" maxWidth="600px">
+    // <Box p={4} mx="auto" maxWidth="600px">
+    <Box>
       <Box mb={4}>
         <Flex alignItems="center">
           <FormLabel htmlFor="file-upload">
@@ -196,7 +197,7 @@ export function ProductEdit() {
             </Box>
           </FormLabel>
 
-          <Flex overflowX="auto" flexWrap="nowrap" maxWidth="400px">
+          <Flex overflowX="auto" flexWrap="nowrap" maxWidth="100%">
             {/* 기존 이미지 표시 */}
             {existingFilePreviews.map((file) => (
               <Box
