@@ -222,6 +222,7 @@ public interface ProductMapper {
             FROM product p
                      JOIN product_like pl ON p.id = pl.product_id
             WHERE pl.user_id = #{userId}
+            ORDER BY p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productAndProductLikeList", value = {

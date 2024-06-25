@@ -26,7 +26,6 @@ public class PaymentService {
 
     @Description("결제하고 추가하기")
     public Payment insertPayment(Payment payment) {
-        payment.setPaidStatus(true);
         int insertCount = mapper.insert(payment);
         if (insertCount == 1) {
             // 상품 아이디 조회

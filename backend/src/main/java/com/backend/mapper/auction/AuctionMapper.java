@@ -35,9 +35,10 @@ public interface AuctionMapper {
 
     @Select("""
             SELECT *
-            FROM bid_list b JOIN product p ON b.product_id = p.id
+            FROM bid_list b
+                     JOIN product p ON b.product_id = p.id
             WHERE b.user_id = #{userId}
-            ORDER BY p.status DESC, p.end_time, p.id
+            ORDER BY b.updated DESC, p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productBidList", value = {
