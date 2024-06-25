@@ -3,6 +3,7 @@ import {
   Button,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Heading,
   IconButton,
@@ -13,7 +14,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
@@ -25,6 +26,8 @@ export function BoardWrite() {
   const [files, setFiles] = useState([]);
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
+  const fileInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
@@ -36,6 +39,7 @@ export function BoardWrite() {
   }, [account]);
 
   function handleClickButton() {
+    setIsLoading(true);
     axios
       .postForm("/api/board/add", {
         title,
@@ -51,13 +55,22 @@ export function BoardWrite() {
         if (err.response.status === 400) {
           errorToast("게시물 작성에 실패했습니다. 다시 작성해주세요");
         }
-      });
+      })
+      .finally(() => setIsLoading(false));
+  }
+
+  let disableSaveButton = false;
+  if (title.length === 0) {
+    disableSaveButton = true;
+  }
+  if (content.length === 0) {
+    disableSaveButton = true;
   }
 
   const fileNameList = [];
   for (let i = 0; i < files.length; i++) {
     fileNameList.push(
-      <Box key={i}>
+      <Flex key={i}>
         <ListItem display="flex" alignItems="center">
           <Text flex="1">{files[i].name}</Text>
         </ListItem>
@@ -70,7 +83,7 @@ export function BoardWrite() {
             setFiles(newFiles);
           }}
         />
-      </Box>,
+      </Flex>,
     );
   }
 
@@ -80,20 +93,27 @@ export function BoardWrite() {
       <Box>
         <FormControl>
           <FormLabel>제목</FormLabel>
-          <Input onChange={(e) => setTitle(e.target.value)} />
+          <Input
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder={"제목을 입력해주세요"}
+          />
         </FormControl>
       </Box>
       <FormControl>
         <Flex>
           <FormLabel>상품 상세 내용</FormLabel>
           <Spacer />
+          <Button onClick={() => fileInputRef.current.click()}>파일첨부</Button>
           <Input
             multiple
             type={"file"}
+            ref={fileInputRef}
+            display={"none"}
             accept={"image/*"}
             onChange={(e) => setFiles(Array.from(e.target.files))}
           />
         </Flex>
+        <FormHelperText>총 용량은 10MB를 초과할 수 없습니다</FormHelperText>
         {fileNameList.length > 0 && (
           <Box mt={2}>
             <Heading size="md" mb={2}>
@@ -104,13 +124,22 @@ export function BoardWrite() {
         )}
       </FormControl>
       <FormControl>
-        <Textarea onChange={(e) => setContent(e.target.value)} />
+        <Textarea
+          onChange={(e) => setContent(e.target.value)}
+          placeholder={"내용을 입력해주세요"}
+        />
       </FormControl>
       <Box>
         <Input type={"hidden"} value={account.id} />
       </Box>
       <Box>
-        <Button onClick={handleClickButton}>게시글 생성</Button>
+        <Button
+          isLoading={isLoading}
+          isDisabled={disableSaveButton}
+          onClick={handleClickButton}
+        >
+          게시글 생성
+        </Button>
       </Box>
     </Box>
   );
