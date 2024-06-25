@@ -14,7 +14,7 @@ public class Chat {
     private Integer userId;
     private String message;
     private LocalDateTime inserted;
-    private Boolean read_check;
+    private Boolean readCheck;
 
     // -- chatList
     @JsonIgnore
