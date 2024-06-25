@@ -424,10 +424,10 @@ export function ChatRoom() {
         <Box>
           <VStack
             h={"500px"}
-            // overflow={"auto"}
             spacing={4}
             flex={1}
-            overflowY="auto"
+            flexDirection={"column-reverse"}
+            overflowY={"auto"}
             w={"full"}
           >
             {messageList.map((msg, index) => (
