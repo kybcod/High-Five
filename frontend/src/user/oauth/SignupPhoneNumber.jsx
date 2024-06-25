@@ -18,7 +18,7 @@ import { CustomToast } from "../../component/CustomToast.jsx";
 
 export function SignupPhoneNumber() {
   const [user, setUser] = useState(null);
-  const [sarchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const codeInfo = useContext(SignupCodeContext);
   const navigate = useNavigate();
   const { successToast, errorToast } = CustomToast();
@@ -26,8 +26,8 @@ export function SignupPhoneNumber() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const emailParam = sarchParams.get("email");
-    const nickNameParam = sarchParams.get("nickName");
+    const emailParam = searchParams.get("email");
+    const nickNameParam = searchParams.get("nickName");
     setUser({ email: emailParam, nickName: nickNameParam, phoneNumber: "" });
   }, []);
 
@@ -108,7 +108,11 @@ export function SignupPhoneNumber() {
         </FormControl>
         <UserPhoneNumber />
       </Box>
-      <Button isDisabled={disabled} onClick={handleOauthSignup}>
+      <Button
+        isDisabled={disabled}
+        onClick={handleOauthSignup}
+        isLoading={isLoading}
+      >
         가입
       </Button>
     </Center>
