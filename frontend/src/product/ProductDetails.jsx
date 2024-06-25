@@ -10,12 +10,16 @@ import {
   Input,
   InputGroup,
   InputRightAddon,
+  List,
+  ListIcon,
+  ListItem,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Spinner,
   Text,
   Textarea,
@@ -25,6 +29,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  faCheckCircle,
   faCommentDots,
   faEye,
   faHeart as fullHeart,
@@ -121,17 +126,7 @@ export function ProductDetails() {
   return (
     <Box>
       <Category />
-
-      <Box display={"inline-block"}>
-        <Heading
-          color="blue"
-          cursor="pointer"
-          mb={3}
-          onClick={() => navigate(`/myPage/${product.userId}/shop`)}
-        >
-          {product.userNickName}
-        </Heading>
-      </Box>
+      <Divider my={6} borderColor="gray" />
 
       <Flex mt={3} alignItems="flex-start">
         <Box width="50%" mr={20} border={"1px solid black"}>
@@ -161,23 +156,80 @@ export function ProductDetails() {
           )}
 
           <Box mb={5}>
-            <Heading>{product.title}</Heading>
+            <Heading style={{ whiteSpace: "nowrap" }}>{product.title}</Heading>
+          </Box>
+          <Box mb={5} justifyContent="space-between">
+            <Text fontSize="xl">{formattedPrice(product.startPrice)}원</Text>
           </Box>
 
-          <Flex mb={5} justifyContent="space-between">
-            <Text fontSize="xl">{formattedPrice(product.startPrice)}원</Text>
-            <Text fontSize="xl">{product.timeFormat}</Text>
-          </Flex>
-
-          <Divider mb={2} />
+          <Divider mb={4} />
 
           {/*다른 user의 상품 일 때*/}
-          {account.isLoggedIn() && !account.hasAccess(product.userId) && (
-            <Box>
-              <Flex mb={5} justifyContent="space-evenly" alignItems="center">
-                <Flex alignItems="center" mr={4}>
-                  <Box mr={2}>찜</Box>
+          <Box>
+            <Flex mb={5} justifyContent="space-evenly" alignItems="center">
+              <Flex alignItems="center" mr={4}>
+                <Box mr={2}>찜</Box>
+                <Box
+                  leftIcon={<FontAwesomeIcon icon="fullHeart" size="lg" />}
+                  colorScheme={"red"}
+                >
+                  {like.count}
+                </Box>
+              </Flex>
+              <Flex alignItems="center" mr={4}>
+                <FontAwesomeIcon icon={faEye} size="lg" />
+                <Box ml={2}>{product.viewCount}</Box>
+              </Flex>
+              <Box>
+                <Text fontSize="lg">{product.timeFormat}</Text>
+              </Box>
+              <Spacer />
+              {account.isLoggedIn() && !account.hasAccess(product.userId) && (
+                <Flex>
+                  <ReportButton userId={product.userId} />
+                </Flex>
+              )}
+            </Flex>
+          </Box>
+
+          <List spacing={3}>
+            <ListItem>
+              <ListIcon as={() => <FontAwesomeIcon icon={faCheckCircle} />} />{" "}
+              판매자 :{" "}
+              <Box mb={5} display="inline-block">
+                <Text
+                  textDecoration="underline"
+                  fontSize="xl"
+                  cursor="pointer"
+                  onClick={() => navigate(`/myPage/${product.userId}/shop`)}
+                >
+                  {product.userNickName}
+                </Text>
+              </Box>
+            </ListItem>
+            <ListItem>
+              <ListIcon as={() => <FontAwesomeIcon icon={faCheckCircle} />} />{" "}
+              종료 시간 :{" "}
+              <Box mb={5} display={"inline-block"}>
+                <Text fontSize="medium">{product.endTimeDetailsFormat}</Text>
+              </Box>
+            </ListItem>
+            <ListItem>
+              <ListIcon as={() => <FontAwesomeIcon icon={faCheckCircle} />} />{" "}
+              참여 인원 :{" "}
+              <Box mb={5} display={"inline-block"}>
+                <Text>{product.numberOfJoin}명</Text>
+              </Box>
+            </ListItem>
+          </List>
+
+          {/*판매 완료, 로그인이 안되어 있는 상태, 자신의 상품일 때 보이지 않음*/}
+          {account.isLoggedIn() && (
+            <Box mb={5}>
+              <Flex w={"100%"}>
+                <Box w={"100%"} mr={4}>
                   <Button
+                    w={"100%"}
                     onClick={handleLikeClick}
                     leftIcon={
                       <FontAwesomeIcon
@@ -190,83 +242,44 @@ export function ProductDetails() {
                   >
                     {like.count}
                   </Button>
-                </Flex>
-                <Flex alignItems="center" mr={4}>
-                  <FontAwesomeIcon icon={faEye} size="lg" />
-                  <Box ml={2}>{product.viewCount}</Box>
-                </Flex>
-                <Flex>
-                  <ReportButton userId={product.userId} />
-                </Flex>
+                </Box>
+
+                {!product.status ||
+                  !account.isLoggedIn() ||
+                  account.hasAccess(product.userId) || (
+                    <Box w={"100%"} mr={4}>
+                      <Button colorScheme="green" w="100%" onClick={onOpen}>
+                        참여하기
+                      </Button>
+                    </Box>
+                  )}
+                {(product.status && !account.isLoggedIn()) ||
+                  account.hasAccess(product.userId) || (
+                    <Box w={"100%"} mr={4}>
+                      <Button
+                        colorScheme="teal"
+                        w="100%"
+                        leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
+                        onClick={handleEnterChatRoom}
+                      >
+                        문의하기
+                      </Button>
+                    </Box>
+                  )}
               </Flex>
             </Box>
           )}
 
-          {/*내 상품 일 때 */}
-          {!account.isLoggedIn() ||
-            (account.hasAccess(product.userId) && (
-              <Flex mb={5} alignItems="center" justifyContent="space-evenly">
-                <Flex>
-                  <Text mr={3}>찜</Text>
-                  <Box>{like.count}</Box>
-                </Flex>
-                <Flex alignItems="center" ml={10}>
-                  <FontAwesomeIcon icon={faEye} size="lg" />
-                  <Box ml={2}>{product.viewCount}</Box>
-                </Flex>
-              </Flex>
-            ))}
-
-          <Box mb={5} textAlign="center">
-            <Heading fontSize="2xl">{product.endTimeDetailsFormat}</Heading>
-          </Box>
-          <Box mb={5} textAlign="center">
-            <Heading color="skyblue">
-              현재 참여 인원 {product.numberOfJoin}명
-            </Heading>
-          </Box>
-
-          {/*판매 완료, 로그인이 안되어 있는 상태, 자신의 상품일 때 보이지 않음*/}
-          <Box mb={5}>
-            <Flex w={"100%"}>
-              {!product.status ||
-                !account.isLoggedIn() ||
-                account.hasAccess(product.userId) || (
-                  <Box w={"100%"} mr={4}>
-                    <Button colorScheme="green" w="100%" onClick={onOpen}>
-                      참여하기
-                    </Button>
-                  </Box>
-                )}
-              {product.status ||
-                !account.isLoggedIn() ||
-                account.hasAccess(product.userId) || (
-                  <Box w={"100%"} mr={4}>
-                    <Button
-                      colorScheme="teal"
-                      w="100%"
-                      leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
-                      onClick={handleEnterChatRoom}
-                    >
-                      문의하기
-                    </Button>
-                  </Box>
-                )}
-            </Flex>
-          </Box>
-
           {!account.isLoggedIn() ||
             (account.hasAccess(product.userId) && (
               <Box mb={5}>
-                {account.hasAccess(product.userId) && (
-                  <Button
-                    colorScheme="green"
-                    w="100%"
-                    onClick={() => navigate(`/edit/${product.id}`)}
-                  >
-                    상품수정
-                  </Button>
-                )}
+                <Button
+                  colorScheme="green"
+                  w="100%"
+                  onClick={() => navigate(`/edit/${product.id}`)}
+                >
+                  상품수정
+                </Button>
               </Box>
             ))}
         </Box>
@@ -281,7 +294,9 @@ export function ProductDetails() {
           </FormLabel>
           {product.content !== null && product.content !== "" ? (
             <Textarea
+              height={"300px"}
               readOnly
+              resize={"none"}
               defaultValue={product.content}
               whiteSpace="pre-wrap"
             />
