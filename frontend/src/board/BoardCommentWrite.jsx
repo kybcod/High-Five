@@ -39,6 +39,11 @@ export function BoardCommentWrite({ boardId, setIsProcessing, isProcessing }) {
       .finally(() => setIsProcessing(false));
   }
 
+  let disableSaveButton = false;
+  if (content.length === 0) {
+    disableSaveButton = true;
+  }
+
   return (
     <Box>
       <Flex>
@@ -52,7 +57,11 @@ export function BoardCommentWrite({ boardId, setIsProcessing, isProcessing }) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
-        <Button isLoading={isProcessing} onClick={handleClickComment}>
+        <Button
+          isDisabled={disableSaveButton}
+          isLoading={isProcessing}
+          onClick={handleClickComment}
+        >
           입력
         </Button>
       </Flex>

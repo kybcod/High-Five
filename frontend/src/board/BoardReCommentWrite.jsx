@@ -47,6 +47,11 @@ export function BoardReCommentWrite({
       });
   }
 
+  let disableSaveButton = false;
+  if (content.length === 0) {
+    disableSaveButton = true;
+  }
+
   return (
     <Flex>
       <Textarea
@@ -60,7 +65,12 @@ export function BoardReCommentWrite({
         onChange={(e) => setContent(e.target.value)}
       />
       <Stack>
-        <Button onClick={() => handleClickSave(boardComment.id)}>저장</Button>
+        <Button
+          isDisabled={disableSaveButton}
+          onClick={() => handleClickSave(boardComment.id)}
+        >
+          저장
+        </Button>
         <Button onClick={() => setShowReCommentId(null)}>취소</Button>
       </Stack>
     </Flex>
