@@ -1,8 +1,11 @@
 package com.backend.controller.question;
 
+import com.backend.domain.question.Faq;
+import com.backend.domain.question.FaqCategory;
 import com.backend.domain.question.Question;
 import com.backend.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,4 +89,14 @@ public class QuestionController {
         }
     }
 
+    @GetMapping("faq")
+    @Description("faq 카테고리")
+    public Map<String, Object> getFaq(@RequestParam(defaultValue = "all") String category) {
+        List<Faq> faqList = service.getFaq(category);
+        List<FaqCategory> categories = service.getAllCategories();
+        Map<String, Object> response = new HashMap<>();
+        response.put("faqList", faqList);
+        response.put("categories", categories);
+        return response;
+    }
 }

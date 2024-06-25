@@ -13,11 +13,11 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import axios from "axios";
-import { LoginContext } from "../component/LoginProvider.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 import { CommentWrite } from "./CommentWrite.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { CustomToast } from "../component/CustomToast.jsx";
+import { CustomToast } from "../../component/CustomToast.jsx";
 
 export function Comment({ comment, isProcessing, setIsProcessing }) {
   const account = useContext(LoginContext);

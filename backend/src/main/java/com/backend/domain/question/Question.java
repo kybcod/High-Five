@@ -24,6 +24,7 @@ public class Question {
     private Integer numberOfFiles;
     private Integer numberOfComments;
     private Boolean isNewBadge;
+    private Boolean secretWrite; //비밀글이면 TRUE, 아니면 FALSE
 
     public String getInserted() {
         LocalDateTime midnightToday = LocalDateTime.now().with(LocalTime.MIDNIGHT);

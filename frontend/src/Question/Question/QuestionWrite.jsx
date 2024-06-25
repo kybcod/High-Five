@@ -20,7 +20,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { CustomToast } from "../component/CustomToast.jsx";
+import { CustomToast } from "../../component/CustomToast.jsx";
 
 export function QuestionWrite() {
   const [title, setTitle] = useState("");
@@ -28,7 +28,7 @@ export function QuestionWrite() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
-  const [secretCheck, setSecretCheck] = useState(false);
+  const [secretWrite, setsecretWrite] = useState(false);
 
   const navigate = useNavigate();
 
@@ -39,6 +39,7 @@ export function QuestionWrite() {
         title,
         content,
         files,
+        secretWrite,
       })
       .then(() => {
         successToast("게시글이 등록되었습니다");
@@ -68,11 +69,11 @@ export function QuestionWrite() {
     );
   }
 
-  function handleSecretCheck() {
-    setSecretCheck(!secretCheck);
+  function handlesecretWrite() {
+    setsecretWrite(!secretWrite);
   }
 
-  console.log(secretCheck);
+  console.log(secretWrite);
 
   return (
     <Box m={8}>
@@ -89,7 +90,7 @@ export function QuestionWrite() {
           ></Input>
         </FormControl>
       </Box>
-      <Checkbox isChecked={secretCheck} onChange={handleSecretCheck} mt={2}>
+      <Checkbox isChecked={secretWrite} onChange={handlesecretWrite} mt={2}>
         비밀글
       </Checkbox>
 

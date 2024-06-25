@@ -82,3 +82,72 @@ SET content='잘 안되시면 다시 글 남겨주세요',
     inserted=now()
 WHERE id = 47;
 
+ALTER TABLE question_board
+    ADD COLUMN secretWrite INT DEFAULT 0 NOT NULL;
+
+ALTER TABLE question_board
+    CHANGE COLUMN secretWrite secret_write BOOLEAN DEFAULT FALSE NOT NULL;
+
+
+ALTER TABLE question_board
+    MODIFY COLUMN secretWrite BOOLEAN DEFAULT false NOT NULL;
+
+desc question_board;
+
+DROP TABLE faq;
+
+CREATE TABLE faqCategory
+(
+    id   INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE faq
+(
+    id       INT PRIMARY KEY AUTO_INCREMENT,
+    category INT,
+    title    VARCHAR(200)  NOT NULL,
+    content  VARCHAR(2000) NOT NULL,
+    FOREIGN KEY (category) REFERENCES faqCategory (id)
+);
+
+INSERT INTO faqCategory (name)
+VALUES ('기타');
+
+desc faqCategory;
+
+INSERT INTO faq (category, title, content)
+VALUES ((SELECT id FROM faqCategory WHERE name = '경매/입찰/결제'),
+        '경매에 참여하고 싶어요',
+        '원하는 상품을 클릭한 후 "참여하기" 버튼을 클릭하여 입찰 금액을 적습니다.\n입찰 금액은 입찰 시작가 보다 높아야 합니다.');
+
+INSERT INTO faq(category, title, content)
+VALUES ((SELECT id FROM faqCategory WHERE name = '경매/입찰/결제'),
+        '경매에 참여하고 싶어요',
+        '원하는 상품을 클릭한 후 "참여하기" 버튼을 클릭하여 입찰 금액을 적습니다.\n입찰 금액은 입찰 시작가 보다 높아야 합니다.');
+
+INSERT INTO faq(category, title, content)
+VALUES ((SELECT id FROM faqCategory WHERE name = '경매/입찰/결제'),
+        '낙찰 여부를 알고 싶습니다',
+        '경매 마감시간 이후 마이페이지에서 낙찰 여부를 확인하실 수 있습니다.\n오른쪽 상단 프로필 사진 > 입찰 내역 에서 낙찰 확인이 가능합니다.');
+
+INSERT INTO faq(category, title, content)
+VALUES ((SELECT id FROM faqCategory WHERE name = '경매/입찰/결제'),
+        '결제는 어떻게 하나요?',
+        '낙찰이 되면 채팅방에서 결제하기 버튼을 눌러 결제를 진행합니다.');
+
+INSERT INTO faq(category, title, content)
+VALUES ((SELECT id FROM faqCategory WHERE name = '경매톡'),
+        '경매톡은 무엇인가요?',
+        '채팅방은 판매자와 1:1 소통이 가능한 곳입니다.\n입찰 여부와 관계없이 판매자와 대화가 가능하니 궁금한 내용을 질문해보세요.');
+
+INSERT INTO faq(category, title, content)
+VALUES ((SELECT id FROM faqCategory WHERE name = '경매톡'),
+        '판매자와 채팅은 어떻게 하나요?',
+        '상품 상세페이지에서 "문의하기" 버튼을 눌러주세요.\n해당 버튼을 누르면 판매자와 채팅할 수 있는 채팅방으로 이동합니다.');
+
+INSERT INTO faq(category, title, content)
+VALUES ((SELECT id FROM faqCategory WHERE name = '회원'),
+        '악성유저를 신고하고 싶어요',
+        '해당 유저가 판매하는 상품의 상세페이지에서 "신고하기" 버튼을 눌러주세요.\n해당 유저의 마이페이지에서도 신고가 가능합니다');
+

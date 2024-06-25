@@ -25,11 +25,10 @@ import {
   faAnglesLeft,
   faAnglesRight,
   faCamera,
-  faComment,
   faLock,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { LoginContext } from "../component/LoginProvider.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
@@ -37,7 +36,6 @@ export function QuestionList() {
   const [searchType, setSearchType] = useState("titleNick");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
-  const [secretCheck, setSecretCheck] = useState(false);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
 
@@ -79,7 +77,11 @@ export function QuestionList() {
   }
 
   const handleSecretTextClick = (question) => {
-    if (secretCheck && !account.hasAccess(question.userId)) {
+    if (
+      question.secretWrite &&
+      !account.isAdmin(account.userId) &&
+      !account.hasAccess(question.userId)
+    ) {
       alert("비밀글에 접근할 권한이 없습니다.");
     } else {
       navigate(`/question/${question.id}`);
@@ -87,60 +89,103 @@ export function QuestionList() {
   };
 
   return (
-    <Box>
+    <>
       <Box mt={5} mb={5}>
         <Heading onClick={() => navigate("/question/list")} cursor={"pointer"}>
           문의 게시판
         </Heading>
       </Box>
       <Box mb={7}>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th>No.</Th>
-              <Th>제목</Th>
-              <Th>작성자</Th>
-              <Th>조회수</Th>
-              <Th>작성일시</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {questionList.map((question) => (
-              <Tr
-                _hover={{ bgColor: "gray.300" }}
-                cursor={"pointer"}
-                onClick={() => handleSecretTextClick(question)}
-                key={question.id}
-              >
-                <Td>{question.id}</Td>
-                <Td>
-                  <Flex gap={2}>
-                    {secretCheck && <FontAwesomeIcon icon={faLock} />}
-                    {question.title}
-                    {question.isNewBadge && (
-                      <Badge colorScheme="green">New</Badge>
-                    )}
-                    {question.numberOfFiles > 0 && (
-                      <Box ml={2}>
-                        <FontAwesomeIcon icon={faCamera} />
-                        {question.numberOfFiles}
-                      </Box>
-                    )}
-                    {question.numberOfComments > 0 && (
-                      <Box ml={2}>
-                        <FontAwesomeIcon icon={faComment} />
-                        {question.numberOfComments}
-                      </Box>
-                    )}
-                  </Flex>
-                </Td>
-                <Td>{question.nickName}</Td>
-                <Td>{question.numberOfCount}</Td>
-                <Td>{question.inserted}</Td>
+        {questionList.length === 0 && (
+          <Center m={20}>조회 결과가 없습니다.</Center>
+        )}
+        {questionList.length > 0 && (
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>No.</Th>
+                <Th>제목</Th>
+                <Th textAlign="center">답변상태</Th>
+                <Th textAlign="center">작성자</Th>
+                <Th textAlign="center">조회수</Th>
+                <Th textAlign="center">작성일시</Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody>
+              {questionList.map((question) => (
+                <Tr
+                  _hover={{ bgColor: "gray.300" }}
+                  cursor={"pointer"}
+                  onClick={() => handleSecretTextClick(question)}
+                  key={question.id}
+                >
+                  <Td width="10%">{question.id}</Td>
+                  <Td width="40%">
+                    <Flex gap={2}>
+                      {question.secretWrite && (
+                        <Box style={{ display: "flex", alignItems: "center" }}>
+                          <FontAwesomeIcon
+                            icon={faLock}
+                            style={{ marginRight: "4px" }}
+                          />
+                          <span style={{ color: "gray" }}>비밀글</span>
+                        </Box>
+                      )}
+                      {question.secretWrite || question.title}
+                      {question.isNewBadge && (
+                        <Badge colorScheme="green">New</Badge>
+                      )}
+                      {question.numberOfFiles > 0 && (
+                        <Box ml={2}>
+                          <FontAwesomeIcon
+                            icon={faCamera}
+                            style={{ marginRight: "2px" }}
+                          />
+                          {question.numberOfFiles}
+                        </Box>
+                      )}
+                      {question.numberOfComments > 0 && (
+                        <Box
+                          style={{
+                            color: "#ff354d",
+                            display: "flex",
+                            alignItems: "center",
+                            fontSize: "0.8rem",
+                            fontWeight: "600",
+                          }}
+                        >
+                          +{question.numberOfComments}
+                        </Box>
+                      )}
+                    </Flex>
+                  </Td>
+                  <Td width="15%" textAlign="center">
+                    {question.numberOfComments > 0 ? (
+                      <Box ml={2}>
+                        <Badge variant="outline" colorScheme="green">
+                          답변완료
+                        </Badge>
+                      </Box>
+                    ) : (
+                      <Box ml={2}>
+                        <Badge variant="outline">답변대기</Badge>
+                      </Box>
+                    )}
+                  </Td>
+                  <Td width="10%" textAlign="center">
+                    {question.nickName}
+                  </Td>
+                  <Td width="10%" textAlign="center" fontSize={"sm"}>
+                    {question.numberOfCount}
+                  </Td>
+                  <Td width="15%" textAlign="center" fontSize={"sm"}>
+                    {question.inserted}
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        )}
       </Box>
 
       <Center mb={3}>
@@ -222,7 +267,7 @@ export function QuestionList() {
         </Flex>
       </Center>
 
-      {account.isLoggedIn && (
+      {account.isLoggedIn() && (
         <Flex justify={"flex-end"} mr={10}>
           <Button
             colorScheme={"blue"}
@@ -232,6 +277,6 @@ export function QuestionList() {
           </Button>
         </Flex>
       )}
-    </Box>
+    </>
   );
 }

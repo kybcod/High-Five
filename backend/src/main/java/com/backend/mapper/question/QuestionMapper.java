@@ -1,5 +1,7 @@
 package com.backend.mapper.question;
 
+import com.backend.domain.question.Faq;
+import com.backend.domain.question.FaqCategory;
 import com.backend.domain.question.Question;
 import org.apache.ibatis.annotations.*;
 
@@ -9,7 +11,7 @@ import java.util.List;
 public interface QuestionMapper {
 
     @Insert("""
-            INSERT INTO question_board( title,content,user_id) VALUES (#{title},#{content},#{userId})
+            INSERT INTO question_board( title,content,user_id,secret_write) VALUES (#{title},#{content},#{userId},#{secretWrite})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Question question);
@@ -28,7 +30,7 @@ public interface QuestionMapper {
     List<Question> getList(Integer page);
 
     @Select("""
-            SELECT qb.id, qb.title, qb.content, qb.inserted, user.nick_name nickName, qb.user_id FROM question_board qb JOIN user ON qb.user_id = user.id WHERE qb.id = #{id}
+            SELECT qb.id, qb.title, qb.content, qb.inserted, user.nick_name nickName, qb.user_id, qb.secret_write FROM question_board qb JOIN user ON qb.user_id = user.id WHERE qb.id = #{id}
             """)
     Question selectById(Integer id);
 
@@ -39,7 +41,7 @@ public interface QuestionMapper {
 
     @Select("""
             <script>
-                SELECT qb.id, qb.title, user.nick_name as nickName, user.id as userId, qb.number_of_count, qb.inserted,
+                SELECT qb.id, qb.title, user.nick_name as nickName, user.id as userId, qb.number_of_count, qb.inserted, qb.secret_write,
                        qbf.numberOfFiles,
                        qbc.numberOfComments
                 FROM question_board qb
@@ -99,7 +101,7 @@ public interface QuestionMapper {
     void deleteByIdFile(Integer id);
 
     @Update("""
-            UPDATE question_board SET title=#{title}, content=#{content} WHERE id=#{id}
+            UPDATE question_board SET title=#{title}, content=#{content}, secret_write=#{secretWrite} WHERE id=#{id}
             """)
     void updateById(Question question);
 
@@ -112,4 +114,10 @@ public interface QuestionMapper {
             UPDATE question_board SET number_of_count = number_of_count+1 WHERE id=#{id}
             """)
     int updateCountById(Integer id);
+
+    @Select("SELECT * FROM faq WHERE category=#{category} OR #{category}='all'")
+    List<Faq> getFaqList(String category);
+
+    @Select("SELECT * FROM faqCategory")
+    List<FaqCategory> getAllCategories();
 }

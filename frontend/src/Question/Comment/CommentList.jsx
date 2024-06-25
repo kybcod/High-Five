@@ -72,6 +72,9 @@ export function CommentList({ questionId, isProcessing, setIsProcessing }) {
 
   return (
     <Box>
+      {commentList.length === 0 && (
+        <Box fontWeight={"500"}>댓글이 없습니다.</Box>
+      )}
       {commentList.length > 0 && (
         <Card>
           <CardBody>

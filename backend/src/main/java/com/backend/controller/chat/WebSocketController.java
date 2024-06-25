@@ -6,6 +6,7 @@ import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -20,6 +21,7 @@ public class WebSocketController {
     }
 
     @MessageMapping("/chat") // /app/chatroom
+    @PreAuthorize("isAuthenticated()")
     public void receiveMessage(Chat chat) throws Exception {
         String chatRoomId = String.valueOf(chat.getChatRoomId());
         // 메세지를 보낸 사용자에게 응답을 보냄(채팅 전송)

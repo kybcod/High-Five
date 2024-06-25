@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Checkbox,
   Flex,
   FormControl,
   FormHelperText,
@@ -15,14 +16,13 @@ import {
   Switch,
   Text,
   Textarea,
-  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import { CustomToast } from "../component/CustomToast.jsx";
+import { CustomToast } from "../../component/CustomToast.jsx";
 
 export function QuestionEdit() {
   const [question, setQuestion] = useState({});
@@ -44,6 +44,7 @@ export function QuestionEdit() {
         content: question.content,
         addFileList,
         removeFileList,
+        secretWrite: question.secretWrite,
       })
       .then(() => {
         successToast(`${id}번 게시물이 수정되었습니다.`);
@@ -81,18 +82,6 @@ export function QuestionEdit() {
     }
   }
 
-  // const fileNameList = [];
-  // for (let addFile of addFileList) {
-  //   fileNameList.push(
-  //     <Flex>
-  //       <Text fontSize={"md"} mr={3}>
-  //         {addFile.name}
-  //       </Text>
-  //       <Box></Box>
-  //     </Flex>,
-  //   );
-  // }
-
   return (
     <Box>
       <Box m={7}>
@@ -120,6 +109,15 @@ export function QuestionEdit() {
           </Flex>
         </Box>
 
+        <Checkbox
+          ml={7}
+          onChange={(e) =>
+            setQuestion({ ...question, secretWrite: e.target.checked })
+          }
+          isChecked={question.secretWrite}
+        >
+          비밀글
+        </Checkbox>
         <Box m={7}>
           <FormControl>
             <FormLabel>문의 상세내용</FormLabel>
