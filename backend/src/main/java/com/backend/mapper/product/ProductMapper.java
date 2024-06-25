@@ -146,10 +146,6 @@ public interface ProductMapper {
     int selectCountLikeByProductId(Integer id);
 
 
-    @Delete("DELETE FROM product_like WHERE product_id=#{productId}")
-    int deleteLikeByProductId(Integer productId);
-
-
     @Select("""
             SELECT p.id,
                    p.title,
@@ -266,9 +262,6 @@ public interface ProductMapper {
             WHERE id=#{userId}
             """)
     String selectUserNickName(Integer userId);
-
-    @Delete("DELETE FROM bid_list WHERE product_id=#{productId}")
-    int deleteBidListByProductId(Integer productId);
 
     @Delete("DELETE FROM chat_room WHERE product_id=#{productId}")
     int deleteChatRoomByProductId(Integer productId);
