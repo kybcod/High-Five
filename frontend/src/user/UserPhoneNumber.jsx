@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   FormControl,
-  FormHelperText,
   FormLabel,
   Input,
   InputGroup,
@@ -64,9 +63,6 @@ export function UserPhoneNumber() {
             )}
           </InputRightElement>
         </InputGroup>
-        <FormHelperText>
-          휴대폰 번호는 010과 (-)를 제외한 숫자만 입력해주세요 ex)11112222
-        </FormHelperText>
       </FormControl>
       <FormControl>
         <FormLabel>인증번호 입력</FormLabel>

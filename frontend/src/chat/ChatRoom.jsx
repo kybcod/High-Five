@@ -71,6 +71,7 @@ export function ChatRoom() {
     axios
       .get(`/api/chats/products/${productId}/buyer/${buyerId}`)
       .then((res) => {
+        console.log(res.data);
         const { user, seller, product, chatRoom, bidder, previousChatList } =
           res.data;
         if (res.data != null) {
@@ -101,7 +102,7 @@ export function ChatRoom() {
   // -- stomp
   useEffect(() => {
     const client = new StompJs.Client({
-      brokerURL: "ws://localhost:8080/ws",
+      brokerURL: "http://localhost:8080/ws",
       // connectHeaders: {
       //   login: "user",
       //   passcode: "password",

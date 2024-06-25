@@ -60,9 +60,9 @@ public interface ChatMapper {
             UPDATE chat
             SET read_check = TRUE
             WHERE chat_room_id = #{id}
-                AND user_id != #{userId} 
+                AND user_id != #{tokenUserId} 
                 AND read_check = FALSE
             ORDER BY id DESC
             """)
-    int updateReadCheck(ChatRoom chatRoom);
+    int updateReadCheck(Integer id, Integer tokenUserId);
 }
