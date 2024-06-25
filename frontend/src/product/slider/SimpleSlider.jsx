@@ -71,7 +71,7 @@ function SimpleSlider({ images, isBrightness }) {
   return (
     <Slider {...settings}>
       {images.map((file, index) => (
-        <Box key={index} position="relative" width="100%" height="300px">
+        <Box key={index} position="relative" width="100%" height="500px">
           <Image
             src={file.filePath}
             className="slick-custom-image"
