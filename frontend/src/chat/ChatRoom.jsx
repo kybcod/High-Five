@@ -126,7 +126,7 @@ export function ChatRoom() {
     });
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    // client.activate(); // 활성화
+    client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
@@ -426,7 +426,7 @@ export function ChatRoom() {
             h={"500px"}
             spacing={4}
             flex={1}
-            flexDirection={"column-reverse"}
+            // flexDirection={"column-reverse"}
             overflowY={"auto"}
             w={"full"}
           >
@@ -457,7 +457,7 @@ export function ChatRoom() {
                     <Text p={1}>{msg.message}</Text>
                   </Box>
                   <Text fontSize="xs" color="gray.500">
-                    {msg.inserted}
+                    {msg.readCheck !== true && "전송됨"} {msg.inserted}
                   </Text>
                 </Flex>
               </Flex>
