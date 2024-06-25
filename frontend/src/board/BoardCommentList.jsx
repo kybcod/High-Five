@@ -71,11 +71,11 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   }
 
   return (
-    <Card>
-      <CardBody>
-        {boardCommentList &&
-          boardCommentList.length > 0 &&
-          boardCommentList.map((boardComment) => (
+    boardCommentList &&
+    boardCommentList.length > 0 && (
+      <Card>
+        <CardBody>
+          {boardCommentList.map((boardComment) => (
             <Stack key={boardComment.id}>
               {boardComment.refId === 0 && (
                 <Box>
@@ -178,7 +178,8 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                 ))}
             </Stack>
           ))}
-      </CardBody>
-    </Card>
+        </CardBody>
+      </Card>
+    )
   );
 }
