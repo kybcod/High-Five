@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -68,7 +71,7 @@ public class ChatService {
         System.out.println("success = " + success);
 
         List<Chat> previousChatList = mapper.selectChatListByChatRoomId(chatRoom.getId());
-        Collections.reverse(previousChatList);
+//        Collections.reverse(previousChatList);
         result.put("previousChatList", previousChatList);
 
 
