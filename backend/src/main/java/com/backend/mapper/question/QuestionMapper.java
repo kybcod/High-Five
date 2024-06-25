@@ -1,5 +1,6 @@
 package com.backend.mapper.question;
 
+import com.backend.domain.question.Faq;
 import com.backend.domain.question.Question;
 import org.apache.ibatis.annotations.*;
 
@@ -112,4 +113,9 @@ public interface QuestionMapper {
             UPDATE question_board SET number_of_count = number_of_count+1 WHERE id=#{id}
             """)
     int updateCountById(Integer id);
+
+    @Select("""
+            SELECT * FROM faq
+            """)
+    List<Faq> getFaqList();
 }

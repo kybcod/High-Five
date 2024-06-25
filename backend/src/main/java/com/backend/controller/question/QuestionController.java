@@ -1,8 +1,10 @@
 package com.backend.controller.question;
 
+import com.backend.domain.question.Faq;
 import com.backend.domain.question.Question;
 import com.backend.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -83,6 +85,12 @@ public class QuestionController {
         } else {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("faq")
+    @Description("faq 카테고리")
+    public List<Faq> getFaq() {
+        return service.getFaq();
     }
 
 }

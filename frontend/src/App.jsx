@@ -36,6 +36,7 @@ import { Payment } from "./pay/Payment.jsx";
 import { UserAuthSuccess } from "./user/UserAuthSuccess.jsx";
 import { SignupPhoneNumber } from "./user/SignupPhoneNumber.jsx";
 import { theme } from "./Theme.jsx";
+import { FAQ } from "./Question/FAQ.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -71,6 +72,7 @@ const router = createBrowserRouter([
       { path: "question/list", element: <QuestionList /> },
       { path: "question/:id", element: <QuestionView /> },
       { path: "question/edit/:id", element: <QuestionEdit /> },
+      { path: "question/faq", element: <FAQ /> },
 
       //board
       { path: "board", element: <BoardWrite /> },
