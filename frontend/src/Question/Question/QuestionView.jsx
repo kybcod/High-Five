@@ -26,10 +26,10 @@ import {
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { LoginContext } from "../component/LoginProvider.jsx";
-import { CommentComponent } from "./CommentComponent.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
+import { CommentComponent } from "../Comment/CommentComponent.jsx";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { CustomToast } from "../component/CustomToast.jsx";
+import { CustomToast } from "../../component/CustomToast.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 

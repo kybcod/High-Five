@@ -20,7 +20,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { CustomToast } from "../component/CustomToast.jsx";
+import { CustomToast } from "../../component/CustomToast.jsx";
 
 export function QuestionWrite() {
   const [title, setTitle] = useState("");

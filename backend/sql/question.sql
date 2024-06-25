@@ -93,3 +93,11 @@ ALTER TABLE question_board
     MODIFY COLUMN secretWrite BOOLEAN DEFAULT false NOT NULL;
 
 desc question_board;
+
+CREATE TABLE FAQ
+(
+    id       INT PRIMARY KEY AUTO_INCREMENT,
+    category VARCHAR(10)   NOT NULL,
+    title    VARCHAR(200)  NOT NULL,
+    content  VARCHAR(2000) NOT NULL
+)

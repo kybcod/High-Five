@@ -22,7 +22,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import { CustomToast } from "../component/CustomToast.jsx";
+import { CustomToast } from "../../component/CustomToast.jsx";
 
 export function QuestionEdit() {
   const [question, setQuestion] = useState({});
