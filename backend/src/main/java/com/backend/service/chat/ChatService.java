@@ -64,8 +64,9 @@ public class ChatService {
 
         // -- 이전 ChatData
         // read_check TRUE 변경
-        int success = mapper.updateReadCheck(chatRoom);
-        
+        int success = mapper.updateReadCheck(chatRoom.getId(), tokenUserId);
+        System.out.println("success = " + success);
+
         List<Chat> previousChatList = mapper.selectChatListByChatRoomId(chatRoom.getId());
         Collections.reverse(previousChatList);
         result.put("previousChatList", previousChatList);
@@ -73,19 +74,44 @@ public class ChatService {
 
         // userName 추가
         User user = userMapper.selectUserById(chatRoom.getUserId());
+        if (user == null) {
+            User newUser = new User();
+            user.setId(chatRoom.getUserId());
+            user.setNickName("탈퇴한 회원");
+            user = newUser;
+        }
         result.put("user", user.getUserIdAndNickName());
+
         // sellerName 추가
         user = userMapper.selectUserById(chatRoom.getSellerId());
+        if (user == null) {
+            User newUser = new User();
+            user.setId(chatRoom.getSellerId());
+            user.setNickName("탈퇴한 회원");
+            user = newUser;
+        }
         result.put("seller", user.getUserIdAndNickName());
+
 
         // -- product
         // status = false (판매종료), reivewStatus = true (후기 등록됨)
         Product product = productMapper.selectChatProductInfo(productId);
-        if (product.getStatus() == false) {
-            // 판매 종료 상품 입찰자 아이디 받아오기
-            buyerId = auctionMapper.selectBuyerIdByProductId(productId);
+        if (product != null) {
+            if (product.getStatus() == false) {
+                // 판매 종료 상품 입찰자 아이디 받아오기
+                buyerId = auctionMapper.selectBuyerIdByProductId(productId);
+            } else {
+                // 없으면 0
+                buyerId = 0;
+            }
         } else {
-            // 없으면 0
+            Product newProduct = new Product();
+            newProduct.setId(0);
+            newProduct.setReviewStatus(false);
+            newProduct.setTitle("삭제된 상품입니다.");
+            newProduct.setPaymentStatus(false);
+            newProduct.setStatus(false);
+            product = newProduct;
             buyerId = 0;
         }
         Map<String, Object> productMap = product.getProductStatusInfo();
