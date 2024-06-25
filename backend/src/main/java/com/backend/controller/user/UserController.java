@@ -92,11 +92,11 @@ public class UserController {
     public ResponseEntity login(@RequestBody User user) {
 
         Map<String, Object> token = service.issueToken(user);
-        if (token == null) {
+        if (token.get("token") == null) {
+            if (token.get("message") != null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             return ResponseEntity.notFound().build();
-        }
-        if (token.get("message") != null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         return ResponseEntity.ok(token);

@@ -71,8 +71,8 @@ SELECT *
 FROM code;
 
 SELECT *
-FROM user_file;
+FROM user;
 
-DELETE
-FROM user
-WHERE id = 72;
+UPDATE user
+SET black_count = 0
+WHERE id = 57;
