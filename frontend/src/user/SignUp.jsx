@@ -16,6 +16,7 @@ import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
+import SignupButton from "./SignupButton.jsx";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ export function SignUp() {
   const { successToast, errorToast } = CustomToast();
   const codeInfo = useContext(SignupCodeContext);
   const navigate = useNavigate();
+  const [isAllChecked, setIsAllChecked] = useState(false);
 
   function handleSignUp() {
     setIsLoading(true);
@@ -85,7 +87,6 @@ export function SignUp() {
     /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
 
   let isValidPassword = false;
-  let isAllChecked = false;
   if (passwordPattern.test(password)) {
     isValidPassword = true;
   }
@@ -249,7 +250,10 @@ export function SignUp() {
           <FormHelperText>닉네임은 10자까지 작성 가능합니다</FormHelperText>
         </FormControl>
         <UserPhoneNumber />
-        {/*<SignupButton isAllChecked={isAllChecked} />*/}
+        <SignupButton
+          isAllChecked={isAllChecked}
+          setIsAllChecked={setIsAllChecked}
+        />
         <Center mt={10}>
           <Button
             height="60px"
