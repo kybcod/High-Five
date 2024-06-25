@@ -129,6 +129,12 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                         </Text>
                       </Box>
                     )}
+                    <Spacer />
+                    <Box>
+                      <Text>{boardComment.inserted}</Text>
+                    </Box>
+                  </Flex>
+                  <Box>
                     {showReCommentId === boardComment.id && (
                       <BoardReCommentWrite
                         boardComment={boardComment}
@@ -137,11 +143,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                         refId={boardComment.id}
                       />
                     )}
-                    <Spacer />
-                    <Box>
-                      <Text>{boardComment.inserted}</Text>
-                    </Box>
-                  </Flex>
+                  </Box>
                 </Box>
               )}
               {boardCommentList
@@ -200,6 +202,12 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                           </Text>
                         </Box>
                       )}
+                      <Spacer />
+                      <Box>
+                        <Text>{subComment.inserted}</Text>
+                      </Box>
+                    </Flex>
+                    <Box>
                       {showReCommentId === subComment.id && (
                         <BoardReCommentWrite
                           boardComment={subComment}
@@ -208,11 +216,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                           refId={subComment.refId}
                         />
                       )}
-                      <Spacer />
-                      <Box>
-                        <Text>{subComment.inserted}</Text>
-                      </Box>
-                    </Flex>
+                    </Box>
                   </Box>
                 ))}
             </Stack>

@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Stack, Textarea } from "@chakra-ui/react";
+import { Button, Flex, Stack, Textarea } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
@@ -21,7 +21,7 @@ export function BoardReCommentWrite({
     }
   }, [account]);
 
-  function handleClickSave(id) {
+  function handleClickSave() {
     setIsProcessing(true);
     axios
       .post(`/api/board/comment`, {
@@ -35,6 +35,7 @@ export function BoardReCommentWrite({
       .then(() => {
         successToast("답글이 작성되었습니다");
         setContent("");
+        setShowReCommentId(null);
       })
       .catch((err) => {
         if (err.response.status === 400) {
@@ -47,23 +48,21 @@ export function BoardReCommentWrite({
   }
 
   return (
-    <Box>
-      <Flex>
-        <Textarea
-          isDisabled={!account.isLoggedIn()}
-          placeholder={
-            account.isLoggedIn()
-              ? "답글을 작성해 보세요"
-              : "답글을 작성하시려면 로그인 하세요"
-          }
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        <Stack>
-          <Button onClick={() => handleClickSave(boardComment.id)}>저장</Button>
-          <Button onClick={() => setShowReCommentId(null)}>취소</Button>
-        </Stack>
-      </Flex>
-    </Box>
+    <Flex>
+      <Textarea
+        isDisabled={!account.isLoggedIn()}
+        placeholder={
+          account.isLoggedIn()
+            ? "답글을 작성해 보세요"
+            : "답글을 작성하시려면 로그인 하세요"
+        }
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+      <Stack>
+        <Button onClick={() => handleClickSave(boardComment.id)}>저장</Button>
+        <Button onClick={() => setShowReCommentId(null)}>취소</Button>
+      </Stack>
+    </Flex>
   );
 }
