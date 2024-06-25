@@ -7,7 +7,6 @@ function SignupButton({ isAllChecked, setIsAllChecked }) {
   useEffect(() => {
     const allChecked = checkedItems.every(Boolean);
     setIsAllChecked(allChecked);
-    console.log(allChecked);
   }, [checkedItems]);
 
   const handleAllCheckedChange = (e) => {
