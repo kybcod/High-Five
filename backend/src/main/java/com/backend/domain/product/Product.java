@@ -64,7 +64,7 @@ public class Product {
     }
 
     public String getEndTimeDetailsFormat() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 까지");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시");
         return endTime.format(formatter);
     }
 
