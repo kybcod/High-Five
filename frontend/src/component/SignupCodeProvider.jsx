@@ -39,7 +39,8 @@ export function SignupCodeProvider({ children }) {
   }
 
   function handleInputPhoneNumber(input) {
-    input.replace(/[-\s]/g, "");
+    const prefix = "010-";
+    input = prefix + input.substring(prefix.length);
     setPhoneNumber(input);
     setIsCheckedCode(false);
   }
