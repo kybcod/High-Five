@@ -52,4 +52,4 @@ WHERE comment_id = 1;
 
 DELETE
 FROM board_comment
-WHERE board_id = 65;
+WHERE board_id = 45;

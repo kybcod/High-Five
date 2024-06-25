@@ -74,6 +74,10 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
     setShowReCommentId(id);
   }
 
+  const measureDepth = (depth) => {
+    return `${depth * 10}px`;
+  };
+
   return (
     boardCommentList &&
     boardCommentList.length > 0 && (
@@ -143,7 +147,11 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
               {boardCommentList
                 .filter((subComment) => subComment.refId === boardComment.id)
                 .map((subComment) => (
-                  <Box key={subComment.commentId} ml="5" width="90%">
+                  <Box
+                    key={subComment.commentSeq}
+                    style={{ marginLeft: measureDepth(subComment.commentId) }}
+                    width="90%"
+                  >
                     {isEditingId === subComment.id || (
                       <Flex>
                         <Text>{subComment.nickName}</Text>
