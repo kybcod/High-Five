@@ -396,27 +396,29 @@ export function ChatRoom() {
         </Flex>
       </Box>
       <Box border={"1px solid green"}>
-        <Flex>
-          <Box
-            cursor={"pointer"}
-            onClick={() => navigate(`/product/${data.product.id}`)}
+        <Stack direction={"row"} align={"center"}>
+          <Button
             w={"80%"}
-            border={"1px solid blue"}
+            variant="link"
+            isDisabled={
+              data.product.title == "삭제된 상품입니다." ? true : false
+            }
+            onClick={() => navigate(`/product/${data.product.id}`)}
           >
-            <Text>{data.product.title}</Text>
-          </Box>
-          <Box w={"20%"} border={"1px solid red"}>
-            {/* 상품 상태 */}
-            {buttonConfig && (
-              <Button
-                onClick={buttonConfig.action}
-                isDisabled={buttonConfig.disabled}
-              >
-                {buttonConfig.label}
-              </Button>
-            )}
-          </Box>
-        </Flex>
+            {data.product.title}
+          </Button>
+          {/* 상품 상태 */}
+          {buttonConfig && (
+            <Button
+              w={"20%"}
+              variant="ghost"
+              onClick={buttonConfig.action}
+              isDisabled={buttonConfig.disabled}
+            >
+              {buttonConfig.label}
+            </Button>
+          )}
+        </Stack>
       </Box>
       <Box>
         <Box>
