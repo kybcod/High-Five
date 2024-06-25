@@ -37,3 +37,11 @@ FROM chat_room;
 SELECT *
 FROM chat;
 
+# 읽음 여부 컬럼 생성
+ALTER TABLE chat
+    ADD read_check BOOLEAN NOT NULL DEFAULT FALSE;
+
+# 이전 데이터 읽음으로 변경
+UPDATE chat
+SET read_check = TRUE
+WHERE read_check = FALSE;
