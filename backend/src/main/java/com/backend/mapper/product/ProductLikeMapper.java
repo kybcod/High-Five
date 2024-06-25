@@ -23,4 +23,7 @@ public interface ProductLikeMapper {
 
     @Select("SELECT COUNT(*) FROM product_like WHERE product_id=#{productId}")
     int selectCountLikeByProductId(Integer id);
+
+    @Delete("DELETE FROM product_like WHERE product_id=#{productId}")
+    int deleteLikeByProductId(Integer productId);
 }

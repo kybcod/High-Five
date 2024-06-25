@@ -1,9 +1,11 @@
 package com.backend.mapper.review;
 
 import com.backend.domain.review.Review;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.context.annotation.Description;
 
 import java.util.List;
 import java.util.Map;
@@ -33,4 +35,9 @@ public interface ReviewMapper {
             SELECT * FROM review_list WHERE id = #{id}
             """)
     Map<String, Object> selectReviewListById(Integer id);
+
+
+    @Description("상품 삭제 시 리뷰 삭제")
+    @Delete("DELETE FROM review WHERE product_id=#{productId} ")
+    Integer deleteReviewByProductId(Integer productId);
 }
