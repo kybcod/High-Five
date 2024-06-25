@@ -37,6 +37,7 @@ import { UserAuthSuccess } from "./user/oauth/UserAuthSuccess.jsx";
 import { SignupPhoneNumber } from "./user/oauth/SignupPhoneNumber.jsx";
 import { theme } from "./Theme.jsx";
 import { FAQ } from "./Question/FAQ.jsx";
+import { Question } from "./Question/Question.jsx";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -68,11 +69,17 @@ const router = createBrowserRouter([
       { path: "signup/phone_number", element: <SignupPhoneNumber /> },
 
       //question
-      { path: "question/write", element: <QuestionWrite /> },
-      { path: "question/list", element: <QuestionList /> },
-      { path: "question/:id", element: <QuestionView /> },
-      { path: "question/edit/:id", element: <QuestionEdit /> },
-      { path: "question/faq", element: <FAQ /> },
+      {
+        path: "question/",
+        element: <Question />,
+        children: [
+          { path: "write", element: <QuestionWrite /> },
+          { path: "list", element: <QuestionList /> },
+          { path: ":id", element: <QuestionView /> },
+          { path: "edit/:id", element: <QuestionEdit /> },
+          { path: "faq", element: <FAQ /> },
+        ],
+      },
 
       //board
       { path: "board", element: <BoardWrite /> },
