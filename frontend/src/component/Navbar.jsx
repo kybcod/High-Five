@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
 import {
   faClipboardList,
-  faHome,
   faQuestionCircle,
   faSignInAlt,
   faSignOutAlt,
@@ -27,10 +26,6 @@ export function Navbar() {
       fontSize={"lg"}
       cursor={"pointer"}
     >
-      <Center onClick={() => navigate("/")} mx={2}>
-        <FontAwesomeIcon icon={faHome} />
-        <Text ml={2}>HOME</Text>
-      </Center>
       <Center onClick={() => navigate("/board/list")} mx={2}>
         <FontAwesomeIcon icon={faClipboardList} />
         <Text ml={2}>자유게시판</Text>
@@ -44,10 +39,12 @@ export function Navbar() {
         <Text ml={2}>QnA</Text>
       </Center>
 
-      <Center onClick={() => navigate("/user/list")} mx={2}>
-        <FontAwesomeIcon icon={faUsers} />
-        <Text ml={2}>USER LIST</Text>
-      </Center>
+      {account.isAdmin() && (
+        <Center onClick={() => navigate("/user/list")} mx={2}>
+          <FontAwesomeIcon icon={faUsers} />
+          <Text ml={2}>USER LIST</Text>
+        </Center>
+      )}
       <Spacer />
       {account.isLoggedIn() ? (
         <>

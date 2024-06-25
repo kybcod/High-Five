@@ -5,7 +5,6 @@ import {
   Box,
   Card,
   CardBody,
-  Center,
   Flex,
   Grid,
   GridItem,
@@ -31,7 +30,6 @@ export function MainProduct() {
   useEffect(() => {
     axios.get(`/api/products`).then((res) => {
       const products = res.data;
-      console.log(products);
       const initialLikes = products.reduce((acc, product) => {
         acc[product.id] = product.like || false;
         return acc;
@@ -74,11 +72,9 @@ export function MainProduct() {
     <Box>
       {/* 네브바, 헤더, 카테고리, 이미지 배너 등 추가 */}
       <Category />
-      <Center w="100%">
-        <Box mt={2} w="100%">
-          {/*<MainSlider />*/}
-        </Box>
-      </Center>
+      <Box mt={10} h="400px" w="100%" mb={10} boxSizing="border-box" mx="auto">
+        {/*<MainSlider />*/}
+      </Box>
       <Heading my={4}>오늘의 상품</Heading>
       <Grid
         templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(5, 1fr)" }}

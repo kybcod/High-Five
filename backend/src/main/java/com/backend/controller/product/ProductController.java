@@ -91,26 +91,18 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    // User와 Product 관련 Controller
+    // MyPage
     @GetMapping("user/{userId}")
-    @Description("상품조회 - 사용자별")
+    @Description("MyPage 판매 목록 : 상품조회 - 사용자별")
     public Map<String, Object> getUserProducts(@PathVariable Integer userId,
                                                @RequestParam(defaultValue = "1") int page) {
         return service.getProductsByUserId(userId, PageRequest.of(page - 1, 9));
     }
 
-    // MyPage
     @GetMapping("user/{userId}/like")
-    @Description("상품조회 + 좋아요 - 사용자별")
+    @Description("MyPage 찜 목록 : 상품조회 + 좋아요 - 사용자별")
     public Map<String, Object> getUserProductsLike(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page) {
         return service.getProductsLikeByUserId(userId, PageRequest.of(page - 1, 9));
     }
 
-
-// TODO: 코드 정리
-
-//    @GetMapping("/test/{id}")
-//    public ProductListResponse getProductById(@PathVariable Integer id, Authentication authentication) {
-//        return service.getById(id, authentication);
-//    }
 }
