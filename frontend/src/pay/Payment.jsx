@@ -9,12 +9,11 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function Payment() {
   const { userId, productId } = useParams();
   const [product, setProduct] = useState(null);
-  const [bidList, setBidList] = useState(null);
   const [merchantUid, setMerchantUid] = useState("");
   const [amount, setAmount] = useState(0);
   const [name, setName] = useState("");
@@ -22,6 +21,7 @@ export function Payment() {
   const [buyerTel, setBuyerTel] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
   const [bidListId, setBidListId] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const iamport = document.createElement("script");
@@ -88,14 +88,16 @@ export function Payment() {
       const { success, error_msg } = response;
 
       if (success) {
-        //post 요청 : payment (merchant_uid, bid_id, 결제 상태 : true)
         axios
           .post(`/api/payments`, {
             merchantUid,
             amount,
             bidListId,
           })
-          .then(() => alert(`결제 성공 : ${merchantUid}`));
+          .then(() => {
+            navigate(`/chat/product/${product.id}/buyer/${product.userId}`);
+            alert(`결제 성공 : ${merchantUid}`);
+          });
       } else {
         alert(`결제 실패: ${error_msg}, ${merchantUid}`);
       }

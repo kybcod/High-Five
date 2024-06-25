@@ -20,6 +20,21 @@ export function ProductUpload() {
 
   function handleUploadClick() {
     setLoading(true);
+
+    const currentDateTime = new Date();
+    const selectedDateTime = new Date(`${date}T${time}`);
+    if (selectedDateTime < currentDateTime) {
+      toast({
+        status: "warning",
+        description:
+          "선택한 시간이 현재 시간보다 이전입니다. 다시 선택해주세요.",
+        position: "top-right",
+        duration: 3000,
+      });
+      setLoading(false);
+      return;
+    }
+
     if (files.length === 0) {
       toast({
         status: "warning",
@@ -53,10 +68,10 @@ export function ProductUpload() {
       return;
     }
 
-    if (!date || !time) {
+    if (!startPrice) {
       toast({
         status: "warning",
-        description: "입찰 마감 시간을 입력해주세요.",
+        description: "입찰 시작가를 입력해주세요.",
         position: "top-right",
         duration: 3000,
       });
@@ -64,10 +79,10 @@ export function ProductUpload() {
       return;
     }
 
-    if (!startPrice) {
+    if (!date || !time) {
       toast({
         status: "warning",
-        description: "입찰 시작가를 입력해주세요.",
+        description: "입찰 마감 시간을 입력해주세요.",
         position: "top-right",
         duration: 3000,
       });

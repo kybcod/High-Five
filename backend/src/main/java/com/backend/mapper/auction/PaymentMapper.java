@@ -30,8 +30,8 @@ public interface PaymentMapper {
     Map<String, Object> selectPaymentInfo(Integer userId, Integer productId);
 
     @Insert("""
-            INSERT INTO payment (merchant_uid, amount, bid_list_id, paid_status)
-            VALUES (#{merchantUid}, #{amount}, #{bidListId}, #{paidStatus})
+            INSERT INTO payment (merchant_uid, amount, bid_list_id)
+            VALUES (#{merchantUid}, #{amount}, #{bidListId})
             """)
     int insert(Payment payment);
 

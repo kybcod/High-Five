@@ -23,7 +23,7 @@ public class UserController {
     private final AuthenticationConfiguration authenticationConfiguration;
 
     // user_id 멤버 상세
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     @GetMapping("users/{id}")
     public ResponseEntity getUser(@PathVariable Integer id) {
         User db = service.getUserByUserId(id);

@@ -83,15 +83,64 @@ export function MyShop() {
           {productList.map((product) => (
             <GridItem key={product.id}>
               <Card
+                cursor={"pointer"}
                 maxW="sm"
                 h="100%"
                 borderWidth="1px"
                 borderColor={"#eee"}
                 borderRadius="lg"
                 overflow="hidden"
+                boxShadow="md"
+                transition="transform 0.2s"
+                _hover={{ transform: "scale(1.05)" }}
               >
                 <CardBody position={"relative"} h={"100%"}>
+                  {/* 판매 상태 true 이면 endTime Badge */}
+                  {product.status && (
+                    <Badge
+                      position={"absolute"}
+                      top={"1"}
+                      left={"1"}
+                      colorScheme={"teal"}
+                    >
+                      {product.endTimeFormat}
+                    </Badge>
+                  )}
+                  {/* 판매 상태 false 이면 낙찰자 Badge */}
+                  {!product.status &&
+                    product.productBidList &&
+                    product.productBidList.length > 0 && (
+                      <Badge
+                        cursor={"pointer"}
+                        position={"absolute"}
+                        top={"1"}
+                        left={"1"}
+                        colorScheme={"purple"}
+                        onClick={() => {
+                          navigate(
+                            `/chat/product/${product.id}/buyer/${product.productBidList[0].successBidUserId}`,
+                          );
+                        }}
+                      >
+                        낙찰자 : {product.productBidList[0].successBidNickName}
+                      </Badge>
+                    )}
+                  {!product.status &&
+                    (!product.productBidList ||
+                      product.productBidList.length === 0) && (
+                      <Badge
+                        position={"absolute"}
+                        top={"1"}
+                        left={"1"}
+                        colorScheme={"purple"}
+                      >
+                        <Text>낙찰자가 없습니다.</Text>
+                      </Badge>
+                    )}
+
                   <Box mt={2} w="30%%">
+                    {/*판매 상태 true 이면 이미지*/}
+                    {/*판매 상태 False 이면 판매완료 이미지*/}
                     {product.status ? (
                       <>
                         {product.productFileList && (
@@ -103,14 +152,6 @@ export function MyShop() {
                             h={"200px"}
                           />
                         )}
-                        <Badge
-                          position={"absolute"}
-                          top={"1"}
-                          left={"1"}
-                          colorScheme={"teal"}
-                        >
-                          {product.endTimeFormat}
-                        </Badge>
                       </>
                     ) : (
                       <Box position={"relative"} w={"100%"} h={"200px"}>
@@ -183,7 +224,7 @@ export function MyShop() {
               더보기
             </Button>
           ) : (
-            productList.length > 10 && (
+            productList.length > 9 && (
               <Button
                 w={"30%"}
                 colorScheme={"blue"}

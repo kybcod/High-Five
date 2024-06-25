@@ -6,16 +6,8 @@ SHOW VARIABLES LIKE 'max_connections'; # 300
 SHOW VARIABLES LIKE 'wait_timeout'; #28800
 SET GLOBAL MAX_CONNECTIONS = 300;
 
-
 SELECT *
 FROM product_like;
-
-SELECT *
-FROM bid_list;
-
-SELECT *
-FROM bid_list
-WHERE product_id = 100;
 
 SELECT *
 FROM product;
@@ -29,15 +21,12 @@ FROM chat;
 SELECT *
 FROM chat_room;
 
-alter table product_file
-    modify id INT first;
+# 판매 종료 0
+SELECT *
+FROM payment;
 
-alter table product_file
-    auto_increment = 1;
+SELECT *
+FROM bid_list;
 
-alter table product_file
-    add constraint product_file_pk
-        primary key (id);
-
-alter table product_file
-    modify id INT auto_increment;
+SELECT *
+FROM payment;
