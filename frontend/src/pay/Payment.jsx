@@ -88,7 +88,6 @@ export function Payment() {
       const { success, error_msg } = response;
 
       if (success) {
-        //post 요청 : payment (merchant_uid, bid_id, 결제 상태 : true)
         axios
           .post(`/api/payments`, {
             merchantUid,
