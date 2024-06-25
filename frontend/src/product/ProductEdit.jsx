@@ -48,24 +48,21 @@ export function ProductEdit() {
 
   function handleUpdateClick() {
     const localDate = new Date(`${date}T${time}`);
-    localDate.setHours(localDate.getHours() + 9);
-    const formattedEndTime = localDate.toISOString().slice(0, -5);
-
-    // 오늘 시간
-    const today = new Date();
-
-    console.log("today", today);
-    console.log("localDate", localDate);
-
-    if (localDate < today) {
+    const currentDateTime = new Date();
+    if (localDate < currentDateTime) {
       toast({
         status: "warning",
-        description: "현재 시간 이후로 설정해주세요.",
+        description:
+          "선택한 시간이 현재 시간보다 이전입니다. 다시 선택해주세요.",
         position: "top-right",
         duration: 3000,
       });
+      setLoading(false);
       return;
     }
+
+    localDate.setHours(localDate.getHours() + 9);
+    const formattedEndTime = localDate.toISOString().slice(0, -5);
 
     setLoading(true);
 
