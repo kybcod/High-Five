@@ -53,3 +53,6 @@ WHERE board_id = 86;
 DELETE
 FROM board_comment
 WHERE board_id = 45;
+
+SELECT *
+FROM user_file;

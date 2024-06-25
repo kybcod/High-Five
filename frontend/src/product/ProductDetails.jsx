@@ -32,6 +32,7 @@ import {
   faCheckCircle,
   faCommentDots,
   faEye,
+  faHandHoldingUsd,
   faHeart as fullHeart,
   faMoneyBillAlt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -126,10 +127,10 @@ export function ProductDetails() {
   return (
     <Box>
       <Category />
-      <Divider my={6} borderColor="gray" />
+      <Divider my={10} borderColor="gray" />
 
-      <Flex mt={3} alignItems="flex-start">
-        <Box width="50%" mr={20} border={"1px solid black"}>
+      <Flex alignItems="flex-start">
+        <Box width="45%" mr={20} border={"1px solid black"}>
           <SimpleSlider
             images={existingFilePreviews}
             isBrightness={!product.status}
@@ -141,13 +142,23 @@ export function ProductDetails() {
             <>
               {product.maxBidPrice !== null ? (
                 <Box mb={5}>
-                  <Box fontWeight="bold" fontSize="3xl" color="red">
+                  <Box
+                    style={{ whiteSpace: "nowrap" }}
+                    fontWeight="bold"
+                    fontSize="3xl"
+                    color="red"
+                  >
                     낙찰 금액 : {formattedPrice(product.maxBidPrice)}원
                   </Box>
                 </Box>
               ) : (
                 <Box mb={5}>
-                  <Box fontWeight="bold" fontSize="3xl" color="red">
+                  <Box
+                    style={{ whiteSpace: "nowrap" }}
+                    fontWeight="bold"
+                    fontSize="3xl"
+                    color="red"
+                  >
                     낙찰된 금액이 없습니다.
                   </Box>
                 </Box>
@@ -155,24 +166,22 @@ export function ProductDetails() {
             </>
           )}
 
-          <Box mb={5}>
+          <Box mb={6}>
             <Heading style={{ whiteSpace: "nowrap" }}>{product.title}</Heading>
           </Box>
           <Box mb={5} justifyContent="space-between">
-            <Text fontSize="xl">{formattedPrice(product.startPrice)}원</Text>
+            <Text fontSize="2xl">{formattedPrice(product.startPrice)}원</Text>
           </Box>
 
-          <Divider mb={4} />
+          <Divider mb={6} />
 
           {/*다른 user의 상품 일 때*/}
-          <Box>
-            <Flex mb={5} justifyContent="space-evenly" alignItems="center">
+          <Box mb={6}>
+            <Flex justifyContent="space-evenly" alignItems="center">
               <Flex alignItems="center" mr={4}>
                 <Box mr={2}>찜</Box>
-                <Box
-                  leftIcon={<FontAwesomeIcon icon="fullHeart" size="lg" />}
-                  colorScheme={"red"}
-                >
+                <Box>
+                  <FontAwesomeIcon icon="fullHeart" size="lg" />
                   {like.count}
                 </Box>
               </Flex>
@@ -192,9 +201,13 @@ export function ProductDetails() {
             </Flex>
           </Box>
 
-          <List spacing={3}>
+          <List mb={10} spacing={3} fontSize="lg">
             <ListItem>
-              <ListIcon as={() => <FontAwesomeIcon icon={faCheckCircle} />} />{" "}
+              <ListIcon
+                as={() => (
+                  <FontAwesomeIcon icon={faCheckCircle} color="green" />
+                )}
+              />{" "}
               판매자 :{" "}
               <Box mb={5} display="inline-block">
                 <Text
@@ -208,28 +221,38 @@ export function ProductDetails() {
               </Box>
             </ListItem>
             <ListItem>
-              <ListIcon as={() => <FontAwesomeIcon icon={faCheckCircle} />} />{" "}
+              <ListIcon
+                as={() => (
+                  <FontAwesomeIcon icon={faCheckCircle} color="green" />
+                )}
+              />{" "}
               종료 시간 :{" "}
               <Box mb={5} display={"inline-block"}>
-                <Text fontSize="medium">{product.endTimeDetailsFormat}</Text>
+                <Text fontSize="xl">{product.endTimeDetailsFormat}</Text>
               </Box>
             </ListItem>
             <ListItem>
-              <ListIcon as={() => <FontAwesomeIcon icon={faCheckCircle} />} />{" "}
+              <ListIcon
+                as={() => (
+                  <FontAwesomeIcon icon={faCheckCircle} color="green" />
+                )}
+              />{" "}
               참여 인원 :{" "}
               <Box mb={5} display={"inline-block"}>
-                <Text>{product.numberOfJoin}명</Text>
+                <Text fontSize="xl">{product.numberOfJoin}명</Text>
               </Box>
             </ListItem>
           </List>
 
           {/*판매 완료, 로그인이 안되어 있는 상태, 자신의 상품일 때 보이지 않음*/}
-          {account.isLoggedIn() && (
+          {(account.isLoggedIn() && account.hasAccess(product.userId)) || (
             <Box mb={5}>
               <Flex w={"100%"}>
                 <Box w={"100%"} mr={4}>
                   <Button
                     w={"100%"}
+                    h={"60px"}
+                    fontSize={"lg"}
                     onClick={handleLikeClick}
                     leftIcon={
                       <FontAwesomeIcon
@@ -240,7 +263,7 @@ export function ProductDetails() {
                     colorScheme={like.like ? "red" : "gray"}
                     variant="outline"
                   >
-                    {like.count}
+                    <Text fontSize={"lg"}>{like.count} </Text>
                   </Button>
                 </Box>
 
@@ -248,7 +271,14 @@ export function ProductDetails() {
                   !account.isLoggedIn() ||
                   account.hasAccess(product.userId) || (
                     <Box w={"100%"} mr={4}>
-                      <Button colorScheme="green" w="100%" onClick={onOpen}>
+                      <Button
+                        h={"60px"}
+                        colorScheme="green"
+                        w="100%"
+                        onClick={onOpen}
+                        fontSize={"lg"}
+                        leftIcon={<FontAwesomeIcon icon={faHandHoldingUsd} />}
+                      >
                         참여하기
                       </Button>
                     </Box>
@@ -259,8 +289,10 @@ export function ProductDetails() {
                       <Button
                         colorScheme="teal"
                         w="100%"
+                        h={"60px"}
                         leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
                         onClick={handleEnterChatRoom}
+                        fontSize={"lg"}
                       >
                         문의하기
                       </Button>
@@ -269,13 +301,13 @@ export function ProductDetails() {
               </Flex>
             </Box>
           )}
-
           {!account.isLoggedIn() ||
             (account.hasAccess(product.userId) && (
               <Box mb={5}>
                 <Button
                   colorScheme="green"
                   w="100%"
+                  h={"50px"}
                   onClick={() => navigate(`/edit/${product.id}`)}
                 >
                   상품수정
@@ -285,11 +317,11 @@ export function ProductDetails() {
         </Box>
       </Flex>
 
-      <Divider mb={5} />
+      <Divider my={10} />
 
       <Box>
         <FormControl>
-          <FormLabel mb={5}>
+          <FormLabel mb={10}>
             <Heading fontSize="2xl">상품 정보</Heading>
           </FormLabel>
           {product.content !== null && product.content !== "" ? (

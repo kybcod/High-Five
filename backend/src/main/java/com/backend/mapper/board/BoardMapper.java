@@ -59,8 +59,9 @@ public interface BoardMapper {
     List<Board> selectAll(int offset, String searchType, String keyword);
 
     @Select("""
-            SELECT b.id, b.title, b.user_id, u.nick_name nickName, b.inserted, b.content
+            SELECT b.id, b.title, b.user_id, u.nick_name nickName, uf.file_name profileImage, b.inserted, b.content
             FROM board b JOIN user u ON b.user_id = u.id
+                         JOIN user_file uf ON b.user_id = uf.user_id
             WHERE b.id = #{id}
             """)
     Board selectById(Integer id);
@@ -152,4 +153,11 @@ public interface BoardMapper {
             WHERE board_id = #{id}
             """)
     void deleteFileByBoardId(Integer id);
+
+    @Select("""
+            SELECT file_name
+            FROM user_file
+            WHERE user_id = #{userId}
+            """)
+    String selectFileNameByUserId(Integer userId);
 }

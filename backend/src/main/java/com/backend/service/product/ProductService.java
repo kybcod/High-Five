@@ -3,7 +3,9 @@ package com.backend.service.product;
 import com.backend.domain.product.Product;
 import com.backend.domain.product.ProductFile;
 import com.backend.mapper.auction.AuctionMapper;
+import com.backend.mapper.product.ProductLikeMapper;
 import com.backend.mapper.product.ProductMapper;
+import com.backend.mapper.review.ReviewMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,8 @@ public class ProductService {
 
     private final ProductMapper mapper;
     private final AuctionMapper auctionMapper;
+    private final ReviewMapper reviewMapper;
+    private final ProductLikeMapper productLikeMapper;
     private final S3Client s3Client;
 
     @Value("${aws.s3.bucket.name}")
@@ -152,7 +156,16 @@ public class ProductService {
 
         Product product = mapper.selectById(id);
 
-//         s3에서 파일(이미지) 삭제
+        //상품 리뷰 삭제
+        reviewMapper.deleteReviewByProductId(id);
+
+        // 입찰 내역 삭제
+        auctionMapper.deleteBidListByProductId(id);
+
+        //좋아요 삭제
+        productLikeMapper.deleteLikeByProductId(id);
+
+        // s3에서 파일(이미지) 삭제
         List<ProductFile> productFileList = mapper.selectFileByProductId(id);
         for (ProductFile productFile : productFileList) {
             String key = STR."prj3/\{id}/\{productFile.getFileName()}";
@@ -162,12 +175,6 @@ public class ProductService {
                     .build();
             s3Client.deleteObject(deleteObjectRequest);
         }
-
-        // 입찰 내역 삭제
-        mapper.deleteBidListByProductId(id);
-
-        //좋아요 삭제
-        mapper.deleteLikeByProductId(id);
 
         //파일 DB 삭제
         mapper.deleteFileByProductId(id);
@@ -179,7 +186,7 @@ public class ProductService {
 
     public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
         List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
-        
+
         for (Product product : productList) {
             // 낙찰된 닉네임
             List<Map<String, Object>> successbidList = mapper.selectSuccessBidList(product.getId());
