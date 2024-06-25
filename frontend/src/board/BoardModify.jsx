@@ -15,11 +15,17 @@ import {
   Input,
   List,
   ListItem,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Spacer,
   Spinner,
   Switch,
   Text,
   Textarea,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -35,6 +41,7 @@ export function BoardModify() {
   const [removeFileList, setRemoveFileList] = useState([]);
   const [addFileList, setAddFileList] = useState([]);
   const fileInputRef = useRef(null);
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const { successToast, errorToast } = CustomToast();
   const { board_id } = useParams();
   const navigate = useNavigate();
@@ -210,8 +217,24 @@ export function BoardModify() {
         <Button onClick={handleClickSaveButton}>게시글 수정</Button>
       </Box>
       <Box>
-        <Button onClick={handleClickDeleteButton}>게시글 삭제</Button>
+        <Button onClick={onOpen}>게시글 삭제</Button>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader>게시글 삭제</ModalHeader>
+          <ModalBody>
+            <Text>게시글을 삭제하시겠습니까?</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Flex>
+              <Button onClick={onClose}>취소</Button>
+              <Button onClick={handleClickDeleteButton} colorScheme={"red"}>
+                삭제
+              </Button>
+            </Flex>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

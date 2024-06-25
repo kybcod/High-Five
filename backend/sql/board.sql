@@ -48,7 +48,7 @@ FROM board_comment;
 
 SELECT *
 FROM board_comment
-WHERE comment_id = 1;
+WHERE board_id = 86;
 
 DELETE
 FROM board_comment
