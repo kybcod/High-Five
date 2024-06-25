@@ -113,7 +113,7 @@ export function ChatRoom() {
       heartbeatIncoming: 30 * 1000,
       heartbeatOutgoing: 30 * 1000,
       onConnect: function () {
-        console.log("Connected to WebSocket");
+        // TODO : 필요한 코드인지 생각해보기
         client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
         client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
           ack: "client",
@@ -125,7 +125,7 @@ export function ChatRoom() {
     });
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    // client.activate(); // 활성화
+    client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
