@@ -34,7 +34,7 @@ import SignupCodeProvider from "./component/SignupCodeProvider.jsx";
 import { UserPassword } from "./user/UserPassword.jsx";
 import { Payment } from "./pay/Payment.jsx";
 import { UserAuthSuccess } from "./user/oauth/UserAuthSuccess.jsx";
-import { SignupPhoneNumber } from "./user/SignupPhoneNumber.jsx";
+import { SignupPhoneNumber } from "./user/oauth/SignupPhoneNumber.jsx";
 import { theme } from "./Theme.jsx";
 
 axios.interceptors.request.use((config) => {

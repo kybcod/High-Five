@@ -1,4 +1,4 @@
-import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
+import { UserPhoneNumber } from "../UserPhoneNumber.jsx";
 import {
   Box,
   Button,
@@ -12,9 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
+import { SignupCodeContext } from "../../component/SignupCodeProvider.jsx";
 import axios from "axios";
-import { CustomToast } from "../component/CustomToast.jsx";
+import { CustomToast } from "../../component/CustomToast.jsx";
 
 export function SignupPhoneNumber() {
   const [user, setUser] = useState(null);
