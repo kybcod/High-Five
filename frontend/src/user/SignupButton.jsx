@@ -1,33 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Checkbox, Stack } from "@chakra-ui/react";
 
-function SignupButton(props) {
-  const [checkedItems, setCheckedItems] = React.useState([false, false]);
-  const [isAllChecked, setIsAllChecked] = useState(false);
+function SignupButton({ isAllChecked, setIsAllChecked }) {
+  const [checkedItems, setCheckedItems] = useState([false, false]);
 
   useEffect(() => {
-    console.log(isAllChecked);
-  }, [checkedItems[0], checkedItems[1]]);
+    const allChecked = checkedItems.every(Boolean);
+    setIsAllChecked(allChecked);
+    console.log(allChecked);
+  }, [checkedItems]);
 
-  // const allChecked = checkedItems.every(Boolean);
-
-  // "전체 동의" 체크박스 변경을 처리하는 함수
-  function handleAllCheckedChange(e) {
+  const handleAllCheckedChange = (e) => {
     const checked = e.target.checked;
     setCheckedItems([checked, checked]);
     setIsAllChecked(checked);
-  }
+  };
 
-  // 개별 체크박스 변경을 처리하는 함수
-  function handleCheckboxChange(index, isChecked) {
+  const handleCheckboxChange = (index, isChecked) => {
     const newCheckedItems = [...checkedItems];
     newCheckedItems[index] = isChecked;
     setCheckedItems(newCheckedItems);
-  }
+  };
 
   return (
     <>
-      <Stack mt={1} spacing={1} mt={9}>
+      <Stack mt={1} spacing={1}>
         <Checkbox
           height={"50px"}
           size="md"
