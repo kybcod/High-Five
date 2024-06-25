@@ -8,13 +8,14 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Text,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
-import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
+import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
@@ -33,7 +34,12 @@ export function SignUp() {
     setIsLoading(true);
     const phoneNumber = codeInfo.phoneNumber;
     axios
-      .post("/api/users", { email, password, nickName, phoneNumber })
+      .post("/api/users", {
+        email,
+        password,
+        nickName,
+        phoneNumber: "010" + phoneNumber,
+      })
       .then(() => {
         successToast("회원가입이 완료되었습니다");
         navigate("/login");
@@ -79,6 +85,7 @@ export function SignUp() {
     /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
 
   let isValidPassword = false;
+  let isAllChecked = false;
   if (passwordPattern.test(password)) {
     isValidPassword = true;
   }
@@ -113,17 +120,29 @@ export function SignUp() {
     isDisabled = true;
   }
 
+  if (!isAllChecked) {
+    isDisabled = true;
+  }
+
   return (
     <Center>
-      <Box>
-        <FormControl>
-          <FormLabel>이메일 주소</FormLabel>
+      <Box color={"gray.500"} mt={70} width={"500px"}>
+        <Text fontSize={"3xl"} fontWeight={"bold"} color={"black"}>
+          본인 정보를 입력해주세요
+        </Text>
+        <FormControl mt={7}>
+          <FormLabel fontSize="sm" fontWeight={"bold"}>
+            이메일 주소
+          </FormLabel>
           <InputGroup size="md">
             <Input
+              fontSize="2xl"
+              color={"black"}
               pr="4.5rem"
+              sx={{ "::placeholder": { fontSize: "xl" } }}
               placeholder={"이메일 중복 확인 필수"}
               isInvalid={isCheckedEmail ? false : true}
-              errorBorderColor={"red.300"}
+              errorBorderColor={"orange.200"}
               variant="flushed"
               type={"email"}
               maxLength="30"
@@ -139,6 +158,8 @@ export function SignUp() {
                 size="sm"
                 onClick={handleCheckEmail}
                 isDisabled={!isValidEmail || email.trim().length === 0}
+                colorScheme="orange"
+                variant="ghost"
               >
                 중복확인
               </Button>
@@ -148,9 +169,13 @@ export function SignUp() {
             <FormHelperText>올바른 이메일 형식이 아닙니다</FormHelperText>
           )}
         </FormControl>
-        <FormControl>
-          <FormLabel>비밀번호</FormLabel>
+        <FormControl mt={7}>
+          <FormLabel fontSize="sm" fontWeight={"bold"}>
+            비밀번호
+          </FormLabel>
           <Input
+            fontSize="2xl"
+            color={"black"}
             pr="4.5rem"
             variant="flushed"
             type="password"
@@ -159,7 +184,7 @@ export function SignUp() {
               isValidPassword = false;
             }}
             isInvalid={isValidPassword ? false : true}
-            errorBorderColor={"red.300"}
+            errorBorderColor={"orange.200"}
           />
           {isValidPassword || (
             <FormHelperText>
@@ -168,12 +193,16 @@ export function SignUp() {
             </FormHelperText>
           )}
         </FormControl>
-        <FormControl>
-          <FormLabel>비밀번호 확인</FormLabel>
+        <FormControl mt={7}>
+          <FormLabel fontSize="sm" fontWeight={"bold"}>
+            비밀번호 확인
+          </FormLabel>
           <Input
+            fontSize="2xl"
+            color={"black"}
             pr="4.5rem"
             isInvalid={isCheckedPassword ? false : true}
-            errorBorderColor={"red.300"}
+            errorBorderColor={"orange.200"}
             variant="flushed"
             type="password"
             onChange={(e) => setPasswordCheck(e.target.value)}
@@ -182,13 +211,20 @@ export function SignUp() {
             <FormHelperText>비밀번호가 일치하지 않습니다</FormHelperText>
           )}
         </FormControl>
-        <FormControl>
-          <FormLabel>닉네임</FormLabel>
+        <FormControl mt={7}>
+          <FormLabel fontSize="sm" fontWeight={"bold"}>
+            닉네임
+          </FormLabel>
           <InputGroup size="md">
             <Input
+              pb={3}
+              focusBorderColor="gray.200"
+              fontSize="2xl"
+              color={"black"}
               pr="4.5rem"
+              sx={{ "::placeholder": { fontSize: "xl" } }}
               isInvalid={isCheckedNickName ? false : true}
-              errorBorderColor={"red.300"}
+              errorBorderColor={"orange.200"}
               variant="flushed"
               onChange={(e) => {
                 setNickName(e.target.value);
@@ -199,6 +235,8 @@ export function SignUp() {
             />
             <InputRightElement width="4.5rem">
               <Button
+                colorScheme="orange"
+                variant="ghost"
                 h="1.75rem"
                 size="sm"
                 onClick={handleCheckNickName}
@@ -211,12 +249,16 @@ export function SignUp() {
           <FormHelperText>닉네임은 10자까지 작성 가능합니다</FormHelperText>
         </FormControl>
         <UserPhoneNumber />
-        <Center mt={5}>
+        {/*<SignupButton isAllChecked={isAllChecked} />*/}
+        <Center mt={10}>
           <Button
+            height="60px"
+            width="550px"
             colorScheme={"green"}
+            borderRadius="5px"
             onClick={handleSignUp}
             isLoading={isLoading}
-            // isDisabled={isDisabled}
+            isDisabled={isDisabled}
           >
             SignUp
           </Button>

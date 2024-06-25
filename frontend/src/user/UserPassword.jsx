@@ -67,56 +67,53 @@ export function UserPassword() {
           <Input onChange={(e) => setEmail(e.target.value)} />
         </FormControl>
         <UserPhoneNumber />
-        {/*{codeInfo.isCheckedCode && (*/}
-        <Center>
-          <Box>
-            <FormControl>
-              <FormLabel>비밀번호</FormLabel>
-              <Input
-                pr="4.5rem"
-                variant="flushed"
-                type="password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  isValidPassword = false;
-                }}
-                isInvalid={isValidPassword ? false : true}
-                errorBorderColor={"red.300"}
-              />
-              {isValidPassword || (
-                <FormHelperText>
-                  비밀번호는 8자 이상으로, 영문 대소문자와 숫자, 특수기호를
-                  포함하여야 합니다
-                </FormHelperText>
-              )}
-            </FormControl>
-            <FormControl>
-              <FormLabel>비밀번호 확인</FormLabel>
-              <Input
-                pr="4.5rem"
-                isInvalid={isCheckedPassword ? false : true}
-                errorBorderColor={"red.300"}
-                variant="flushed"
-                type="password"
-                onChange={(e) => setPasswordCheck(e.target.value)}
-              />
-              {isCheckedPassword || (
-                <FormHelperText>비밀번호가 일치하지 않습니다</FormHelperText>
-              )}
-            </FormControl>
-          </Box>
-        </Center>
-        {/*)}*/}
-        {/*{codeInfo.isCheckedCode && (*/}
-        <Center>
-          <Button
-            onClick={handleUpdatePassword}
-            // isDisabled={isDisabled}
-          >
-            비밀번호 재설정
-          </Button>
-        </Center>
-        {/*)}*/}
+        {codeInfo.isCheckedCode && (
+          <Center>
+            <Box>
+              <FormControl>
+                <FormLabel>비밀번호</FormLabel>
+                <Input
+                  pr="4.5rem"
+                  variant="flushed"
+                  type="password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    isValidPassword = false;
+                  }}
+                  isInvalid={isValidPassword ? false : true}
+                  errorBorderColor={"red.300"}
+                />
+                {isValidPassword || (
+                  <FormHelperText>
+                    비밀번호는 8자 이상으로, 영문 대소문자와 숫자, 특수기호를
+                    포함하여야 합니다
+                  </FormHelperText>
+                )}
+              </FormControl>
+              <FormControl>
+                <FormLabel>비밀번호 확인</FormLabel>
+                <Input
+                  pr="4.5rem"
+                  isInvalid={isCheckedPassword ? false : true}
+                  errorBorderColor={"red.300"}
+                  variant="flushed"
+                  type="password"
+                  onChange={(e) => setPasswordCheck(e.target.value)}
+                />
+                {isCheckedPassword || (
+                  <FormHelperText>비밀번호가 일치하지 않습니다</FormHelperText>
+                )}
+              </FormControl>
+            </Box>
+          </Center>
+        )}
+        {codeInfo.isCheckedCode && (
+          <Center>
+            <Button onClick={handleUpdatePassword} isDisabled={isDisabled}>
+              비밀번호 재설정
+            </Button>
+          </Center>
+        )}
       </Box>
     </Center>
   );

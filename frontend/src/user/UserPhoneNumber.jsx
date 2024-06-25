@@ -8,6 +8,7 @@ import {
   InputGroup,
   InputLeftAddon,
   InputRightElement,
+  Text,
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { useContext } from "react";
@@ -34,6 +35,13 @@ export function UserPhoneNumber() {
             }}
           />
           <InputRightElement width="4.5rem">
+            {codeInfo.isSendingCode && (
+              <Text>
+                {codeInfo.min +
+                  ":" +
+                  (codeInfo.sec < 10 ? "0" + codeInfo.sec : codeInfo.sec)}
+              </Text>
+            )}
             {codeInfo.isSendingCode || (
               <Button
                 h="1.75rem"

@@ -5,6 +5,7 @@ import com.backend.domain.chat.ChatRoom;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -54,4 +55,14 @@ public interface ChatMapper {
             LIMIT 20
             """)
     List<Chat> selectChatListByChatRoomId(Integer id);
+
+    @Update("""
+            UPDATE chat
+            SET read_check = TRUE
+            WHERE chat_room_id = #{id}
+                AND user_id != #{userId} 
+                AND read_check = FALSE
+            ORDER BY id DESC
+            """)
+    int updateReadCheck(ChatRoom chatRoom);
 }

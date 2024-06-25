@@ -7,6 +7,7 @@ import {
   CardFooter,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Heading,
   IconButton,
@@ -14,13 +15,19 @@ import {
   Input,
   List,
   ListItem,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Spacer,
   Spinner,
   Switch,
   Text,
   Textarea,
+  useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
@@ -33,6 +40,8 @@ export function BoardModify() {
   const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
   const [removeFileList, setRemoveFileList] = useState([]);
   const [addFileList, setAddFileList] = useState([]);
+  const fileInputRef = useRef(null);
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const { successToast, errorToast } = CustomToast();
   const { board_id } = useParams();
   const navigate = useNavigate();
@@ -84,6 +93,7 @@ export function BoardModify() {
   }
 
   function handleRemoveSwitchChange(fileName, checked) {
+    console.log(fileName);
     if (checked) {
       setRemoveFileList([...removeFileList, fileName]);
     } else {
@@ -136,7 +146,15 @@ export function BoardModify() {
           board.boardFileList.map((file, index) => (
             <Card m={3} key={index} w={"400px"}>
               <CardBody>
-                <Image src={file.filePath} sizes={"100%"} />
+                <Image
+                  src={file.filePath}
+                  sizes={"100%"}
+                  sx={
+                    removeFileList.includes(file.fileName)
+                      ? { filter: "blur(8px)" }
+                      : {}
+                  }
+                />
               </CardBody>
               <CardFooter>
                 <Flex>
@@ -166,15 +184,21 @@ export function BoardModify() {
           <Flex>
             <FormLabel>상품 상세 내용</FormLabel>
             <Spacer />
+            <Button onClick={() => fileInputRef.current.click()}>
+              파일첨부
+            </Button>
             <Input
               multiple
               type={"file"}
               accept={"image/*"}
+              display={"none"}
+              ref={fileInputRef}
               onChange={(e) => {
                 setAddFileList(e.target.files);
               }}
             />
           </Flex>
+          <FormHelperText>총 용량은 10MB를 초과할 수 없습니다</FormHelperText>
           {addFileList.length > 0 && (
             <Box mt={2}>
               <Heading size="md" mb={2}>
@@ -193,8 +217,24 @@ export function BoardModify() {
         <Button onClick={handleClickSaveButton}>게시글 수정</Button>
       </Box>
       <Box>
-        <Button onClick={handleClickDeleteButton}>게시글 삭제</Button>
+        <Button onClick={onOpen}>게시글 삭제</Button>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader>게시글 삭제</ModalHeader>
+          <ModalBody>
+            <Text>게시글을 삭제하시겠습니까?</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Flex>
+              <Button onClick={onClose}>취소</Button>
+              <Button onClick={handleClickDeleteButton} colorScheme={"red"}>
+                삭제
+              </Button>
+            </Flex>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

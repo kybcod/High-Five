@@ -21,7 +21,7 @@ public interface AuctionMapper {
 
     @Update("""
             UPDATE bid_list
-            SET bid_price = #{bidPrice}
+            SET bid_price = #{bidPrice}, updated = NOW()
             WHERE product_id = #{productId}
             AND user_id = #{userId}
             """)
@@ -35,12 +35,13 @@ public interface AuctionMapper {
 
     @Select("""
             SELECT *
-            FROM bid_list b JOIN product p ON b.product_id = p.id
+            FROM bid_list b
+                     JOIN product p ON b.product_id = p.id
             WHERE b.user_id = #{userId}
-            ORDER BY p.status DESC, p.end_time, p.id
+            ORDER BY b.updated DESC, p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
-    @Results(id = "bidList", value = {
+    @Results(id = "productBidList", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "product", column = "product_id", one = @One(select = "selectProductByProductId")),
     })
@@ -73,7 +74,7 @@ public interface AuctionMapper {
             SELECT id, user_id, product_id, bid_price, bid_status
             FROM bid_list
             WHERE product_id = #{productId}
-            ORDER BY bid_price DESC
+            ORDER BY bid_price DESC, updated
             LIMIT 1
             """)
     BidList selectMaxPriceByProductId(Integer productId);

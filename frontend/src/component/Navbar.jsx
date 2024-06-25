@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
 import {
   faClipboardList,
-  faHome,
   faQuestionCircle,
   faSignInAlt,
   faSignOutAlt,
@@ -27,10 +26,6 @@ export function Navbar() {
       fontSize={"lg"}
       cursor={"pointer"}
     >
-      <Center onClick={() => navigate("/")} mx={2}>
-        <FontAwesomeIcon icon={faHome} />
-        <Text ml={2}>HOME</Text>
-      </Center>
       <Center onClick={() => navigate("/board/list")} mx={2}>
         <FontAwesomeIcon icon={faClipboardList} />
         <Text ml={2}>자유게시판</Text>
@@ -44,10 +39,12 @@ export function Navbar() {
         <Text ml={2}>QnA</Text>
       </Center>
 
-      <Center onClick={() => navigate("/user/list")} mx={2}>
-        <FontAwesomeIcon icon={faUsers} />
-        <Text ml={2}>USER LIST</Text>
-      </Center>
+      {account.isAdmin() && (
+        <Center onClick={() => navigate("/user/list")} mx={2}>
+          <FontAwesomeIcon icon={faUsers} />
+          <Text ml={2}>USER LIST</Text>
+        </Center>
+      )}
       <Spacer />
       {account.isLoggedIn() ? (
         <>
@@ -56,7 +53,7 @@ export function Navbar() {
               <Image
                 boxSize="50px"
                 src={account.profileImage}
-                fallbackSrc="https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800"
+                fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
                 borderRadius="full"
               />
             </Box>

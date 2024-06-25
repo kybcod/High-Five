@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ProductMapper {
@@ -174,29 +175,6 @@ public interface ProductMapper {
     int updateStatus(Product product);
 
 
-    // -- ChatService
-    @Select("""
-            SELECT user_id
-            FROM product
-            WHERE id = #{productId}
-            """)
-    Integer selectProductSellerId(Integer productId);
-
-    @Select("""
-            SELECT id, title, status, review_status, payment_status
-            FROM product
-            WHERE id =#{productId}
-            """)
-    Product selectChatProductInfo(Integer productId);
-
-    @Select("""
-            SELECT b.user_id buyerId
-            FROM product p
-                     LEFT JOIN bid_list b ON p.id = b.product_id
-            WHERE b.product_id = #{productId};
-            """)
-    Integer selectBuyerId(Integer productId);
-
     @Select("""
             SELECT p.id,
                    p.user_id,
@@ -207,12 +185,14 @@ public interface ProductMapper {
                    p.end_time,
                    p.content,
                    p.view_count,
-                   p.status
+                   p.status,
+                p.review_status,
+                u.nick_name AS userNickName
             FROM product p
                      JOIN user u
                           ON p.user_id = u.id
             WHERE p.user_id = #{userId}
-            ORDER BY p.end_time
+            ORDER BY p.start_time DESC
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productListByUserId", value = {
@@ -237,10 +217,12 @@ public interface ProductMapper {
                    p.end_time,
                    p.content,
                    p.status,
-                   p.user_id
+                   p.user_id,
+                   p.review_status
             FROM product p
                      JOIN product_like pl ON p.id = pl.product_id
             WHERE pl.user_id = #{userId}
+            ORDER BY p.end_time
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productAndProductLikeList", value = {
@@ -324,4 +306,35 @@ public interface ProductMapper {
             """)
     int updatePaymentStatus(Integer productId, boolean paymentStatus);
 
+    @Select("""
+            SELECT u.nick_name AS successBidNickName, bl.user_id AS successBidUserId
+            FROM bid_list bl
+                     JOIN user u on u.id = bl.user_id
+            WHERE product_id = #{productId}
+              AND bid_status = TRUE
+            """)
+    List<Map<String, Object>> selectSuccessBidList(Integer productId);
+
+    // -- ChatService
+    @Select("""
+            SELECT user_id
+            FROM product
+            WHERE id = #{productId}
+            """)
+    Integer selectProductSellerId(Integer productId);
+
+    @Select("""
+            SELECT id, title, status, review_status, payment_status
+            FROM product
+            WHERE id =#{productId}
+            """)
+    Product selectChatProductInfo(Integer productId);
+
+    @Select("""
+            SELECT COUNT(status) AS totalSalesCount
+            FROM product
+            WHERE user_id = #{userId}
+              AND status = FALSE;
+            """)
+    Integer selectTotalSalesCount(Integer userId);
 }

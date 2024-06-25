@@ -4,6 +4,7 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -26,7 +27,7 @@ export function UserEdit() {
   const [user, setUser] = useState(null);
   const [oldNickName, setOldNickName] = useState("");
   const [oldPassword, setOldPassword] = useState("");
-  const [isCheckedNickName, setIsCheckedNickName] = useState(false);
+  const [isCheckedNickName, setIsCheckedNickName] = useState(true);
   const [passwordCheck, setPasswordCheck] = useState("");
   const [profileImages, setProfileImages] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -109,6 +110,7 @@ export function UserEdit() {
   return (
     <Box>
       <Box>
+        <Heading>회원정보 수정</Heading>
         <FormControl>
           <FormLabel>프로필 사진</FormLabel>
           <Input
@@ -129,6 +131,7 @@ export function UserEdit() {
         <FormControl>
           <FormLabel>비밀번호</FormLabel>
           <Input
+            type={"password"}
             variant="flushed"
             placeholder={"변경 시에만 입력해주세요"}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
@@ -137,6 +140,7 @@ export function UserEdit() {
         <FormControl>
           <FormLabel>비밀번호 확인</FormLabel>
           <Input
+            type={"password"}
             variant="flushed"
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
@@ -166,10 +170,7 @@ export function UserEdit() {
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button
-          onClick={onOpen}
-          // isDisabled={disabled}
-        >
+        <Button onClick={onOpen} isDisabled={disabled}>
           수정
         </Button>
       </Box>
@@ -180,6 +181,7 @@ export function UserEdit() {
           <ModalBody>비밀번호를 입력해주세요</ModalBody>
           <ModalFooter>
             <Input
+              type={"password"}
               variant="flushed"
               onChange={(e) => setOldPassword(e.target.value)}
             />

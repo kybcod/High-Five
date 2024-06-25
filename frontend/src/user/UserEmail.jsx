@@ -40,7 +40,7 @@ export function UserEmail() {
         <Center>
           <Button
             onClick={handleFindEmail}
-            // isDisabled={!codeInfo.isCheckedCode}
+            isDisabled={!codeInfo.isCheckedCode}
           >
             이메일 찾기
           </Button>
@@ -51,11 +51,6 @@ export function UserEmail() {
               <FormLabel>Email</FormLabel>
               <Input variant="flushed" readOnly value={email} />
             </FormControl>
-          </Center>
-        )}
-        {codeInfo.isCheckedCode && (
-          <Center>
-            <Button>비밀번호 찾기</Button>
           </Center>
         )}
       </Box>

@@ -8,15 +8,28 @@ import {
   Grid,
   GridItem,
   Image,
+  List,
+  ListItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Stack,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleCheck,
+  faHeart as fullHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ArrowDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
@@ -27,7 +40,9 @@ export function LikeList() {
   const [likes, setLikes] = useState({});
   const [pageInfo, setPageInfo] = useState({});
   const [hasNextPage, setHasNextPage] = useState(true);
+  const [reviewList, setReviewList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const account = useContext(LoginContext);
   const navigate = useNavigate();
 
@@ -99,6 +114,19 @@ export function LikeList() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  const handleGetReviewButtonClick = (productId) => {
+    // TODO : 후기 조회 버튼 status 추가 예정
+    axios
+      .get(`/api/reviews/${productId}`)
+      .then((res) => {
+        if (res.data != null) {
+          setReviewList(res.data);
+        }
+      })
+      .catch()
+      .finally();
+  };
+
   return (
     <Box>
       {likeProductList.length === 0 ? (
@@ -113,12 +141,16 @@ export function LikeList() {
           {likeProductList.map((product) => (
             <GridItem key={product.id}>
               <Card
+                cursor={"pointer"}
                 maxW="sm"
                 h="100%"
                 borderWidth="1px"
                 borderColor={"#eee"}
                 borderRadius="lg"
                 overflow="hidden"
+                boxShadow="md"
+                transition="transform 0.2s"
+                _hover={{ transform: "scale(1.05)" }}
               >
                 <CardBody position="relative" h="100%">
                   <Box mt={2} w="100%">
@@ -210,7 +242,16 @@ export function LikeList() {
                   </Stack>
                   {product.status || (
                     <Box display="flex" justifyContent="center">
-                      <Button mt={2} w={"100%"} colorScheme={"green"}>
+                      <Button
+                        hidden={product.reviewStatus === false}
+                        mt={2}
+                        w={"100%"}
+                        colorScheme={"green"}
+                        onClick={() => {
+                          onOpen();
+                          handleGetReviewButtonClick(product.id);
+                        }}
+                      >
                         상품 후기
                       </Button>
                     </Box>
@@ -234,7 +275,7 @@ export function LikeList() {
               더보기
             </Button>
           ) : (
-            likeProductList.length > 10 && (
+            likeProductList.length > 9 && (
               <Button
                 w={"30%"}
                 colorScheme={"blue"}
@@ -248,6 +289,28 @@ export function LikeList() {
           )}
         </Box>
       )}
+      {/* 후기 작성 모달 */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>판매자님에게 보내는 후기</ModalHeader>
+          <ModalBody>
+            <List>
+              {reviewList.map((review) => (
+                <ListItem key={review.id}>
+                  <FontAwesomeIcon icon={faCircleCheck} />
+                  &nbsp;
+                  {review.content}
+                </ListItem>
+              ))}
+            </List>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>Close</Button>
+          </ModalFooter>
+          <ModalCloseButton />
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
