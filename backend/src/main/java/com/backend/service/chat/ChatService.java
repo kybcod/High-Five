@@ -65,9 +65,7 @@ public class ChatService {
         // -- 이전 ChatData
         // read_check TRUE 변경
         int success = mapper.updateReadCheck(chatRoom);
-        if (success == 1) {
-            System.out.println("success = " + success);
-        }
+        
         List<Chat> previousChatList = mapper.selectChatListByChatRoomId(chatRoom.getId());
         Collections.reverse(previousChatList);
         result.put("previousChatList", previousChatList);
