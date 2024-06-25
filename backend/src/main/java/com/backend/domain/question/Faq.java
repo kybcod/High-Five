@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Faq {
     private Integer id;
-    private String category;
+    private Integer category;
     private String title;
     private String content;
 }

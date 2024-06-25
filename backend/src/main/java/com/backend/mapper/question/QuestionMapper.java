@@ -1,6 +1,7 @@
 package com.backend.mapper.question;
 
 import com.backend.domain.question.Faq;
+import com.backend.domain.question.FaqCategory;
 import com.backend.domain.question.Question;
 import org.apache.ibatis.annotations.*;
 
@@ -114,8 +115,9 @@ public interface QuestionMapper {
             """)
     int updateCountById(Integer id);
 
-    @Select("""
-            SELECT * FROM faq
-            """)
-    List<Faq> getFaqList();
+    @Select("SELECT * FROM faq WHERE category=#{category} OR #{category}='all'")
+    List<Faq> getFaqList(String category);
+
+    @Select("SELECT * FROM faqCategory")
+    List<FaqCategory> getAllCategories();
 }
