@@ -54,6 +54,7 @@ export function BoardCommentWrite({ boardId, setIsProcessing, isProcessing }) {
               ? "댓글을 작성해 보세요"
               : "댓글을 작성하시려면 로그인 하세요"
           }
+          resize={"none"}
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />

@@ -2,6 +2,7 @@ package com.backend.service.board;
 
 import com.backend.domain.board.Board;
 import com.backend.domain.board.BoardFile;
+import com.backend.domain.user.UserFile;
 import com.backend.mapper.board.BoardCommentMapper;
 import com.backend.mapper.board.BoardMapper;
 import com.backend.util.PageInfo;
@@ -93,6 +94,11 @@ public class BoardService {
                 .toList();
 
         board.setBoardFileList(files);
+
+        String fileName = mapper.selectFileNameByUserId(id);
+        UserFile userFile = UserFile.builder()
+                .fileName(fileName).src(STR."\{srcPrefix}user/\{board.getUserId()}/\{fileName}").build();
+        board.setProfileImage(userFile);
 
         Map<String, Object> boardLike = new HashMap<>();
         if (authentication == null) {

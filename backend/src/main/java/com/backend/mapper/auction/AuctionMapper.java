@@ -86,6 +86,9 @@ public interface AuctionMapper {
             """)
     int updateBidStatusByProductId(Integer id, boolean bidStatus);
 
+    @Delete("DELETE FROM bid_list WHERE product_id=#{productId}")
+    int deleteBidListByProductId(Integer productId);
+
 
     // -- chatService
     @Select("""

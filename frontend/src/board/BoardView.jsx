@@ -118,6 +118,12 @@ export function BoardView() {
         <Box>
           <Text>{board.nickName}</Text>
         </Box>
+        <Image
+          fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
+          borderRadius="full"
+          boxSize="150px"
+          src={board.profileImage}
+        />
         <Spacer />
         <Box>
           <Text>{board.inserted}</Text>
