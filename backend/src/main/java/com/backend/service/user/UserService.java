@@ -30,9 +30,8 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -63,6 +62,17 @@ public class UserService {
         if (response.getStatusCode().equals("2000")) {
             mapper.insertCode(phoneNumber, verificationCode);
         }
+
+        Timer timer = new Timer();
+
+        TimerTask timeOutCodeDelete = new TimerTask() {
+            public void run() {
+                mapper.deleteCodeByVerificationCode(Integer.parseInt(verificationCode));
+            }
+        };
+
+        timer.schedule(timeOutCodeDelete, 180000);
+
         return verificationCode;
     }
 
@@ -75,8 +85,9 @@ public class UserService {
     }
 
     public void addUser(User user) {
-        if (user.getPassword() == null) {
-            user.setPassword(Integer.toString((int) (Math.random() * 8999) + 1000) + "oauth");
+        // kakao, google Oauth 로그인이면 랜덤 번호로 비밀번호 생성
+        if (user.getPassword().equals("oauth")) {
+            user.setPassword(((Math.random() * 8999) + 1000) + "Oauth!");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         mapper.insertUser(user);
@@ -150,13 +161,13 @@ public class UserService {
             return false;
         }
 
-        if (user.getEmail().trim().length() == 0 && user.getEmail().length() > 30) {
+        if (user.getEmail().trim().isEmpty() || user.getEmail().length() > 30) {
             return false;
         }
-        if (user.getPassword().trim().length() == 0) {
+        if (user.getPassword().trim().isEmpty()) {
             return false;
         }
-        if (user.getNickName().trim().length() == 0 && user.getNickName().length() > 10) {
+        if (user.getNickName().trim().isEmpty() || user.getNickName().length() > 10) {
             return false;
         }
         if (user.getPhoneNumber().trim().length() != 11) {
@@ -173,12 +184,9 @@ public class UserService {
             return false;
         }
 
+        // 회원 가입 시 비밀번호가 정규식 일치하는지 & 혹은 Oauth 로그인인지 확인
         String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
-        if (!user.getPassword().trim().matches(passwordPattern)) {
-            return false;
-        }
-
-        return true;
+        return user.getPassword().trim().matches(passwordPattern) || user.getPassword().equals("oauth");
     }
 
     // userId로 본인 확인
@@ -206,11 +214,13 @@ public class UserService {
 
         // 권한 지우기
         mapper.deleteAuthorityById(id);
+        // 프로필 사진 지우기
+        mapper.deleteProfileImageById(id);
 
         // chatMapper
         // 채팅룸 지우기
         // 메시지 지우기
-        // 경매내역 지우기
+        // TODO.입찰내역 지우기
 
         // boardMapper
         // 자유 게시물 파일 지우기
@@ -229,6 +239,7 @@ public class UserService {
         // 상품 파일 지우기
         // 상품 리뷰 지우기
         // 상품 게시물 지우기
+        // 결제 내역 지우기
 
         // 회원 지우기
         mapper.deleteUserById(id);
@@ -265,7 +276,7 @@ public class UserService {
                     RequestBody.fromInputStream(profileImage.getInputStream(), profileImage.getSize()));
         }
 
-        if (user.getPassword() != null && user.getPassword().length() > 0) {
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         } else {
             User db = mapper.selectUserById(user.getId());
@@ -274,7 +285,6 @@ public class UserService {
         mapper.updateUser(user);
 
         Jwt jwt = (Jwt) authentication.getPrincipal();
-        Instant now = Instant.now();
 
         Map<String, Object> claims = jwt.getClaims();
         JwtClaimsSet.Builder jwtClaimsSetBuilder = JwtClaimsSet.builder();
@@ -300,11 +310,7 @@ public class UserService {
         if (user.getId() != db.getId()) {
             return false;
         }
-        if (!passwordEncoder.matches(user.getOldPassword(), db.getPassword())) {
-            return false;
-        }
-
-        return true;
+        return passwordEncoder.matches(user.getOldPassword(), db.getPassword());
     }
 
     public Map<String, Object> getUserList(int page, String type, String keyword) {

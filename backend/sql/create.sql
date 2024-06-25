@@ -207,6 +207,7 @@ CREATE TABLE code
     PRIMARY KEY (phone_number, code)
 );
 
+# 유저 프로필 사진 테이블
 CREATE TABLE user_file
 (
     user_id   INT         NOT NULL REFERENCES user (id),

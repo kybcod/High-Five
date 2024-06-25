@@ -162,4 +162,16 @@ public interface UserMapper {
                 WHERE user_id = #{userId}
             """)
     int updateProfileImage(Integer userId, String fileName);
+
+    @Delete("""
+                DELETE FROM user_file
+                WHERE user_id = userId
+            """)
+    int deleteProfileImageById(Integer userId);
+
+    @Delete("""
+                DELETE FROM code
+                WHERE code = #{code}
+            """)
+    int deleteCodeByVerificationCode(int code);
 }

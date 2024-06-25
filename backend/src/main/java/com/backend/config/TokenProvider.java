@@ -27,10 +27,13 @@ public class TokenProvider {
         if (attributes == null) {
             attributes = (Map<String, Object>) details.getAttributes();
         }
-        // TODO. 주석 삭제
-//        System.out.println("attributes = " + attributes);
+        String email = (String) attributes.get("email");
+        if (email == null) {
+            Map<String, Object> kakao = (Map<String, Object>) attributes.get("kakao_account");
+            email = (String) kakao.get("email");
+        }
 
-        User db = userMapper.selectUserByEmail(attributes.get("email").toString());
+        User db = userMapper.selectUserByEmail(email);
         List<String> authorities = userMapper.selectAuthoritiesByUserId(db.getId());
         String authorityString = "user";
         if (authorities != null) {
