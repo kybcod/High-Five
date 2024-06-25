@@ -26,7 +26,7 @@ public interface BoardMapper {
             SELECT b.id,
                     b.title,
                     b.content,
-                    b.user_id,
+                    u.nick_name nickName,
                     b.inserted,
                     COUNT(DISTINCT f.file_name) AS number_of_images,
                     COUNT(DISTINCT l.user_id) AS number_of_likes,
@@ -34,18 +34,19 @@ public interface BoardMapper {
             FROM board b LEFT JOIN board_file f ON b.id = f.board_id
                          LEFT JOIN board_like l ON b.id = l.board_id
                          LEFT JOIN board_comment c ON b.id = c.board_id
+                         LEFT JOIN user u ON b.user_id = u.id
             <where>
                 <if test="keyword != null and keyword != ''">
                     <bind name="pattern" value="'%' + keyword + '%'"/>
                     <choose>
                         <when test="searchType == 'all'">
+                            (b.title LIKE #{pattern} OR b.content LIKE #{pattern} OR u.nick_name LIKE #{pattern})
+                        </when>
+                        <when test="searchType == 'text'">
                             (b.title LIKE #{pattern} OR b.content LIKE #{pattern})
                         </when>
-                        <when test="searchType == 'title'">
-                            b.title LIKE #{pattern}
-                        </when>
-                        <when test="searchType == 'content'">
-                            b.content LIKE #{pattern}
+                        <when test="searchType == 'nickName'">
+                            u.nick_name LIKE #{pattern}
                         </when>
                     </choose>
                 </if>
@@ -58,9 +59,9 @@ public interface BoardMapper {
     List<Board> selectAll(int offset, String searchType, String keyword);
 
     @Select("""
-            SELECT id, title, user_id, inserted, content
-            FROM board
-            WHERE id = #{id}
+            SELECT b.id, b.title, b.user_id, u.nick_name nickName, b.inserted, b.content
+            FROM board b JOIN user u ON b.user_id = u.id
+            WHERE b.id = #{id}
             """)
     Board selectById(Integer id);
 
@@ -73,9 +74,9 @@ public interface BoardMapper {
 
     @Delete("""
             DELETE FROM board
-            WHERE id = #{id}
+            WHERE id = #{boardId}
             """)
-    int deleteById(Integer id);
+    int deleteById(Integer boardId);
 
     @Select("""
             SELECT file_name FROM board_file
@@ -139,4 +140,16 @@ public interface BoardMapper {
             </script>
             """)
     int selectTotalBoardCount(@Param("searchType") String searchType, @Param("keyword") String keyword);
+
+    @Delete("""
+            DELETE FROM board_like
+            WHERE board_id = #{id}
+            """)
+    void deleteLikeByBoardId(Integer id);
+
+    @Delete("""
+            DELETE FROM board_file
+            WHERE board_id = #{id}
+            """)
+    void deleteFileByBoardId(Integer id);
 }
