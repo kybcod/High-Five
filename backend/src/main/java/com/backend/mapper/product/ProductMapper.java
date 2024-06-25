@@ -192,7 +192,7 @@ public interface ProductMapper {
                      JOIN user u
                           ON p.user_id = u.id
             WHERE p.user_id = #{userId}
-            ORDER BY p.end_time
+            ORDER BY p.start_time DESC
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productListByUserId", value = {

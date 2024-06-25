@@ -70,7 +70,7 @@ export function ProductDetails() {
   }
 
   function handleJoinClick() {
-    if (parseInt(bidPrice) > product.startPrice) {
+    if (parseInt(bidPrice) >= product.startPrice) {
       setIsProcessing(true);
       axios
         .post("/api/bids", {

@@ -43,6 +43,7 @@ public class AuctionService {
     }
 
     public void upsertBidPrice(BidList bid) {
+        // 이미 상품이 존재하면 상품과 해당 user 입찰 내역 업데이트
         if (mapper.existsBid(bid.getProductId(), bid.getUserId())) {
             mapper.updateBidPrice(bid);
         } else {

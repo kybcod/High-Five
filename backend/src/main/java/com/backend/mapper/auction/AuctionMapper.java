@@ -21,7 +21,7 @@ public interface AuctionMapper {
 
     @Update("""
             UPDATE bid_list
-            SET bid_price = #{bidPrice}
+            SET bid_price = #{bidPrice}, updated = NOW()
             WHERE product_id = #{productId}
             AND user_id = #{userId}
             """)
@@ -73,7 +73,7 @@ public interface AuctionMapper {
             SELECT id, user_id, product_id, bid_price, bid_status
             FROM bid_list
             WHERE product_id = #{productId}
-            ORDER BY bid_price DESC
+            ORDER BY bid_price DESC, updated
             LIMIT 1
             """)
     BidList selectMaxPriceByProductId(Integer productId);
