@@ -8,6 +8,7 @@ import {
   Flex,
   Grid,
   GridItem,
+  Heading,
   Image,
   Stack,
   Text,
@@ -82,7 +83,7 @@ export function ProductList() {
   return (
     <Box>
       <Category />
-      {/*<Heading my={4}>오늘의 상품</Heading>*/}
+      <Heading my={6}></Heading>
       <Grid
         templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(5, 1fr)" }}
         gap={6}
