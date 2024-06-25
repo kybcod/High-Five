@@ -27,6 +27,7 @@ export function BoardWrite() {
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
   const fileInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
@@ -38,6 +39,7 @@ export function BoardWrite() {
   }, [account]);
 
   function handleClickButton() {
+    setIsLoading(true);
     axios
       .postForm("/api/board/add", {
         title,
@@ -53,7 +55,16 @@ export function BoardWrite() {
         if (err.response.status === 400) {
           errorToast("게시물 작성에 실패했습니다. 다시 작성해주세요");
         }
-      });
+      })
+      .finally(() => setIsLoading(false));
+  }
+
+  let disableSaveButton = false;
+  if (title.length === 0) {
+    disableSaveButton = true;
+  }
+  if (content.length === 0) {
+    disableSaveButton = true;
   }
 
   const fileNameList = [];
@@ -82,7 +93,10 @@ export function BoardWrite() {
       <Box>
         <FormControl>
           <FormLabel>제목</FormLabel>
-          <Input onChange={(e) => setTitle(e.target.value)} />
+          <Input
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder={"제목을 입력해주세요"}
+          />
         </FormControl>
       </Box>
       <FormControl>
@@ -110,13 +124,22 @@ export function BoardWrite() {
         )}
       </FormControl>
       <FormControl>
-        <Textarea onChange={(e) => setContent(e.target.value)} />
+        <Textarea
+          onChange={(e) => setContent(e.target.value)}
+          placeholder={"내용을 입력해주세요"}
+        />
       </FormControl>
       <Box>
         <Input type={"hidden"} value={account.id} />
       </Box>
       <Box>
-        <Button onClick={handleClickButton}>게시글 생성</Button>
+        <Button
+          isLoading={isLoading}
+          isDisabled={disableSaveButton}
+          onClick={handleClickButton}
+        >
+          게시글 생성
+        </Button>
       </Box>
     </Box>
   );
