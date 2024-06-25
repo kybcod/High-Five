@@ -56,7 +56,7 @@ FROM user
 
 UPDATE user
 SET black_count = 0
-WHERE id = 37;
+WHERE id = 57;
 
 SELECT *
 FROM user_file;
@@ -66,3 +66,13 @@ FROM user_file;
 
 # ALTER TABLE user_file
 #     CHANGE file_src file_name VARCHAR(500);
+
+SELECT *
+FROM code;
+
+SELECT *
+FROM user;
+
+UPDATE user
+SET black_count = 0
+WHERE id = 57;

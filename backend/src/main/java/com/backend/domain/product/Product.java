@@ -1,6 +1,5 @@
 package com.backend.domain.product;
 
-import com.backend.domain.auction.BidList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -27,8 +26,7 @@ public class Product {
     private Boolean reviewStatus;
     private Boolean paymentStatus;
 
-    // TODO:지우기
-    private List<BidList> productBidList;
+    private List<Map<String, Object>> productBidList;
     private List<ProductFile> productFileList;
 
     private Integer numberOfJoin;
@@ -66,7 +64,7 @@ public class Product {
     }
 
     public String getEndTimeDetailsFormat() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 까지");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시");
         return endTime.format(formatter);
     }
 

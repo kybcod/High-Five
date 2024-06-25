@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "./CustomToast.jsx";
 
@@ -9,6 +9,10 @@ export function SignupCodeProvider({ children }) {
   const [isCheckedCode, setIsCheckedCode] = useState(false);
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
+  const [sec, setSec] = useState(0);
+  const [min, setMin] = useState(3);
+  const time = useRef(180);
+  const timerId = useRef(null);
   const { successToast, errorToast } = CustomToast();
 
   useEffect(() => {
@@ -17,12 +21,25 @@ export function SignupCodeProvider({ children }) {
     setVerificationCode("");
   }, []);
 
+  useEffect(() => {
+    if (time.current === -1) {
+      clearInterval(timerId.current);
+    }
+  }, [sec]);
+
   let isWrongPhoneNumberLength = phoneNumber.length !== 8;
-  let isDisabledCheckButton = verificationCode.trim().length !== 4;
+  let isDisabledCheckButton = false;
+
+  if (verificationCode.trim().length !== 4) {
+    isDisabledCheckButton = true;
+  }
+
+  if (time.current === -1) {
+    isDisabledCheckButton = true;
+  }
 
   function handleInputPhoneNumber(input) {
     input.replace(/[-\s]/g, "");
-    console.log(input);
     setPhoneNumber(input);
     setIsCheckedCode(false);
   }
@@ -32,6 +49,14 @@ export function SignupCodeProvider({ children }) {
   }
 
   function handleSendCode() {
+    clearInterval(timerId.current);
+    time.current = 180;
+    timerId.current = setInterval(() => {
+      setMin(parseInt(time.current / 60));
+      setSec(time.current % 60);
+      time.current -= 1;
+    }, 1000);
+
     setIsSendingCode(true);
     axios.get(`/api/users/codes?phoneNumber=010${phoneNumber}`).catch((err) => {
       if (err.response.status === 400) {
@@ -68,6 +93,8 @@ export function SignupCodeProvider({ children }) {
   return (
     <SignupCodeContext.Provider
       value={{
+        sec: sec,
+        min: min,
         phoneNumber: phoneNumber,
         setPhoneNumber: setPhoneNumber,
         isCheckedCode: isCheckedCode,

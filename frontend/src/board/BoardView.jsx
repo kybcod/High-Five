@@ -1,14 +1,21 @@
 import {
   Box,
+  Button,
   Card,
   CardBody,
   Flex,
   Heading,
   Image,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Spacer,
   Spinner,
   Text,
   Textarea,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -25,6 +32,7 @@ export function BoardView() {
   const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
   const [isLikeProcess, setIsLikeProcess] = useState(false);
   const navigate = useNavigate();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const { successToast, errorToast } = CustomToast();
   const account = useContext(LoginContext);
   const { board_id } = useParams();
@@ -77,17 +85,13 @@ export function BoardView() {
         </Box>
         <Spacer />
         {isLikeProcess || (
-          <Flex>
-            <Box onClick={handleClickLike}>
+          <Box onClick={handleClickLike}>
+            <Flex>
               {boardLike.boardLike && <FontAwesomeIcon icon={fullHeart} />}
               {boardLike.boardLike || <FontAwesomeIcon icon={emptyHeart} />}
-              {boardLike.count > 0 && (
-                <Box mx={3} fontSize={"3xl"}>
-                  {boardLike.count}
-                </Box>
-              )}
-            </Box>
-          </Flex>
+              {boardLike.count > 0 && <Box>{boardLike.count}</Box>}
+            </Flex>
+          </Box>
         )}
         {isLikeProcess && (
           <Box>
@@ -96,14 +100,6 @@ export function BoardView() {
         )}
       </Flex>
       <Flex>
-        <Flex>
-          <Box>
-            <Text>{board.userId}</Text>
-          </Box>
-          <Box>
-            <Text>{board.inserted}</Text>
-          </Box>
-        </Flex>
         <Spacer />
         {account.hasAccess(board.userId) && (
           <Flex>
@@ -113,10 +109,19 @@ export function BoardView() {
               </Text>
             </Box>
             <Box>
-              <Text onClick={handleClickDelete}>삭제</Text>
+              <Text onClick={onOpen}>삭제</Text>
             </Box>
           </Flex>
         )}
+      </Flex>
+      <Flex>
+        <Box>
+          <Text>{board.nickName}</Text>
+        </Box>
+        <Spacer />
+        <Box>
+          <Text>{board.inserted}</Text>
+        </Box>
       </Flex>
       <Box mt={3}>
         <Flex>
@@ -134,8 +139,25 @@ export function BoardView() {
       <Box>
         <Textarea value={board.content} readOnly />
       </Box>
-
-      <BoardCommentComponent boardId={board_id} />
+      <Box>
+        <BoardCommentComponent boardId={board_id} />
+      </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader>게시글 삭제</ModalHeader>
+          <ModalBody>
+            <Text>게시글을 삭제하시겠습니까?</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Flex>
+              <Button onClick={onClose}>취소</Button>
+              <Button onClick={handleClickDelete} colorScheme={"red"}>
+                삭제
+              </Button>
+            </Flex>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

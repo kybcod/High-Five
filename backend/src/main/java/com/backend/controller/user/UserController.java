@@ -23,7 +23,7 @@ public class UserController {
     private final AuthenticationConfiguration authenticationConfiguration;
 
     // user_id 멤버 상세
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     @GetMapping("users/{id}")
     public ResponseEntity getUser(@PathVariable Integer id) {
         User db = service.getUserByUserId(id);
@@ -36,7 +36,6 @@ public class UserController {
     // user 회원 가입
     @PostMapping("users")
     public ResponseEntity addUser(@RequestBody User user) {
-        //TODO:나중에 주석 풀기
         if (service.signUpVerification(user)) {
             service.addUser(user);
             return ResponseEntity.ok().build();
@@ -46,7 +45,6 @@ public class UserController {
 
 
     // 회원가입 시 인증코드 받기
-    // TODO. 나중에 활성화
     @GetMapping("users/codes")
     public ResponseEntity sendCode(String phoneNumber) {
         if (phoneNumber.length() == 11) {
@@ -94,11 +92,11 @@ public class UserController {
     public ResponseEntity login(@RequestBody User user) {
 
         Map<String, Object> token = service.issueToken(user);
-        if (token == null) {
+        if (token.get("token") == null) {
+            if (token.get("message") != null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             return ResponseEntity.notFound().build();
-        }
-        if (token.get("message") != null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         return ResponseEntity.ok(token);
@@ -131,6 +129,7 @@ public class UserController {
     }
 
     // user 리스트 조회
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     @GetMapping("/users/list")
     public Map<String, Object> list(@RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false) String type,

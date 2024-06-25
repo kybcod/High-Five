@@ -9,12 +9,14 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
 import { BoardCommentEdit } from "./BoardCommentEdit.jsx";
 import { BoardReCommentWrite } from "./BoardReCommentWrite.jsx";
+import { LoginContext } from "../component/LoginProvider.jsx";
+import { BoardReCommentEdit } from "./BoardReCommentEdit.jsx";
 
 export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   const [boardCommentList, setBoardCommentList] = useState([]);
@@ -22,6 +24,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   const [updatedContent, setUpdatedContent] = useState("");
   const [showReCommentId, setShowReCommentId] = useState(null);
   const { successToast, errorToast } = CustomToast();
+  const account = useContext(LoginContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +33,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
         .get(`/api/board/comment/${boardId}`)
         .then((res) => {
           setBoardCommentList(res.data);
-          navigate(`/board/${boardId}`);
+          setUpdatedContent(updatedContent);
         })
         .catch((err) => {
           console.log(err);
@@ -42,6 +45,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   }, [isProcessing]);
 
   function handleClickCommentDelete(commentId) {
+    setIsProcessing(true);
     axios
       .delete(`/api/board/comment/${commentId}`)
       .then((res) => {
@@ -66,33 +70,43 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
     setShowReCommentId(id);
   }
 
+  function handleClickReReComment(id) {
+    setShowReCommentId(id);
+  }
+
+  const measureDepth = (depth) => {
+    return `${depth * 10}px`;
+  };
+
   return (
-    <Card>
-      <CardBody>
-        {boardCommentList &&
-          boardCommentList.length > 0 &&
-          boardCommentList.map((boardComment) => (
+    boardCommentList &&
+    boardCommentList.length > 0 && (
+      <Card>
+        <CardBody>
+          {boardCommentList.map((boardComment) => (
             <Stack key={boardComment.id}>
               {boardComment.refId === 0 && (
                 <Box>
                   {isEditingId === boardComment.id || (
                     <Flex>
-                      <Text>{boardComment.userId}</Text>
+                      <Text>{boardComment.nickName}</Text>
                       <Textarea defaultValue={boardComment.content} readOnly />
-                      <Stack>
-                        <Button
-                          onClick={() =>
-                            handleClickCommentDelete(boardComment.id)
-                          }
-                        >
-                          삭제
-                        </Button>
-                        <Button
-                          onClick={() => handleEditClick(boardComment.id)}
-                        >
-                          수정
-                        </Button>
-                      </Stack>
+                      {account.hasAccess(boardComment.userId) && (
+                        <Stack>
+                          <Button
+                            onClick={() =>
+                              handleClickCommentDelete(boardComment.id)
+                            }
+                          >
+                            삭제
+                          </Button>
+                          <Button
+                            onClick={() => handleEditClick(boardComment.id)}
+                          >
+                            수정
+                          </Button>
+                        </Stack>
+                      )}
                     </Flex>
                   )}
                   {isEditingId === boardComment.id && (
@@ -101,6 +115,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                       setIsEditingId={setIsEditingId}
                       updatedContent={updatedContent}
                       setUpdatedContent={setUpdatedContent}
+                      setIsProcessing={setIsProcessing}
                     />
                   )}
                   <Flex>
@@ -114,60 +129,100 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                         </Text>
                       </Box>
                     )}
-                    {showReCommentId === boardComment.id && (
-                      <BoardReCommentWrite
-                        boardComment={boardComment}
-                        setShowReCommentId={setShowReCommentId}
-                      />
-                    )}
                     <Spacer />
                     <Box>
                       <Text>{boardComment.inserted}</Text>
                     </Box>
                   </Flex>
+                  <Box>
+                    {showReCommentId === boardComment.id && (
+                      <BoardReCommentWrite
+                        boardComment={boardComment}
+                        setShowReCommentId={setShowReCommentId}
+                        setIsProcessing={setIsProcessing}
+                        refId={boardComment.id}
+                      />
+                    )}
+                  </Box>
                 </Box>
               )}
               {boardCommentList
                 .filter((subComment) => subComment.refId === boardComment.id)
                 .map((subComment) => (
-                  <Box key={subComment.commentSeq} ml="5" width="90%">
+                  <Box
+                    key={subComment.commentSeq}
+                    style={{ marginLeft: measureDepth(subComment.commentId) }}
+                    width="90%"
+                  >
                     {isEditingId === subComment.id || (
                       <Flex>
-                        <Text>{subComment.userId}</Text>
+                        <Text>{subComment.nickName}</Text>
                         <Textarea
                           defaultValue={subComment.content}
                           readOnly
                           size="sm"
                         />
-                        <Stack>
-                          <Button
-                            onClick={() =>
-                              handleClickCommentDelete(subComment.id)
-                            }
-                          >
-                            삭제
-                          </Button>
-                          <Button
-                            onClick={() => handleEditClick(subComment.id)}
-                          >
-                            수정
-                          </Button>
-                        </Stack>
+                        {account.hasAccess(subComment.userId) && (
+                          <Stack>
+                            <Button
+                              onClick={() =>
+                                handleClickCommentDelete(subComment.id)
+                              }
+                            >
+                              삭제
+                            </Button>
+                            <Button
+                              onClick={() => handleEditClick(subComment.id)}
+                            >
+                              수정
+                            </Button>
+                          </Stack>
+                        )}
                       </Flex>
                     )}
-                    {isEditingId === boardComment.id && (
-                      <BoardCommentEdit
-                        boardComment={boardComment}
+                    {isEditingId === subComment.id && (
+                      <BoardReCommentEdit
+                        subComment={subComment}
                         setIsEditingId={setIsEditingId}
                         updatedContent={updatedContent}
                         setUpdatedContent={setUpdatedContent}
+                        setIsProcessing={setIsProcessing}
                       />
                     )}
+                    <Flex>
+                      {showReCommentId === subComment.id || (
+                        <Box>
+                          <Text
+                            onClick={() =>
+                              handleClickReReComment(subComment.id)
+                            }
+                            fontSize={"12px"}
+                          >
+                            답글쓰기
+                          </Text>
+                        </Box>
+                      )}
+                      <Spacer />
+                      <Box>
+                        <Text>{subComment.inserted}</Text>
+                      </Box>
+                    </Flex>
+                    <Box>
+                      {showReCommentId === subComment.id && (
+                        <BoardReCommentWrite
+                          boardComment={subComment}
+                          setShowReCommentId={setShowReCommentId}
+                          setIsProcessing={setIsProcessing}
+                          refId={subComment.refId}
+                        />
+                      )}
+                    </Box>
                   </Box>
                 ))}
             </Stack>
           ))}
-      </CardBody>
-    </Card>
+        </CardBody>
+      </Card>
+    )
   );
 }

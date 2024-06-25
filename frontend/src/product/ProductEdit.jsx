@@ -48,6 +48,19 @@ export function ProductEdit() {
 
   function handleUpdateClick() {
     const localDate = new Date(`${date}T${time}`);
+    const currentDateTime = new Date();
+    if (localDate < currentDateTime) {
+      toast({
+        status: "warning",
+        description:
+          "선택한 시간이 현재 시간보다 이전입니다. 다시 선택해주세요.",
+        position: "top-right",
+        duration: 3000,
+      });
+      setLoading(false);
+      return;
+    }
+
     localDate.setHours(localDate.getHours() + 9);
     const formattedEndTime = localDate.toISOString().slice(0, -5);
 
@@ -108,8 +121,10 @@ export function ProductEdit() {
         });
       })
       .finally(() => {
-        deleteModal.onClose();
+        // deleteModal.onClose();
+        setDeleteModal({ isOpen: false });
         setLoading(false);
+        navigate("/");
       });
   }
 
@@ -148,7 +163,8 @@ export function ProductEdit() {
   }
 
   return (
-    <Box p={4} mx="auto" maxWidth="600px">
+    // <Box p={4} mx="auto" maxWidth="600px">
+    <Box>
       <Box mb={4}>
         <Flex alignItems="center">
           <FormLabel htmlFor="file-upload">
@@ -181,7 +197,7 @@ export function ProductEdit() {
             </Box>
           </FormLabel>
 
-          <Flex overflowX="auto" flexWrap="nowrap" maxWidth="400px">
+          <Flex overflowX="auto" flexWrap="nowrap" maxWidth="100%">
             {/* 기존 이미지 표시 */}
             {existingFilePreviews.map((file) => (
               <Box

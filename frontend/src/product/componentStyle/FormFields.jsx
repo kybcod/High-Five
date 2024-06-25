@@ -130,6 +130,8 @@ export function FormFields({
         <FormControl>
           <FormLabel>상품 상세내용 (선택)</FormLabel>
           <Textarea
+            resize={"none"}
+            height={"300px"}
             borderColor="gray.400"
             value={content}
             onChange={(e) => setContent(e.target.value)}
