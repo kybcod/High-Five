@@ -60,6 +60,8 @@ export function UserEdit() {
       .catch((err) => {
         if (err.response.status === 401) {
           errorToast("비밀번호가 다릅니다");
+        } else if (err.response.status === 400) {
+          errorToast("사용할 수 없는 비밀번호이거나 닉네임입니다");
         } else {
           errorToast("회원 정보 수정 중 문제가 발생했습니다");
         }

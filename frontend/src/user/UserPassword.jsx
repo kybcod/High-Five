@@ -28,9 +28,7 @@ export function UserPassword() {
         if (err.response.status === 404) {
           errorToast("입력한 정보에 맞는 회원 정보가 없습니다");
         } else {
-          successToast(
-            "비밀번호 변경 중 문제가 발생했습니다. 다시 시도해주세요",
-          );
+          errorToast("비밀번호 변경 중 문제가 발생했습니다. 다시 시도해주세요");
         }
       });
   }
