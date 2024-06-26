@@ -130,7 +130,7 @@ export function ProductDetails() {
       <Divider my={10} borderColor="gray" />
 
       <Flex alignItems="flex-start">
-        <Box width="45%" mr={20} border={"1px solid black"}>
+        <Box width="45%" mr={20}>
           <SimpleSlider
             images={existingFilePreviews}
             isBrightness={!product.status}
@@ -138,59 +138,60 @@ export function ProductDetails() {
         </Box>
 
         <Box flex="1">
-          {product.status || (
-            <>
-              {product.maxBidPrice !== null ? (
-                <Box mb={5}>
-                  <Box
-                    style={{ whiteSpace: "nowrap" }}
-                    fontWeight="bold"
-                    fontSize="3xl"
-                    color="red"
-                  >
-                    낙찰 금액 : {formattedPrice(product.maxBidPrice)}원
-                  </Box>
-                </Box>
-              ) : (
-                <Box mb={5}>
-                  <Box
-                    style={{ whiteSpace: "nowrap" }}
-                    fontWeight="bold"
-                    fontSize="3xl"
-                    color="red"
-                  >
-                    낙찰된 금액이 없습니다.
-                  </Box>
-                </Box>
-              )}
-            </>
-          )}
-
-          <Box mb={6}>
+          <Box mb={7}>
             <Heading style={{ whiteSpace: "nowrap" }}>{product.title}</Heading>
           </Box>
-          <Box mb={5} justifyContent="space-between">
+          <Flex mb={5} justifyContent="space-between">
             <Text fontSize="2xl">{formattedPrice(product.startPrice)}원</Text>
-          </Box>
+            <Text fontSize="2xl">
+              {product.status || (
+                <>
+                  {product.maxBidPrice !== null ? (
+                    <Box mb={5}>
+                      <Box
+                        style={{ whiteSpace: "nowrap" }}
+                        fontWeight="bold"
+                        color="red"
+                      >
+                        낙찰 금액 : {formattedPrice(product.maxBidPrice)}원
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Box mb={5}>
+                      <Box
+                        style={{ whiteSpace: "nowrap" }}
+                        fontWeight="bold"
+                        fontSize="3xl"
+                        color="red"
+                      >
+                        낙찰된 금액이 없습니다.
+                      </Box>
+                    </Box>
+                  )}
+                </>
+              )}
+            </Text>
+          </Flex>
 
           <Divider mb={6} />
 
           {/*다른 user의 상품 일 때*/}
-          <Box mb={6}>
+          <Box mb={10}>
             <Flex justifyContent="space-evenly" alignItems="center">
               <Flex alignItems="center" mr={4}>
-                <Box mr={2}>찜</Box>
-                <Box>
-                  <FontAwesomeIcon icon="fullHeart" size="lg" />
-                  {like.count}
-                </Box>
+                <FontAwesomeIcon icon={fullHeart} size="lg" />
+                <Text ml={1}>{like.count}</Text>
               </Flex>
-              <Flex alignItems="center" mr={4}>
+              <Box height="24px" borderLeft="1px solid #ccc" />
+              <Flex alignItems="center" ml={4} mr={4}>
                 <FontAwesomeIcon icon={faEye} size="lg" />
                 <Box ml={2}>{product.viewCount}</Box>
               </Flex>
+              <Box height="24px" borderLeft="1px solid #ccc" />
               <Box>
-                <Text fontSize="lg">{product.timeFormat}</Text>
+                <Text fontSize="lg" ml={4}>
+                  {product.timeFormat}
+                </Text>
               </Box>
               <Spacer />
               {account.isLoggedIn() && !account.hasAccess(product.userId) && (
@@ -307,7 +308,8 @@ export function ProductDetails() {
                 <Button
                   colorScheme="green"
                   w="100%"
-                  h={"50px"}
+                  h={"60px"}
+                  fontSize={"lg"}
                   onClick={() => navigate(`/edit/${product.id}`)}
                 >
                   상품수정
