@@ -100,16 +100,12 @@ export function BidList() {
           경매에 참여한 상품이 없습니다.
         </Text>
       ) : (
-        <Grid
-          templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
-          gap={6}
-        >
+        <Grid templateColumns={"repeat(3, 1fr)"} gap={6}>
           {bidList.map((bid) => (
             <GridItem key={bid.id}>
               <Card
                 cursor={"pointer"}
                 maxW="sm"
-                h="100%"
                 borderWidth="1px"
                 borderColor={"#eee"}
                 borderRadius="lg"
@@ -117,6 +113,9 @@ export function BidList() {
                 boxShadow="md"
                 transition="transform 0.2s"
                 _hover={{ transform: "scale(1.05)" }}
+                h="100%"
+                display="flex"
+                flexDirection="column"
               >
                 <CardBody position="relative" h="100%">
                   <Box mt={2} w="100%">
@@ -142,7 +141,8 @@ export function BidList() {
                             src={bid.product.productFileList[0].filePath}
                             borderRadius="lg"
                             w="100%"
-                            h="200px"
+                            h="200px" // 이미지 높이 조정
+                            objectFit="cover" // 이미지가 카드 안에 꽉 차도록 설정
                           />
                         )}
 
@@ -161,7 +161,8 @@ export function BidList() {
                           src={bid.product.productFileList[0].filePath}
                           borderRadius="lg"
                           w="100%"
-                          h="200px"
+                          h="200px" // 이미지 높이 조정
+                          objectFit="cover" // 이미지가 카드 안에 꽉 차도록 설정
                           filter="brightness(50%)"
                           position="absolute"
                           top="0"
@@ -188,7 +189,7 @@ export function BidList() {
                       </Box>
                     )}
                   </Box>
-                  <Stack mt="6" spacing="3">
+                  <Stack mt="6" spacing="3" flex="1">
                     <Flex justifyContent={"space-between"}>
                       <Text as={"b"} noOfLines={1} fontSize="lg">
                         {bid.product.title}
@@ -222,22 +223,6 @@ export function BidList() {
                       <Text>{bid.product.timeFormat}</Text>
                     </Flex>
                   </Stack>
-                  {/*{!bid.product.status && bid.bidStatus && (*/}
-                  {/*    <Box display="flex" justifyContent="center">*/}
-                  {/*      <Button*/}
-                  {/*          mt={2}*/}
-                  {/*          w={"100%"}*/}
-                  {/*          colorScheme={"purple"}*/}
-                  {/*          onClick={() => {*/}
-                  {/*            navigate(*/}
-                  {/*                `/chat/product/${bid.product.id}/buyer/${bid.userId}`,*/}
-                  {/*            );*/}
-                  {/*          }}*/}
-                  {/*      >*/}
-                  {/*        {bid.product.paymentStatus ? "결제완료" : "거래하기"}*/}
-                  {/*      </Button>*/}
-                  {/*    </Box>*/}
-                  {/*)}*/}
                   {!bid.product.status &&
                     bid.bidStatus &&
                     bid.product.paymentStatus && (
@@ -291,9 +276,8 @@ export function BidList() {
           {hasNextPage ? (
             <Button
               w={"30%"}
-              colorScheme={"black"}
-              variant={"outline"}
-              borderRadius={"0px"}
+              colorScheme={"white"}
+              color={"black"}
               mt={4}
               onClick={handleMoreClick}
               rightIcon={<ArrowDownIcon />}
@@ -304,9 +288,8 @@ export function BidList() {
             bidList.length > 9 && (
               <Button
                 w={"30%"}
-                colorScheme={"black"}
-                variant={"outline"}
-                borderRadius={"0px"}
+                colorScheme={"white"}
+                color={"black"}
                 mt={4}
                 rightIcon={<ChevronUpIcon />}
                 onClick={handleFoldClick}
