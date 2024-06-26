@@ -267,7 +267,9 @@ export function LikeList() {
           {hasNextPage ? (
             <Button
               w={"30%"}
-              colorScheme={"blue"}
+              colorScheme={"black"}
+              variant={"outline"}
+              borderRadius={"0px"}
               mt={4}
               onClick={handleMoreClick}
               rightIcon={<ArrowDownIcon />}
@@ -278,7 +280,9 @@ export function LikeList() {
             likeProductList.length > 9 && (
               <Button
                 w={"30%"}
-                colorScheme={"blue"}
+                colorScheme={"black"}
+                variant={"outline"}
+                borderRadius={"0px"}
                 mt={4}
                 rightIcon={<ChevronUpIcon />}
                 onClick={handleFoldClick}
