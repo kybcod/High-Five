@@ -14,7 +14,7 @@ import {
   faSackDollar,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons"; // FontAwesome에서 추가 아이콘 가져오기
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
 
@@ -79,6 +79,14 @@ export function Header() {
               >
                 판매하기
               </Button>
+
+              <Box
+                height="24px"
+                borderLeft="1px solid #ccc"
+                mx={2}
+                alignSelf="center"
+              />
+
               <Button
                 onClick={() => navigate("/chat/list")}
                 size="md"
