@@ -1,0 +1,37 @@
+/* 부모 요소에 위치 기준을 설정 */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* 기본적으로 드롭다운 메뉴 숨기기 */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top:150%;
+    left:0;
+    background-color: rgba(241,241,241,0.8);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* 고객센터 hover 시 드롭다운 메뉴 보이기 */
+.dropdown:hover .dropdown-content{
+    display: block;
+}
+
+.dropdown-content:hover{display: block}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdown-content a{
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* 드롭다운 메뉴 링크 hover 스타일 */
+.dropdown-content a:hover {
+    background-color: lightgray;
+}

@@ -167,7 +167,7 @@ export function QuestionList() {
                       </Box>
                     )}
                   </Td>
-                  <Td width="10%" textAlign="center">
+                  <Td width="15%" textAlign="center">
                     {question.nickName}
                   </Td>
                   <Td width="10%" textAlign="center" fontSize={"sm"}>
@@ -183,7 +183,7 @@ export function QuestionList() {
         )}
       </Box>
 
-      <Center mb={3}>
+      <Center mb={10}>
         <Flex gap={2}>
           <Box>
             <Select
@@ -263,7 +263,7 @@ export function QuestionList() {
       </Center>
 
       {account.isLoggedIn() && (
-        <Flex justify={"flex-end"} mr={10}>
+        <Flex justify={"flex-end"} mr={10} mt={2}>
           <Button
             colorScheme={"blue"}
             onClick={() => navigate("/question/write")}

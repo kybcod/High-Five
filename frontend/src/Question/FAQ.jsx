@@ -73,7 +73,7 @@ export function FAQ() {
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
-            mb={2}
+            mb={8}
           >
             <Flex
               onClick={() => toggleExpand(item.id)}
@@ -81,7 +81,7 @@ export function FAQ() {
               justifyContent="space-between"
               _hover={{ backgroundColor: "gray.100" }}
               p={4}
-              bg="gray.50"
+              // bg="gray.50"
               borderBottom="1px solid gray"
             >
               <Box fontWeight="bold" flex="1" textAlign="left">
@@ -91,7 +91,9 @@ export function FAQ() {
             </Flex>
             {expanded.includes(item.id) && (
               <Box p={4} bg="gray.100">
-                <Text whiteSpace={"pre-line"}>{item.content}</Text>
+                <Text whiteSpace={"pre-line"} m={"20px"}>
+                  {item.content}
+                </Text>
               </Box>
             )}
           </Box>
