@@ -144,7 +144,7 @@ export function ProductUpload() {
       >
         상품 등록
       </Text>
-      <Divider mx="auto" maxWidth="1000px" my={4} />
+      <Divider border={"1px solid black"} mx="auto" maxWidth="1000px" my={4} />
       <Box mx="auto" maxWidth="1000px">
         <FileUpload
           files={files}

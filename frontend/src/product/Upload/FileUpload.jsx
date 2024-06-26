@@ -61,10 +61,8 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
 
   return (
     <Box mb={4}>
-      <Grid templateColumns="180px 1fr" gap={4}>
-        <Text width="180px" pr={4}>
-          상품 이미지
-        </Text>
+      <Text mb={2}>상품 이미지</Text>
+      <Grid templateColumns="repeat(auto-fill, minmax(180px, 1fr))" gap={4}>
         <Box alignSelf="flex-start">
           <FormLabel
             border="1px dashed gray"
@@ -100,9 +98,7 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
             />
           </FormLabel>
         </Box>
-        <Grid templateColumns="repeat(auto-fill, 180px)" gap={4}>
-          {filePreview}
-        </Grid>
+        {filePreview}
       </Grid>
     </Box>
   );
