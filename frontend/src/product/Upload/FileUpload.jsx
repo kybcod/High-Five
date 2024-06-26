@@ -61,44 +61,50 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
 
   return (
     <Box mb={4}>
-      <Text mb={2}>상품 이미지</Text>
-      <Grid templateColumns="repeat(auto-fill, minmax(180px, 1fr))" gap={4}>
-        <Box alignSelf="flex-start">
-          <FormLabel
-            border="1px dashed gray"
-            textAlign="center"
-            cursor="pointer"
-            _hover={{ borderColor: "blue.500" }}
-            mr={4}
-            p={4}
-            rounded="md"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-            width="180px"
-            height="180px"
-            maxW={"180px"}
-            maxH={"180px"}
-          >
-            <Box mb={2}>
-              <FontAwesomeIcon icon={faCamera} size="2xl" />
+      <Grid templateColumns="max-content 1fr" alignItems="start" gap={4}>
+        <Text width="max-content" whiteSpace="nowrap" w={"180px"}>
+          상품 이미지
+        </Text>
+        <Box>
+          <Grid templateColumns="repeat(auto-fill, minmax(180px, 1fr))" gap={4}>
+            <Box alignSelf="flex-start">
+              <FormLabel
+                border="1px dashed gray"
+                textAlign="center"
+                cursor="pointer"
+                _hover={{ borderColor: "blue.500" }}
+                mr={4}
+                p={4}
+                rounded="md"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="column"
+                width="180px"
+                height="180px"
+                maxW={"180px"}
+                maxH={"180px"}
+              >
+                <Box mb={2}>
+                  <FontAwesomeIcon icon={faCamera} size="2xl" />
+                </Box>
+                <Box>이미지 등록</Box>
+                <Input
+                  ref={fileInputRef}
+                  id="file-upload"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleChangeFiles}
+                  height={"180px"}
+                  width={"180px"}
+                />
+              </FormLabel>
             </Box>
-            <Box>이미지 등록</Box>
-            <Input
-              ref={fileInputRef}
-              id="file-upload"
-              type="file"
-              multiple
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleChangeFiles}
-              height={"180px"}
-              width={"180px"}
-            />
-          </FormLabel>
+            {filePreview}
+          </Grid>
         </Box>
-        {filePreview}
       </Grid>
     </Box>
   );
