@@ -84,6 +84,8 @@ export function SignupCodeProvider({ children }) {
       })
       .catch((err) => {
         if (err.response.status === 400) {
+          errorToast("유효한 휴대폰 번호가 아닙니다");
+        } else if (err.response.status === 404) {
           errorToast("인증번호가 일치하지 않습니다");
         } else {
           errorToast(

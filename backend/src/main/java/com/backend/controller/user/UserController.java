@@ -47,6 +47,7 @@ public class UserController {
     // 회원가입 시 인증코드 받기
     @GetMapping("users/codes")
     public ResponseEntity sendCode(String phoneNumber) {
+        // TODO. 주석 삭제
         phoneNumber = phoneNumber.replaceAll("-", "");
         System.out.println("phoneNumber = " + phoneNumber);
         if (phoneNumber.length() == 11) {
@@ -156,6 +157,7 @@ public class UserController {
     // 전화번호로 이메일 찾기
     @GetMapping("/users/emails/{phoneNumber}")
     public ResponseEntity getEmails(@PathVariable String phoneNumber) {
+        phoneNumber = phoneNumber.replaceAll("-", "");
         if (phoneNumber.length() == 11) {
             String email = service.getEmailByPhoneNumber(phoneNumber);
             if (email != null) {

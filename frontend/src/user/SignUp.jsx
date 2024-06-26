@@ -22,6 +22,7 @@ import {
   InputGroupButton,
   InputGroupStyle,
   InputStyle,
+  title,
 } from "../component/css/style.js";
 
 export function SignUp() {
@@ -137,9 +138,7 @@ export function SignUp() {
   return (
     <Center>
       <Box color={"gray.500"} mt={70} width={"500px"}>
-        <Text fontSize={"3xl"} fontWeight={"bold"} color={"black"}>
-          본인 정보를 입력해주세요
-        </Text>
+        <Text {...title}>본인 정보를 입력해주세요</Text>
         <FormControl mt={7}>
           <FormLabel {...formLabel}>이메일 주소</FormLabel>
           <InputGroup {...InputGroupStyle}>

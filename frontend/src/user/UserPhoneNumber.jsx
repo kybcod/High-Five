@@ -36,7 +36,7 @@ export function UserPhoneNumber() {
           />
           <InputRightElement width="4.5rem">
             {codeInfo.isSendingCode && (
-              <Text>
+              <Text mr={2} color={"gray.800"}>
                 {codeInfo.min +
                   ":" +
                   (codeInfo.sec < 10 ? "0" + codeInfo.sec : codeInfo.sec)}
@@ -68,7 +68,6 @@ export function UserPhoneNumber() {
         <InputGroup {...InputGroupStyle}>
           <Input
             {...InputStyle}
-            placeholder={"인증번호를 입력하세요"}
             onChange={(e) => codeInfo.handleInputCode(e.target.value)}
           />
           <InputRightElement width="4.5rem">

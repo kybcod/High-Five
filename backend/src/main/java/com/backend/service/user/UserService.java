@@ -7,7 +7,6 @@ import com.backend.mapper.user.UserMapper;
 import com.backend.util.PageInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -52,22 +51,26 @@ public class UserService {
 
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
-        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
+        // TODO. 주석풀기
+//        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
 
         Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
         if (dbCode != null) {
             mapper.deleteCodeByPhoneNumber(phoneNumber);
         }
 
-        if (response.getStatusCode().equals("2000")) {
-            mapper.insertCode(phoneNumber, verificationCode);
-        }
+//        if (response.getStatusCode().equals("2000")) {
+        mapper.insertCode(phoneNumber, verificationCode);
+//        }
 
         Timer timer = new Timer();
 
         TimerTask timeOutCodeDelete = new TimerTask() {
             public void run() {
-                mapper.deleteCodeByVerificationCode(Integer.parseInt(verificationCode));
+                Integer leftCode = mapper.selectCodeByPhoneNumber(phoneNumber);
+                if (leftCode != null) {
+                    mapper.deleteCodeByVerificationCode(leftCode);
+                }
             }
         };
 
@@ -78,10 +81,18 @@ public class UserService {
 
     public boolean checkVerificationCode(String phoneNumber, int verificationCode) {
         Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
-        if (dbCode != null) {
-            mapper.deleteCodeByPhoneNumber(phoneNumber);
+
+        if (dbCode == null) {
+            return false;
         }
-        return verificationCode == dbCode;
+
+        if (verificationCode != dbCode) {
+            return false;
+        }
+
+        mapper.deleteCodeByPhoneNumber(phoneNumber);
+
+        return true;
     }
 
     public void addUser(User user) {
