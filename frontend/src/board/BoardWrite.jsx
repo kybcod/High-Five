@@ -4,7 +4,6 @@ import {
   Flex,
   FormControl,
   FormHelperText,
-  FormLabel,
   Heading,
   IconButton,
   Input,
@@ -91,21 +90,30 @@ export function BoardWrite() {
   return (
     <Box>
       <Heading>자유게시판 글 작성</Heading>
-      <Box mt={"20px"}>
+      <Box mt={"30px"}>
         <FormControl>
-          <FormLabel fontSize={"lg"}>제목</FormLabel>
+          <Heading fontSize={"md"}>제목</Heading>
           <Input
             onChange={(e) => setTitle(e.target.value)}
             placeholder={"제목을 입력해주세요"}
+            mt={"20px"}
           />
         </FormControl>
       </Box>
-      <Box mt={"10px"}>
+      <Box mt={"20px"}>
         <FormControl>
-          <Flex alignItems="center">
-            <FormLabel fontSize={"lg"} mt={"5px"}>
+          {fileNameList.length > 0 && (
+            <Box mt={"5px"}>
+              <Heading fontSize="md" mb={"10px"}>
+                선택된 파일 목록
+              </Heading>
+              <List spacing={3}>{fileNameList}</List>
+            </Box>
+          )}
+          <Flex justifyContent="center">
+            <Heading fontSize={"md"} mt={"10px"}>
               상품 상세 내용
-            </FormLabel>
+            </Heading>
             <Spacer />
             <FormHelperText mb={"13px"} mr={3}>
               총 용량은 10MB를 초과할 수 없습니다
@@ -122,14 +130,6 @@ export function BoardWrite() {
               onChange={(e) => setFiles(Array.from(e.target.files))}
             />
           </Flex>
-          {fileNameList.length > 0 && (
-            <Box mt={"5px"}>
-              <Heading size="md" mb={"5px"}>
-                선택된 파일 목록
-              </Heading>
-              <List spacing={3}>{fileNameList}</List>
-            </Box>
-          )}
           <Textarea
             onChange={(e) => setContent(e.target.value)}
             placeholder={"내용을 입력해주세요"}
