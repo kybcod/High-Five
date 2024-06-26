@@ -24,6 +24,7 @@ import {
   Spinner,
   Text,
   Textarea,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
@@ -211,14 +212,16 @@ export function ProductDetails() {
               />{" "}
               판매자 :{" "}
               <Box mb={5} display="inline-block">
-                <Text
-                  textDecoration="underline"
-                  fontSize="xl"
-                  cursor="pointer"
-                  onClick={() => navigate(`/myPage/${product.userId}/shop`)}
-                >
-                  {product.userNickName}
-                </Text>
+                <Tooltip label="판매자 페이지로 이동">
+                  <Text
+                    textDecoration="underline"
+                    fontSize="xl"
+                    cursor="pointer"
+                    onClick={() => navigate(`/myPage/${product.userId}/shop`)}
+                  >
+                    {product.userNickName}
+                  </Text>
+                </Tooltip>
               </Box>
             </ListItem>
             <ListItem>
@@ -246,7 +249,7 @@ export function ProductDetails() {
           </List>
 
           {/*판매 완료, 로그인이 안되어 있는 상태, 자신의 상품일 때 보이지 않음*/}
-          {(account.isLoggedIn() && account.hasAccess(product.userId)) || (
+          {!account.isLoggedIn() || account.hasAccess(product.userId) || (
             <Box mb={5}>
               <Flex w={"100%"}>
                 <Box w={"100%"} mr={4}>
@@ -387,6 +390,9 @@ export function ProductDetails() {
                 </OrderedList>
               </Box>
             </Box>
+            <Text fontWeight={"bold"} fontSize={"lg"} mb={4}>
+              시작가 : {formattedPrice(product.startPrice)} 원
+            </Text>
             <FormControl mb={4}>
               <FormLabel mb={4}>입찰 금액</FormLabel>
               <InputGroup>

@@ -190,7 +190,7 @@ export function MyShop() {
                     {product.title}
                   </Text>
                   <Flex justifyContent={"space-between"}>
-                    <Text color="blue.600" fontSize="xl">
+                    <Text color="blue.600" fontSize="lg">
                       {product.startPrice
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}

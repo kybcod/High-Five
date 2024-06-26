@@ -12,6 +12,7 @@ export function Navbar() {
   return (
     <Flex
       border={"1px solid black"}
+      h={"10px"}
       p={4}
       justifyContent={"space-between"}
       align="center"
@@ -19,8 +20,7 @@ export function Navbar() {
       cursor={"pointer"}
     >
       <Center onClick={() => navigate("/board/list")} mx={2}>
-        {/*<FontAwesomeIcon icon={faClipboardList} />*/}
-        <Text fontSize={"sm"} ml={2}>
+        <Text fontSize={"small"} ml={2}>
           자유게시판
         </Text>
       </Center>
@@ -29,8 +29,7 @@ export function Navbar() {
         cursor="pointer"
         mx={2}
       >
-        {/*<FontAwesomeIcon icon={faQuestionCircle} />*/}
-        <Text fontSize={"sm"} ml={2}>
+        <Text fontSize={"small"} ml={2}>
           QnA
         </Text>
       </Center>
@@ -38,7 +37,7 @@ export function Navbar() {
       {account.isAdmin() && (
         <Center onClick={() => navigate("/user/list")} mx={2}>
           <FontAwesomeIcon icon={faUsers} />
-          <Text fontSize={"sm"} ml={2}>
+          <Text fontSize={"small"} ml={2}>
             회원 목록
           </Text>
         </Center>
@@ -54,8 +53,7 @@ export function Navbar() {
             cursor="pointer"
             mx={2}
           >
-            {/*<FontAwesomeIcon icon={faSignOutAlt} />*/}
-            <Text fontSize={"sm"} ml={2}>
+            <Text fontSize={"small"} ml={2}>
               로그아웃
             </Text>
           </Center>
@@ -63,7 +61,7 @@ export function Navbar() {
       ) : (
         <>
           <Center onClick={() => navigate("/signup")} mx={2}>
-            <Text fontSize={"sm"} ml={2}>
+            <Text fontSize={"small"} ml={2}>
               회원 가입
             </Text>
           </Center>
@@ -73,7 +71,7 @@ export function Navbar() {
             mx={2}
             alignSelf="center"
           />
-          <Center fontSize={"sm"} onClick={() => navigate("/login")} mx={2}>
+          <Center fontSize={"small"} onClick={() => navigate("/login")} mx={2}>
             <Text ml={2}>로그인</Text>
           </Center>
         </>

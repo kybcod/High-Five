@@ -71,7 +71,7 @@ export function MainProduct() {
     <Box>
       {/* 네브바, 헤더, 카테고리, 이미지 배너 등 추가 */}
       {/*<Category />*/}
-      <Box mt={10} h="400px" w="100%" mb={10} boxSizing="border-box" mx="auto">
+      <Box mt={10} h="350px" w="100%" mb={10} boxSizing="border-box" mx="auto">
         {/*<MainSlider />*/}
       </Box>
       <Heading my={4}>오늘의 상품</Heading>
@@ -170,7 +170,7 @@ export function MainProduct() {
                     )}
                   </Flex>
                   <Flex justifyContent="space-between">
-                    <Text color="blue.600" fontSize="xl">
+                    <Text color="blue.600" fontSize="lg">
                       {product.startPrice
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}

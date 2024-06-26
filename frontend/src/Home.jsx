@@ -9,7 +9,7 @@ export function Home() {
     <Box
       mx={{
         base: 0,
-        lg: 250,
+        lg: 200,
       }}
       mb={10}
     >

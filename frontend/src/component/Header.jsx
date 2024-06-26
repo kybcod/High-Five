@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  IconButton,
   Input,
   InputGroup,
   InputRightAddon,
@@ -57,18 +56,15 @@ export function Header() {
   }
 
   return (
-    <Box py={4} border={"1px solid black"}>
+    <Box border={"1px solid black"}>
       <Flex align="center" justify="space-between" maxW="100%">
         <Menu>
           <Box ml={2} h={"100%"} align={"center"}>
-            <MenuButton
-              as={IconButton}
-              icon={<HamburgerIcon />}
-              variant="outline"
-            />
-            <Text mt={2}>카테고리</Text>
+            <MenuButton as={Button} leftIcon={<HamburgerIcon />}>
+              카테고리
+            </MenuButton>
           </Box>
-          <MenuList mt={6}>
+          <MenuList>
             <MenuItem
               onClick={() => handleCategoryClick("clothes")}
               icon={<FontAwesomeIcon icon={faShirt} />}
@@ -128,14 +124,21 @@ export function Header() {
 
         {/* 검색 */}
         <Flex align={"center"}>
-          <InputGroup>
+          <InputGroup border={"1px solid purple"}>
             <Input
-              w="500px"
+              _focus={{ boxShadow: "none" }}
+              bg="transparent"
+              border="none"
+              w="400px"
               placeholder="상품명 입력"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
             />
-            <InputRightAddon onClick={() => handleSearchClick(keyword)}>
+            <InputRightAddon
+              bg="transparent"
+              border="none"
+              onClick={() => handleSearchClick(keyword)}
+            >
               <FontAwesomeIcon icon={faSearch} />
             </InputRightAddon>
           </InputGroup>
@@ -152,7 +155,7 @@ export function Header() {
                 >
                   <FontAwesomeIcon icon={faUser} size="xl" />
                 </Button>
-                <Text fontSize="small" mt={2}>
+                <Text fontSize="small" mt={1}>
                   마이경매
                 </Text>
               </Box>
@@ -161,7 +164,7 @@ export function Header() {
                 <Button onClick={() => navigate("/write")} variant="unstyled">
                   <FontAwesomeIcon icon={faScaleUnbalanced} size="xl" />
                 </Button>
-                <Text fontSize="small" mt={2}>
+                <Text fontSize="small" mt={1}>
                   판매하기
                 </Text>
               </Box>
@@ -173,7 +176,7 @@ export function Header() {
                 >
                   <FontAwesomeIcon icon={faComments} size="xl" />
                 </Button>
-                <Text fontSize="small" mt={2}>
+                <Text fontSize="small" mt={1}>
                   경매톡
                 </Text>
               </Box>
