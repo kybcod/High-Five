@@ -140,7 +140,7 @@ export function ProductDetails() {
 
         <Box flex="1">
           <Box mb={7}>
-            <Heading style={{ whiteSpace: "nowrap" }}>{product.title}</Heading>
+            <Heading>{product.title}</Heading>
           </Box>
           <Flex mb={5} justifyContent="space-between">
             <Text fontSize="2xl">{formattedPrice(product.startPrice)}원</Text>

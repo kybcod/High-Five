@@ -59,51 +59,58 @@ export function Header() {
     <Box border={"1px solid black"}>
       <Flex align="center" justify="space-between" maxW="100%">
         <Menu>
-          <Box ml={2} h={"100%"} align={"center"}>
-            <MenuButton as={Button} leftIcon={<HamburgerIcon />}>
+          <Box ml={2} align="center">
+            <MenuButton
+              bg="transparent"
+              _hover={{ bg: "transparent" }}
+              _active={{ bg: "transparent" }}
+              as={Button}
+              leftIcon={<HamburgerIcon />}
+            >
               카테고리
             </MenuButton>
           </Box>
-          <MenuList>
+          <MenuList mt={1}>
             <MenuItem
               onClick={() => handleCategoryClick("clothes")}
               icon={<FontAwesomeIcon icon={faShirt} />}
-              _hover={{ color: "purple" }}
+              _hover={{ color: "green", bg: "transparent" }}
+              _focus={{ bg: "transparent" }}
             >
               의류
             </MenuItem>
             <MenuItem
               onClick={() => handleCategoryClick("goods")}
               icon={<FontAwesomeIcon icon={faBasketShopping} />}
-              _hover={{ color: "purple" }}
+              _hover={{ color: "green", bg: "transparent" }}
             >
               잡화
             </MenuItem>
             <MenuItem
               onClick={() => handleCategoryClick("food")}
               icon={<FontAwesomeIcon icon={faUtensils} />}
-              _hover={{ color: "purple" }}
+              _hover={{ color: "green", bg: "transparent" }}
             >
               식품
             </MenuItem>
             <MenuItem
               onClick={() => handleCategoryClick("digital")}
               icon={<FontAwesomeIcon icon={faMobileScreenButton} />}
-              _hover={{ color: "purple" }}
+              _hover={{ color: "green", bg: "transparent" }}
             >
               디지털
             </MenuItem>
             <MenuItem
               onClick={() => handleCategoryClick("sport")}
               icon={<FontAwesomeIcon icon={faHeartPulse} />}
-              _hover={{ color: "purple" }}
+              _hover={{ color: "green", bg: "transparent" }}
             >
               스포츠
             </MenuItem>
             <MenuItem
               onClick={() => handleCategoryClick("e-coupon")}
               icon={<FontAwesomeIcon icon={faTicket} />}
-              _hover={{ color: "purple" }}
+              _hover={{ color: "green", bg: "transparent" }}
             >
               e-쿠폰
             </MenuItem>
@@ -114,7 +121,7 @@ export function Header() {
         <Box>
           <Text
             fontSize={"2xl"}
-            color={"purple"}
+            color={"green"}
             cursor={"pointer"}
             onClick={() => navigate("/")}
           >
@@ -124,7 +131,7 @@ export function Header() {
 
         {/* 검색 */}
         <Flex align={"center"}>
-          <InputGroup border={"1px solid purple"}>
+          <InputGroup border={"1px solid green"}>
             <Input
               _focus={{ boxShadow: "none" }}
               bg="transparent"

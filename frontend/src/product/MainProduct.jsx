@@ -75,10 +75,7 @@ export function MainProduct() {
         {/*<MainSlider />*/}
       </Box>
       <Heading my={4}>오늘의 상품</Heading>
-      <Grid
-        templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(5, 1fr)" }}
-        gap={6}
-      >
+      <Grid templateColumns="repeat(5, 1fr)" gap={6}>
         {productList.map((product) => (
           <GridItem key={product.id}>
             <Card
