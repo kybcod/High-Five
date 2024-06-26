@@ -20,10 +20,10 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { BoardCommentComponent } from "./BoardCommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
-import { BoardCommentComponent } from "./BoardCommentComponent.jsx";
 
 export function BoardView() {
   const [board, setBoard] = useState("");
@@ -77,45 +77,10 @@ export function BoardView() {
       <Box>
         <Heading>자유게시판 게시글</Heading>
       </Box>
+      <Box ml={5} mt={"30px"}>
+        <Text fontSize="4xl">{board.title}</Text>
+      </Box>
       <Flex>
-        <Box>
-          <Text fontSize="30px">{board.title}</Text>
-        </Box>
-        <Spacer />
-        {isLikeProcess || (
-          <Box onClick={handleClickLike}>
-            <Flex>
-              {boardLike.boardLike && <FontAwesomeIcon icon={fullHeart} />}
-              {boardLike.boardLike || <FontAwesomeIcon icon={emptyHeart} />}
-              {boardLike.count > 0 && <Box>{boardLike.count}</Box>}
-            </Flex>
-          </Box>
-        )}
-        {isLikeProcess && (
-          <Box>
-            <Spinner />
-          </Box>
-        )}
-      </Flex>
-      <Flex>
-        <Spacer />
-        {account.hasAccess(board.userId) && (
-          <Flex>
-            <Box>
-              <Text onClick={() => navigate(`/board/modify/${board_id}`)}>
-                수정
-              </Text>
-            </Box>
-            <Box>
-              <Text onClick={onOpen}>삭제</Text>
-            </Box>
-          </Flex>
-        )}
-      </Flex>
-      <Flex>
-        <Box>
-          <Text>{board.nickName}</Text>
-        </Box>
         {board.profileImage && board.profileImage.fileName == null && (
           <Image
             borderRadius="full"
@@ -133,10 +98,39 @@ export function BoardView() {
             alt="Profile Image"
           />
         )}
-        <Spacer />
+        <Box>
+          <Text>{board.nickName}</Text>
+        </Box>
         <Box>
           <Text>{board.inserted}</Text>
         </Box>
+        <Spacer />
+        {account.hasAccess(board.userId) && (
+          <Flex>
+            <Box>
+              <Text onClick={() => navigate(`/board/modify/${board_id}`)}>
+                수정
+              </Text>
+            </Box>
+            <Box>
+              <Text onClick={onOpen}>삭제</Text>
+            </Box>
+          </Flex>
+        )}
+        {isLikeProcess || (
+          <Box onClick={handleClickLike}>
+            <Flex>
+              {boardLike.boardLike && <FontAwesomeIcon icon={fullHeart} />}
+              {boardLike.boardLike || <FontAwesomeIcon icon={emptyHeart} />}
+              {boardLike.count > 0 && <Box>{boardLike.count}</Box>}
+            </Flex>
+          </Box>
+        )}
+        {isLikeProcess && (
+          <Box>
+            <Spinner />
+          </Box>
+        )}
       </Flex>
       <Box border={"1px"} color={"gray.200"} borderRadius={"md"}>
         <Flex flexWrap={"wrap"} justifyContent={"space-evenly"} p={"20px"}>
