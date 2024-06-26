@@ -36,7 +36,7 @@ export function FAQ() {
 
   return (
     <Box>
-      <Heading mb={4}>FAQ</Heading>
+      {/*<Heading mb={4}>FAQ</Heading>*/}
       <Flex mb={4} wrap="wrap" justify="center">
         <Button
           onClick={() => handleCategoryChange("all")}

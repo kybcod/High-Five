@@ -90,17 +90,17 @@ export function QuestionList() {
 
   return (
     <>
-      <Box mt={5} mb={5}>
-        <Heading onClick={() => navigate("/question/list")} cursor={"pointer"}>
-          문의 게시판
-        </Heading>
-      </Box>
+      {/*<Box mt={5} mb={5}>*/}
+      {/*  <Heading onClick={() => navigate("/question/list")} cursor={"pointer"}>*/}
+      {/*    문의 게시판*/}
+      {/*  </Heading>*/}
+      {/*</Box>*/}
       <Box mb={7}>
         {questionList.length === 0 && (
           <Center m={20}>조회 결과가 없습니다.</Center>
         )}
         {questionList.length > 0 && (
-          <Table variant="simple">
+          <Table variant="simple" mt={20}>
             <Thead>
               <Tr>
                 <Th>No.</Th>

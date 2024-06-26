@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
 import {
   faClipboardList,
+  faHeadset,
   faQuestionCircle,
   faSignInAlt,
   faSignOutAlt,
@@ -35,8 +36,8 @@ export function Navbar() {
         cursor="pointer"
         mx={2}
       >
-        <FontAwesomeIcon icon={faQuestionCircle} />
-        <Text ml={2}>QnA</Text>
+        <FontAwesomeIcon icon={faHeadset} />
+        <Text ml={1}>고객센터</Text>
       </Center>
 
       {account.isAdmin() && (
