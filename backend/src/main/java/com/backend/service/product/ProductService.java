@@ -186,6 +186,7 @@ public class ProductService {
 
     public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
         List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
+        String userNickName = mapper.selectUserNickName(userId);
 
         for (Product product : productList) {
             // 낙찰된 닉네임
@@ -207,7 +208,8 @@ public class ProductService {
 
         return Map.of("productList", productList,
                 "pageInfo", pageInfo, "hasNextPage", hasNextPage,
-                "totalProductCount", total, "totalSalesCount", totalSalesCount);
+                "totalProductCount", total, "totalSalesCount", totalSalesCount, "userNickName", userNickName
+        );
     }
 
     public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable) {

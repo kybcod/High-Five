@@ -26,6 +26,7 @@ export function MyPage({ tab }) {
   const [totalProductCount, setTotalProductCount] = useState(0);
   const [totalSalesCount, setTotalSalesCount] = useState(0);
   const [product, setProduct] = useState(null);
+  const [userNickName, setUserNickName] = useState("");
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -53,6 +54,7 @@ export function MyPage({ tab }) {
     axios.get(`/api/products/user/${userId}`).then((res) => {
       console.log(res.data);
       setProduct(res.data.productList);
+      setUserNickName(res.data.userNickName);
       setTotalSalesCount(res.data.totalSalesCount);
       setTotalProductCount(res.data.totalProductCount);
     });
@@ -103,7 +105,7 @@ export function MyPage({ tab }) {
                 mb={4}
               />
               <Heading textAlign="center" size="md">
-                {product[0].userNickName}
+                {userNickName}
               </Heading>
             </Flex>
             <Flex
