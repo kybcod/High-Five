@@ -5,7 +5,6 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputLeftAddon,
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
@@ -20,13 +19,10 @@ export function UserPhoneNumber() {
     <Box>
       <FormControl>
         <InputGroup size="md">
-          <InputLeftAddon bg={"none"} border={"none"}>
-            010
-          </InputLeftAddon>
           <Input
             pr="4.5rem"
             variant="flushed"
-            type="number"
+            maxLength={13}
             value={codeInfo.phoneNumber}
             placeholder={"phone number"}
             onChange={(e) => {

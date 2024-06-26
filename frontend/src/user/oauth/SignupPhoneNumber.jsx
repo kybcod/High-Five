@@ -40,7 +40,7 @@ export function SignupPhoneNumber() {
     axios
       .post("/api/users", {
         ...user,
-        phoneNumber: "010" + codeInfo.phoneNumber,
+        phoneNumber: codeInfo.phoneNumber,
         password: "oauth",
       })
       .then(() => {

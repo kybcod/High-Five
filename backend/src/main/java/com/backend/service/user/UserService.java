@@ -152,6 +152,7 @@ public class UserService {
 
         User emailDB = mapper.selectUserByEmail(user.getEmail());
         User nickNameDB = mapper.selectUserByNickName(user.getNickName());
+        user.setPhoneNumber(user.getPhoneNumber().replaceAll("-", ""));
 
         if (emailDB != null) {
             return false;

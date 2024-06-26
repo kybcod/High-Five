@@ -47,6 +47,8 @@ public class UserController {
     // 회원가입 시 인증코드 받기
     @GetMapping("users/codes")
     public ResponseEntity sendCode(String phoneNumber) {
+        phoneNumber = phoneNumber.replaceAll("-", "");
+        System.out.println("phoneNumber = " + phoneNumber);
         if (phoneNumber.length() == 11) {
             String verificationCode = service.sendMessage(phoneNumber);
             System.out.println("verificationCode = " + verificationCode);
@@ -58,6 +60,7 @@ public class UserController {
     // 인증코드 일치 확인
     @GetMapping("users/confirmation")
     public ResponseEntity verifyCode(String phoneNumber, int verificationCode) {
+        phoneNumber = phoneNumber.replaceAll("-", "");
         if (service.checkVerificationCode(phoneNumber, verificationCode)) {
             return ResponseEntity.ok().build();
         }
