@@ -82,6 +82,7 @@ export function BoardWrite() {
             newFiles.splice(i, 1);
             setFiles(newFiles);
           }}
+          ml={3}
         />
       </Flex>,
     );
@@ -90,45 +91,54 @@ export function BoardWrite() {
   return (
     <Box>
       <Heading>자유게시판 글 작성</Heading>
-      <Box>
+      <Box mt={"20px"}>
         <FormControl>
-          <FormLabel>제목</FormLabel>
+          <FormLabel fontSize={"lg"}>제목</FormLabel>
           <Input
             onChange={(e) => setTitle(e.target.value)}
             placeholder={"제목을 입력해주세요"}
           />
         </FormControl>
       </Box>
-      <FormControl>
-        <Flex>
-          <FormLabel>상품 상세 내용</FormLabel>
-          <Spacer />
-          <Button onClick={() => fileInputRef.current.click()}>파일첨부</Button>
-          <Input
-            multiple
-            type={"file"}
-            ref={fileInputRef}
-            display={"none"}
-            accept={"image/*"}
-            onChange={(e) => setFiles(Array.from(e.target.files))}
+      <Box mt={"10px"}>
+        <FormControl>
+          <Flex alignItems="center">
+            <FormLabel fontSize={"lg"} mt={"5px"}>
+              상품 상세 내용
+            </FormLabel>
+            <Spacer />
+            <FormHelperText mb={"13px"} mr={3}>
+              총 용량은 10MB를 초과할 수 없습니다
+            </FormHelperText>
+            <Button mb={"5px"} onClick={() => fileInputRef.current.click()}>
+              파일첨부
+            </Button>
+            <Input
+              multiple
+              type={"file"}
+              ref={fileInputRef}
+              display={"none"}
+              accept={"image/*"}
+              onChange={(e) => setFiles(Array.from(e.target.files))}
+            />
+          </Flex>
+          {fileNameList.length > 0 && (
+            <Box mt={"5px"}>
+              <Heading size="md" mb={"5px"}>
+                선택된 파일 목록
+              </Heading>
+              <List spacing={3}>{fileNameList}</List>
+            </Box>
+          )}
+          <Textarea
+            onChange={(e) => setContent(e.target.value)}
+            placeholder={"내용을 입력해주세요"}
+            mt={"5px"}
+            rows={10}
+            resize={"none"}
           />
-        </Flex>
-        <FormHelperText>총 용량은 10MB를 초과할 수 없습니다</FormHelperText>
-        {fileNameList.length > 0 && (
-          <Box mt={2}>
-            <Heading size="md" mb={2}>
-              선택된 파일 목록
-            </Heading>
-            <List spacing={2}>{fileNameList}</List>
-          </Box>
-        )}
-      </FormControl>
-      <FormControl>
-        <Textarea
-          onChange={(e) => setContent(e.target.value)}
-          placeholder={"내용을 입력해주세요"}
-        />
-      </FormControl>
+        </FormControl>
+      </Box>
       <Box>
         <Input type={"hidden"} value={account.id} />
       </Box>
@@ -137,6 +147,7 @@ export function BoardWrite() {
           isLoading={isLoading}
           isDisabled={disableSaveButton}
           onClick={handleClickButton}
+          mt={"20px"}
         >
           게시글 생성
         </Button>

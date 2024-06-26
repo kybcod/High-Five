@@ -124,6 +124,7 @@ export function BoardModify() {
             newFiles.splice(i, 1);
             setAddFileList(newFiles);
           }}
+          ml={3}
         />
       </Flex>,
     );
@@ -132,59 +133,54 @@ export function BoardModify() {
   return (
     <Box>
       <Heading>자유게시판 글 수정</Heading>
-      <Box>
+      <Box mt={"20px"}>
         <FormControl>
-          <FormLabel>제목</FormLabel>
+          <FormLabel fontSize={"lg"}>제목</FormLabel>
           <Input
             onChange={(e) => setBoard({ ...board, title: e.target.value })}
             defaultValue={board.title}
           />
         </FormControl>
       </Box>
-      <Flex>
-        {board.boardFileList &&
-          board.boardFileList.map((file, index) => (
-            <Card m={3} key={index} w={"400px"}>
-              <CardBody>
-                <Image
-                  src={file.filePath}
-                  sizes={"100%"}
-                  sx={
-                    removeFileList.includes(file.fileName)
-                      ? { filter: "blur(8px)" }
-                      : {}
+      {board.boardFileList &&
+        board.boardFileList.map((file, index) => (
+          <Card mt={"10px"} key={index} w={"300px"}>
+            <CardBody>
+              <Image
+                src={file.filePath}
+                sizes={"100%"}
+                sx={
+                  removeFileList.includes(file.fileName)
+                    ? { filter: "blur(8px)" }
+                    : {}
+                }
+              />
+            </CardBody>
+            <CardFooter>
+              <Flex alignItems={"center"}>
+                <FontAwesomeIcon icon={faTrashCan} />
+                <Switch
+                  onChange={(e) =>
+                    handleRemoveSwitchChange(file.fileName, e.target.checked)
                   }
+                  ml={3}
                 />
-              </CardBody>
-              <CardFooter>
-                <Flex>
-                  <Box mr={3}>
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </Box>
-                  <Box mr={1}>
-                    <Switch
-                      onChange={(e) =>
-                        handleRemoveSwitchChange(
-                          file.fileName,
-                          e.target.checked,
-                        )
-                      }
-                    />
-                  </Box>
-                  <Box>
-                    <Text>{file.fileName}</Text>
-                  </Box>
-                </Flex>
-              </CardFooter>
-            </Card>
-          ))}
-      </Flex>
-      <Box>
+                <Text ml={1}>{file.fileName}</Text>
+              </Flex>
+            </CardFooter>
+          </Card>
+        ))}
+      <Box mt={"10px"}>
         <FormControl>
-          <Flex>
-            <FormLabel>상품 상세 내용</FormLabel>
+          <Flex alignItems={"center"}>
+            <FormLabel fontSize={"lg"} mt={"5px"}>
+              상품 상세 내용
+            </FormLabel>
             <Spacer />
-            <Button onClick={() => fileInputRef.current.click()}>
+            <FormHelperText mb={"13px"} mr={3}>
+              총 용량은 10MB를 초과할 수 없습니다
+            </FormHelperText>
+            <Button mb={"5px"} onClick={() => fileInputRef.current.click()}>
               파일첨부
             </Button>
             <Input
@@ -198,26 +194,32 @@ export function BoardModify() {
               }}
             />
           </Flex>
-          <FormHelperText>총 용량은 10MB를 초과할 수 없습니다</FormHelperText>
           {addFileList.length > 0 && (
             <Box mt={2}>
-              <Heading size="md" mb={2}>
+              <Heading size="md" mb={"5px"}>
                 선택된 파일 목록
               </Heading>
-              <List spacing={2}>{fileNameList}</List>
+              <List spacing={3}>{fileNameList}</List>
             </Box>
           )}
           <Textarea
             onChange={(e) => setBoard({ ...board, content: e.target.value })}
             defaultValue={board.content}
+            mt={"5px"}
+            rows={10}
+            resize={"none"}
           />
         </FormControl>
       </Box>
       <Box>
-        <Button onClick={handleClickSaveButton}>게시글 수정</Button>
+        <Button mt={"20px"} onClick={handleClickSaveButton}>
+          게시글 수정
+        </Button>
       </Box>
       <Box>
-        <Button onClick={onOpen}>게시글 삭제</Button>
+        <Button mt={"10px"} onClick={onOpen}>
+          게시글 삭제
+        </Button>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
