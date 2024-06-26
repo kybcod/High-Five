@@ -2,21 +2,32 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
+  IconButton,
   Input,
   InputGroup,
   InputRightAddon,
-  Stack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faComments,
-  faSackDollar,
+  faBasketShopping,
+  faHeartPulse,
+  faMobileScreenButton,
   faSearch,
-} from "@fortawesome/free-solid-svg-icons"; // FontAwesome에서 추가 아이콘 가져오기
+  faShirt,
+  faTicket,
+  faUtensils,
+} from "@fortawesome/free-solid-svg-icons";
+import { faComments, faUser } from "@fortawesome/free-regular-svg-icons"; // Import regular style FontAwesome icons
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { faScaleUnbalanced } from "@fortawesome/free-solid-svg-icons/faScaleUnbalanced";
 
 export function Header() {
   const [keyword, setKeyword] = useState("");
@@ -37,14 +48,82 @@ export function Header() {
     navigate(`/list?keyword=${keyword}`);
   }
 
+  function handleCategoryClick(category) {
+    if (category === "") {
+      navigate(`/list`);
+    } else {
+      navigate(`/list?category=${category}`);
+    }
+  }
+
   return (
-    <Box py={4}>
-      <Flex align="center" justify="space-between" maxW="100%" mx="auto">
+    <Box py={4} border={"1px solid black"}>
+      <Flex align="center" justify="space-between" maxW="100%">
+        <Menu>
+          <Box ml={2} h={"100%"} align={"center"}>
+            <MenuButton
+              as={IconButton}
+              icon={<HamburgerIcon />}
+              variant="outline"
+            />
+            <Text mt={2}>카테고리</Text>
+          </Box>
+          <MenuList mt={6}>
+            <MenuItem
+              onClick={() => handleCategoryClick("clothes")}
+              icon={<FontAwesomeIcon icon={faShirt} />}
+              _hover={{ color: "purple" }}
+            >
+              의류
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleCategoryClick("goods")}
+              icon={<FontAwesomeIcon icon={faBasketShopping} />}
+              _hover={{ color: "purple" }}
+            >
+              잡화
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleCategoryClick("food")}
+              icon={<FontAwesomeIcon icon={faUtensils} />}
+              _hover={{ color: "purple" }}
+            >
+              식품
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleCategoryClick("digital")}
+              icon={<FontAwesomeIcon icon={faMobileScreenButton} />}
+              _hover={{ color: "purple" }}
+            >
+              디지털
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleCategoryClick("sport")}
+              icon={<FontAwesomeIcon icon={faHeartPulse} />}
+              _hover={{ color: "purple" }}
+            >
+              스포츠
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleCategoryClick("e-coupon")}
+              icon={<FontAwesomeIcon icon={faTicket} />}
+              _hover={{ color: "purple" }}
+            >
+              e-쿠폰
+            </MenuItem>
+          </MenuList>
+        </Menu>
+
         {/* 로고 */}
         <Box>
-          <Heading cursor={"pointer"} onClick={() => navigate("/")}>
+          <Text
+            fontSize={"2xl"}
+            color={"purple"}
+            cursor={"pointer"}
+            onClick={() => navigate("/")}
+          >
             LIVE AUCTION{" "}
-          </Heading>
+          </Text>
         </Box>
 
         {/* 검색 */}
@@ -65,41 +144,45 @@ export function Header() {
           </InputGroup>
         </Flex>
 
-        {/* 판매하기, 경매톡 */}
-        <Stack direction="row" spacing={2}>
+        {/* 마이경매, 판매하기, 경매톡 */}
+        <Flex align="center" justifyContent="center">
           {account.isLoggedIn() && (
             <>
-              <Button
-                onClick={() => navigate("/write")}
-                size="md"
-                ml={4}
-                leftIcon={<FontAwesomeIcon icon={faSackDollar} />}
-                colorScheme="pink"
-                variant="unstyled"
-              >
-                판매하기
-              </Button>
+              <Box textAlign="center">
+                <Button
+                  variant="unstyled"
+                  onClick={() => navigate(`/myPage/${account.id}`)}
+                >
+                  <FontAwesomeIcon icon={faUser} size="xl" />
+                </Button>
+                <Text fontSize="small" mt={2}>
+                  마이경매
+                </Text>
+              </Box>
 
-              <Box
-                height="24px"
-                borderLeft="1px solid #ccc"
-                mx={2}
-                alignSelf="center"
-              />
+              <Box textAlign="center" ml={4}>
+                <Button onClick={() => navigate("/write")} variant="unstyled">
+                  <FontAwesomeIcon icon={faScaleUnbalanced} size="xl" />
+                </Button>
+                <Text fontSize="small" mt={2}>
+                  판매하기
+                </Text>
+              </Box>
 
-              <Button
-                onClick={() => navigate("/chat/list")}
-                size="md"
-                ml={4}
-                leftIcon={<FontAwesomeIcon icon={faComments} />}
-                colorScheme="blue"
-                variant="unstyled"
-              >
-                경매톡
-              </Button>
+              <Box textAlign="center" ml={4} mr={4}>
+                <Button
+                  onClick={() => navigate("/chat/list")}
+                  variant="unstyled"
+                >
+                  <FontAwesomeIcon icon={faComments} size="xl" />
+                </Button>
+                <Text fontSize="small" mt={2}>
+                  경매톡
+                </Text>
+              </Box>
             </>
           )}
-        </Stack>
+        </Flex>
       </Flex>
     </Box>
   );

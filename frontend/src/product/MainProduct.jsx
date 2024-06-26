@@ -19,7 +19,6 @@ import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { Category } from "../component/Category.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
@@ -71,7 +70,7 @@ export function MainProduct() {
   return (
     <Box>
       {/* 네브바, 헤더, 카테고리, 이미지 배너 등 추가 */}
-      <Category />
+      {/*<Category />*/}
       <Box mt={10} h="400px" w="100%" mb={10} boxSizing="border-box" mx="auto">
         {/*<MainSlider />*/}
       </Box>

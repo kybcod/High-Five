@@ -42,7 +42,6 @@ import SimpleSlider from "./slider/SimpleSlider.jsx";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Category } from "../component/Category.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
 import ReportButton from "../user/ReportButton.jsx";
@@ -127,7 +126,7 @@ export function ProductDetails() {
 
   return (
     <Box>
-      <Category />
+      {/*<Category />*/}
       <Divider my={10} borderColor="gray" />
 
       <Flex alignItems="flex-start">
