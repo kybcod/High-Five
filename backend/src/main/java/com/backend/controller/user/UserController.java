@@ -115,12 +115,12 @@ public class UserController {
         String emailPattern = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
 
         if (!email.trim().matches(emailPattern)) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409 응답
     }
 
     // 회원가입 시 닉네임 중복 확인
@@ -128,10 +128,14 @@ public class UserController {
     public ResponseEntity nickNames(String nickName) {
         User user = service.getUserByNickName(nickName);
 
-        if (user == null) {
-            return ResponseEntity.notFound().build();
+        if (nickName.length() > 10) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return ResponseEntity.ok().build();
+
+        if (user == null) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409 응답
     }
 
     // user 리스트 조회

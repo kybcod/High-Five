@@ -54,13 +54,15 @@ export function SignUp() {
   function handleCheckEmail() {
     axios
       .get(`/api/users/emails?email=${email}`)
-      .then(() =>
-        errorToast("이미 존재하는 이메일이거나 이메일 형식이 아닙니다"),
-      )
+      .then(() => {
+        successToast("사용가능한 이메일입니다");
+      })
       .catch((err) => {
         setIsCheckedEmail(true);
-        if (err.response.status === 404) {
-          successToast("사용가능한 이메일입니다");
+        if (err.response.status === 400) {
+          errorToast("유효한 이메일 형식이 아닙니다");
+        } else if (err.response.status === 409) {
+          errorToast("이미 존재하는 이메일입니다");
         } else {
           errorToast("이메일 조회 중 에러가 발생했습니다");
         }
@@ -70,13 +72,15 @@ export function SignUp() {
   function handleCheckNickName() {
     axios
       .get(`/api/users/nickNames?nickName=${nickName}`)
-      .then(() => errorToast("이미 존재하는 닉네임입니다"))
+      .then(() => successToast("사용 가능한 닉네임입니다"))
       .catch((err) => {
         setIsCheckedNickName(true);
-        if (err.response.status === 404) {
-          successToast("사용가능한 닉네임입니다");
+        if (err.response.status === 400) {
+          errorToast("닉네임은 10자까지 입력할 수 있습니다");
+        } else if (err.response.status === 409) {
+          errorToast("이미 존재하는 닉네임입니다");
         } else {
-          errorToast("닉네임 조회 중 에러가 발생했습니다");
+          errorToast("이메일 조회 중 에러가 발생했습니다");
         }
       });
   }
