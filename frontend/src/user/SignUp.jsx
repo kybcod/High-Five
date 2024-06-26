@@ -16,7 +16,13 @@ import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
-import SignupButton from "./SignupButton.jsx";
+import InfoAgreeCheck from "./InfoAgreeCheck.jsx";
+import {
+  formLabel,
+  InputGroupButton,
+  InputGroupStyle,
+  InputStyle,
+} from "../component/css/style.js";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
@@ -49,7 +55,6 @@ export function SignUp() {
       .catch(() => errorToast("회원가입 중 문제가 발생하였습니다"))
       .finally(() => setIsLoading(false));
   }
-  // TODO. 휴대폰 번호 11자리 (-)없이 숫자만 입력 가능하게끔 설정, 표시 메세지, 형식 다르면 메세지 전송버튼 활성화 X
 
   function handleCheckEmail() {
     axios
@@ -136,19 +141,12 @@ export function SignUp() {
           본인 정보를 입력해주세요
         </Text>
         <FormControl mt={7}>
-          <FormLabel fontSize="sm" fontWeight={"bold"}>
-            이메일 주소
-          </FormLabel>
-          <InputGroup size="md">
+          <FormLabel {...formLabel}>이메일 주소</FormLabel>
+          <InputGroup {...InputGroupStyle}>
             <Input
-              fontSize="2xl"
-              color={"black"}
-              pr="4.5rem"
-              sx={{ "::placeholder": { fontSize: "xl" } }}
+              {...InputStyle}
               placeholder={"이메일 중복 확인 필수"}
               isInvalid={isCheckedEmail ? false : true}
-              errorBorderColor={"orange.200"}
-              variant="flushed"
               type={"email"}
               maxLength="30"
               onChange={(e) => {
@@ -159,12 +157,9 @@ export function SignUp() {
             />
             <InputRightElement width="4.5rem">
               <Button
-                h="1.75rem"
-                size="sm"
+                {...InputGroupButton}
                 onClick={handleCheckEmail}
                 isDisabled={!isValidEmail || email.trim().length === 0}
-                colorScheme="orange"
-                variant="ghost"
               >
                 중복확인
               </Button>
@@ -175,21 +170,15 @@ export function SignUp() {
           )}
         </FormControl>
         <FormControl mt={7}>
-          <FormLabel fontSize="sm" fontWeight={"bold"}>
-            비밀번호
-          </FormLabel>
+          <FormLabel {...formLabel}>비밀번호</FormLabel>
           <Input
-            fontSize="2xl"
-            color={"black"}
-            pr="4.5rem"
-            variant="flushed"
+            {...InputStyle}
             type="password"
             onChange={(e) => {
               setPassword(e.target.value);
               isValidPassword = false;
             }}
             isInvalid={isValidPassword ? false : true}
-            errorBorderColor={"orange.200"}
           />
           {isValidPassword || (
             <FormHelperText>
@@ -199,16 +188,10 @@ export function SignUp() {
           )}
         </FormControl>
         <FormControl mt={7}>
-          <FormLabel fontSize="sm" fontWeight={"bold"}>
-            비밀번호 확인
-          </FormLabel>
+          <FormLabel {...formLabel}>비밀번호 확인</FormLabel>
           <Input
-            fontSize="2xl"
-            color={"black"}
-            pr="4.5rem"
+            {...InputStyle}
             isInvalid={isCheckedPassword ? false : true}
-            errorBorderColor={"orange.200"}
-            variant="flushed"
             type="password"
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
@@ -217,20 +200,11 @@ export function SignUp() {
           )}
         </FormControl>
         <FormControl mt={7}>
-          <FormLabel fontSize="sm" fontWeight={"bold"}>
-            닉네임
-          </FormLabel>
-          <InputGroup size="md">
+          <FormLabel {...formLabel}>닉네임</FormLabel>
+          <InputGroup {...InputGroupStyle}>
             <Input
-              pb={3}
-              focusBorderColor="gray.200"
-              fontSize="2xl"
-              color={"black"}
-              pr="4.5rem"
-              sx={{ "::placeholder": { fontSize: "xl" } }}
+              {...InputStyle}
               isInvalid={isCheckedNickName ? false : true}
-              errorBorderColor={"orange.200"}
-              variant="flushed"
               onChange={(e) => {
                 setNickName(e.target.value);
                 setIsCheckedNickName(false);
@@ -240,10 +214,7 @@ export function SignUp() {
             />
             <InputRightElement width="4.5rem">
               <Button
-                colorScheme="orange"
-                variant="ghost"
-                h="1.75rem"
-                size="sm"
+                {...InputGroupButton}
                 onClick={handleCheckNickName}
                 isDisabled={nickName.trim().length === 0}
               >
@@ -254,7 +225,7 @@ export function SignUp() {
           <FormHelperText>닉네임은 10자까지 작성 가능합니다</FormHelperText>
         </FormControl>
         <UserPhoneNumber />
-        <SignupButton
+        <InfoAgreeCheck
           isAllChecked={isAllChecked}
           setIsAllChecked={setIsAllChecked}
         />
