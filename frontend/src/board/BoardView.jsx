@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Card,
-  CardBody,
   Flex,
   Heading,
   Image,
@@ -14,7 +13,6 @@ import {
   Spacer,
   Spinner,
   Text,
-  Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
@@ -140,26 +138,27 @@ export function BoardView() {
           <Text>{board.inserted}</Text>
         </Box>
       </Flex>
-      <Flex flexWrap={"wrap"} gap={5}>
-        {board.boardFileList &&
-          board.boardFileList.length > 0 &&
-          board.boardFileList.map((file, index) => (
-            <Card
-              mt={"10px"}
-              mb={5}
-              key={index}
-              w={"calc(30% - 10px)"}
-              boxShadow={"none"}
-              border={"none"}
-            >
-              <CardBody>
+      <Box border={"1px"} color={"gray.200"} borderRadius={"md"}>
+        <Flex flexWrap={"wrap"} justifyContent={"space-evenly"} p={"20px"}>
+          {board.boardFileList &&
+            board.boardFileList.length > 0 &&
+            board.boardFileList.map((file, index) => (
+              <Card
+                mt={"10px"}
+                key={index}
+                w={"calc(33.33% - 10px)"}
+                boxShadow={"none"}
+                border={"none"}
+              >
                 <Image src={file.filePath} w={"100%"} h={"300px"} />
-              </CardBody>
-            </Card>
-          ))}
-      </Flex>
-      <Box>
-        <Textarea value={board.content} readOnly />
+              </Card>
+            ))}
+        </Flex>
+        <Box p={"30px"}>
+          <Text color={"black"} fontSize={"md"}>
+            {board.content}
+          </Text>
+        </Box>
       </Box>
       <Box>
         <BoardCommentComponent boardId={board_id} />
