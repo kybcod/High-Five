@@ -71,10 +71,12 @@ public class ProductService {
         }
     }
 
-    public List<Product> list() {
+    public Map<String, Object> list() {
         List<Product> products = mapper.selectAll();
         settingFilePath(products);
-        return products;
+        List<Product> todayProduct = mapper.selectProductToday();
+        settingFilePath(todayProduct);
+        return Map.of("products", products, "todayProduct", todayProduct);
     }
 
 

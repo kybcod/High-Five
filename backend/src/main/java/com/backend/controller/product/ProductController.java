@@ -38,7 +38,7 @@ public class ProductController {
 
     @GetMapping
     @Description("상품조회 - 메인 페이지")
-    public List<Product> list() {
+    public Map<String, Object> list() {
         return service.list();
     }
 

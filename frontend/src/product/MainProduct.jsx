@@ -5,6 +5,7 @@ import {
   Box,
   Card,
   CardBody,
+  Divider,
   Flex,
   Grid,
   GridItem,
@@ -22,13 +23,15 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
+  const [todayProduct, setTodayProduct] = useState(null);
   const navigate = useNavigate();
   const [likes, setLikes] = useState({});
   const account = useContext(LoginContext);
 
   useEffect(() => {
     axios.get(`/api/products`).then((res) => {
-      const products = res.data;
+      console.log(res.data);
+      const products = res.data.products;
       const initialLikes = products.reduce((acc, product) => {
         acc[product.id] = product.like || false;
         return acc;
@@ -44,6 +47,7 @@ export function MainProduct() {
       }
 
       setProductList(products);
+      setTodayProduct(res.data.todayProduct);
     });
   }, [account]);
 
@@ -74,26 +78,27 @@ export function MainProduct() {
       <Box mt={10} h="350px" w="100%" mb={10} boxSizing="border-box" mx="auto">
         {/*<MainSlider />*/}
       </Box>
-      <Heading my={4}>오늘의 상품</Heading>
-      <Grid templateColumns="repeat(5, 1fr)" gap={6}>
-        {productList.map((product) => (
-          <GridItem key={product.id}>
-            <Card
-              cursor={"pointer"}
-              maxW="sm"
-              h="100%"
-              borderWidth="1px"
-              borderColor={"#eee"}
-              borderRadius="lg"
-              overflow="hidden"
-              boxShadow="md"
-              transition="transform 0.2s"
-              _hover={{ transform: "scale(1.05)" }}
-            >
-              <CardBody position="relative" h="100%">
-                <Box mt={2} w="100%">
-                  {product.status ? (
-                    <>
+      {/* 오늘의 상품 */}
+      {todayProduct === null || todayProduct.length === 0 || (
+        <Box>
+          <Heading my={4}>오늘의 경매 상품</Heading>
+          <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+            {todayProduct.map((product) => (
+              <GridItem key={product.id}>
+                <Card
+                  cursor={"pointer"}
+                  maxW="sm"
+                  h="100%"
+                  borderWidth="1px"
+                  borderColor={"#eee"}
+                  borderRadius="lg"
+                  overflow="hidden"
+                  boxShadow="md"
+                  transition="transform 0.2s"
+                  _hover={{ transform: "scale(1.05)" }}
+                >
+                  <CardBody position="relative" h="100%">
+                    <Box mt={2} w="100%">
                       {product.productFileList && (
                         <Image
                           onClick={() => navigate(`/product/${product.id}`)}
@@ -111,76 +116,157 @@ export function MainProduct() {
                       >
                         {product.endTimeFormat}
                       </Badge>
-                    </>
-                  ) : (
-                    <Box position={"relative"} w={"100%"} h={"200px"}>
-                      <Image
-                        src={product.productFileList[0].filePath}
-                        borderRadius="lg"
-                        w="100%"
-                        h="200px"
-                        filter="brightness(50%)"
-                        position="absolute"
-                        top="0"
-                        left="0"
-                      />
-                      <Text
-                        onClick={() => navigate(`/product/${product.id}`)}
-                        cursor={"pointer"}
-                        borderRadius="lg"
-                        w="100%"
-                        h="200px"
-                        position="absolute"
-                        top="0"
-                        left="0"
-                        color={"white"}
-                        display={"flex"}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                        fontSize={"2xl"}
-                        as="b"
-                      >
-                        판매완료
-                      </Text>
                     </Box>
-                  )}
-                </Box>
-                <Stack mt="4" spacing="2">
-                  <Flex justifyContent="space-between" alignItems="center">
-                    <Text
-                      onClick={() => navigate(`/product/${product.id}`)}
-                      fontSize="lg"
-                      fontWeight="bold"
-                      noOfLines={1}
-                    >
-                      {product.title}
-                    </Text>
-                    {account.isLoggedIn() && (
-                      <Box onClick={() => handleLikeClick(product.id)}>
-                        <FontAwesomeIcon
-                          icon={likes[product.id] ? fullHeart : emptyHeart}
-                          style={{ color: "red" }}
-                          cursor="pointer"
-                          size="lg"
+                    <Stack mt="4" spacing="2">
+                      <Flex justifyContent="space-between" alignItems="center">
+                        <Text
+                          onClick={() => navigate(`/product/${product.id}`)}
+                          fontSize="lg"
+                          fontWeight="bold"
+                          noOfLines={1}
+                        >
+                          {product.title}
+                        </Text>
+                        {account.isLoggedIn() && (
+                          <Box onClick={() => handleLikeClick(product.id)}>
+                            <FontAwesomeIcon
+                              icon={likes[product.id] ? fullHeart : emptyHeart}
+                              style={{ color: "red" }}
+                              cursor="pointer"
+                              size="lg"
+                            />
+                          </Box>
+                        )}
+                      </Flex>
+                      <Flex justifyContent="space-between">
+                        <Text color="blue.600" fontSize="lg">
+                          {product.startPrice
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                          원
+                        </Text>
+                        <Text>{product.timeFormat}</Text>
+                      </Flex>
+                    </Stack>
+                  </CardBody>
+                </Card>
+              </GridItem>
+            ))}
+          </Grid>
+
+          <Divider my={8} />
+        </Box>
+      )}
+
+      <Box>
+        <Heading my={4}>오늘의 상품 추천</Heading>
+        <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+          {productList.map((product) => (
+            <GridItem key={product.id}>
+              <Card
+                cursor={"pointer"}
+                maxW="sm"
+                h="100%"
+                borderWidth="1px"
+                borderColor={"#eee"}
+                borderRadius="lg"
+                overflow="hidden"
+                boxShadow="md"
+                transition="transform 0.2s"
+                _hover={{ transform: "scale(1.05)" }}
+              >
+                <CardBody position="relative" h="100%">
+                  <Box mt={2} w="100%">
+                    {product.status ? (
+                      <>
+                        {product.productFileList && (
+                          <Image
+                            onClick={() => navigate(`/product/${product.id}`)}
+                            src={product.productFileList[0].filePath}
+                            borderRadius="lg"
+                            w="100%"
+                            h="200px"
+                          />
+                        )}
+                        <Badge
+                          position="absolute"
+                          top="1.5"
+                          left="2"
+                          colorScheme="teal"
+                        >
+                          {product.endTimeFormat}
+                        </Badge>
+                      </>
+                    ) : (
+                      <Box position={"relative"} w={"100%"} h={"200px"}>
+                        <Image
+                          src={product.productFileList[0].filePath}
+                          borderRadius="lg"
+                          w="100%"
+                          h="200px"
+                          filter="brightness(50%)"
+                          position="absolute"
+                          top="0"
+                          left="0"
                         />
+                        <Text
+                          onClick={() => navigate(`/product/${product.id}`)}
+                          cursor={"pointer"}
+                          borderRadius="lg"
+                          w="100%"
+                          h="200px"
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          color={"white"}
+                          display={"flex"}
+                          alignItems={"center"}
+                          justifyContent={"center"}
+                          fontSize={"2xl"}
+                          as="b"
+                        >
+                          판매완료
+                        </Text>
                       </Box>
                     )}
-                  </Flex>
-                  <Flex justifyContent="space-between">
-                    <Text color="blue.600" fontSize="lg">
-                      {product.startPrice
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-                      원
-                    </Text>
-                    <Text>{product.timeFormat}</Text>
-                  </Flex>
-                </Stack>
-              </CardBody>
-            </Card>
-          </GridItem>
-        ))}
-      </Grid>
+                  </Box>
+                  <Stack mt="4" spacing="2">
+                    <Flex justifyContent="space-between" alignItems="center">
+                      <Text
+                        onClick={() => navigate(`/product/${product.id}`)}
+                        fontSize="lg"
+                        fontWeight="bold"
+                        noOfLines={1}
+                      >
+                        {product.title}
+                      </Text>
+                      {account.isLoggedIn() && (
+                        <Box onClick={() => handleLikeClick(product.id)}>
+                          <FontAwesomeIcon
+                            icon={likes[product.id] ? fullHeart : emptyHeart}
+                            style={{ color: "red" }}
+                            cursor="pointer"
+                            size="lg"
+                          />
+                        </Box>
+                      )}
+                    </Flex>
+                    <Flex justifyContent="space-between">
+                      <Text color="blue.600" fontSize="lg">
+                        {product.startPrice
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                        원
+                      </Text>
+                      <Text>{product.timeFormat}</Text>
+                    </Flex>
+                  </Stack>
+                </CardBody>
+              </Card>
+            </GridItem>
+          ))}
+        </Grid>
+      </Box>
     </Box>
   );
 }
