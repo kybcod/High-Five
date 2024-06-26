@@ -31,11 +31,7 @@ export function Navbar() {
         <FontAwesomeIcon icon={faClipboardList} />
         <Text ml={2}>자유게시판</Text>
       </Center>
-      <Center
-        onClick={() => navigate("/question/list")}
-        cursor="pointer"
-        mx={2}
-      >
+      <Center onClick={() => navigate("/question/faq")} cursor="pointer" mx={2}>
         <FontAwesomeIcon icon={faHeadset} />
         <Text ml={1}>고객센터</Text>
       </Center>

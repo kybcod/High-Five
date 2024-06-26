@@ -32,12 +32,12 @@ export function FAQ() {
 
   const handleCategoryChange = (newCategory) => {
     setSearchParams({ category: newCategory });
+    setExpanded([]);
   };
 
   return (
     <Box>
-      {/*<Heading mb={4}>FAQ</Heading>*/}
-      <Flex mb={4} wrap="wrap" justify="center">
+      <Flex mb={10} wrap="wrap" justify="center">
         <Button
           onClick={() => handleCategoryChange("all")}
           m={2}
@@ -91,7 +91,7 @@ export function FAQ() {
             </Flex>
             {expanded.includes(item.id) && (
               <Box p={4} bg="gray.100">
-                <Text>{item.content}</Text>
+                <Text whiteSpace={"pre-line"}>{item.content}</Text>
               </Box>
             )}
           </Box>
