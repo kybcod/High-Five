@@ -125,6 +125,8 @@ public class ChatService {
     }
 
     public void insertMessage(Chat chat) {
+        // read_check FALSE 이전 메세지 있으면 TRUE 변경 - apic test 시 axios.get 요청 안 함
+        int success = mapper.updateReadCheck(chat.getChatRoomId(), chat.getUserId());
         mapper.insertMessage(chat);
     }
 
