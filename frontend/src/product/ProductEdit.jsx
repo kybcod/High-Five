@@ -21,9 +21,9 @@ import {
   faTimesCircle,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormFields } from "./componentStyle/FormFields.jsx";
 import { ModalComponent } from "./componentStyle/ModalComponent.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function ProductEdit() {
   const { id } = useParams();
@@ -93,7 +93,7 @@ export function ProductEdit() {
           position: "top-right",
           duration: 1000,
         });
-        navigate("/");
+        navigate(`/product/${product.id}`);
       })
       .catch((err) => {
         toast({
@@ -183,91 +183,100 @@ export function ProductEdit() {
       >
         상품 수정
       </Text>
-      <Divider mx="auto" maxWidth="1000px" my={4} />
+      <Divider border={"1px solid black"} mx="auto" maxWidth="1000px" my={4} />
       <Box mx="auto" maxWidth="1000px">
         <Box mb={4}>
-          <Grid templateColumns="180px 1fr" gap={4}>
-            <FormLabel htmlFor="file-upload">
-              <Box
-                border="1px dashed gray"
-                textAlign="center"
-                cursor="pointer"
-                _hover={{ borderColor: "blue.500" }}
-                mr={4}
-                p={4}
-                rounded="md"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-                minW="180px"
-                minH="180px"
+          <Grid templateColumns="max-content 1fr" gap={4} alignItems="start">
+            <Text width="max-content" whiteSpace="nowrap" w={"180px"}>
+              상품 이미지
+            </Text>
+            <Box>
+              <Grid
+                templateColumns="repeat(auto-fill, minmax(180px, 1fr))"
+                gap={4}
               >
-                <Box mb={2}>
-                  <FontAwesomeIcon icon={faCamera} size="2xl" />
+                <Box alignSelf="flex-start">
+                  <FormLabel
+                    border="1px dashed gray"
+                    textAlign="center"
+                    cursor="pointer"
+                    _hover={{ borderColor: "blue.500" }}
+                    mr={4}
+                    p={4}
+                    rounded="md"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    flexDirection="column"
+                    width="180px"
+                    height="180px"
+                    maxW={"180px"}
+                    maxH={"180px"}
+                  >
+                    <Box mb={2}>
+                      <FontAwesomeIcon icon={faCamera} size="2xl" />
+                    </Box>
+                    <Box>이미지 등록</Box>
+                    <Input
+                      ref={fileInputRef}
+                      id="file-upload"
+                      type="file"
+                      multiple
+                      accept={"image/*"}
+                      style={{ display: "none" }}
+                      onChange={handleChangeFiles}
+                    />
+                  </FormLabel>
                 </Box>
-                <Box>이미지 등록</Box>
-                <Input
-                  ref={fileInputRef}
-                  id="file-upload"
-                  type="file"
-                  multiple
-                  accept={"image/*"}
-                  style={{ display: "none" }}
-                  onChange={handleChangeFiles}
-                />
-              </Box>
-            </FormLabel>
 
-            <Grid templateColumns="repeat(auto-fill, 180px)" gap={4}>
-              {/* 기존 이미지 표시 */}
-              {existingFilePreviews.map((file, index) => {
-                const uniqueKey = `${index}-${file.fileName}`;
-                return (
+                {/* 기존 이미지 표시 */}
+                {existingFilePreviews.map((file, index) => {
+                  const uniqueKey = `${index}-${file.fileName}`;
+                  return (
+                    <Box
+                      key={uniqueKey}
+                      position="relative"
+                      mr={3}
+                      minWidth="180px"
+                    >
+                      <Image boxSize="180px" src={file.filePath} mr={2} />
+                      <Button
+                        position="absolute"
+                        top={1}
+                        right={2}
+                        variant="ghost"
+                        onClick={() => handleRemoveExistingFile(index)}
+                      >
+                        <FontAwesomeIcon icon={faTimesCircle} size="lg" />
+                      </Button>
+                    </Box>
+                  );
+                })}
+
+                {/* 새로운 파일 선택 시 미리보기 표시 */}
+                {newFilePreviews.map((preview, index) => (
                   <Box
-                    key={uniqueKey}
+                    key={preview.key}
                     position="relative"
                     mr={3}
                     minWidth="180px"
                   >
-                    <Image boxSize="180px" src={file.filePath} mr={2} />
+                    <Image boxSize="180px" src={preview.src} mr={2} />
                     <Button
                       position="absolute"
                       top={1}
                       right={2}
                       variant="ghost"
-                      onClick={() => handleRemoveExistingFile(index)}
+                      onClick={() => handleRemoveNewFile(index)}
                     >
                       <FontAwesomeIcon icon={faTimesCircle} size="lg" />
                     </Button>
                   </Box>
-                );
-              })}
-
-              {/* 새로운 파일 선택 시 미리보기 표시 */}
-              {newFilePreviews.map((preview, index) => (
-                <Box
-                  key={preview.key}
-                  position="relative"
-                  mr={3}
-                  minWidth="180px"
-                >
-                  <Image boxSize="180px" src={preview.src} mr={2} />
-                  <Button
-                    position="absolute"
-                    top={1}
-                    right={2}
-                    variant="ghost"
-                    onClick={() => handleRemoveNewFile(index)}
-                  >
-                    <FontAwesomeIcon icon={faTimesCircle} size="lg" />
-                  </Button>
-                </Box>
-              ))}
-            </Grid>
+                ))}
+              </Grid>
+            </Box>
           </Grid>
         </Box>
-
         <FormFields
           title={product.title}
           setTitle={(title) => setProduct({ ...product, title: title })}
