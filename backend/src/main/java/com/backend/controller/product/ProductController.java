@@ -45,10 +45,10 @@ public class ProductController {
     @GetMapping("search")
     @Description("상품조회 - 페이징, 키워드, 카테고리 검색")
     public Map<String, Object> getListProduct(@RequestParam(defaultValue = "1") int page,
-                                              @RequestParam(defaultValue = "") String keyword,
+                                              @RequestParam(defaultValue = "") String title,
                                               @RequestParam(defaultValue = "") String category
     ) {
-        return service.getList(PageRequest.of(page - 1, 20), keyword, category);
+        return service.getList(PageRequest.of(page - 1, 20), title, category);
     }
 
     @GetMapping("{id}")

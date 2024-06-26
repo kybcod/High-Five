@@ -78,11 +78,11 @@ public class ProductService {
     }
 
 
-    public Map<String, Object> getList(Pageable pageable, String keyword, String category) {
-        List<Product> content = mapper.selectWithPageable(pageable, keyword, category);
+    public Map<String, Object> getList(Pageable pageable, String title, String category) {
+        List<Product> content = mapper.selectWithPageable(pageable, title, category);
         settingFilePath(content);
 
-        int total = mapper.selectTotalCount(keyword, category);
+        int total = mapper.selectTotalCount(title, category);
         Page<Product> page = new PageImpl<>(content, pageable, total);
         PageInfo pageInfo = new PageInfo().setting(page);
         return Map.of("content", content, "pageInfo", pageInfo);

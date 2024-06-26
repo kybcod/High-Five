@@ -36,7 +36,7 @@ export function Header() {
 
   const [searchParams] = useSearchParams();
   useEffect(() => {
-    const keywordFromParams = searchParams.get("keyword");
+    const keywordFromParams = searchParams.get("title");
     if (keywordFromParams) {
       setKeyword(keywordFromParams);
     } else {
@@ -44,8 +44,8 @@ export function Header() {
     }
   }, [searchParams]);
 
-  function handleSearchClick(keyword) {
-    navigate(`/list?keyword=${keyword}`);
+  function handleSearchClick(title) {
+    navigate(`/list?title=${title}`);
   }
 
   function handleCategoryClick(category) {
@@ -135,10 +135,7 @@ export function Header() {
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
             />
-            <InputRightAddon
-              // bgColor={"mediumslateblue"}
-              onClick={() => handleSearchClick(keyword)}
-            >
+            <InputRightAddon onClick={() => handleSearchClick(keyword)}>
               <FontAwesomeIcon icon={faSearch} />
             </InputRightAddon>
           </InputGroup>
