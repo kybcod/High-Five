@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormLabel, Image, Input } from "@chakra-ui/react";
+import { Box, Button, FormLabel, Grid, Image, Input } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
@@ -53,7 +53,7 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
 
   return (
     <Box mb={4}>
-      <Flex alignItems="center">
+      <Grid templateColumns="180px 1fr" gap={4}>
         <FormLabel htmlFor="file-upload">
           <Box
             border="1px dashed gray"
@@ -73,7 +73,7 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
             <Box mb={2}>
               <FontAwesomeIcon icon={faCamera} size="2xl" />
             </Box>
-            <Box>Upload files</Box>
+            <Box>이미지 등록</Box>
             <Input
               ref={fileInputRef}
               id="file-upload"
@@ -85,10 +85,10 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
             />
           </Box>
         </FormLabel>
-        <Flex overflowX="auto" flexWrap="nowrap" maxWidth="100%">
+        <Grid templateColumns="repeat(auto-fill, 180px)" gap={4}>
           {filePreview}
-        </Flex>
-      </Flex>
+        </Grid>
+      </Grid>
     </Box>
   );
 }

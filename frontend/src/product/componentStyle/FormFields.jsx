@@ -37,9 +37,9 @@ export function FormFields({
 
   return (
     <Box>
-      <Box mb={4}>
+      <Box mb={10}>
         <FormControl>
-          <FormLabel>제목</FormLabel>
+          <FormLabel>상품명</FormLabel>
           <Input
             borderColor="gray.400"
             value={title}
@@ -47,7 +47,7 @@ export function FormFields({
           />
         </FormControl>
       </Box>
-      <Box mb={4}>
+      <Box mb={10}>
         <FormControl>
           <FormLabel>카테고리</FormLabel>
           <Select
@@ -68,7 +68,7 @@ export function FormFields({
           </Select>
         </FormControl>
       </Box>
-      <Box mb={4}>
+      <Box mb={10}>
         <FormControl>
           <FormLabel>입찰 시작가</FormLabel>
           <InputGroup>
@@ -81,10 +81,10 @@ export function FormFields({
           </InputGroup>
         </FormControl>
       </Box>
-      <Box>
-        <Flex mb={4}>
-          <FormControl mr={4}>
-            <FormLabel>날짜</FormLabel>
+      <Box mb={10}>
+        <FormControl>
+          <FormLabel>경매 마감 시간</FormLabel>
+          <Flex>
             <Input
               type="date"
               value={date}
@@ -93,12 +93,10 @@ export function FormFields({
               borderColor="gray.400"
               borderRadius="md"
               _focus={{ borderColor: "blue.500" }}
+              mr={4}
             />
-          </FormControl>
-          <FormControl>
-            <FormLabel>시간(AM 8:00 ~ PM 23:00)</FormLabel>
             <Select
-              placeholder="시간"
+              placeholder="시간 선택"
               value={time}
               onChange={(e) => setTime(e.target.value)}
               borderWidth="1px"
@@ -123,10 +121,10 @@ export function FormFields({
               <option value="22:00">22:00</option>
               <option value="23:00">23:00</option>
             </Select>
-          </FormControl>
-        </Flex>
+          </Flex>
+        </FormControl>
       </Box>
-      <Box mb={4}>
+      <Box mb={10}>
         <FormControl>
           <FormLabel>상품 상세내용 (선택)</FormLabel>
           <Textarea
@@ -135,7 +133,7 @@ export function FormFields({
             borderColor="gray.400"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="상품 설명을 입력하세요."
+            placeholder="개인정보(전화번호, SNS 계정 등)는 기재하지 말아주세요."
           />
         </FormControl>
       </Box>
