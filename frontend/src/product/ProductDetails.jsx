@@ -375,7 +375,11 @@ export function ProductDetails() {
                     경매에 참여하게 됩니다.
                   </ListItem>
                   <ListItem mb={2}>
-                    경매 종료 후 낙찰여부는 마이 페이지에서 확인 가능합니다.
+                    경매 종료 후 낙찰여부는{" "}
+                    <Box as="span" fontWeight="bold" color="blue.500">
+                      마이 페이지에서 확인 가능
+                    </Box>
+                    합니다.
                   </ListItem>
                   <ListItem mb={2}>
                     입찰 금액을 입력할 때 반드시 제시된 가격보다 같거나 높아야
