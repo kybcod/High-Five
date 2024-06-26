@@ -140,19 +140,24 @@ export function BoardView() {
           <Text>{board.inserted}</Text>
         </Box>
       </Flex>
-      <Box mt={3}>
-        <Flex>
-          {board.boardFileList &&
-            board.boardFileList.length > 0 &&
-            board.boardFileList.map((file, index) => (
-              <Card m={3} key={index} w={"400px"}>
-                <CardBody>
-                  <Image src={file.filePath} sizes={"100%"} />
-                </CardBody>
-              </Card>
-            ))}
-        </Flex>
-      </Box>
+      <Flex flexWrap={"wrap"} gap={5}>
+        {board.boardFileList &&
+          board.boardFileList.length > 0 &&
+          board.boardFileList.map((file, index) => (
+            <Card
+              mt={"10px"}
+              mb={5}
+              key={index}
+              w={"calc(30% - 10px)"}
+              boxShadow={"none"}
+              border={"none"}
+            >
+              <CardBody>
+                <Image src={file.filePath} w={"100%"} h={"300px"} />
+              </CardBody>
+            </Card>
+          ))}
+      </Flex>
       <Box>
         <Textarea value={board.content} readOnly />
       </Box>

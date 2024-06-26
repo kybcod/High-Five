@@ -110,10 +110,14 @@ export function BoardModify() {
         break;
       }
     }
+    const displayName =
+      addFileList[i].name.length > 15
+        ? `${addFileList[i].name.slice(0, 15)}...`
+        : addFileList[i].name;
     fileNameList.push(
       <Flex key={i}>
         <ListItem display="flex" alignItems="center">
-          <Text flex="1">{addFileList[i].name}</Text>
+          <Text flex="1">{displayName}</Text>
           {duplicate && <Badge colorScheme={"yellow"}>중복된 파일</Badge>}
         </ListItem>
         <IconButton
@@ -142,34 +146,41 @@ export function BoardModify() {
           />
         </FormControl>
       </Box>
-      {board.boardFileList &&
-        board.boardFileList.map((file, index) => (
-          <Card mt={"10px"} key={index} w={"300px"}>
-            <CardBody>
-              <Image
-                src={file.filePath}
-                sizes={"100%"}
-                sx={
-                  removeFileList.includes(file.fileName)
-                    ? { filter: "blur(8px)" }
-                    : {}
-                }
-              />
-            </CardBody>
-            <CardFooter>
-              <Flex alignItems={"center"}>
-                <FontAwesomeIcon icon={faTrashCan} />
-                <Switch
-                  onChange={(e) =>
-                    handleRemoveSwitchChange(file.fileName, e.target.checked)
+      <Flex flexWrap={"wrap"} gap={5}>
+        {board.boardFileList &&
+          board.boardFileList.map((file, index) => (
+            <Card key={index} w={"calc(30% - 10px)"} mt={"10px"} mb={5}>
+              <CardBody>
+                <Image
+                  src={file.filePath}
+                  w={"100%"}
+                  h={"300px"}
+                  sx={
+                    removeFileList.includes(file.fileName)
+                      ? { filter: "blur(8px)" }
+                      : {}
                   }
-                  ml={3}
                 />
-                <Text ml={1}>{file.fileName}</Text>
-              </Flex>
-            </CardFooter>
-          </Card>
-        ))}
+              </CardBody>
+              <CardFooter>
+                <Flex alignItems={"center"}>
+                  <FontAwesomeIcon icon={faTrashCan} />
+                  <Switch
+                    onChange={(e) =>
+                      handleRemoveSwitchChange(file.fileName, e.target.checked)
+                    }
+                    ml={3}
+                  />
+                  <Text ml={1}>
+                    {file.fileName.length > 10 &&
+                      `${file.fileName.slice(0, 10)}...`}
+                    {file.fileName.length < 10 && file.fileName}
+                  </Text>
+                </Flex>
+              </CardFooter>
+            </Card>
+          ))}
+      </Flex>
       <Box mt={"10px"}>
         <FormControl>
           <Flex alignItems={"center"}>
