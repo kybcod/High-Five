@@ -1,4 +1,12 @@
-import { Box, Button, FormLabel, Grid, Image, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormLabel,
+  Grid,
+  Image,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
@@ -54,8 +62,11 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
   return (
     <Box mb={4}>
       <Grid templateColumns="180px 1fr" gap={4}>
-        <FormLabel htmlFor="file-upload">
-          <Box
+        <Text width="180px" pr={4}>
+          상품 이미지
+        </Text>
+        <Box alignSelf="flex-start">
+          <FormLabel
             border="1px dashed gray"
             textAlign="center"
             cursor="pointer"
@@ -67,8 +78,10 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
             alignItems="center"
             justifyContent="center"
             flexDirection="column"
-            minW="180px"
-            minH="180px"
+            width="180px"
+            height="180px"
+            maxW={"180px"}
+            maxH={"180px"}
           >
             <Box mb={2}>
               <FontAwesomeIcon icon={faCamera} size="2xl" />
@@ -82,9 +95,11 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
               accept="image/*"
               style={{ display: "none" }}
               onChange={handleChangeFiles}
+              height={"180px"}
+              width={"180px"}
             />
-          </Box>
-        </FormLabel>
+          </FormLabel>
+        </Box>
         <Grid templateColumns="repeat(auto-fill, 180px)" gap={4}>
           {filePreview}
         </Grid>

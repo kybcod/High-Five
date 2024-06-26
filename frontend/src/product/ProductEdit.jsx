@@ -1,12 +1,14 @@
 import {
   Box,
   Button,
+  Divider,
   Flex,
   FormLabel,
   Grid,
   Image,
   Input,
   Spinner,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -172,116 +174,138 @@ export function ProductEdit() {
 
   return (
     <Box>
-      <Box mb={4}>
-        <Grid templateColumns="180px 1fr" gap={4}>
-          <FormLabel htmlFor="file-upload">
-            <Box
-              border="1px dashed gray"
-              textAlign="center"
-              cursor="pointer"
-              _hover={{ borderColor: "blue.500" }}
-              mr={4}
-              p={4}
-              rounded="md"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              flexDirection="column"
-              minW="180px"
-              minH="180px"
-            >
-              <Box mb={2}>
-                <FontAwesomeIcon icon={faCamera} size="2xl" />
+      <Text
+        mx="auto"
+        maxWidth="1000px"
+        fontSize={"2xl"}
+        fontWeight={"bold"}
+        mb={4}
+      >
+        상품 수정
+      </Text>
+      <Divider mx="auto" maxWidth="1000px" my={4} />
+      <Box mx="auto" maxWidth="1000px">
+        <Box mb={4}>
+          <Grid templateColumns="180px 1fr" gap={4}>
+            <FormLabel htmlFor="file-upload">
+              <Box
+                border="1px dashed gray"
+                textAlign="center"
+                cursor="pointer"
+                _hover={{ borderColor: "blue.500" }}
+                mr={4}
+                p={4}
+                rounded="md"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="column"
+                minW="180px"
+                minH="180px"
+              >
+                <Box mb={2}>
+                  <FontAwesomeIcon icon={faCamera} size="2xl" />
+                </Box>
+                <Box>이미지 등록</Box>
+                <Input
+                  ref={fileInputRef}
+                  id="file-upload"
+                  type="file"
+                  multiple
+                  accept={"image/*"}
+                  style={{ display: "none" }}
+                  onChange={handleChangeFiles}
+                />
               </Box>
-              <Box>이미지 등록</Box>
-              <Input
-                ref={fileInputRef}
-                id="file-upload"
-                type="file"
-                multiple
-                accept={"image/*"}
-                style={{ display: "none" }}
-                onChange={handleChangeFiles}
-              />
-            </Box>
-          </FormLabel>
+            </FormLabel>
 
-          <Grid templateColumns="repeat(auto-fill, 180px)" gap={4}>
-            {/* 기존 이미지 표시 */}
-            {existingFilePreviews.map((file, index) => {
-              const uniqueKey = `${index}-${file.fileName}`;
-              return (
+            <Grid templateColumns="repeat(auto-fill, 180px)" gap={4}>
+              {/* 기존 이미지 표시 */}
+              {existingFilePreviews.map((file, index) => {
+                const uniqueKey = `${index}-${file.fileName}`;
+                return (
+                  <Box
+                    key={uniqueKey}
+                    position="relative"
+                    mr={3}
+                    minWidth="180px"
+                  >
+                    <Image boxSize="180px" src={file.filePath} mr={2} />
+                    <Button
+                      position="absolute"
+                      top={1}
+                      right={2}
+                      variant="ghost"
+                      onClick={() => handleRemoveExistingFile(index)}
+                    >
+                      <FontAwesomeIcon icon={faTimesCircle} size="lg" />
+                    </Button>
+                  </Box>
+                );
+              })}
+
+              {/* 새로운 파일 선택 시 미리보기 표시 */}
+              {newFilePreviews.map((preview, index) => (
                 <Box
-                  key={uniqueKey}
+                  key={preview.key}
                   position="relative"
                   mr={3}
                   minWidth="180px"
                 >
-                  <Image boxSize="180px" src={file.filePath} mr={2} />
+                  <Image boxSize="180px" src={preview.src} mr={2} />
                   <Button
                     position="absolute"
                     top={1}
                     right={2}
                     variant="ghost"
-                    onClick={() => handleRemoveExistingFile(index)}
+                    onClick={() => handleRemoveNewFile(index)}
                   >
                     <FontAwesomeIcon icon={faTimesCircle} size="lg" />
                   </Button>
                 </Box>
-              );
-            })}
-
-            {/* 새로운 파일 선택 시 미리보기 표시 */}
-            {newFilePreviews.map((preview, index) => (
-              <Box
-                key={preview.key}
-                position="relative"
-                mr={3}
-                minWidth="180px"
-              >
-                <Image boxSize="180px" src={preview.src} mr={2} />
-                <Button
-                  position="absolute"
-                  top={1}
-                  right={2}
-                  variant="ghost"
-                  onClick={() => handleRemoveNewFile(index)}
-                >
-                  <FontAwesomeIcon icon={faTimesCircle} size="lg" />
-                </Button>
-              </Box>
-            ))}
+              ))}
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
+
+        <FormFields
+          title={product.title}
+          setTitle={(title) => setProduct({ ...product, title: title })}
+          category={product.category}
+          setCategory={(category) =>
+            setProduct({ ...product, category: category })
+          }
+          startPrice={product.startPrice}
+          setStartPrice={(price) =>
+            setProduct({ ...product, startPrice: price })
+          }
+          date={date}
+          setDate={setDate}
+          time={time}
+          setTime={setTime}
+          content={product.content}
+          setContent={(content) => setProduct({ ...product, content: content })}
+        />
       </Box>
 
-      <FormFields
-        title={product.title}
-        setTitle={(title) => setProduct({ ...product, title: title })}
-        category={product.category}
-        setCategory={(category) =>
-          setProduct({ ...product, category: category })
-        }
-        startPrice={product.startPrice}
-        setStartPrice={(price) => setProduct({ ...product, startPrice: price })}
-        date={date}
-        setDate={setDate}
-        time={time}
-        setTime={setTime}
-        content={product.content}
-        setContent={(content) => setProduct({ ...product, content: content })}
-      />
-
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="flex-end">
         <Button
           onClick={updateModal.onOpen}
-          w={"100%"}
+          w={"15%"}
+          h={"50px"}
           mr={4}
+          fontSize={"lg"}
           colorScheme={"green"}
         >
           수정
         </Button>
-        <Button onClick={deleteModal.onOpen} w={"100%"} colorScheme="red">
+        <Button
+          onClick={deleteModal.onOpen}
+          w={"15%"}
+          h={"50px"}
+          fontSize={"lg"}
+          colorScheme="red"
+        >
           삭제
         </Button>
       </Flex>

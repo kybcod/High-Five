@@ -1,4 +1,4 @@
-import { Box, Button, useToast } from "@chakra-ui/react";
+import { Box, Button, Divider, Text, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -134,38 +134,52 @@ export function ProductUpload() {
   }
 
   return (
-    <Box p={4} mx="auto" maxWidth="1000px">
-      <FileUpload
-        files={files}
-        setFiles={setFiles}
-        filePreview={filePreview}
-        setFilePreView={setFilePreView}
-      />
-      <FormFields
-        title={title}
-        setTitle={setTitle}
-        category={category}
-        setCategory={setCategory}
-        startPrice={startPrice}
-        setStartPrice={setStartPrice}
-        date={date}
-        setDate={setDate}
-        time={time}
-        setTime={setTime}
-        content={content}
-        setContent={setContent}
-      />
-      <Box mt={6} textAlign="center">
-        <Button
-          w={"100%"}
-          isLoading={loading}
-          type="submit"
-          colorScheme="blue"
-          size="lg"
-          onClick={handleUploadClick}
-        >
-          상품 업로드
-        </Button>
+    <Box>
+      <Text
+        mx="auto"
+        maxWidth="1000px"
+        fontSize={"2xl"}
+        fontWeight={"bold"}
+        mb={4}
+      >
+        상품 등록
+      </Text>
+      <Divider mx="auto" maxWidth="1000px" my={4} />
+      <Box mx="auto" maxWidth="1000px">
+        <FileUpload
+          files={files}
+          setFiles={setFiles}
+          filePreview={filePreview}
+          setFilePreView={setFilePreView}
+        />
+        <FormFields
+          title={title}
+          setTitle={setTitle}
+          category={category}
+          setCategory={setCategory}
+          startPrice={startPrice}
+          setStartPrice={setStartPrice}
+          date={date}
+          setDate={setDate}
+          time={time}
+          setTime={setTime}
+          content={content}
+          setContent={setContent}
+        />
+        <Box mt={6} textAlign="end">
+          <Button
+            w={"20%"}
+            h={"50px"}
+            fontSize={"lg"}
+            isLoading={loading}
+            type="submit"
+            colorScheme="blue"
+            size="lg"
+            onClick={handleUploadClick}
+          >
+            상품 업로드
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
