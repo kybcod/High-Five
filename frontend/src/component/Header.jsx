@@ -56,7 +56,7 @@ export function Header() {
   }
 
   return (
-    <Box border={"1px solid black"}>
+    <Box height={"70px"} border={"1px solid black"}>
       <Flex align="center" justify="space-between" maxW="100%">
         <Menu>
           <Box ml={2} align="center">
@@ -70,7 +70,7 @@ export function Header() {
               카테고리
             </MenuButton>
           </Box>
-          <MenuList mt={1}>
+          <MenuList>
             <MenuItem
               onClick={() => handleCategoryClick("clothes")}
               icon={<FontAwesomeIcon icon={faShirt} />}
