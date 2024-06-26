@@ -155,19 +155,32 @@ public class ChatService {
             } else {
                 userId = chatRoom.getSellerId();
             }
+
             User user = userMapper.selectUserNickNameById(userId);
+            if (user == null) {
+                User newUser = new User();
+                newUser.setId(chatRoom.getUserId());
+                newUser.setNickName("탈퇴한 회원");
+                user = newUser;
+            }
 
             // -- chat : message, inserted
             Chat chat = mapper.selectMessageByRoomId(chatRoom);
+            // -- chat readCheck count
+            int count = mapper.selectNotReadCountById(chatRoom.getId(), tokenUserId);
+
             if (chat == null) {
                 Chat newChat = new Chat();
                 newChat.setMessage("대화를 시작해보세요!");
                 newChat.setInserted(LocalDateTime.now());
                 chat = newChat;
             }
+            
+            Map<String, Object> chatMap = new HashMap<>(chat.getChatMessageAndInserted());
+            chatMap.put("count", count);
 
             map.put("chatRoom", chatRoom.getChatRoomIdAndBuyerId());
-            map.put("chat", chat.getChatMessageAndInserted());
+            map.put("chat", chatMap);
             map.put("product", product.getProductIdAndTitle());
             map.put("user", user.getUserIdAndNickName());
 
