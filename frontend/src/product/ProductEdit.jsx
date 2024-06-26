@@ -3,18 +3,31 @@ import {
   Button,
   Flex,
   FormLabel,
+  Grid,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { faCamera, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCamera,
+  faCheck,
+  faTimes,
+  faTimesCircle,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormFields } from "./componentStyle/FormFields.jsx";
-import { ModalComponent } from "./componentStyle/ModalComponent.jsx";
 
 export function ProductEdit() {
   const { id } = useParams();
@@ -27,10 +40,9 @@ export function ProductEdit() {
   const [removedFileList, setRemovedFileList] = useState([]);
   const toast = useToast();
   const navigate = useNavigate();
+  const updateModal = useDisclosure();
+  const deleteModal = useDisclosure();
   const fileInputRef = useRef(null);
-
-  const [updateModal, setUpdateModal] = useState({ isOpen: false });
-  const [deleteModal, setDeleteModal] = useState({ isOpen: false });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -121,8 +133,7 @@ export function ProductEdit() {
         });
       })
       .finally(() => {
-        // deleteModal.onClose();
-        setDeleteModal({ isOpen: false });
+        deleteModal.onClose();
         setLoading(false);
         navigate("/");
       });
@@ -135,9 +146,10 @@ export function ProductEdit() {
   function handleChangeFiles(e) {
     const newSelectedFiles = Array.from(e.target.files);
     setNewFileList([...newFileList, ...newSelectedFiles]);
-    const newPreviews = newSelectedFiles.map((file) =>
-      URL.createObjectURL(file),
-    );
+    const newPreviews = newSelectedFiles.map((file, index) => {
+      const uniqueKey = `${index}-${file.name}`;
+      return { src: URL.createObjectURL(file), key: uniqueKey };
+    });
     setNewFilePreviews([...newFilePreviews, ...newPreviews]);
 
     // 파일 인풋 초기화(같은 파일 선택 시 초기화)
@@ -146,11 +158,12 @@ export function ProductEdit() {
     }
   }
 
-  function handleRemoveExistingFile(fileName) {
-    setRemovedFileList([...removedFileList, fileName]);
-    setExistingFilePreviews(
-      existingFilePreviews.filter((file) => file.fileName !== fileName),
-    );
+  function handleRemoveExistingFile(index) {
+    setRemovedFileList([
+      ...removedFileList,
+      existingFilePreviews[index].fileName,
+    ]);
+    setExistingFilePreviews(existingFilePreviews.filter((_, i) => i !== index));
   }
 
   function handleRemoveNewFile(index) {
@@ -163,10 +176,9 @@ export function ProductEdit() {
   }
 
   return (
-    // <Box p={4} mx="auto" maxWidth="600px">
     <Box>
       <Box mb={4}>
-        <Flex alignItems="center">
+        <Grid templateColumns="180px 1fr" gap={4}>
           <FormLabel htmlFor="file-upload">
             <Box
               border="1px dashed gray"
@@ -180,11 +192,13 @@ export function ProductEdit() {
               alignItems="center"
               justifyContent="center"
               flexDirection="column"
+              minW="180px"
+              minH="180px"
             >
               <Box mb={2}>
                 <FontAwesomeIcon icon={faCamera} size="2xl" />
               </Box>
-              <Box>Upload files</Box>
+              <Box>이미지 등록</Box>
               <Input
                 ref={fileInputRef}
                 id="file-upload"
@@ -197,31 +211,40 @@ export function ProductEdit() {
             </Box>
           </FormLabel>
 
-          <Flex overflowX="auto" flexWrap="nowrap" maxWidth="100%">
+          <Grid templateColumns="repeat(auto-fill, 180px)" gap={4}>
             {/* 기존 이미지 표시 */}
-            {existingFilePreviews.map((file) => (
+            {existingFilePreviews.map((file, index) => {
+              const uniqueKey = `${index}-${file.fileName}`;
+              return (
+                <Box
+                  key={uniqueKey}
+                  position="relative"
+                  mr={3}
+                  minWidth="180px"
+                >
+                  <Image boxSize="180px" src={file.filePath} mr={2} />
+                  <Button
+                    position="absolute"
+                    top={1}
+                    right={2}
+                    variant="ghost"
+                    onClick={() => handleRemoveExistingFile(index)}
+                  >
+                    <FontAwesomeIcon icon={faTimesCircle} size="lg" />
+                  </Button>
+                </Box>
+              );
+            })}
+
+            {/* 새로운 파일 선택 시 미리보기 표시 */}
+            {newFilePreviews.map((preview, index) => (
               <Box
-                key={file.fileName}
+                key={preview.key}
                 position="relative"
                 mr={3}
                 minWidth="180px"
               >
-                <Image boxSize="180px" src={file.filePath} mr={2} />
-                <Button
-                  position="absolute"
-                  top={1}
-                  right={2}
-                  variant="ghost"
-                  onClick={() => handleRemoveExistingFile(file.fileName)}
-                >
-                  <FontAwesomeIcon icon={faTimesCircle} size="lg" />
-                </Button>
-              </Box>
-            ))}
-            {/* 새로운 파일 선택 시 미리보기 표시 */}
-            {newFilePreviews.map((src, index) => (
-              <Box key={index} position="relative" mr={3} minWidth="180px">
-                <Image boxSize="180px" src={src} mr={2} />
+                <Image boxSize="180px" src={preview.src} mr={2} />
                 <Button
                   position="absolute"
                   top={1}
@@ -233,8 +256,8 @@ export function ProductEdit() {
                 </Button>
               </Box>
             ))}
-          </Flex>
-        </Flex>
+          </Grid>
+        </Grid>
       </Box>
 
       <FormFields
@@ -254,52 +277,83 @@ export function ProductEdit() {
         setContent={(content) => setProduct({ ...product, content: content })}
       />
 
-      <Box>
-        {/* 수정 Modal */}
-        <ModalComponent
-          isOpen={updateModal.isOpen}
-          onClose={() => setUpdateModal({ isOpen: false })}
-          headerText="수정하기"
-          bodyText="정말로 수정하시겠습니까?"
-          onClick={handleUpdateClick}
-          colorScheme="blue"
-          okButtonText="확인"
-          cancelButtonText="취소"
+      <Flex justifyContent="space-between">
+        <Button
+          onClick={updateModal.onOpen}
+          w={"100%"}
+          mr={4}
+          colorScheme={"green"}
           isLoading={loading}
-        />
-
-        {/* 삭제 Modal */}
-        <ModalComponent
-          isOpen={deleteModal.isOpen}
-          onClose={() => setDeleteModal({ isOpen: false })}
-          headerText="삭제하기"
-          bodyText="정말로 삭제하시겠습니까?"
-          onClick={handleDeleteClick}
+          loadingText={"처리중"}
+        >
+          수정
+        </Button>
+        <Button
+          onClick={deleteModal.onOpen}
+          w={"100%"}
           colorScheme="red"
-          okButtonText="확인"
-          cancelButtonText="취소"
           isLoading={loading}
-        />
+          loadingText={"처리중"}
+        >
+          삭제
+        </Button>
+      </Flex>
 
-        <Flex justifyContent="space-between">
-          <Button
-            w={"100%"}
-            mr={4}
-            colorScheme={"green"}
-            onClick={() => setUpdateModal({ isOpen: true })}
-          >
-            수정
-          </Button>
-          <Button
-            w={"100%"}
-            mr={4}
-            colorScheme={"red"}
-            onClick={() => setDeleteModal({ isOpen: true })}
-          >
-            삭제
-          </Button>
-        </Flex>
-      </Box>
+      {/* 수정 모달 */}
+      <Modal isOpen={updateModal.isOpen} onClose={updateModal.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>수정하기</ModalHeader>
+          <ModalBody>정말로 수정하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button
+              mr={3}
+              onClick={handleUpdateClick}
+              colorScheme="blue"
+              leftIcon={<FontAwesomeIcon icon={faCheck} />}
+              isLoading={loading}
+              loadingText={"처리중"}
+            >
+              확인
+            </Button>
+            <Button
+              mr={3}
+              onClick={updateModal.onClose}
+              leftIcon={<FontAwesomeIcon icon={faTimes} />}
+            >
+              취소
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* 삭제 모달 */}
+      <Modal isOpen={deleteModal.isOpen} onClose={deleteModal.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>삭제하기</ModalHeader>
+          <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button
+              mr={3}
+              onClick={handleDeleteClick}
+              colorScheme="red"
+              leftIcon={<FontAwesomeIcon icon={faTrashAlt} />}
+              isLoading={loading}
+              loadingText={"처리중"}
+            >
+              확인
+            </Button>
+            <Button
+              mr={3}
+              onClick={deleteModal.onClose}
+              leftIcon={<FontAwesomeIcon icon={faTimes} />}
+            >
+              취소
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
