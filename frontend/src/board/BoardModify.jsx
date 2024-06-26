@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Card,
-  CardBody,
   CardFooter,
   Flex,
   FormControl,
@@ -132,7 +131,7 @@ export function BoardModify() {
             newFiles.splice(i, 1);
             setAddFileList(newFiles);
           }}
-          ml={1}
+          ml={3}
         />
       </HStack>,
     );
@@ -151,60 +150,25 @@ export function BoardModify() {
           />
         </FormControl>
       </Box>
-      <Flex flexWrap={"wrap"} gap={5} mt={"20px"}>
-        {board.boardFileList &&
-          board.boardFileList.map((file, index) => (
-            <Card key={index} w={"calc(30% - 10px)"} mt={"10px"} mb={5}>
-              <CardBody>
-                <Image
-                  src={file.filePath}
-                  w={"100%"}
-                  h={"300px"}
-                  sx={
-                    removeFileList.includes(file.fileName)
-                      ? { filter: "blur(8px)" }
-                      : {}
-                  }
-                />
-              </CardBody>
-              <CardFooter>
-                <Flex alignItems={"center"}>
-                  <FontAwesomeIcon icon={faTrashCan} />
-                  <Switch
-                    onChange={(e) =>
-                      handleRemoveSwitchChange(file.fileName, e.target.checked)
-                    }
-                    ml={3}
-                  />
-                  <Text ml={1}>
-                    {file.fileName.length > 10 &&
-                      `${file.fileName.slice(0, 10)}...`}
-                    {file.fileName.length < 10 && file.fileName}
-                  </Text>
-                </Flex>
-              </CardFooter>
-            </Card>
-          ))}
-      </Flex>
-      <Box mt={"20px"}>
+      <Box mt={"30px"}>
         <FormControl>
           {addFileList.length > 0 && (
-            <Box mt={"5px"}>
-              <Heading size="md" mb={"10px"}>
+            <Box mt={"10px"}>
+              <Heading fontSize="md" mb={"10px"}>
                 선택된 파일 목록
               </Heading>
               <List spacing={3}>{fileNameList}</List>
             </Box>
           )}
-          <Flex justifyContent={"center"}>
-            <Heading fontSize={"md"} mt={"10px"}>
+          <Flex justifyContent={"center"} mt={"10px"}>
+            <Heading color={"black"} fontSize={"md"} mt={"10px"}>
               상품 상세 내용
             </Heading>
             <Spacer />
-            <FormHelperText mb={"13px"} mr={3}>
+            <FormHelperText mt={"10px"} mr={3}>
               총 용량은 10MB를 초과할 수 없습니다
             </FormHelperText>
-            <Button mb={"5px"} onClick={() => fileInputRef.current.click()}>
+            <Button mb={"10px"} onClick={() => fileInputRef.current.click()}>
               파일첨부
             </Button>
             <Input
@@ -218,14 +182,61 @@ export function BoardModify() {
               }}
             />
           </Flex>
-          <Textarea
-            onChange={(e) => setBoard({ ...board, content: e.target.value })}
-            defaultValue={board.content}
-            mt={"5px"}
-            rows={10}
-            resize={"none"}
-          />
         </FormControl>
+      </Box>
+      <Box border={"1px"} color={"gray.200"} borderRadius={"md"}>
+        <Flex flexWrap={"wrap"} justifyContent={"space-evenly"} p={"20px"}>
+          {board.boardFileList &&
+            board.boardFileList.map((file, index) => (
+              <Card
+                mt={"10px"}
+                key={index}
+                w={"calc(30% - 10px)"}
+                boxShadow={"none"}
+                border={"none"}
+              >
+                <Image
+                  src={file.filePath}
+                  w={"100%"}
+                  h={"300px"}
+                  sx={
+                    removeFileList.includes(file.fileName)
+                      ? { filter: "blur(8px)" }
+                      : {}
+                  }
+                />
+                <CardFooter>
+                  <Flex alignItems={"center"}>
+                    <FontAwesomeIcon icon={faTrashCan} />
+                    <Switch
+                      onChange={(e) =>
+                        handleRemoveSwitchChange(
+                          file.fileName,
+                          e.target.checked,
+                        )
+                      }
+                      ml={3}
+                    />
+                    <Text ml={1}>
+                      {file.fileName.length > 10 &&
+                        `${file.fileName.slice(0, 10)}...`}
+                      {file.fileName.length < 10 && file.fileName}
+                    </Text>
+                  </Flex>
+                </CardFooter>
+              </Card>
+            ))}
+        </Flex>
+        <Textarea
+          onChange={(e) => setBoard({ ...board, content: e.target.value })}
+          defaultValue={board.content}
+          mt={"5px"}
+          color={"black"}
+          border={"transparent"}
+          focusBorderColor={"transparent"}
+          sx={{ outline: "none" }}
+          resize={"none"}
+        />
       </Box>
       <Box>
         <Button mt={"20px"} onClick={handleClickSaveButton}>
