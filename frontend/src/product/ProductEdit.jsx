@@ -6,12 +6,6 @@ import {
   Grid,
   Image,
   Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Spinner,
   useDisclosure,
   useToast,
@@ -22,12 +16,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   faCamera,
   faCheck,
-  faTimes,
   faTimesCircle,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormFields } from "./componentStyle/FormFields.jsx";
+import { ModalComponent } from "./componentStyle/ModalComponent.jsx";
 
 export function ProductEdit() {
   const { id } = useParams();
@@ -43,7 +37,8 @@ export function ProductEdit() {
   const updateModal = useDisclosure();
   const deleteModal = useDisclosure();
   const fileInputRef = useRef(null);
-  const [loading, setLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
@@ -56,7 +51,7 @@ export function ProductEdit() {
       setDate(datePart);
       setTime(timePart.slice(0, 5));
     });
-  }, []);
+  }, [id]);
 
   function handleUpdateClick() {
     const localDate = new Date(`${date}T${time}`);
@@ -69,14 +64,14 @@ export function ProductEdit() {
         position: "top-right",
         duration: 3000,
       });
-      setLoading(false);
+      setUpdateLoading(false);
       return;
     }
 
     localDate.setHours(localDate.getHours() + 9);
     const formattedEndTime = localDate.toISOString().slice(0, -5);
 
-    setLoading(true);
+    setUpdateLoading(true);
 
     axios
       .putForm("/api/products", {
@@ -108,12 +103,12 @@ export function ProductEdit() {
       })
       .finally(() => {
         updateModal.onClose();
-        setLoading(false);
+        setUpdateLoading(false);
       });
   }
 
   function handleDeleteClick() {
-    setLoading(true);
+    setDeleteLoading(true);
     axios
       .delete(`/api/products/${id}`)
       .then(() =>
@@ -134,7 +129,7 @@ export function ProductEdit() {
       })
       .finally(() => {
         deleteModal.onClose();
-        setLoading(false);
+        setDeleteLoading(false);
         navigate("/");
       });
   }
@@ -283,77 +278,43 @@ export function ProductEdit() {
           w={"100%"}
           mr={4}
           colorScheme={"green"}
-          isLoading={loading}
-          loadingText={"처리중"}
         >
           수정
         </Button>
-        <Button
-          onClick={deleteModal.onOpen}
-          w={"100%"}
-          colorScheme="red"
-          isLoading={loading}
-          loadingText={"처리중"}
-        >
+        <Button onClick={deleteModal.onOpen} w={"100%"} colorScheme="red">
           삭제
         </Button>
       </Flex>
 
       {/* 수정 모달 */}
-      <Modal isOpen={updateModal.isOpen} onClose={updateModal.onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>수정하기</ModalHeader>
-          <ModalBody>정말로 수정하시겠습니까?</ModalBody>
-          <ModalFooter>
-            <Button
-              mr={3}
-              onClick={handleUpdateClick}
-              colorScheme="blue"
-              leftIcon={<FontAwesomeIcon icon={faCheck} />}
-              isLoading={loading}
-              loadingText={"처리중"}
-            >
-              확인
-            </Button>
-            <Button
-              mr={3}
-              onClick={updateModal.onClose}
-              leftIcon={<FontAwesomeIcon icon={faTimes} />}
-            >
-              취소
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ModalComponent
+        isOpen={updateModal.isOpen}
+        onClose={updateModal.onClose}
+        onClick={handleUpdateClick}
+        isLoading={updateLoading}
+        loadingText="처리중"
+        header="수정하기"
+        body="정말로 수정하시겠습니까?"
+        confirmText="확인"
+        colorScheme="blue"
+        icon={faCheck}
+        cancelText="취소"
+      />
 
       {/* 삭제 모달 */}
-      <Modal isOpen={deleteModal.isOpen} onClose={deleteModal.onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>삭제하기</ModalHeader>
-          <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
-          <ModalFooter>
-            <Button
-              mr={3}
-              onClick={handleDeleteClick}
-              colorScheme="red"
-              leftIcon={<FontAwesomeIcon icon={faTrashAlt} />}
-              isLoading={loading}
-              loadingText={"처리중"}
-            >
-              확인
-            </Button>
-            <Button
-              mr={3}
-              onClick={deleteModal.onClose}
-              leftIcon={<FontAwesomeIcon icon={faTimes} />}
-            >
-              취소
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ModalComponent
+        isOpen={deleteModal.isOpen}
+        onClose={deleteModal.onClose}
+        onClick={handleDeleteClick}
+        isLoading={deleteLoading}
+        loadingText="처리중"
+        header="삭제하기"
+        body="정말로 삭제하시겠습니까?"
+        confirmText="확인"
+        colorScheme="red"
+        icon={faTrashAlt}
+        cancelText="취소"
+      />
     </Box>
   );
 }
