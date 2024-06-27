@@ -12,7 +12,7 @@ export function Navbar() {
 
   return (
     <Flex
-      border={"1px solid gray"}
+      borderBottom={"1px solid gray"}
       h={"50px"}
       p={4}
       justifyContent={"space-between"}
