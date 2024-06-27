@@ -71,18 +71,20 @@ public class ProductService {
         }
     }
 
-    public List<Product> list() {
+    public Map<String, Object> list() {
         List<Product> products = mapper.selectAll();
         settingFilePath(products);
-        return products;
+        List<Product> todayProduct = mapper.selectProductToday();
+        settingFilePath(todayProduct);
+        return Map.of("products", products, "todayProduct", todayProduct);
     }
 
 
-    public Map<String, Object> getList(Pageable pageable, String keyword, String category) {
-        List<Product> content = mapper.selectWithPageable(pageable, keyword, category);
+    public Map<String, Object> getList(Pageable pageable, String title, String category) {
+        List<Product> content = mapper.selectWithPageable(pageable, title, category);
         settingFilePath(content);
 
-        int total = mapper.selectTotalCount(keyword, category);
+        int total = mapper.selectTotalCount(title, category);
         Page<Product> page = new PageImpl<>(content, pageable, total);
         PageInfo pageInfo = new PageInfo().setting(page);
         return Map.of("content", content, "pageInfo", pageInfo);
@@ -186,6 +188,7 @@ public class ProductService {
 
     public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
         List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
+        String userNickName = mapper.selectUserNickName(userId);
 
         for (Product product : productList) {
             // 낙찰된 닉네임
@@ -207,7 +210,8 @@ public class ProductService {
 
         return Map.of("productList", productList,
                 "pageInfo", pageInfo, "hasNextPage", hasNextPage,
-                "totalProductCount", total, "totalSalesCount", totalSalesCount);
+                "totalProductCount", total, "totalSalesCount", totalSalesCount, "userNickName", userNickName
+        );
     }
 
     public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable) {
