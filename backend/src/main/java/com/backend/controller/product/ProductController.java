@@ -95,8 +95,9 @@ public class ProductController {
     @GetMapping("user/{userId}")
     @Description("MyPage 판매 목록 : 상품조회 - 사용자별")
     public Map<String, Object> getUserProducts(@PathVariable Integer userId,
-                                               @RequestParam(defaultValue = "1") int page) {
-        return service.getProductsByUserId(userId, PageRequest.of(page - 1, 9));
+                                               @RequestParam(defaultValue = "1") int page,
+                                               @RequestParam(defaultValue = "0") int sort) {
+        return service.getProductsByUserId(userId, PageRequest.of(page - 1, 9), sort);
     }
 
     @GetMapping("user/{userId}/like")

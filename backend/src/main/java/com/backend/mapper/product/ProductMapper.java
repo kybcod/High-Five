@@ -183,20 +183,27 @@ public interface ProductMapper {
                    p.content,
                    p.view_count,
                    p.status,
-                p.review_status,
-                u.nick_name AS userNickName
+                   p.review_status,
+                   u.nick_name AS userNickName,
+                   COUNT(pl.id) AS likes
             FROM product p
-                     JOIN user u
-                          ON p.user_id = u.id
+            JOIN user u ON p.user_id = u.id
+            LEFT JOIN product_like pl ON pl.product_id = p.id
             WHERE p.user_id = #{userId}
-            ORDER BY p.start_time DESC
+            GROUP BY p.id 
+            ORDER BY
+                CASE WHEN #{sort} = 0 THEN p.start_time END DESC,
+                CASE WHEN #{sort} = 1 THEN COUNT(pl.id) END DESC,
+                CASE WHEN #{sort} = 2 THEN p.start_price END ASC,
+                CASE WHEN #{sort} = 3 THEN p.start_price END DESC,
+                p.id DESC  
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productListByUserId", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
     })
-    List<Product> selectProductsByUserIdWithPagination(Integer userId, Pageable pageable);
+    List<Product> selectProductsByUserIdWithPagination(Integer userId, Pageable pageable, int sort);
 
     @Select("""
             SELECT COUNT(*)

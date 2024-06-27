@@ -8,6 +8,7 @@ import {
   Grid,
   GridItem,
   Image,
+  Select,
   Spinner,
   Text,
 } from "@chakra-ui/react";
@@ -23,13 +24,15 @@ export function MyShop() {
   const [pageInfo, setPageInfo] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const [hasNextPage, setHasNextPage] = useState(true);
+  const [sortOption, setSortOption] = useState(0);
   const account = useContext(LoginContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("page") || "1");
+    const sort = parseInt(searchParams.get("sort") || sortOption);
     axios
-      .get(`/api/products/user/${userId}?page=${currentPage}`)
+      .get(`/api/products/user/${userId}?page=${currentPage}&sort=${sort}`)
       .then((res) => {
         console.log(res.data);
         if (currentPage === 1) {
@@ -69,8 +72,28 @@ export function MyShop() {
     return <Spinner />;
   }
 
+  function handleSortChange(event) {
+    setSortOption(parseInt(event.target.value));
+    searchParams.set("sort", event.target.value);
+    searchParams.set("page", 1);
+    setSearchParams(searchParams);
+  }
+
   return (
     <Box>
+      <Flex justifyContent={"flex-end"} mb={4}>
+        <Select
+          width={"200px"}
+          value={sortOption}
+          onChange={(e) => handleSortChange(e)}
+        >
+          <option value="0">최신순</option>
+          <option value="1">인기순</option>
+          <option value="2">저가순</option>
+          <option value="3">고가순</option>
+        </Select>
+      </Flex>
+
       {productList.length === 0 ? (
         <Text align="center" fontSize="xl" fontWeight="bold" mt={4}>
           판매한 상품이 없습니다.

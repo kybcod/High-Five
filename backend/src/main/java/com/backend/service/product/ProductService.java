@@ -186,8 +186,8 @@ public class ProductService {
     }
 
 
-    public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
-        List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
+    public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable, int sort) {
+        List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable, sort);
         String userNickName = mapper.selectUserNickName(userId);
 
         for (Product product : productList) {
