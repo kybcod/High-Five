@@ -81,21 +81,21 @@ public interface ChatMapper {
 
     @Update("""
             UPDATE chat_room
-            SET seller_exit = TRUE
+            SET seller_exit = #{changeValue}
             WHERE id = #{id}
                 AND seller_id = #{tokenUserId}
-                AND seller_exit = FALSE
+                AND seller_exit = #{prevValue}
             """)
-    int updateSellerExitById(Integer id, Integer tokenUserId);
+    int updateSellerExitById(Integer id, Integer tokenUserId, Boolean changeValue, Boolean prevValue);
 
     @Update("""
             UPDATE chat_room
-            SET user_exit = TRUE
+            SET user_exit = #{changeValue}
             WHERE id = #{id}
                 AND user_id = #{tokenUserId}
-                AND user_exit = FALSE
+                AND user_exit = #{prevValue}
             """)
-    int updateUserExitById(Integer id, Integer tokenUserId);
+    int updateUserExitById(Integer id, Integer tokenUserId, Boolean changeValue, Boolean prevValue);
 
     @Delete("""
             DELETE chat, chat_room
