@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Flex,
+  Image,
   Input,
   InputGroup,
   InputRightAddon,
@@ -126,7 +127,10 @@ export function Header() {
             cursor={"pointer"}
             onClick={() => navigate("/")}
           >
-            LIVE AUCTION{" "}
+            {/*LIVE AUCTION{" "}*/}
+            <Box w={"250px"}>
+              <Image src={"/img/function.png"} />
+            </Box>
           </Text>
         </Box>
 
