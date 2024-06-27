@@ -21,6 +21,10 @@ import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faAngleLeft,
+  faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
   faComment,
   faHeart as fullHeart,
   faImage,
@@ -166,6 +170,20 @@ export function BoardList() {
       </Center>
       <Center mt={"10px"}>
         <Flex gap={1}>
+          {pageInfo.prevPageNumber && (
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAnglesLeft} />
+            </Button>
+          )}
+          {pageInfo.leftPageNumber && (
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.leftPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </Button>
+          )}
           {pageNumbers.map((pageNumber) => (
             <ButtonGroup
               key={pageNumber}
@@ -174,6 +192,20 @@ export function BoardList() {
               <Button>{pageNumber}</Button>
             </ButtonGroup>
           ))}
+          {pageInfo.rightPageNumber && (
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAngleRight} />
+            </Button>
+          )}
+          {pageInfo.nextPageNumber && (
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAnglesRight} />
+            </Button>
+          )}
         </Flex>
       </Center>
     </Box>
