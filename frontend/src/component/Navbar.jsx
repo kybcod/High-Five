@@ -12,8 +12,8 @@ export function Navbar() {
 
   return (
     <Flex
-      border={"1px solid black"}
-      h={"10px"}
+      border={"1px solid gray"}
+      h={"50px"}
       p={4}
       justifyContent={"space-between"}
       align="center"

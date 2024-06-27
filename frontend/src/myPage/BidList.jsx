@@ -251,10 +251,10 @@ export function BidList() {
                         <Button
                           mt={2}
                           w={"100%"}
-                          borderColor={"purple"}
+                          borderColor={"teal"}
                           borderWidth={"2px"}
                           colorScheme={"whiteAlpha"}
-                          color={"purple"}
+                          color={"teal"}
                           onClick={() => {
                             navigate(
                               `/chat/product/${bid.product.id}/buyer/${bid.userId}`,

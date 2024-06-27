@@ -6,25 +6,25 @@ import Footer from "./component/Footer.jsx";
 
 export function Home() {
   return (
-    <Box
-      mx={{
-        base: 0,
-        lg: 200,
-      }}
-      mb={10}
-    >
+    <Box>
       <Box>
         <Navbar />
       </Box>
-      <Box>
-        <Box mb={10}>
+      <Box
+        mx={{
+          base: 0,
+          lg: 150,
+        }}
+        mb={10}
+      >
+        <Box mt={6} mb={10}>
           <Header />
         </Box>
         <Box>
           <Outlet />
         </Box>
       </Box>
-      <Box mt={10}>
+      <Box mt={20}>
         <Footer />
       </Box>
     </Box>

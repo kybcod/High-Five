@@ -56,7 +56,7 @@ export function Header() {
   }
 
   return (
-    <Box height={"70px"} border={"1px solid black"}>
+    <Box height={"70px"}>
       <Flex align="center" justify="space-between" maxW="100%">
         <Menu>
           <Box ml={2} align="center">
@@ -120,6 +120,7 @@ export function Header() {
         {/* 로고 */}
         <Box>
           <Text
+            fontWeight={"bold"}
             fontSize={"2xl"}
             color={"green"}
             cursor={"pointer"}

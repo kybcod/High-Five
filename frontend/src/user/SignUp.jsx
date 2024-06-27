@@ -127,7 +127,7 @@ export function SignUp() {
 
   return (
     <Center>
-      <Box color={"gray.500"} mt={70} width={"500px"}>
+      <Box color={"gray.500"} width={"500px"}>
         <Text fontSize={"3xl"} fontWeight={"bold"} color={"black"}>
           본인 정보를 입력해주세요
         </Text>
