@@ -130,6 +130,7 @@ export function Header() {
             {/*LIVE AUCTION{" "}*/}
             <Box w={"250px"}>
               <Image src={"/img/function.png"} />
+              {/*<Image src={"/img/live.PNG"} />*/}
             </Box>
           </Text>
         </Box>
