@@ -13,7 +13,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Category } from "../component/Category.jsx";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -82,7 +81,7 @@ export function ProductList() {
 
   return (
     <Box>
-      <Category />
+      {/*<Category />*/}
       <Heading my={6}></Heading>
       <Grid
         templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(5, 1fr)" }}
@@ -179,7 +178,7 @@ export function ProductList() {
                     )}
                   </Flex>
                   <Flex justifyContent="space-between">
-                    <Text color="blue.600" fontSize="xl">
+                    <Text color="blue.600" fontSize="lg">
                       {product.startPrice
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}

@@ -36,6 +36,7 @@ public interface ProductMapper {
                    p.content,
                    p.status
             FROM product p
+            WHERE p.status = 1
             ORDER BY p.status DESC, p.end_time
             """)
     @Results(id = "productList", value = {
@@ -330,4 +331,16 @@ public interface ProductMapper {
               AND status = FALSE;
             """)
     Integer selectTotalSalesCount(Integer userId);
+
+    @Select("""
+            SELECT *
+            FROM product
+            WHERE DATE(end_time) = CURDATE()
+            ORDER BY end_time;
+            """)
+    @Results(id = "todayProduct", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
+    List<Product> selectProductToday();
 }
