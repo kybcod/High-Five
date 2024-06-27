@@ -24,29 +24,30 @@ public class ChatController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity getChatRoomInfo(
             @PathVariable Integer productId, @PathVariable Integer buyerId, Authentication authentication) {
-        // TODO : 로직 전부 변경 예정 후 status 추가
         Map<String, Object> result = service.selectChatRoomId(productId, buyerId, authentication);
+        if (result.size() == 0 || result == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity getChatList(Authentication authentication) {
-        // TODO : status 추가 예정
         List<Map<String, Object>> result = service.getChatRoomList(authentication);
-        if (result.size() > 0) {
-            return ResponseEntity.ok().body(result);
+        if (result.size() == 0 || result == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping("{chatRoomId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity deleteChatRoom(@PathVariable Integer chatRoomId, Authentication authentication) {
         Integer success = service.deleteChatRoomById(chatRoomId, authentication);
-        if (success != 1) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (success > 0) {
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }
