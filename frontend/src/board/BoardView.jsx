@@ -15,12 +15,13 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
   Spacer,
   Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
@@ -32,14 +33,22 @@ import {
   faHeart as fullHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
-import ReportButton from "../user/ReportButton.jsx";
 
 export function BoardView() {
   const [board, setBoard] = useState("");
   const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
   const [isLikeProcess, setIsLikeProcess] = useState(false);
   const navigate = useNavigate();
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const {
+    isOpen: deleteModalIsOpen,
+    onClose: deleteModalOnClose,
+    onOpen: deleteModalOnOpen,
+  } = useDisclosure();
+  const {
+    isOpen: reportModalIsOpen,
+    onClose: reportModalOnClose,
+    onOpen: reportModalOnOpen,
+  } = useDisclosure();
   const { successToast, errorToast } = CustomToast();
   const account = useContext(LoginContext);
   const { board_id } = useParams();
@@ -62,7 +71,8 @@ export function BoardView() {
         if (err.response.status === 400) {
           errorToast("게시물 삭제에 실패했습니다. 다시 삭제해주세요");
         }
-      });
+      })
+      .finally(() => deleteModalOnClose);
   }
 
   function handleClickLike() {
@@ -97,6 +107,14 @@ export function BoardView() {
       setBoard(res.data.board);
       setBoardLike(res.data.boardLike);
     });
+  }
+
+  function handleReport() {
+    axios
+      .put(`/api/users/black/${board.userId}`)
+      .then(() => successToast("신고처리 되었습니다"))
+      .catch(() => errorToast("회원 신고 중 문제가 발생했습니다"))
+      .finally(() => reportModalOnClose);
   }
 
   return (
@@ -171,19 +189,17 @@ export function BoardView() {
               <MenuItem onClick={() => navigate(`/board/modify/${board_id}`)}>
                 수정
               </MenuItem>
-              <MenuItem onClick={onOpen}>삭제</MenuItem>
+              <MenuItem onClick={deleteModalOnOpen}>삭제</MenuItem>
             </MenuList>
           </Menu>
         )}
-        {account.hasAccess(board.userId) || (
+        {!account.hasAccess(board.userId) && (
           <Menu>
-            <MenuButton as="box">
+            <MenuButton>
               <FontAwesomeIcon icon={faEllipsisVertical} size={"lg"} />
             </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <ReportButton userId={board.userId} />
-              </MenuItem>
+            <MenuList onClick={reportModalOnOpen}>
+              <MenuItem>신고하기</MenuItem>
             </MenuList>
           </Menu>
         )}
@@ -218,7 +234,7 @@ export function BoardView() {
       <Box>
         <BoardCommentComponent boardId={board_id} />
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={deleteModalIsOpen} onClose={deleteModalOnClose}>
         <ModalContent>
           <ModalHeader>게시글 삭제</ModalHeader>
           <ModalBody>
@@ -226,11 +242,22 @@ export function BoardView() {
           </ModalBody>
           <ModalFooter>
             <Flex>
-              <Button onClick={onClose}>취소</Button>
+              <Button onClick={deleteModalOnClose}>취소</Button>
               <Button onClick={handleClickDelete} colorScheme={"red"}>
                 삭제
               </Button>
             </Flex>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={reportModalIsOpen} onClose={reportModalOnClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>신고하시겠습니까?</ModalHeader>
+          <ModalBody>허위 신고 적발 시 불이익을 받게됩니다</ModalBody>
+          <ModalFooter>
+            <Button onClick={reportModalOnClose}>취소</Button>
+            <Button onClick={handleReport}>신고</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
