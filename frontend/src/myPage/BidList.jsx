@@ -106,16 +106,10 @@ export function BidList() {
               <Card
                 cursor={"pointer"}
                 maxW="sm"
-                borderWidth="1px"
-                borderColor={"#eee"}
-                borderRadius="lg"
-                overflow="hidden"
-                boxShadow="md"
+                h="100%"
+                borderRadius="0"
                 transition="transform 0.2s"
                 _hover={{ transform: "scale(1.05)" }}
-                h="100%"
-                display="flex"
-                flexDirection="column"
               >
                 <CardBody position="relative" h="100%">
                   <Box mt={2} w="100%">

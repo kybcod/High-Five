@@ -83,11 +83,7 @@ export function MyShop() {
                 cursor={"pointer"}
                 maxW="sm"
                 h="100%"
-                borderWidth="1px"
-                borderColor={"#eee"}
-                borderRadius="lg"
-                overflow="hidden"
-                boxShadow="md"
+                borderRadius="0"
                 transition="transform 0.2s"
                 _hover={{ transform: "scale(1.05)" }}
               >
@@ -197,7 +193,12 @@ export function MyShop() {
                   </Flex>
                   {product.status || (
                     <Box display="flex" justifyContent="center">
-                      <Button mt={2} w={"100%"} colorScheme={"green"}>
+                      <Button
+                        mt={2}
+                        w={"100%"}
+                        variant={"outline"}
+                        colorScheme={"teal"}
+                      >
                         상품 후기
                       </Button>
                     </Box>
