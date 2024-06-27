@@ -61,3 +61,7 @@ WHERE board_id = 45;
 SELECT *
 FROM user_file;
 
+SELECT *
+FROM user
+WHERE black_count > 0;
+

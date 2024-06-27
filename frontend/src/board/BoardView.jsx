@@ -2,9 +2,14 @@ import {
   Box,
   Button,
   Card,
+  Divider,
   Flex,
   Heading,
   Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Modal,
   ModalBody,
   ModalContent,
@@ -22,8 +27,12 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { BoardCommentComponent } from "./BoardCommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEllipsisVertical,
+  faHeart as fullHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import ReportButton from "../user/ReportButton.jsx";
 
 export function BoardView() {
   const [board, setBoard] = useState("");
@@ -95,54 +104,23 @@ export function BoardView() {
       <Box>
         <Heading>자유게시판 게시글</Heading>
       </Box>
-      <Box ml={5} mt={"30px"}>
+      <Flex ml={5} mt={"30px"} alignItems={"center"}>
         <Text fontSize="4xl">{board.title}</Text>
-      </Box>
-      <Flex>
-        {board.profileImage && board.profileImage.fileName == null && (
-          <Image
-            borderRadius="full"
-            boxSize="150px"
-            fallbackSrc="https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800"
-            src={board.profileImage.src}
-            alt="Default Profile Image"
-          />
-        )}
-        {board.profileImage && board.profileImage.fileName != null && (
-          <Image
-            borderRadius="full"
-            boxSize="150px"
-            src={board.profileImage.src}
-            alt="Profile Image"
-          />
-        )}
-        <Box>
-          <Text>{board.nickName}</Text>
-        </Box>
-        <Box>
-          <Text>{board.inserted}</Text>
-        </Box>
         <Spacer />
-        {account.hasAccess(board.userId) && (
-          <Flex>
-            <Box>
-              <Text onClick={() => navigate(`/board/modify/${board_id}`)}>
-                수정
-              </Text>
-            </Box>
-            <Box>
-              <Text onClick={onOpen}>삭제</Text>
-            </Box>
-          </Flex>
-        )}
         {isLikeProcess || (
-          <Box onClick={handleClickLike}>
-            <Flex>
-              {boardLike.boardLike && <FontAwesomeIcon icon={fullHeart} />}
-              {boardLike.boardLike || <FontAwesomeIcon icon={emptyHeart} />}
-              {boardLike.count > 0 && <Box>{boardLike.count}</Box>}
-            </Flex>
-          </Box>
+          <Flex onClick={handleClickLike} mt={"20px"} alignItems={"center"}>
+            {boardLike.boardLike && (
+              <FontAwesomeIcon icon={fullHeart} size={"xl"} color={"red"} />
+            )}
+            {boardLike.boardLike || (
+              <FontAwesomeIcon icon={emptyHeart} size={"xl"} color={"red"} />
+            )}
+            {boardLike.count > 0 && (
+              <Box ml={"5px"} fontSize={"md"}>
+                좋아요 {boardLike.count}
+              </Box>
+            )}
+          </Flex>
         )}
         {isLikeProcess && (
           <Box>
@@ -150,11 +128,71 @@ export function BoardView() {
           </Box>
         )}
       </Flex>
+      <Flex alignItems={"center"} ml={5} m={7}>
+        {board.profileImage && board.profileImage.fileName == null && (
+          <Image
+            borderRadius="full"
+            boxSize="45px"
+            fallbackSrc="https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800"
+            src={board.profileImage.src}
+            alt="Default Profile Image"
+            onClick={() => navigate(`/myPage/${board.userId}/shop`)}
+            cursor={"pointer"}
+          />
+        )}
+        {board.profileImage && board.profileImage.fileName != null && (
+          <Image
+            borderRadius="full"
+            boxSize="45px"
+            src={board.profileImage.src}
+            alt="Profile Image"
+            onClick={() => navigate(`/myPage/${board.userId}/shop`)}
+            cursor={"pointer"}
+          />
+        )}
+        <Box ml={"10px"}>
+          <Text fontSize={"lg"}>{board.nickName}</Text>
+        </Box>
+        <Box ml={"20px"}>
+          <Text fontSize={"small"} color={"gray"}>
+            ৹
+          </Text>
+        </Box>
+        <Box ml={"20px"}>
+          <Text fontSize={"lg"}>{board.inserted}</Text>
+        </Box>
+        <Spacer />
+        {account.hasAccess(board.userId) && (
+          <Menu>
+            <MenuButton>
+              <FontAwesomeIcon icon={faEllipsisVertical} size={"lg"} />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => navigate(`/board/modify/${board_id}`)}>
+                수정
+              </MenuItem>
+              <MenuItem onClick={onOpen}>삭제</MenuItem>
+            </MenuList>
+          </Menu>
+        )}
+        {account.hasAccess(board.userId) || (
+          <Menu>
+            <MenuButton as="box">
+              <FontAwesomeIcon icon={faEllipsisVertical} size={"lg"} />
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <ReportButton userId={board.userId} />
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        )}
+      </Flex>
+      <Divider />
       <Box border={"1px"} color={"gray.200"} borderRadius={"md"}>
-        <Flex flexWrap={"wrap"} justifyContent={"space-evenly"} p={"20px"}>
-          {board.boardFileList &&
-            board.boardFileList.length > 0 &&
-            board.boardFileList.map((file, index) => (
+        {board.boardFileList && board.boardFileList.length > 0 && (
+          <Flex flexWrap={"wrap"} justifyContent={"space-evenly"} p={"20px"}>
+            {board.boardFileList.map((file, index) => (
               <Card
                 mt={"10px"}
                 key={index}
@@ -165,7 +203,8 @@ export function BoardView() {
                 <Image src={file.filePath} w={"100%"} h={"300px"} />
               </Card>
             ))}
-        </Flex>
+          </Flex>
+        )}
         <Box p={"30px"}>
           <Text color={"black"} fontSize={"md"}>
             {board.content}
