@@ -71,7 +71,6 @@ export function BoardList() {
       <Flex>
         <Heading>자유게시판 목록</Heading>
         <Spacer />
-        <Button onClick={() => navigate(`/board`)}>글쓰기</Button>
       </Flex>
       <Box>
         <Table>
@@ -134,8 +133,18 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          variant={"outline"}
+          colorScheme={"teal"}
+          sx={{ borderWidth: 2 }}
+          onClick={() => navigate(`/board`)}
+        >
+          글쓰기
+        </Button>
+      </Box>
       <Center mt={"10px"}>
-        <Flex>
+        <Flex gap={2}>
           <Select
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
@@ -154,14 +163,16 @@ export function BoardList() {
         </Flex>
       </Center>
       <Center mt={"10px"}>
-        {pageNumbers.map((pageNumber) => (
-          <ButtonGroup
-            key={pageNumber}
-            onClick={() => handlePageButtonClick(pageNumber)}
-          >
-            <Button>{pageNumber}</Button>
-          </ButtonGroup>
-        ))}
+        <Flex gap={1}>
+          {pageNumbers.map((pageNumber) => (
+            <ButtonGroup
+              key={pageNumber}
+              onClick={() => handlePageButtonClick(pageNumber)}
+            >
+              <Button>{pageNumber}</Button>
+            </ButtonGroup>
+          ))}
+        </Flex>
       </Center>
     </Box>
   );
