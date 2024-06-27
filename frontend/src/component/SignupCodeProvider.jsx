@@ -15,11 +15,11 @@ export function SignupCodeProvider({ children }) {
   const timerId = useRef(null);
   const { successToast, errorToast } = CustomToast();
 
-  useEffect(() => {
-    setPhoneNumber("");
-    setIsCheckedCode(false);
-    setVerificationCode("");
-  }, []);
+  // useEffect(() => {
+  //   setPhoneNumber("");
+  //   setIsCheckedCode(false);
+  //   setVerificationCode("");
+  // }, []);
 
   useEffect(() => {
     if (time.current === -1) {

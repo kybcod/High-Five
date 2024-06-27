@@ -10,7 +10,7 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
 import InfoAgreeCheck from "./InfoAgreeCheck.jsx";
 import {
   formLabel,
+  helperText,
   InputGroupButton,
   InputGroupStyle,
   InputStyle,
@@ -38,6 +39,12 @@ export function SignUp() {
   const codeInfo = useContext(SignupCodeContext);
   const navigate = useNavigate();
   const [isAllChecked, setIsAllChecked] = useState(false);
+
+  useEffect(() => {
+    codeInfo.setPhoneNumber("");
+    codeInfo.setIsCheckedCode(false);
+    codeInfo.setVerificationCode("");
+  }, []);
 
   function handleSignUp() {
     setIsLoading(true);
@@ -165,7 +172,9 @@ export function SignUp() {
             </InputRightElement>
           </InputGroup>
           {isValidEmail || (
-            <FormHelperText>올바른 이메일 형식이 아닙니다</FormHelperText>
+            <FormHelperText {...helperText}>
+              올바른 이메일 형식이 아닙니다
+            </FormHelperText>
           )}
         </FormControl>
         <FormControl mt={7}>
@@ -180,7 +189,7 @@ export function SignUp() {
             isInvalid={isValidPassword ? false : true}
           />
           {isValidPassword || (
-            <FormHelperText>
+            <FormHelperText {...helperText}>
               비밀번호는 8자 이상으로, 영문 대소문자와 숫자, 특수기호를
               포함하여야 합니다
             </FormHelperText>
@@ -195,7 +204,9 @@ export function SignUp() {
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
           {isCheckedPassword || (
-            <FormHelperText>비밀번호가 일치하지 않습니다</FormHelperText>
+            <FormHelperText {...helperText}>
+              비밀번호가 일치하지 않습니다
+            </FormHelperText>
           )}
         </FormControl>
         <FormControl mt={7}>
@@ -221,7 +232,9 @@ export function SignUp() {
               </Button>
             </InputRightElement>
           </InputGroup>
-          <FormHelperText>닉네임은 10자까지 작성 가능합니다</FormHelperText>
+          <FormHelperText {...helperText}>
+            닉네임은 10자까지 작성 가능합니다
+          </FormHelperText>
         </FormControl>
         <UserPhoneNumber />
         <InfoAgreeCheck
@@ -232,7 +245,7 @@ export function SignUp() {
           <Button
             height="60px"
             width="550px"
-            colorScheme={"green"}
+            colorScheme={"teal"}
             borderRadius="5px"
             onClick={handleSignUp}
             isLoading={isLoading}

@@ -29,6 +29,9 @@ export function SignupPhoneNumber() {
     const emailParam = searchParams.get("email");
     const nickNameParam = searchParams.get("nickName");
     setUser({ email: emailParam, nickName: nickNameParam, phoneNumber: "" });
+    codeInfo.setPhoneNumber("");
+    codeInfo.setIsCheckedCode(false);
+    codeInfo.setVerificationCode("");
   }, []);
 
   if (user === null) {

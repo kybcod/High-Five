@@ -80,7 +80,7 @@ export function Login() {
         </Box>
         <Box mt={3}>
           <Center>
-            <Flex gap={10} fontSize={"md"}>
+            <Flex gap={10} fontSize={"sm"}>
               <Link to={"/signup"}>이메일 가입</Link>
               <Link to={"/user/email"}>이메일 찾기</Link>
               <Link to={"/user/password"}>비밀번호 찾기</Link>

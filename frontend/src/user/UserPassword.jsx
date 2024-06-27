@@ -2,14 +2,16 @@ import {
   Box,
   Button,
   Center,
+  Divider,
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   Input,
   Text,
 } from "@chakra-ui/react";
 import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
@@ -26,6 +28,12 @@ export function UserPassword() {
   const [passwordCheck, setPasswordCheck] = useState("");
   const codeInfo = useContext(SignupCodeContext);
   const { successToast, errorToast } = CustomToast();
+
+  useEffect(() => {
+    codeInfo.setPhoneNumber("");
+    codeInfo.setIsCheckedCode(false);
+    codeInfo.setVerificationCode("");
+  }, []);
 
   function handleUpdatePassword() {
     axios
@@ -66,19 +74,25 @@ export function UserPassword() {
 
   return (
     <Center>
-      <Box>
+      <Box width={"500px"}>
         <Center>
-          <Text {...title}>비밀번호 찾기</Text>
+          <Box>
+            <Text {...title}>비밀번호 찾기</Text>
+          </Box>
         </Center>
+        <Divider borderColor={"green"} mt={7} />
         <FormControl mt={10}>
           <FormLabel {...formLabel}>이메일</FormLabel>
-          <Input onChange={(e) => setEmail(e.target.value)} />
+          <Input {...InputStyle} onChange={(e) => setEmail(e.target.value)} />
         </FormControl>
         <UserPhoneNumber />
         {codeInfo.isCheckedCode && (
-          <Center>
-            <Box>
-              <FormControl>
+          <Center mt={10}>
+            <Box border={"1px"} borderColor={"gray.200"} p={5}>
+              <Center>
+                <Heading fontSize={"lg"}>새 비밀번호를 입력해주세요</Heading>
+              </Center>
+              <FormControl mt={7}>
                 <FormLabel {...formLabel}>비밀번호</FormLabel>
                 <Input
                   {...InputStyle}
@@ -96,7 +110,7 @@ export function UserPassword() {
                   </FormHelperText>
                 )}
               </FormControl>
-              <FormControl>
+              <FormControl mt={7}>
                 <FormLabel {...formLabel}>비밀번호 확인</FormLabel>
                 <Input
                   {...InputStyle}

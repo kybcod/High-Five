@@ -1,6 +1,6 @@
 import { Box, Button, Center, Divider, Text } from "@chakra-ui/react";
 import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
@@ -9,11 +9,23 @@ import { buttonStyle, title } from "../component/css/style.js";
 export function UserEmail() {
   const codeInfo = useContext(SignupCodeContext);
   const [email, setEmail] = useState("");
+  const [hasEmail, setHasEmail] = useState(false);
   const { errorToast } = CustomToast();
+
+  useEffect(() => {
+    codeInfo.setPhoneNumber("");
+    codeInfo.setIsCheckedCode(false);
+    codeInfo.setVerificationCode("");
+    setHasEmail(false);
+  }, []);
+
   function handleFindEmail() {
     axios
       .get(`/api/users/emails/${codeInfo.phoneNumber}`)
-      .then((res) => setEmail(res.data))
+      .then((res) => {
+        setEmail(res.data);
+        setHasEmail(true);
+      })
       .catch((err) => {
         if (err.response.status === 404) {
           errorToast("해당 번호로 가입된 회원이 없습니다");
@@ -48,7 +60,7 @@ export function UserEmail() {
             이메일 찾기
           </Button>
         </Center>
-        {codeInfo.isCheckedCode && (
+        {hasEmail && (
           <Center mt={10} border={"1px"} borderColor={"gray.200"} pt={5} pb={5}>
             <Box>
               <Text fontSize={"sm"}>휴대전화 정보와 일치하는 이메일입니다</Text>

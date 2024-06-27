@@ -2,7 +2,7 @@ export const InputStyle = {
   fontSize: "2xl",
   color: "black",
   pr: "4.5rem",
-  sx: { "::placeholder": { fontSize: "lg" } },
+  sx: { "::placeholder": { fontSize: "md" } },
   variant: "flushed",
   pb: 3,
   focusBorderColor: "gray.200",
@@ -15,7 +15,7 @@ export const InputGroupStyle = {
 
 export const InputGroupButton = {
   h: "1.75rem",
-  size: "sm",
+  size: "md",
   colorScheme: "orange",
   variant: "ghost",
 };
@@ -34,5 +34,9 @@ export const title = {
 export const buttonStyle = {
   height: "38px",
   width: "400px",
-  colorScheme: "green",
+  colorScheme: "teal",
+};
+
+export const helperText = {
+  fontSize: "xs",
 };
