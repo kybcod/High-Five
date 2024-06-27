@@ -4,6 +4,7 @@ import com.backend.component.SmsUtil;
 import com.backend.domain.user.User;
 import com.backend.domain.user.UserFile;
 import com.backend.mapper.user.UserMapper;
+import com.backend.service.product.ProductService;
 import com.backend.util.PageInfo;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtEncoder jwtEncoder;
     private final S3Client s3Client;
+    private final ProductService productService;
 
     @Value("${aws.s3.bucket.name}")
     String bucketName;
@@ -228,36 +230,15 @@ public class UserService {
     }
 
     public void removeUserById(Integer id) {
-        // TODO. 지울것이 산더미,,
 
         // 권한 지우기
         mapper.deleteAuthorityById(id);
         // 프로필 사진 지우기
         mapper.deleteProfileImageById(id);
 
-        // chatMapper
-        // 채팅룸 지우기
-        // 메시지 지우기
-        // TODO.입찰내역 지우기
-
-        // boardMapper
-        // 자유 게시물 파일 지우기
-        // 자유 게시물 좋아요 지우기
-        // 자유 게시물 댓글 지우기
-        // 자유 게시물 지우기
-
-        // questionMapper
-        // QnA 게시물 파일 지우기
-        // QnA 게시물 좋아요 지우기
-        // QnA 게시물 댓글 지우기
-        // QnA 게시물 지우기
-
-        // productMapper
-        // 상품 좋아요 지우기
-        // 상품 파일 지우기
-        // 상품 리뷰 지우기
-        // 상품 게시물 지우기
-        // 결제 내역 지우기
+        // 상품 지우기
+        List<Integer> productIdList = mapper.selectProductIdByUserId(id);
+        productIdList.forEach(productService::remove);
 
         // 회원 지우기
         mapper.deleteUserById(id);

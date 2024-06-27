@@ -76,3 +76,28 @@ FROM user;
 UPDATE user
 SET black_count = 0
 WHERE id = 57;
+
+# 아직 실행 안 함
+ALTER TABLE review
+    MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE question_board_comment
+    MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE question_board
+    MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE board
+    MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE board_like
+    MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE board_comment
+    MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE chat
+    MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE chat_room
+    MODIFY COLUMN user_id int NOT NULL;
