@@ -115,13 +115,11 @@ INSERT INTO faqCategory (name)
 VALUES ('기타');
 
 desc faqCategory;
+DELETE
+FROM faq
+WHERE id = 2;
 
 INSERT INTO faq (category, title, content)
-VALUES ((SELECT id FROM faqCategory WHERE name = '경매/입찰/결제'),
-        '경매에 참여하고 싶어요',
-        '원하는 상품을 클릭한 후 "참여하기" 버튼을 클릭하여 입찰 금액을 적습니다.\n입찰 금액은 입찰 시작가 보다 높아야 합니다.');
-
-INSERT INTO faq(category, title, content)
 VALUES ((SELECT id FROM faqCategory WHERE name = '경매/입찰/결제'),
         '경매에 참여하고 싶어요',
         '원하는 상품을 클릭한 후 "참여하기" 버튼을 클릭하여 입찰 금액을 적습니다.\n입찰 금액은 입찰 시작가 보다 높아야 합니다.');
@@ -150,4 +148,14 @@ INSERT INTO faq(category, title, content)
 VALUES ((SELECT id FROM faqCategory WHERE name = '회원'),
         '악성유저를 신고하고 싶어요',
         '해당 유저가 판매하는 상품의 상세페이지에서 "신고하기" 버튼을 눌러주세요.\n해당 유저의 마이페이지에서도 신고가 가능합니다');
+
+INSERT INTO faq(category, title, content)
+VALUES ((SELECT id FROM faqCategory WHERE name = '기타'),
+        '문의하고 싶은 내용이 있습니다',
+        '고객센터 > 1:1문의게시판에서 문의 하실 수 있습니다.\n 비밀글도 가능하니 글을 남겨보세요.\n관리자가 댓글로 답변해드립니다.');
+
+INSERT INTO faq(category, title, content)
+VALUES ((SELECT id FROM faqCategory WHERE name = '기타'),
+        '자유게시판에는 어떤 글을 올릴 수 있나요?',
+        '자유게시판은 자유롭게 의견을 나누고 다양한 주제를 다룰 수 있는 공간입니다. \n 일상 이야기부터 취미, 관심사, 질문, 고민 상담 등 무엇이든 공유하실 수 있습니다. \n다른 이용자에게 불편함을 주지 않는 선에서 자유롭게 의견을 나누시길 바랍니다.');
 
