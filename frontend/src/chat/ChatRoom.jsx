@@ -38,6 +38,7 @@ import {
   faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import CustomModal from "./CustomModal.jsx";
 
 export function ChatRoom() {
   const { productId, buyerId } = useParams();
@@ -61,6 +62,11 @@ export function ChatRoom() {
   const [messageList, setMessageList] = useState([]);
   // -- review
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpen1,
+    onOpen: onOpen1,
+    onClose: onClose1,
+  } = useDisclosure();
   const [reviewList, setReviewList] = useState([]);
   const [reviewId, setReviewId] = useState([]);
   const tokenUserId = Number(account.id);
@@ -340,6 +346,33 @@ export function ChatRoom() {
     return <Spinner />;
   }
 
+  const handleExitChatRoomClick = () => {
+    axios
+      .delete(`/api/chats/${data.chatRoom.id}`, {
+        // headers: {
+        //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+        // },
+      })
+      .then(() => {
+        toast({
+          status: "success",
+          description: `${data.chatRoom.id}번 게시물이 삭제되었습니다.`,
+          position: "top",
+        });
+        navigate("/");
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          description: `${data.chatRoom.id}번 게시물 삭제 중 오류 발생`,
+          position: "top",
+        });
+      })
+      .finally(() => {
+        // onClose(); // modal
+      });
+  };
+
   return (
     <Box w={"70%"} border={"1px solid gray"}>
       <Box border={"1px solid red"}>
@@ -385,7 +418,9 @@ export function ChatRoom() {
                 <MenuItem
                   color={"red"}
                   gap={2}
-                  onClick={() => navigate(`/api/chats/${data.chatRoom.id}`)}
+                  onClick={() => {
+                    onOpen1();
+                  }}
                 >
                   <FontAwesomeIcon icon={faTrashCan} />
                   채팅방 나가기
@@ -525,6 +560,15 @@ export function ChatRoom() {
           <ModalCloseButton />
         </ModalContent>
       </Modal>
+      <CustomModal
+        isOpen={isOpen1}
+        onClose={onClose1}
+        method={"delete"}
+        header={"채팅방 나가기"}
+        body={"채팅방을 나가시겠습니까?"}
+        buttonContent={"Exit"}
+        url={`/api/chats/${data.chatRoom.id}`}
+      />
     </Box>
   );
 }
