@@ -62,14 +62,20 @@ export function ChatRoom() {
   const [messageList, setMessageList] = useState([]);
   // -- review
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isOpen1,
-    onOpen: onOpen1,
-    onClose: onClose1,
-  } = useDisclosure();
   const [reviewList, setReviewList] = useState([]);
   const [reviewId, setReviewId] = useState([]);
   const tokenUserId = Number(account.id);
+  // -- Modal
+  const {
+    isOpen: isOpenChatRoomDelete,
+    onOpen: onOpenChatRoomDelete,
+    onClose: onCloseChatRoomDelete,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenBlackUserPut,
+    onOpen: onOpenBlackUserPut,
+    onClose: onCloseBlackUserPut,
+  } = useDisclosure();
 
   // -- axios.get
   useEffect(() => {
@@ -133,7 +139,7 @@ export function ChatRoom() {
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
     // client.activate(); // 활성화
-    setStompClient(client);
+    // setStompClient(client);
 
     return () => {
       if (stompClient) {
@@ -346,33 +352,6 @@ export function ChatRoom() {
     return <Spinner />;
   }
 
-  const handleExitChatRoomClick = () => {
-    axios
-      .delete(`/api/chats/${data.chatRoom.id}`, {
-        // headers: {
-        //   Authorization: `Bearer ${localStorage.getItem("token")}`,
-        // },
-      })
-      .then(() => {
-        toast({
-          status: "success",
-          description: `${data.chatRoom.id}번 게시물이 삭제되었습니다.`,
-          position: "top",
-        });
-        navigate("/");
-      })
-      .catch(() => {
-        toast({
-          status: "error",
-          description: `${data.chatRoom.id}번 게시물 삭제 중 오류 발생`,
-          position: "top",
-        });
-      })
-      .finally(() => {
-        // onClose(); // modal
-      });
-  };
-
   return (
     <Box w={"70%"} border={"1px solid gray"}>
       <Box border={"1px solid red"}>
@@ -410,16 +389,20 @@ export function ChatRoom() {
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </MenuButton>
               <MenuList>
-                <MenuItem gap={2} onClick={handleBlackUser}>
+                <MenuItem
+                  gap={2}
+                  onClick={() => {
+                    onOpenBlackUserPut();
+                  }}
+                >
                   <FontAwesomeIcon icon={faCircleExclamation} />
                   신고하기
                 </MenuItem>
-                {/* TODO : 채팅방 나가기 */}
                 <MenuItem
                   color={"red"}
                   gap={2}
                   onClick={() => {
-                    onOpen1();
+                    onOpenChatRoomDelete();
                   }}
                 >
                   <FontAwesomeIcon icon={faTrashCan} />
@@ -561,13 +544,22 @@ export function ChatRoom() {
         </ModalContent>
       </Modal>
       <CustomModal
-        isOpen={isOpen1}
-        onClose={onClose1}
+        isOpen={isOpenChatRoomDelete}
+        onClose={onCloseChatRoomDelete}
         method={"delete"}
         header={"채팅방 나가기"}
         body={"채팅방을 나가시겠습니까?"}
-        buttonContent={"Exit"}
+        buttonContent={"나가기"}
         url={`/api/chats/${data.chatRoom.id}`}
+      />
+      <CustomModal
+        isOpen={isOpenBlackUserPut}
+        onClose={onCloseBlackUserPut}
+        method={"put"}
+        header={"신고하시겠습니까?"}
+        body={"허위 신고 적발 시 불이익을 받게됩니다"}
+        buttonContent={"신고하기"}
+        url={`/api/users/black/${data.user.id === tokenUserId ? data.seller.id : data.user.id}`}
       />
     </Box>
   );
