@@ -31,7 +31,8 @@ public interface ChatMapper {
     @Select("""
             SELECT *
             FROM chat_room
-            WHERE user_id = #{tokenUserId} OR seller_id = #{tokenUserId}
+            WHERE user_id = #{tokenUserId} AND user_exit = FALSE 
+               OR seller_id = #{tokenUserId} AND seller_exit = FALSE
             """)
     List<ChatRoom> selectChatRoomListByUserId(Integer tokenUserId);
 
@@ -101,7 +102,7 @@ public interface ChatMapper {
             FROM chat 
             LEFT JOIN chat_room
             ON chat.chat_room_id = chat_room.id
-            WHERE chat_room.id = #{chatRoomId}
+            WHERE chat.chat_room_id = #{chatRoomId}
             """)
     int deleteAllChatById(Integer chatRoomId);
 }
