@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Card,
-  CardBody,
   Flex,
   Heading,
   Image,
@@ -14,7 +13,6 @@ import {
   Spacer,
   Spinner,
   Text,
-  Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
@@ -22,10 +20,10 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { BoardCommentComponent } from "./BoardCommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
-import { BoardCommentComponent } from "./BoardCommentComponent.jsx";
 
 export function BoardView() {
   const [board, setBoard] = useState("");
@@ -79,11 +77,46 @@ export function BoardView() {
       <Box>
         <Heading>자유게시판 게시글</Heading>
       </Box>
+      <Box ml={5} mt={"30px"}>
+        <Text fontSize="4xl">{board.title}</Text>
+      </Box>
       <Flex>
+        {board.profileImage && board.profileImage.fileName == null && (
+          <Image
+            borderRadius="full"
+            boxSize="150px"
+            fallbackSrc="https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800"
+            src={board.profileImage.src}
+            alt="Default Profile Image"
+          />
+        )}
+        {board.profileImage && board.profileImage.fileName != null && (
+          <Image
+            borderRadius="full"
+            boxSize="150px"
+            src={board.profileImage.src}
+            alt="Profile Image"
+          />
+        )}
         <Box>
-          <Text fontSize="30px">{board.title}</Text>
+          <Text>{board.nickName}</Text>
+        </Box>
+        <Box>
+          <Text>{board.inserted}</Text>
         </Box>
         <Spacer />
+        {account.hasAccess(board.userId) && (
+          <Flex>
+            <Box>
+              <Text onClick={() => navigate(`/board/modify/${board_id}`)}>
+                수정
+              </Text>
+            </Box>
+            <Box>
+              <Text onClick={onOpen}>삭제</Text>
+            </Box>
+          </Flex>
+        )}
         {isLikeProcess || (
           <Box onClick={handleClickLike}>
             <Flex>
@@ -99,51 +132,27 @@ export function BoardView() {
           </Box>
         )}
       </Flex>
-      <Flex>
-        <Spacer />
-        {account.hasAccess(board.userId) && (
-          <Flex>
-            <Box>
-              <Text onClick={() => navigate(`/board/modify/${board_id}`)}>
-                수정
-              </Text>
-            </Box>
-            <Box>
-              <Text onClick={onOpen}>삭제</Text>
-            </Box>
-          </Flex>
-        )}
-      </Flex>
-      <Flex>
-        <Box>
-          <Text>{board.nickName}</Text>
-        </Box>
-        <Image
-          fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
-          borderRadius="full"
-          boxSize="150px"
-          src={board.profileImage}
-        />
-        <Spacer />
-        <Box>
-          <Text>{board.inserted}</Text>
-        </Box>
-      </Flex>
-      <Box mt={3}>
-        <Flex>
+      <Box border={"1px"} color={"gray.200"} borderRadius={"md"}>
+        <Flex flexWrap={"wrap"} justifyContent={"space-evenly"} p={"20px"}>
           {board.boardFileList &&
             board.boardFileList.length > 0 &&
             board.boardFileList.map((file, index) => (
-              <Card m={3} key={index} w={"400px"}>
-                <CardBody>
-                  <Image src={file.filePath} sizes={"100%"} />
-                </CardBody>
+              <Card
+                mt={"10px"}
+                key={index}
+                w={"calc(33.33% - 10px)"}
+                boxShadow={"none"}
+                border={"none"}
+              >
+                <Image src={file.filePath} w={"100%"} h={"300px"} />
               </Card>
             ))}
         </Flex>
-      </Box>
-      <Box>
-        <Textarea value={board.content} readOnly />
+        <Box p={"30px"}>
+          <Text color={"black"} fontSize={"md"}>
+            {board.content}
+          </Text>
+        </Box>
       </Box>
       <Box>
         <BoardCommentComponent boardId={board_id} />

@@ -3,13 +3,12 @@ import {
   Box,
   Button,
   Card,
-  CardBody,
   CardFooter,
   Flex,
   FormControl,
   FormHelperText,
-  FormLabel,
   Heading,
+  HStack,
   IconButton,
   Image,
   Input,
@@ -68,7 +67,7 @@ export function BoardModify() {
         navigate(`/board/${board_id}`);
       })
       .catch((err) => {
-        if (err.response.status === 400) {
+        if (err) {
           errorToast("게시물 수정에 실패했습니다. 다시 수정해주세요");
         }
       });
@@ -105,16 +104,24 @@ export function BoardModify() {
   for (let i = 0; i < addFileList.length; i++) {
     let duplicate = false;
     for (let file of board.boardFileList) {
-      if (file.name === addFileList.name) {
+      if (file.fileName === addFileList[i].name) {
         duplicate = true;
         break;
       }
     }
+    const displayName =
+      addFileList[i].name.length > 15
+        ? `${addFileList[i].name.slice(0, 15)}...`
+        : addFileList[i].name;
     fileNameList.push(
-      <Flex key={i}>
-        <ListItem display="flex" alignItems="center">
-          <Text flex="1">{addFileList[i].name}</Text>
-          {duplicate && <Badge colorScheme={"yellow"}>중복된 파일</Badge>}
+      <HStack key={i}>
+        <ListItem alignItems={"center"} display={"flex"}>
+          <Text flex={1}>{displayName}</Text>
+          {duplicate && (
+            <Badge colorScheme={"yellow"} ml={"20px"}>
+              중복된 파일
+            </Badge>
+          )}
         </ListItem>
         <IconButton
           aria-label="Remove"
@@ -124,67 +131,44 @@ export function BoardModify() {
             newFiles.splice(i, 1);
             setAddFileList(newFiles);
           }}
+          ml={3}
         />
-      </Flex>,
+      </HStack>,
     );
   }
 
   return (
     <Box>
       <Heading>자유게시판 글 수정</Heading>
-      <Box>
+      <Box mt={"30px"}>
         <FormControl>
-          <FormLabel>제목</FormLabel>
+          <Heading fontSize={"md"}>제목</Heading>
           <Input
             onChange={(e) => setBoard({ ...board, title: e.target.value })}
             defaultValue={board.title}
+            mt={"20px"}
           />
         </FormControl>
       </Box>
-      <Flex>
-        {board.boardFileList &&
-          board.boardFileList.map((file, index) => (
-            <Card m={3} key={index} w={"400px"}>
-              <CardBody>
-                <Image
-                  src={file.filePath}
-                  sizes={"100%"}
-                  sx={
-                    removeFileList.includes(file.fileName)
-                      ? { filter: "blur(8px)" }
-                      : {}
-                  }
-                />
-              </CardBody>
-              <CardFooter>
-                <Flex>
-                  <Box mr={3}>
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </Box>
-                  <Box mr={1}>
-                    <Switch
-                      onChange={(e) =>
-                        handleRemoveSwitchChange(
-                          file.fileName,
-                          e.target.checked,
-                        )
-                      }
-                    />
-                  </Box>
-                  <Box>
-                    <Text>{file.fileName}</Text>
-                  </Box>
-                </Flex>
-              </CardFooter>
-            </Card>
-          ))}
-      </Flex>
-      <Box>
+      <Box mt={"30px"}>
         <FormControl>
-          <Flex>
-            <FormLabel>상품 상세 내용</FormLabel>
+          {addFileList.length > 0 && (
+            <Box mt={"10px"}>
+              <Heading fontSize="md" mb={"10px"}>
+                선택된 파일 목록
+              </Heading>
+              <List spacing={3}>{fileNameList}</List>
+            </Box>
+          )}
+          <Flex justifyContent={"center"} mt={"10px"}>
+            <Heading color={"black"} fontSize={"md"} mt={"10px"}>
+              상품 상세 내용
+            </Heading>
             <Spacer />
-            <Button onClick={() => fileInputRef.current.click()}>
+            <FormHelperText mt={"10px"} mr={3}>
+              총 용량은 10MB를 초과할 수 없습니다
+            </FormHelperText>
+            <Button mb={"10px"} onClick={() => fileInputRef.current.click()}>
               파일첨부
             </Button>
             <Input
@@ -198,26 +182,71 @@ export function BoardModify() {
               }}
             />
           </Flex>
-          <FormHelperText>총 용량은 10MB를 초과할 수 없습니다</FormHelperText>
-          {addFileList.length > 0 && (
-            <Box mt={2}>
-              <Heading size="md" mb={2}>
-                선택된 파일 목록
-              </Heading>
-              <List spacing={2}>{fileNameList}</List>
-            </Box>
-          )}
-          <Textarea
-            onChange={(e) => setBoard({ ...board, content: e.target.value })}
-            defaultValue={board.content}
-          />
         </FormControl>
       </Box>
-      <Box>
-        <Button onClick={handleClickSaveButton}>게시글 수정</Button>
+      <Box border={"1px"} color={"gray.200"} borderRadius={"md"}>
+        <Flex flexWrap={"wrap"} justifyContent={"space-evenly"} p={"20px"}>
+          {board.boardFileList &&
+            board.boardFileList.map((file, index) => (
+              <Card
+                mt={"10px"}
+                key={index}
+                w={"calc(30% - 10px)"}
+                boxShadow={"none"}
+                border={"none"}
+              >
+                <Image
+                  src={file.filePath}
+                  w={"100%"}
+                  h={"300px"}
+                  sx={
+                    removeFileList.includes(file.fileName)
+                      ? { filter: "blur(8px)" }
+                      : {}
+                  }
+                />
+                <CardFooter>
+                  <Flex alignItems={"center"}>
+                    <FontAwesomeIcon icon={faTrashCan} />
+                    <Switch
+                      onChange={(e) =>
+                        handleRemoveSwitchChange(
+                          file.fileName,
+                          e.target.checked,
+                        )
+                      }
+                      ml={3}
+                    />
+                    <Text ml={1}>
+                      {file.fileName.length > 10 &&
+                        `${file.fileName.slice(0, 10)}...`}
+                      {file.fileName.length < 10 && file.fileName}
+                    </Text>
+                  </Flex>
+                </CardFooter>
+              </Card>
+            ))}
+        </Flex>
+        <Textarea
+          onChange={(e) => setBoard({ ...board, content: e.target.value })}
+          defaultValue={board.content}
+          mt={"5px"}
+          color={"black"}
+          border={"transparent"}
+          focusBorderColor={"transparent"}
+          sx={{ outline: "none" }}
+          resize={"none"}
+        />
       </Box>
       <Box>
-        <Button onClick={onOpen}>게시글 삭제</Button>
+        <Button mt={"20px"} onClick={handleClickSaveButton}>
+          게시글 수정
+        </Button>
+      </Box>
+      <Box>
+        <Button mt={"10px"} onClick={onOpen}>
+          게시글 삭제
+        </Button>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
