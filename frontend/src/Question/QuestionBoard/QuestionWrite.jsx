@@ -73,8 +73,6 @@ export function QuestionWrite() {
     setsecretWrite(!secretWrite);
   }
 
-  console.log(secretWrite);
-
   return (
     <Box m={8}>
       <Box mt={5}>

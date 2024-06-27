@@ -1,4 +1,12 @@
-import { Box, Button, Flex, FormLabel, Image, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormLabel,
+  Grid,
+  Image,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
@@ -53,42 +61,51 @@ export function FileUpload({ files, setFiles, filePreview, setFilePreView }) {
 
   return (
     <Box mb={4}>
-      <Flex alignItems="center">
-        <FormLabel htmlFor="file-upload">
-          <Box
-            border="1px dashed gray"
-            textAlign="center"
-            cursor="pointer"
-            _hover={{ borderColor: "blue.500" }}
-            mr={4}
-            p={4}
-            rounded="md"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-            minW="180px"
-            minH="180px"
-          >
-            <Box mb={2}>
-              <FontAwesomeIcon icon={faCamera} size="2xl" />
+      <Grid templateColumns="max-content 1fr" alignItems="start" gap={4}>
+        <Text width="max-content" whiteSpace="nowrap" w={"180px"}>
+          상품 이미지
+        </Text>
+        <Box>
+          <Grid templateColumns="repeat(auto-fill, minmax(180px, 1fr))" gap={4}>
+            <Box alignSelf="flex-start">
+              <FormLabel
+                border="1px dashed gray"
+                textAlign="center"
+                cursor="pointer"
+                _hover={{ borderColor: "blue.500" }}
+                mr={4}
+                p={4}
+                rounded="md"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="column"
+                width="180px"
+                height="180px"
+                maxW={"180px"}
+                maxH={"180px"}
+              >
+                <Box mb={2}>
+                  <FontAwesomeIcon icon={faCamera} size="2xl" />
+                </Box>
+                <Box>이미지 등록</Box>
+                <Input
+                  ref={fileInputRef}
+                  id="file-upload"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleChangeFiles}
+                  height={"180px"}
+                  width={"180px"}
+                />
+              </FormLabel>
             </Box>
-            <Box>Upload files</Box>
-            <Input
-              ref={fileInputRef}
-              id="file-upload"
-              type="file"
-              multiple
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleChangeFiles}
-            />
-          </Box>
-        </FormLabel>
-        <Flex overflowX="auto" flexWrap="nowrap" maxWidth="100%">
-          {filePreview}
-        </Flex>
-      </Flex>
+            {filePreview}
+          </Grid>
+        </Box>
+      </Grid>
     </Box>
   );
 }

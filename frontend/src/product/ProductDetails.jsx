@@ -19,10 +19,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  OrderedList,
   Spacer,
   Spinner,
   Text,
   Textarea,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
@@ -41,7 +43,6 @@ import SimpleSlider from "./slider/SimpleSlider.jsx";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Category } from "../component/Category.jsx";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
 import ReportButton from "../user/ReportButton.jsx";
@@ -126,11 +127,11 @@ export function ProductDetails() {
 
   return (
     <Box>
-      <Category />
+      {/*<Category />*/}
       <Divider my={10} borderColor="gray" />
 
       <Flex alignItems="flex-start">
-        <Box width="45%" mr={20} border={"1px solid black"}>
+        <Box width="45%" mr={20}>
           <SimpleSlider
             images={existingFilePreviews}
             isBrightness={!product.status}
@@ -138,59 +139,60 @@ export function ProductDetails() {
         </Box>
 
         <Box flex="1">
-          {product.status || (
-            <>
-              {product.maxBidPrice !== null ? (
-                <Box mb={5}>
-                  <Box
-                    style={{ whiteSpace: "nowrap" }}
-                    fontWeight="bold"
-                    fontSize="3xl"
-                    color="red"
-                  >
-                    낙찰 금액 : {formattedPrice(product.maxBidPrice)}원
-                  </Box>
-                </Box>
-              ) : (
-                <Box mb={5}>
-                  <Box
-                    style={{ whiteSpace: "nowrap" }}
-                    fontWeight="bold"
-                    fontSize="3xl"
-                    color="red"
-                  >
-                    낙찰된 금액이 없습니다.
-                  </Box>
-                </Box>
-              )}
-            </>
-          )}
-
-          <Box mb={6}>
-            <Heading style={{ whiteSpace: "nowrap" }}>{product.title}</Heading>
+          <Box mb={7}>
+            <Heading>{product.title}</Heading>
           </Box>
-          <Box mb={5} justifyContent="space-between">
+          <Flex mb={5} justifyContent="space-between">
             <Text fontSize="2xl">{formattedPrice(product.startPrice)}원</Text>
-          </Box>
+            <Text fontSize="2xl">
+              {product.status || (
+                <>
+                  {product.maxBidPrice !== null ? (
+                    <Box mb={5}>
+                      <Box
+                        style={{ whiteSpace: "nowrap" }}
+                        fontWeight="bold"
+                        color="red"
+                      >
+                        낙찰 금액 : {formattedPrice(product.maxBidPrice)}원
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Box mb={5}>
+                      <Box
+                        style={{ whiteSpace: "nowrap" }}
+                        fontWeight="bold"
+                        fontSize="3xl"
+                        color="red"
+                      >
+                        낙찰된 금액이 없습니다.
+                      </Box>
+                    </Box>
+                  )}
+                </>
+              )}
+            </Text>
+          </Flex>
 
           <Divider mb={6} />
 
           {/*다른 user의 상품 일 때*/}
-          <Box mb={6}>
+          <Box mb={10}>
             <Flex justifyContent="space-evenly" alignItems="center">
               <Flex alignItems="center" mr={4}>
-                <Box mr={2}>찜</Box>
-                <Box>
-                  <FontAwesomeIcon icon="fullHeart" size="lg" />
-                  {like.count}
-                </Box>
+                <FontAwesomeIcon icon={fullHeart} size="lg" />
+                <Text ml={1}>{like.count}</Text>
               </Flex>
-              <Flex alignItems="center" mr={4}>
+              <Box height="24px" borderLeft="1px solid #ccc" />
+              <Flex alignItems="center" ml={4} mr={4}>
                 <FontAwesomeIcon icon={faEye} size="lg" />
                 <Box ml={2}>{product.viewCount}</Box>
               </Flex>
+              <Box height="24px" borderLeft="1px solid #ccc" />
               <Box>
-                <Text fontSize="lg">{product.timeFormat}</Text>
+                <Text fontSize="lg" ml={4}>
+                  {product.timeFormat}
+                </Text>
               </Box>
               <Spacer />
               {account.isLoggedIn() && !account.hasAccess(product.userId) && (
@@ -210,14 +212,16 @@ export function ProductDetails() {
               />{" "}
               판매자 :{" "}
               <Box mb={5} display="inline-block">
-                <Text
-                  textDecoration="underline"
-                  fontSize="xl"
-                  cursor="pointer"
-                  onClick={() => navigate(`/myPage/${product.userId}/shop`)}
-                >
-                  {product.userNickName}
-                </Text>
+                <Tooltip label="판매자 페이지로 이동">
+                  <Text
+                    textDecoration="underline"
+                    fontSize="xl"
+                    cursor="pointer"
+                    onClick={() => navigate(`/myPage/${product.userId}/shop`)}
+                  >
+                    {product.userNickName}
+                  </Text>
+                </Tooltip>
               </Box>
             </ListItem>
             <ListItem>
@@ -245,7 +249,7 @@ export function ProductDetails() {
           </List>
 
           {/*판매 완료, 로그인이 안되어 있는 상태, 자신의 상품일 때 보이지 않음*/}
-          {(account.isLoggedIn() && account.hasAccess(product.userId)) || (
+          {!account.isLoggedIn() || account.hasAccess(product.userId) || (
             <Box mb={5}>
               <Flex w={"100%"}>
                 <Box w={"100%"} mr={4}>
@@ -307,7 +311,8 @@ export function ProductDetails() {
                 <Button
                   colorScheme="green"
                   w="100%"
-                  h={"50px"}
+                  h={"60px"}
+                  fontSize={"lg"}
                   onClick={() => navigate(`/edit/${product.id}`)}
                 >
                   상품수정
@@ -338,7 +343,7 @@ export function ProductDetails() {
         </FormControl>
       </Box>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -350,14 +355,52 @@ export function ProductDetails() {
             </Flex>
           </ModalHeader>
           <ModalBody>
-            <FormControl>
-              <FormLabel>입찰 금액</FormLabel>
+            <Box
+              mb={6}
+              p={4}
+              border="1px solid"
+              borderColor="gray.200"
+              borderRadius="md"
+              bg="gray.50"
+            >
+              <Box>
+                <Heading fontSize="lg" mb={4}>
+                  경매 참여 시 유의사항
+                </Heading>
+
+                <OrderedList>
+                  <ListItem mb={2}>
+                    경매 참여는 신중하게 결정해야 합니다.
+                  </ListItem>
+                  <ListItem mb={2}>
+                    중복 참여는 가능하나 마지막으로 기록된 입찰 금액으로만
+                    경매에 참여하게 됩니다.
+                  </ListItem>
+                  <ListItem mb={2}>
+                    경매 종료 후 낙찰여부는{" "}
+                    <Box as="span" fontWeight="bold" color="blue.500">
+                      마이 페이지에서 확인 가능
+                    </Box>
+                    합니다.
+                  </ListItem>
+                  <ListItem mb={2}>
+                    입찰 금액을 입력할 때 반드시 제시된 가격보다 같거나 높아야
+                    합니다.
+                  </ListItem>
+                </OrderedList>
+              </Box>
+            </Box>
+            <Text fontWeight={"bold"} fontSize={"lg"} mb={4}>
+              시작가 : {formattedPrice(product.startPrice)} 원
+            </Text>
+            <FormControl mb={4}>
+              <FormLabel mb={4}>입찰 금액</FormLabel>
               <InputGroup>
                 <Input
                   type="text"
                   value={formattedPrice(bidPrice)}
                   onChange={(e) => handleIntegerNumber(e)}
-                  placeholder="숫자만 입력하세요"
+                  placeholder="숫자만 입력하세요."
                   borderRadius="none"
                   borderColor="gray.300"
                   _hover={{ borderColor: "gray.400" }}
