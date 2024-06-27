@@ -173,8 +173,9 @@ export function ProductUpload() {
             fontSize={"lg"}
             isLoading={loading}
             type="submit"
-            colorScheme="blue"
-            size="lg"
+            borderWidth={"3px"}
+            variant={"outline"}
+            colorScheme={"teal"}
             onClick={handleUploadClick}
           >
             상품 업로드

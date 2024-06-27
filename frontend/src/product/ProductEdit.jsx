@@ -295,29 +295,33 @@ export function ProductEdit() {
           content={product.content}
           setContent={(content) => setProduct({ ...product, content: content })}
         />
-      </Box>
 
-      <Flex justifyContent="flex-end">
-        <Button
-          onClick={updateModal.onOpen}
-          w={"15%"}
-          h={"50px"}
-          mr={4}
-          fontSize={"lg"}
-          colorScheme={"green"}
-        >
-          수정
-        </Button>
-        <Button
-          onClick={deleteModal.onOpen}
-          w={"15%"}
-          h={"50px"}
-          fontSize={"lg"}
-          colorScheme="red"
-        >
-          삭제
-        </Button>
-      </Flex>
+        <Flex justifyContent="flex-end">
+          <Button
+            onClick={updateModal.onOpen}
+            w={"15%"}
+            h={"50px"}
+            mr={4}
+            fontSize={"lg"}
+            borderWidth={"3px"}
+            variant={"outline"}
+            colorScheme={"teal"}
+          >
+            수정
+          </Button>
+          <Button
+            onClick={deleteModal.onOpen}
+            w={"15%"}
+            h={"50px"}
+            fontSize={"lg"}
+            borderWidth={"3px"}
+            variant={"outline"}
+            colorScheme={"red"}
+          >
+            삭제
+          </Button>
+        </Flex>
+      </Box>
 
       {/* 수정 모달 */}
       <ModalComponent

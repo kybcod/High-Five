@@ -320,8 +320,10 @@ export function ProductDetails() {
             (account.hasAccess(product.userId) && (
               <Box mb={5}>
                 <Button
-                  colorScheme="teal"
-                  w="100%"
+                  borderWidth={"3px"}
+                  variant={"outline"}
+                  colorScheme={"teal"}
+                  w="30%"
                   h={"60px"}
                   fontSize={"lg"}
                   onClick={() => navigate(`/edit/${product.id}`)}
@@ -354,6 +356,7 @@ export function ProductDetails() {
         </FormControl>
       </Box>
 
+      {/*모달 참여하기 */}
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent>
@@ -388,11 +391,11 @@ export function ProductDetails() {
                     경매에 참여하게 됩니다.
                   </ListItem>
                   <ListItem mb={2}>
-                    경매 종료 후 낙찰여부는{" "}
+                    경매 종료 후{" "}
                     <Box as="span" fontWeight="bold" color="blue.500">
-                      마이 페이지에서 확인 가능
+                      낙찰여부는 마이 페이지 입찰내역에서 확인
                     </Box>
-                    합니다.
+                    가능 합니다.
                   </ListItem>
                   <ListItem mb={2}>
                     입찰 금액을 입력할 때 반드시 제시된 가격보다 같거나 높아야
