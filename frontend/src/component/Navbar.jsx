@@ -1,6 +1,9 @@
 import { Box, Center, Flex, Image, Spacer, Text } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
+import { Box, Center, Flex, Spacer, Text } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
 import {
   faClipboardList,
@@ -8,8 +11,8 @@ import {
   faSignInAlt,
   faSignOutAlt,
   faUserPlus,
-  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
+import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Navbar.css";
 
@@ -19,17 +22,27 @@ export function Navbar() {
 
   return (
     <Flex
-      bg="green.500"
-      color="white"
+      border={"1px solid black"}
+      h={"10px"}
       p={4}
+      justifyContent={"space-between"}
       align="center"
-      h={20}
       fontSize={"lg"}
       cursor={"pointer"}
     >
       <Center onClick={() => navigate("/board/list")} mx={2}>
-        <FontAwesomeIcon icon={faClipboardList} />
-        <Text ml={2}>자유게시판</Text>
+        <Text fontSize={"small"} ml={2}>
+          자유게시판
+        </Text>
+      </Center>
+      <Center
+        onClick={() => navigate("/question/list")}
+        cursor="pointer"
+        mx={2}
+      >
+        <Text fontSize={"small"} ml={2}>
+          QnA
+        </Text>
       </Center>
       <Box className="dropdown">
         <Center
@@ -49,23 +62,14 @@ export function Navbar() {
       {account.isAdmin() && (
         <Center onClick={() => navigate("/user/list")} mx={2}>
           <FontAwesomeIcon icon={faUsers} />
-          <Text ml={2}>USER LIST</Text>
+          <Text fontSize={"small"} ml={2}>
+            회원 목록
+          </Text>
         </Center>
       )}
       <Spacer />
       {account.isLoggedIn() ? (
         <>
-          <Center mx={2} onClick={() => navigate(`/myPage/${account.id}`)}>
-            <Box mx={1}>
-              <Image
-                boxSize="50px"
-                src={account.profileImage}
-                fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
-                borderRadius="full"
-              />
-            </Box>
-            <Text ml={2}>{account.nickName} 님</Text>
-          </Center>
           <Center
             onClick={() => {
               account.logout();
@@ -74,19 +78,26 @@ export function Navbar() {
             cursor="pointer"
             mx={2}
           >
-            <FontAwesomeIcon icon={faSignOutAlt} />
-            <Text ml={2}>LOGOUT</Text>
+            <Text fontSize={"small"} ml={2}>
+              로그아웃
+            </Text>
           </Center>
         </>
       ) : (
         <>
-          <Center onClick={() => navigate("/login")} mx={2}>
-            <FontAwesomeIcon icon={faSignInAlt} />
-            <Text ml={2}>LOGIN</Text>
-          </Center>
           <Center onClick={() => navigate("/signup")} mx={2}>
-            <FontAwesomeIcon icon={faUserPlus} />
-            <Text ml={2}>SIGNUP</Text>
+            <Text fontSize={"small"} ml={2}>
+              회원 가입
+            </Text>
+          </Center>
+          <Box
+            height="24px"
+            borderLeft="1px solid #ccc"
+            mx={2}
+            alignSelf="center"
+          />
+          <Center fontSize={"small"} onClick={() => navigate("/login")} mx={2}>
+            <Text ml={2}>로그인</Text>
           </Center>
         </>
       )}

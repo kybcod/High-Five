@@ -6,7 +6,11 @@ import {
   Input,
   InputGroup,
   InputRightAddon,
+  Radio,
+  RadioGroup,
   Select,
+  Stack,
+  Text,
   Textarea,
 } from "@chakra-ui/react";
 
@@ -37,9 +41,75 @@ export function FormFields({
 
   return (
     <Box>
-      <Box mb={4}>
-        <FormControl>
-          <FormLabel>제목</FormLabel>
+      <Box mb={10} display="flex">
+        <FormLabel width="180px" pr={4} alignSelf="flex-start">
+          카테고리
+        </FormLabel>
+        <FormControl flex="1">
+          <RadioGroup
+            colorScheme="blue"
+            value={category}
+            onChange={setCategory}
+          >
+            <Stack spacing={2}>
+              <Flex align="center">
+                <Radio mr={2} value="clothes">
+                  의류
+                </Radio>
+                <Text fontSize="sm" color={"gray"}>
+                  {" "}
+                  아우터, 상의, 바지, 점프수트, 셋업/세트...
+                </Text>
+              </Flex>
+              <Flex align="center">
+                <Radio mr={2} value="goods">
+                  잡화
+                </Radio>
+                <Text fontSize="sm" color={"gray"}>
+                  책, 인형, 신발, 가방...
+                </Text>
+              </Flex>
+              <Flex align="center">
+                <Radio mr={2} value="food">
+                  식품
+                </Radio>
+                <Text fontSize="sm" color={"gray"}>
+                  과자, 음료수, 젤리, 초콜릿...
+                </Text>
+              </Flex>
+              <Flex align="center">
+                <Radio mr={2} value="digital">
+                  디지털
+                </Radio>
+                <Text fontSize="sm" color={"gray"}>
+                  휴대폰, 태블릿, 노트북, 카메라...
+                </Text>
+              </Flex>
+              <Flex align="center">
+                <Radio mr={2} value="sport">
+                  스포츠
+                </Radio>
+                <Text fontSize="sm" color={"gray"}>
+                  자전거, 골프용품, 축구공...
+                </Text>
+              </Flex>
+              <Flex align="center">
+                <Radio mr={2} value="e-coupon">
+                  e-쿠폰
+                </Radio>
+                <Text fontSize="sm" color={"gray"}>
+                  기프티콘, 상품권...
+                </Text>
+              </Flex>
+            </Stack>
+          </RadioGroup>
+        </FormControl>
+      </Box>
+      <Box mb={10} display="flex">
+        <FormLabel width="180px" pr={4} alignSelf="flex-start">
+          상품명
+        </FormLabel>
+        <FormControl flex="1">
           <Input
             borderColor="gray.400"
             value={title}
@@ -47,30 +117,11 @@ export function FormFields({
           />
         </FormControl>
       </Box>
-      <Box mb={4}>
-        <FormControl>
-          <FormLabel>카테고리</FormLabel>
-          <Select
-            placeholder="카테고리 선택"
-            borderWidth="1px"
-            borderColor="gray.400"
-            borderRadius="md"
-            _focus={{ borderColor: "blue.500" }}
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="clothes">의류</option>
-            <option value="goods">잡화</option>
-            <option value="food">식품</option>
-            <option value="digital">디지털</option>
-            <option value="sport">스포츠</option>
-            <option value="e-coupon">e-쿠폰</option>
-          </Select>
-        </FormControl>
-      </Box>
-      <Box mb={4}>
-        <FormControl>
-          <FormLabel>입찰 시작가</FormLabel>
+      <Box mb={10} display="flex">
+        <FormLabel width="180px" pr={4} alignSelf="flex-start">
+          입찰 시작가
+        </FormLabel>
+        <FormControl flex="1">
           <InputGroup>
             <Input
               borderColor="gray.400"
@@ -81,10 +132,12 @@ export function FormFields({
           </InputGroup>
         </FormControl>
       </Box>
-      <Box>
-        <Flex mb={4}>
-          <FormControl mr={4}>
-            <FormLabel>날짜</FormLabel>
+      <Box mb={10} display="flex">
+        <FormLabel width="180px" pr={4} alignSelf="flex-start">
+          경매 마감 시간
+        </FormLabel>
+        <FormControl flex="1">
+          <Flex>
             <Input
               type="date"
               value={date}
@@ -93,12 +146,10 @@ export function FormFields({
               borderColor="gray.400"
               borderRadius="md"
               _focus={{ borderColor: "blue.500" }}
+              mr={4}
             />
-          </FormControl>
-          <FormControl>
-            <FormLabel>시간(AM 8:00 ~ PM 23:00)</FormLabel>
             <Select
-              placeholder="시간"
+              placeholder="시간 선택"
               value={time}
               onChange={(e) => setTime(e.target.value)}
               borderWidth="1px"
@@ -123,19 +174,21 @@ export function FormFields({
               <option value="22:00">22:00</option>
               <option value="23:00">23:00</option>
             </Select>
-          </FormControl>
-        </Flex>
+          </Flex>
+        </FormControl>
       </Box>
-      <Box mb={4}>
-        <FormControl>
-          <FormLabel>상품 상세내용 (선택)</FormLabel>
+      <Box mb={10} display="flex">
+        <FormLabel width="180px" pr={4} alignSelf="flex-start">
+          상품 상세내용 (선택)
+        </FormLabel>
+        <FormControl flex="1">
           <Textarea
             resize={"none"}
             height={"300px"}
             borderColor="gray.400"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="상품 설명을 입력하세요."
+            placeholder="개인정보(전화번호, SNS 계정 등)는 기재하지 말아주세요."
           />
         </FormControl>
       </Box>

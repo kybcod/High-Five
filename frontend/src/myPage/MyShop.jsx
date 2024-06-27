@@ -76,10 +76,7 @@ export function MyShop() {
           판매한 상품이 없습니다.
         </Text>
       ) : (
-        <Grid
-          templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
-          gap={6}
-        >
+        <Grid templateColumns={"repeat(3, 1fr)"} gap={6}>
           {productList.map((product) => (
             <GridItem key={product.id}>
               <Card
@@ -190,7 +187,7 @@ export function MyShop() {
                     {product.title}
                   </Text>
                   <Flex justifyContent={"space-between"}>
-                    <Text color="blue.600" fontSize="xl">
+                    <Text color="blue.600" fontSize="lg">
                       {product.startPrice
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
@@ -216,7 +213,8 @@ export function MyShop() {
           {hasNextPage ? (
             <Button
               w={"30%"}
-              colorScheme={"blue"}
+              colorScheme={"white"}
+              color={"black"}
               mt={4}
               onClick={handleMoreClick}
               rightIcon={<ArrowDownIcon />}
@@ -227,7 +225,8 @@ export function MyShop() {
             productList.length > 9 && (
               <Button
                 w={"30%"}
-                colorScheme={"blue"}
+                colorScheme={"white"}
+                color={"black"}
                 mt={4}
                 rightIcon={<ChevronUpIcon />}
                 onClick={handleFoldClick}
