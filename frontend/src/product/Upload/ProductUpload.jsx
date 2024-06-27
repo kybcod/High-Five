@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileUpload } from "./FileUpload.jsx";
-import { FormFields } from "../componentStyle/FormFields.jsx";
+import { FormFields } from "../../component/FormFields.jsx";
 
 export function ProductUpload() {
   const [title, setTitle] = useState("");

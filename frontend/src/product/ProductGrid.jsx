@@ -20,21 +20,14 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
   const navigate = useNavigate();
 
   return (
-    <Grid
-      templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(5, 1fr)" }}
-      gap={6}
-    >
+    <Grid templateColumns={"repeat(5, 1fr)"} gap={6}>
       {productList.map((product) => (
         <GridItem key={product.id}>
           <Card
             cursor={"pointer"}
             maxW="sm"
             h="100%"
-            borderWidth="1px"
-            borderColor={"#eee"}
-            borderRadius="lg"
-            overflow="hidden"
-            boxShadow="md"
+            borderRadius="0"
             transition="transform 0.2s"
             _hover={{ transform: "scale(1.05)" }}
           >
@@ -46,7 +39,6 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                       <Image
                         onClick={() => navigate(`/product/${product.id}`)}
                         src={product.productFileList[0].filePath}
-                        borderRadius="lg"
                         w="100%"
                         h="200px"
                       />

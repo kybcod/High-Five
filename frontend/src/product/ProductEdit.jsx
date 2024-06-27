@@ -21,8 +21,8 @@ import {
   faTimesCircle,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { FormFields } from "./componentStyle/FormFields.jsx";
-import { ModalComponent } from "./componentStyle/ModalComponent.jsx";
+import { FormFields } from "../component/FormFields.jsx";
+import { ModalComponent } from "../component/ModalComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function ProductEdit() {

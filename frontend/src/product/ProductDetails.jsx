@@ -39,7 +39,7 @@ import {
   faMoneyBillAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SimpleSlider from "./slider/SimpleSlider.jsx";
+import SimpleSlider from "../component/slider/SimpleSlider.jsx";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -203,47 +203,58 @@ export function ProductDetails() {
             </Flex>
           </Box>
 
-          <List mb={10} spacing={3} fontSize="lg">
-            <ListItem>
+          <List spacing={3} fontSize="lg">
+            <ListItem display="flex" alignItems="center" mb={10}>
               <ListIcon
                 as={() => (
-                  <FontAwesomeIcon icon={faCheckCircle} color="green" />
+                  <FontAwesomeIcon icon={faCheckCircle} color="#adb5bd" />
                 )}
-              />{" "}
-              판매자 :{" "}
-              <Box mb={5} display="inline-block">
+              />
+              <Box ml={4} display="flex" alignItems="center">
+                <Text fontSize={"medium"} mr={4} w={"100px"}>
+                  판매자
+                </Text>
                 <Tooltip label="판매자 페이지로 이동">
                   <Text
                     textDecoration="underline"
                     fontSize="xl"
                     cursor="pointer"
                     onClick={() => navigate(`/myPage/${product.userId}/shop`)}
+                    ml={1}
                   >
                     {product.userNickName}
                   </Text>
                 </Tooltip>
               </Box>
             </ListItem>
-            <ListItem>
+            <ListItem display="flex" alignItems="center" mb={10}>
               <ListIcon
                 as={() => (
-                  <FontAwesomeIcon icon={faCheckCircle} color="green" />
+                  <FontAwesomeIcon icon={faCheckCircle} color="#adb5bd" />
                 )}
-              />{" "}
-              종료 시간 :{" "}
-              <Box mb={5} display={"inline-block"}>
-                <Text fontSize="xl">{product.endTimeDetailsFormat}</Text>
+              />
+              <Box ml={4} display="flex" alignItems="center">
+                <Text fontSize={"medium"} w={"100px"} mr={4}>
+                  종료 시간
+                </Text>
+                <Text fontSize="xl" ml={1}>
+                  {product.endTimeDetailsFormat}
+                </Text>
               </Box>
             </ListItem>
-            <ListItem>
+            <ListItem display="flex" alignItems="center" mb={10}>
               <ListIcon
                 as={() => (
-                  <FontAwesomeIcon icon={faCheckCircle} color="green" />
+                  <FontAwesomeIcon icon={faCheckCircle} color="#adb5bd" />
                 )}
-              />{" "}
-              참여 인원 :{" "}
-              <Box mb={5} display={"inline-block"}>
-                <Text fontSize="xl">{product.numberOfJoin}명</Text>
+              />
+              <Box ml={4} display="flex" alignItems="center">
+                <Text fontSize={"medium"} w={"100px"} mr={4}>
+                  참여 인원
+                </Text>
+                <Text fontSize="xl" ml={1}>
+                  {product.numberOfJoin}명
+                </Text>
               </Box>
             </ListItem>
           </List>
@@ -277,7 +288,7 @@ export function ProductDetails() {
                     <Box w={"100%"} mr={4}>
                       <Button
                         h={"60px"}
-                        colorScheme="green"
+                        colorScheme="orange"
                         w="100%"
                         onClick={onOpen}
                         fontSize={"lg"}
@@ -309,7 +320,7 @@ export function ProductDetails() {
             (account.hasAccess(product.userId) && (
               <Box mb={5}>
                 <Button
-                  colorScheme="green"
+                  colorScheme="teal"
                   w="100%"
                   h={"60px"}
                   fontSize={"lg"}
@@ -417,6 +428,7 @@ export function ProductDetails() {
           </ModalBody>
           <ModalFooter>
             <Button
+              variant="outline"
               colorScheme="blue"
               onClick={handleJoinClick}
               isLoading={isProcessing}
@@ -424,7 +436,7 @@ export function ProductDetails() {
             >
               확인
             </Button>
-            <Button onClick={onClose} ml={3}>
+            <Button variant="outline" onClick={onClose} ml={3}>
               취소
             </Button>
           </ModalFooter>
