@@ -303,7 +303,7 @@ export function ProductEdit() {
             h={"50px"}
             mr={4}
             fontSize={"lg"}
-            borderWidth={"3px"}
+            borderWidth={3}
             variant={"outline"}
             colorScheme={"teal"}
           >
@@ -314,7 +314,7 @@ export function ProductEdit() {
             w={"15%"}
             h={"50px"}
             fontSize={"lg"}
-            borderWidth={"3px"}
+            borderWidth={3}
             variant={"outline"}
             colorScheme={"red"}
           >

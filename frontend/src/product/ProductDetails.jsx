@@ -320,7 +320,7 @@ export function ProductDetails() {
             (account.hasAccess(product.userId) && (
               <Box mb={5}>
                 <Button
-                  borderWidth={"3px"}
+                  borderWidth={3}
                   variant={"outline"}
                   colorScheme={"teal"}
                   w="30%"

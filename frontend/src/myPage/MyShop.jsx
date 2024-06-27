@@ -198,6 +198,7 @@ export function MyShop() {
                         w={"100%"}
                         variant={"outline"}
                         colorScheme={"teal"}
+                        borderWidth={3}
                       >
                         상품 후기
                       </Button>

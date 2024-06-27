@@ -173,7 +173,7 @@ export function ProductUpload() {
             fontSize={"lg"}
             isLoading={loading}
             type="submit"
-            borderWidth={"3px"}
+            borderWidth={3}
             variant={"outline"}
             colorScheme={"teal"}
             onClick={handleUploadClick}

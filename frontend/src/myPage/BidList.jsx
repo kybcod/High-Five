@@ -225,7 +225,7 @@ export function BidList() {
                           mt={2}
                           w={"100%"}
                           borderColor={"gray"}
-                          borderWidth={"2px"}
+                          borderWidth={3}
                           colorScheme={"whiteAlpha"}
                           color={"gray"}
                           onClick={() => {
@@ -246,8 +246,8 @@ export function BidList() {
                           mt={2}
                           w={"100%"}
                           borderColor={"teal"}
-                          borderWidth={"2px"}
-                          colorScheme={"whiteAlpha"}
+                          borderWidth={3}
+                          colorScheme={"teal"}
                           color={"teal"}
                           onClick={() => {
                             navigate(
