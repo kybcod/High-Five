@@ -65,4 +65,14 @@ public interface ChatMapper {
             ORDER BY id DESC
             """)
     int updateReadCheck(Integer id, Integer tokenUserId);
+
+    @Select("""
+            SELECT COUNT(read_check)
+            FROM chat
+            WHERE chat_room_id = #{id}
+                AND user_id != #{tokenUserId}
+                AND read_check = FALSE
+            ORDER BY id DESC
+            """)
+    int selectNotReadCountById(Integer id, Integer tokenUserId);
 }

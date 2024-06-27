@@ -65,7 +65,6 @@ public class ChatService {
         // -- 이전 ChatData
         // read_check TRUE 변경
         int success = mapper.updateReadCheck(chatRoom.getId(), tokenUserId);
-        System.out.println("success = " + success);
 
         List<Chat> previousChatList = mapper.selectChatListByChatRoomId(chatRoom.getId());
         Collections.reverse(previousChatList);
@@ -126,6 +125,8 @@ public class ChatService {
     }
 
     public void insertMessage(Chat chat) {
+        // read_check FALSE 이전 메세지 있으면 TRUE 변경 - apic test 시 axios.get 요청 안 함
+        int success = mapper.updateReadCheck(chat.getChatRoomId(), chat.getUserId());
         mapper.insertMessage(chat);
     }
 
@@ -154,19 +155,32 @@ public class ChatService {
             } else {
                 userId = chatRoom.getSellerId();
             }
+
             User user = userMapper.selectUserNickNameById(userId);
+            if (user == null) {
+                User newUser = new User();
+                newUser.setId(chatRoom.getUserId());
+                newUser.setNickName("탈퇴한 회원");
+                user = newUser;
+            }
 
             // -- chat : message, inserted
             Chat chat = mapper.selectMessageByRoomId(chatRoom);
+            // -- chat readCheck count
+            int count = mapper.selectNotReadCountById(chatRoom.getId(), tokenUserId);
+
             if (chat == null) {
                 Chat newChat = new Chat();
                 newChat.setMessage("대화를 시작해보세요!");
                 newChat.setInserted(LocalDateTime.now());
                 chat = newChat;
             }
+            
+            Map<String, Object> chatMap = new HashMap<>(chat.getChatMessageAndInserted());
+            chatMap.put("count", count);
 
             map.put("chatRoom", chatRoom.getChatRoomIdAndBuyerId());
-            map.put("chat", chat.getChatMessageAndInserted());
+            map.put("chat", chatMap);
             map.put("product", product.getProductIdAndTitle());
             map.put("user", user.getUserIdAndNickName());
 

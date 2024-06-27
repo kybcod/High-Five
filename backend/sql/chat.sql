@@ -45,3 +45,23 @@ ALTER TABLE chat
 UPDATE chat
 SET read_check = TRUE
 WHERE read_check = FALSE;
+
+UPDATE chat
+SET read_check = FALSE
+WHERE id = 69;
+
+SELECT *
+FROM chat
+WHERE chat_room_id IN (SELECT id
+                       FROM chat_room
+                       WHERE user_id = 34
+                          OR seller_id = 34)
+ORDER BY inserted DESC;
+
+# chatRoom 최신순으로 조회
+SELECT id
+FROM chat_room
+WHERE user_id = 34
+   OR seller_id = 34;
+
+

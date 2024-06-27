@@ -24,6 +24,7 @@ export function ChatRoomList() {
     axios
       .get(`/api/chats/list`)
       .then((res) => {
+        console.log(res.data);
         if (res.data != null) {
           setData(res.data);
         }
@@ -48,7 +49,13 @@ export function ChatRoomList() {
             <Button
               size="lg"
               variant="link"
+              whiteSpace={"nowrap"}
+              textOverflow={"ellipsis"}
+              overflow={"hidden"}
               onClick={() => navigate(`/product/${item.product.id}`)}
+              isDisabled={
+                item.product.title == "삭제된 상품입니다." ? true : false
+              }
             >
               {item.product.title}
             </Button>
@@ -60,6 +67,9 @@ export function ChatRoomList() {
                   <Button
                     variant="link"
                     onClick={() => navigate(`/myPage/${item.user.id}/shop`)}
+                    isDisabled={
+                      item.user.nickName == "탈퇴한 회원" ? true : false
+                    }
                   >
                     {item.user.nickName}
                   </Button>
@@ -73,13 +83,28 @@ export function ChatRoomList() {
           <Box
             bgColor={"gray.200"}
             m={2}
+            h={"30px"}
+            lineHeight={"30px"}
+            cursor={"pointer"}
             onClick={() =>
               navigate(
                 `/chat/product/${item.product.id}/buyer/${item.chatRoom.userId}`,
               )
             }
           >
-            <Box cursor={"pointer"}>{item.chat.message}</Box>
+            <Flex>
+              <Box
+                w={"90%"}
+                whiteSpace={"nowrap"}
+                textOverflow={"ellipsis"}
+                overflow={"hidden"}
+              >
+                {item.chat.message}
+              </Box>
+              <Box w={"10%"} color={"blue.500"}>
+                {item.chat.count > 0 && item.chat.count}
+              </Box>
+            </Flex>
           </Box>
         </Box>
       ))}
