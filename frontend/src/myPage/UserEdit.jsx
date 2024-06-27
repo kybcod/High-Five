@@ -103,6 +103,13 @@ export function UserEdit() {
   let disabledNickNameCheckButton = true;
   let disabled = false;
   let isPasswordCheck = user.password === passwordCheck;
+  const passwordPattern =
+    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
+
+  let isValidPassword = false;
+  if (passwordPattern.test(user.password)) {
+    isValidPassword = true;
+  }
 
   if (user.nickName.length === 0) {
     disabledNickNameCheckButton = false;
@@ -117,6 +124,10 @@ export function UserEdit() {
   }
 
   if (!disabledNickNameCheckButton) {
+    disabled = true;
+  }
+
+  if (!isValidPassword) {
     disabled = true;
   }
 
@@ -188,6 +199,12 @@ export function UserEdit() {
             placeholder={"변경 시에만 입력해주세요"}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
           />
+          {isValidPassword || (
+            <FormHelperText fontSize={"xs"}>
+              비밀번호는 8자 이상으로, 영문 대소문자와 숫자, 특수기호를
+              포함하여야 합니다
+            </FormHelperText>
+          )}
         </FormControl>
         <FormControl mt={7}>
           <FormLabel>비밀번호 확인</FormLabel>
@@ -197,7 +214,9 @@ export function UserEdit() {
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
           {isPasswordCheck || (
-            <FormHelperText>비밀번호가 일치하지 않습니다</FormHelperText>
+            <FormHelperText fontSize={"xs"}>
+              비밀번호가 일치하지 않습니다
+            </FormHelperText>
           )}
         </FormControl>
         <FormControl mt={7}>
