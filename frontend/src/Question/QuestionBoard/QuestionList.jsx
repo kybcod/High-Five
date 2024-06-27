@@ -234,8 +234,9 @@ export function QuestionList() {
               onClick={() => handlePageButtonClick(pageNumber)}
               key={pageNumber}
               colorScheme={
-                pageNumber === pageInfo.currentPageNumber ? "blue" : "gray"
+                pageNumber === pageInfo.currentPageNumber ? "green" : "gray"
               }
+              variant="outline"
             >
               {pageNumber}
             </Button>

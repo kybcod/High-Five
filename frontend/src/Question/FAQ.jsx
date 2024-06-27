@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Heading, Box, Text, Flex, Button } from "@chakra-ui/react";
+import { Box, Text, Flex, Button } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
 
 export function FAQ() {
@@ -68,34 +68,32 @@ export function FAQ() {
       </Flex>
       <Flex direction="column" w="100%">
         {faq.map((item) => (
-          <Box
-            key={item.id}
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            mb={8}
-          >
+          <Box key={item.id} borderBottom="1px solid #e8e8e8" overflow="hidden">
             <Flex
               onClick={() => toggleExpand(item.id)}
               cursor="pointer"
               justifyContent="space-between"
-              _hover={{ backgroundColor: "gray.100" }}
-              p={4}
-              // bg="gray.50"
-              borderBottom="1px solid gray"
+              p={6}
+              borderBottom="1px solid #e8e8e8"
             >
               <Box fontWeight="bold" flex="1" textAlign="left">
-                {item.title}
+                Q. {item.title}
               </Box>
               <Box flex="0">{expanded.includes(item.id) ? "▲" : "▼"}</Box>
             </Flex>
-            {expanded.includes(item.id) && (
-              <Box p={4} bg="gray.100">
-                <Text whiteSpace={"pre-line"} m={"20px"}>
-                  {item.content}
-                </Text>
-              </Box>
-            )}
+            <Box
+              maxHeight={expanded.includes(item.id) ? "1000px" : "0"}
+              overflow="hidden"
+              transition="max-height 1s ease-in-out"
+            >
+              {expanded.includes(item.id) && (
+                <Box p={4} bg="gray.100">
+                  <Text whiteSpace={"pre-line"} m={"20px"}>
+                    A. {item.content}
+                  </Text>
+                </Box>
+              )}
+            </Box>
           </Box>
         ))}
       </Flex>
