@@ -126,11 +126,13 @@ public class ChatService {
 
     public void insertMessage(Chat chat) {
         // read_check FALSE 이전 메세지 있으면 TRUE 변경 - apic test 시 axios.get 요청 안 함
+        // TODO : 상대방 _exit true -> false 변경
         int success = mapper.updateReadCheck(chat.getChatRoomId(), chat.getUserId());
         mapper.insertMessage(chat);
     }
 
     public List<Map<String, Object>> getChatRoomList(Authentication authentication) {
+        // TODO : 본인 _exit false 만 가져오기
         Integer tokenUserId = Integer.valueOf(authentication.getName());
 
         List<Map<String, Object>> result = new ArrayList<>();
@@ -175,7 +177,7 @@ public class ChatService {
                 newChat.setInserted(LocalDateTime.now());
                 chat = newChat;
             }
-            
+
             Map<String, Object> chatMap = new HashMap<>(chat.getChatMessageAndInserted());
             chatMap.put("count", count);
 
@@ -187,5 +189,27 @@ public class ChatService {
             result.add(map);
         }
         return result;
+    }
+
+    public Integer deleteChatRoomById(Integer chatRoomId, Authentication authentication) {
+        Integer tokenUserId = Integer.valueOf(authentication.getName());
+        // chatRoomId로 seller/user 확인
+        ChatRoom chatRoom = mapper.selectChatRoomById(chatRoomId);
+        int success = 0;
+        System.out.println("chatRoom = " + chatRoom);
+        if (chatRoom.getSellerId() == tokenUserId && chatRoom.getUserExit() == false) {
+            // update seller_exit true
+            success = mapper.updateSellerExitById(chatRoomId, tokenUserId);
+            System.out.println("update seller true : " + success);
+        } else if (chatRoom.getUserId() == tokenUserId && chatRoom.getSellerExit() == false) {
+            // update user_exit true
+            success = mapper.updateUserExitById(chatRoomId, tokenUserId);
+            System.out.println("update user true : " + success);
+        } else {
+            // delete chat_room
+            success = mapper.deleteAllChatById(chatRoomId);
+            System.out.println("delete chatRoom " + chatRoomId + " : " + success);
+        }
+        return success;
     }
 }
