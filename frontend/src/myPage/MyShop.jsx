@@ -15,7 +15,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
 
 export function MyShop() {
   const { userId } = useParams();
@@ -210,31 +210,12 @@ export function MyShop() {
       )}
       {productList.length > 0 && (
         <Box display={"flex"} justifyContent={"center"}>
-          {hasNextPage ? (
-            <Button
-              w={"30%"}
-              colorScheme={"white"}
-              color={"black"}
-              mt={4}
-              onClick={handleMoreClick}
-              rightIcon={<ArrowDownIcon />}
-            >
-              더보기
-            </Button>
-          ) : (
-            productList.length > 9 && (
-              <Button
-                w={"30%"}
-                colorScheme={"white"}
-                color={"black"}
-                mt={4}
-                rightIcon={<ChevronUpIcon />}
-                onClick={handleFoldClick}
-              >
-                접기
-              </Button>
-            )
-          )}
+          <LoadMoreAndFoldButton
+            hasNextPage={hasNextPage}
+            productListLength={productList.length}
+            onMoreClick={handleMoreClick}
+            onFoldClick={handleFoldClick}
+          />
         </Box>
       )}
     </Box>

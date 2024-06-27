@@ -15,11 +15,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { ArrowDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
 
 export function BidList() {
   const { userId } = useParams();
@@ -273,31 +273,12 @@ export function BidList() {
       )}
       {bidList.length > 0 && (
         <Box display={"flex"} justifyContent={"center"}>
-          {hasNextPage ? (
-            <Button
-              w={"30%"}
-              colorScheme={"white"}
-              color={"black"}
-              mt={4}
-              onClick={handleMoreClick}
-              rightIcon={<ArrowDownIcon />}
-            >
-              더보기
-            </Button>
-          ) : (
-            bidList.length > 9 && (
-              <Button
-                w={"30%"}
-                colorScheme={"white"}
-                color={"black"}
-                mt={4}
-                rightIcon={<ChevronUpIcon />}
-                onClick={handleFoldClick}
-              >
-                접기
-              </Button>
-            )
-          )}
+          <LoadMoreAndFoldButton
+            hasNextPage={hasNextPage}
+            productListLength={bidList.length}
+            onMoreClick={handleMoreClick}
+            onFoldClick={handleFoldClick}
+          />
         </Box>
       )}
     </Box>
