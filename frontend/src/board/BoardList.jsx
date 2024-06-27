@@ -80,6 +80,7 @@ export function BoardList() {
               <Th>제목</Th>
               <Th>작성자</Th>
               <Th>댓글수</Th>
+              <Th>조회수</Th>
               <Th>작성시간</Th>
             </Tr>
           </Thead>
@@ -126,6 +127,7 @@ export function BoardList() {
                     <FontAwesomeIcon icon={faComment} size={"sm"} />
                     {board.numberOfComments}
                   </Td>
+                  <Td>{board.viewCount}</Td>
                   <Td>{board.inserted}</Td>
                   <Td hidden>{board.content}</Td>
                 </Tr>

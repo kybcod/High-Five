@@ -112,6 +112,8 @@ public class BoardService {
         result.put("board", board);
         result.put("boardLike", boardLike);
 
+        mapper.viewCountByBoardClick(id);
+
         return result;
 
     }

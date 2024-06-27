@@ -43,6 +43,10 @@ ALTER TABLE board_comment
 ALTER TABLE board_comment
     ADD reference_id INT NOT NULL DEFAULT 0;
 
+# 조회수 기능
+ALTER TABLE board
+    ADD COLUMN view_count INT DEFAULT 0;
+
 SELECT *
 FROM board_comment;
 
@@ -56,3 +60,4 @@ WHERE board_id = 45;
 
 SELECT *
 FROM user_file;
+
