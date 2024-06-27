@@ -46,7 +46,7 @@ export function BoardCommentWrite({ boardId, setIsProcessing, isProcessing }) {
 
   return (
     <Box>
-      <Flex>
+      <Flex mt={"10px"}>
         <Textarea
           isDisabled={!account.isLoggedIn()}
           placeholder={
@@ -62,6 +62,7 @@ export function BoardCommentWrite({ boardId, setIsProcessing, isProcessing }) {
           isDisabled={disableSaveButton}
           isLoading={isProcessing}
           onClick={handleClickComment}
+          ml={"10px"}
         >
           입력
         </Button>

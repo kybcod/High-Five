@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Card,
-  Divider,
   Flex,
   Heading,
   Image,
@@ -124,27 +123,6 @@ export function BoardView() {
       </Box>
       <Flex ml={5} mt={"30px"} alignItems={"center"}>
         <Text fontSize="4xl">{board.title}</Text>
-        <Spacer />
-        {isLikeProcess || (
-          <Flex onClick={handleClickLike} mt={"20px"} alignItems={"center"}>
-            {boardLike.boardLike && (
-              <FontAwesomeIcon icon={fullHeart} size={"xl"} color={"red"} />
-            )}
-            {boardLike.boardLike || (
-              <FontAwesomeIcon icon={emptyHeart} size={"xl"} color={"red"} />
-            )}
-            {boardLike.count > 0 && (
-              <Box ml={"5px"} fontSize={"md"}>
-                좋아요 {boardLike.count}
-              </Box>
-            )}
-          </Flex>
-        )}
-        {isLikeProcess && (
-          <Box>
-            <Spinner />
-          </Box>
-        )}
       </Flex>
       <Flex alignItems={"center"} ml={5} m={7}>
         {board.profileImage && board.profileImage.fileName == null && (
@@ -171,15 +149,37 @@ export function BoardView() {
         <Box ml={"10px"}>
           <Text fontSize={"lg"}>{board.nickName}</Text>
         </Box>
-        <Box ml={"20px"}>
-          <Text fontSize={"small"} color={"gray"}>
+        <Box ml={"5px"}>
+          <Text fontSize={"small"} color={"gray.200"}>
             ৹
           </Text>
         </Box>
-        <Box ml={"20px"}>
-          <Text fontSize={"lg"}>{board.inserted}</Text>
+        <Box ml={"5px"}>
+          <Text fontSize={"lg"} color={"gray.400"}>
+            {board.inserted}
+          </Text>
         </Box>
         <Spacer />
+        {isLikeProcess || (
+          <Flex onClick={handleClickLike} alignItems={"center"}>
+            {boardLike.boardLike && (
+              <FontAwesomeIcon icon={fullHeart} size={"xl"} color={"red"} />
+            )}
+            {boardLike.boardLike || (
+              <FontAwesomeIcon icon={emptyHeart} size={"xl"} color={"red"} />
+            )}
+            {boardLike.count >= 0 && (
+              <Box mr={"25px"} ml={"5px"} fontSize={"md"}>
+                좋아요 {boardLike.count}
+              </Box>
+            )}
+          </Flex>
+        )}
+        {isLikeProcess && (
+          <Box>
+            <Spinner />
+          </Box>
+        )}
         {account.hasAccess(board.userId) && (
           <Menu>
             <MenuButton>
@@ -204,7 +204,6 @@ export function BoardView() {
           </Menu>
         )}
       </Flex>
-      <Divider />
       <Box border={"1px"} color={"gray.200"} borderRadius={"md"}>
         {board.boardFileList && board.boardFileList.length > 0 && (
           <Flex flexWrap={"wrap"} justifyContent={"space-evenly"} p={"20px"}>
@@ -227,7 +226,7 @@ export function BoardView() {
           </Text>
         </Box>
       </Box>
-      <Flex justifyContent={"space-evenly"}>
+      <Flex justifyContent={"space-evenly"} mt={"15px"}>
         <Text onClick={handleClickPrev}>⟨ 이전글</Text>
         <Text onClick={handleClickNext}>다음글 ⟩</Text>
       </Flex>
