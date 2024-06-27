@@ -68,68 +68,8 @@ export function Header() {
   }
 
   return (
-    <Box height={"70px"}>
+    <Box mb={4} height={"70px"}>
       <Flex align="center" justify="space-between" maxW="100%">
-        {/*<Menu>*/}
-        {/*  <Box ml={2} align="center">*/}
-        {/*    <MenuButton*/}
-        {/*      bg="transparent"*/}
-        {/*      _hover={{ bg: "transparent" }}*/}
-        {/*      _active={{ bg: "transparent" }}*/}
-        {/*      as={Button}*/}
-        {/*      leftIcon={<HamburgerIcon />}*/}
-        {/*      size="lg"*/}
-        {/*    >*/}
-        {/*      카테고리*/}
-        {/*    </MenuButton>*/}
-        {/*  </Box>*/}
-        {/*  <MenuList m={2} border="1px solid green" borderRadius={0} bg="white">*/}
-        {/*    <MenuItem*/}
-        {/*      onClick={() => handleCategoryClick("clothes")}*/}
-        {/*      icon={<FontAwesomeIcon icon={faShirt} />}*/}
-        {/*      _hover={{ bg: "green.50" }}*/}
-        {/*      _focus={{ bg: "green.50" }}*/}
-        {/*    >*/}
-        {/*      의류*/}
-        {/*    </MenuItem>*/}
-        {/*    <MenuItem*/}
-        {/*      onClick={() => handleCategoryClick("goods")}*/}
-        {/*      icon={<FontAwesomeIcon icon={faBasketShopping} />}*/}
-        {/*      _hover={{ bg: "green.50" }}*/}
-        {/*    >*/}
-        {/*      잡화*/}
-        {/*    </MenuItem>*/}
-        {/*    <MenuItem*/}
-        {/*      onClick={() => handleCategoryClick("food")}*/}
-        {/*      icon={<FontAwesomeIcon icon={faUtensils} />}*/}
-        {/*      _hover={{ bg: "green.50" }}*/}
-        {/*    >*/}
-        {/*      식품*/}
-        {/*    </MenuItem>*/}
-        {/*    <MenuItem*/}
-        {/*      onClick={() => handleCategoryClick("digital")}*/}
-        {/*      icon={<FontAwesomeIcon icon={faMobileScreenButton} />}*/}
-        {/*      _hover={{ bg: "green.50" }}*/}
-        {/*    >*/}
-        {/*      디지털*/}
-        {/*    </MenuItem>*/}
-        {/*    <MenuItem*/}
-        {/*      onClick={() => handleCategoryClick("sport")}*/}
-        {/*      icon={<FontAwesomeIcon icon={faHeartPulse} />}*/}
-        {/*      _hover={{ bg: "green.50" }}*/}
-        {/*    >*/}
-        {/*      스포츠*/}
-        {/*    </MenuItem>*/}
-        {/*    <MenuItem*/}
-        {/*      onClick={() => handleCategoryClick("e-coupon")}*/}
-        {/*      icon={<FontAwesomeIcon icon={faTicket} />}*/}
-        {/*      _hover={{ bg: "green.50" }}*/}
-        {/*    >*/}
-        {/*      e-쿠폰*/}
-        {/*    </MenuItem>*/}
-        {/*  </MenuList>*/}
-        {/*</Menu>*/}
-
         {/* 로고 */}
         <Box>
           <Text

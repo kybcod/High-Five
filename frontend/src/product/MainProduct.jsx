@@ -81,7 +81,7 @@ export function MainProduct() {
 
       <Box position="relative" marginY="20">
         <Divider border={"1px solid gray"} />
-        <AbsoluteCenter fontSize={"xl"} fontWeight={"bold"} bg="white" px="4">
+        <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
           👍 상품 추천
         </AbsoluteCenter>
       </Box>
