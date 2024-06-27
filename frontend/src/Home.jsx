@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { Navbar } from "./component/Navbar.jsx";
 import { Header } from "./component/Header.jsx";
 import Footer from "./component/Footer.jsx";
+import { Category } from "./component/Category.jsx";
 
 export function Home() {
   return (
@@ -19,6 +20,7 @@ export function Home() {
       >
         <Box mt={6} mb={10}>
           <Header />
+          <Category />
         </Box>
         <Box>
           <Outlet />

@@ -245,7 +245,7 @@ export function BidList() {
                         <Button
                           mt={2}
                           w={"100%"}
-                          borderColor={"teal"}
+                          variant={"outline"}
                           borderWidth={3}
                           colorScheme={"teal"}
                           color={"teal"}

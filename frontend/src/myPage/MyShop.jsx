@@ -75,7 +75,6 @@ export function MyShop() {
   function handleSortChange(event) {
     setSortOption(parseInt(event.target.value));
     searchParams.set("sort", event.target.value);
-    searchParams.set("page", 1);
     setSearchParams(searchParams);
   }
 

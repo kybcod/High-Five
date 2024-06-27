@@ -128,7 +128,7 @@ export function ProductDetails() {
   return (
     <Box>
       {/*<Category />*/}
-      <Divider my={10} borderColor="gray" />
+      {/*<Divider my={10} borderColor="gray" />*/}
 
       <Flex alignItems="flex-start">
         <Box width="45%" mr={20}>

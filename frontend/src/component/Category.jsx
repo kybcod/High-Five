@@ -1,65 +1,100 @@
-import { Box, Center, Grid } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
 import React from "react";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBasketShopping,
+  faHeartPulse,
+  faMobileScreenButton,
+  faShirt,
+  faTicket,
+  faUtensils,
+} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 export function Category() {
+  const navigate = useNavigate();
+
+  function handleCategoryClick(category) {
+    if (category === "") {
+      navigate(`/list`);
+    } else {
+      navigate(`/list?category=${category}`);
+    }
+  }
+
   return (
-    <Box bg="gray.200" p={4} borderRadius="md">
-      <Grid
-        templateColumns="repeat(auto-fit, minmax(120px, 1fr))"
-        gap={2}
-        justifyItems="center"
-        cursor="pointer"
-      >
-        <Center
-          onClick={() => handleCategoryClick("")}
-          fontWeight="bold"
-          _hover={{ color: "blue.500" }}
-        >
-          전체
-        </Center>
-        <Center
-          onClick={() => handleCategoryClick("clothes")}
-          fontWeight="bold"
-          _hover={{ color: "blue.500" }}
-        >
-          의류
-        </Center>
-        <Center
-          onClick={() => handleCategoryClick("goods")}
-          fontWeight="bold"
-          _hover={{ color: "blue.500" }}
-        >
-          잡화
-        </Center>
-        <Center
-          onClick={() => handleCategoryClick("food")}
-          fontWeight="bold"
-          _hover={{ color: "blue.500" }}
-        >
-          식품
-        </Center>
-        <Center
-          onClick={() => handleCategoryClick("digital")}
-          fontWeight="bold"
-          _hover={{ color: "blue.500" }}
-        >
-          디지털
-        </Center>
-        <Center
-          onClick={() => handleCategoryClick("sport")}
-          fontWeight="bold"
-          _hover={{ color: "blue.500" }}
-        >
-          스포츠
-        </Center>
-        <Center
-          onClick={() => handleCategoryClick("e-coupon")}
-          fontWeight="bold"
-          _hover={{ color: "blue.500" }}
-        >
-          e-쿠폰
-        </Center>
-      </Grid>
+    <Box>
+      <Menu>
+        <Flex justifyContent="flex-start">
+          <MenuButton
+            as={Button}
+            bg="transparent"
+            _hover={{ bg: "transparent" }}
+            _active={{ bg: "transparent" }}
+            leftIcon={<HamburgerIcon />}
+            size="lg"
+            px={2} // 가로 내부 패딩 조정
+          >
+            카테고리
+          </MenuButton>
+        </Flex>
+        <MenuList border="1px solid green" borderRadius={0} bg="white">
+          <MenuItem
+            onClick={() => handleCategoryClick("clothes")}
+            icon={<FontAwesomeIcon icon={faShirt} />}
+            _hover={{ bg: "green.50" }}
+            _focus={{ bg: "green.50" }}
+          >
+            의류
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleCategoryClick("goods")}
+            icon={<FontAwesomeIcon icon={faBasketShopping} />}
+            _hover={{ bg: "green.50" }}
+          >
+            잡화
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleCategoryClick("food")}
+            icon={<FontAwesomeIcon icon={faUtensils} />}
+            _hover={{ bg: "green.50" }}
+          >
+            식품
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleCategoryClick("digital")}
+            icon={<FontAwesomeIcon icon={faMobileScreenButton} />}
+            _hover={{ bg: "green.50" }}
+          >
+            디지털
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleCategoryClick("sport")}
+            icon={<FontAwesomeIcon icon={faHeartPulse} />}
+            _hover={{ bg: "green.50" }}
+          >
+            스포츠
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleCategoryClick("e-coupon")}
+            icon={<FontAwesomeIcon icon={faTicket} />}
+            _hover={{ bg: "green.50" }}
+          >
+            e-쿠폰
+          </MenuItem>
+        </MenuList>
+      </Menu>
+      <Divider mt={2} borderWidth={1} />
     </Box>
   );
 }

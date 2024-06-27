@@ -1,7 +1,6 @@
-// MainSlider.jsx
 import React from "react";
 import Slider from "react-slick";
-import { Box, Image } from "@chakra-ui/react";
+import { Box, Flex, Image } from "@chakra-ui/react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -39,6 +38,11 @@ export function MainSlider() {
     slidesToScroll: 1,
     centerMode: false,
     centerPadding: "0px",
+    appendDots: (dots) => (
+      <Flex justifyContent="center" mt="-30px">
+        <ul style={{ margin: "-10px" }}> {dots} </ul>
+      </Flex>
+    ),
   };
 
   return (

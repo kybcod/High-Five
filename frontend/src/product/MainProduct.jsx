@@ -57,15 +57,15 @@ export function MainProduct() {
 
   return (
     <Box>
-      <Box mt={10} h="350px" w="100%" mb={10} boxSizing="border-box" mx="auto">
+      <Box h="350px" w="100%" boxSizing="border-box" mx="auto">
         {/*<MainSlider />*/}
       </Box>
 
       {/* 오늘의 상품 */}
       <Box position="relative" marginY="20">
         <Divider border={"1px solid gray"} />
-        <AbsoluteCenter fontWeight={"bold"} bg="white" px="4">
-          오늘의 경매 상품
+        <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
+          📣 오늘의 경매 상품
         </AbsoluteCenter>
       </Box>
       {todayProduct === null || todayProduct.length === 0 || (
@@ -81,8 +81,8 @@ export function MainProduct() {
 
       <Box position="relative" marginY="20">
         <Divider border={"1px solid gray"} />
-        <AbsoluteCenter fontWeight={"bold"} bg="white" px="4">
-          상품 추천
+        <AbsoluteCenter fontSize={"xl"} fontWeight={"bold"} bg="white" px="4">
+          👍 상품 추천
         </AbsoluteCenter>
       </Box>
 
