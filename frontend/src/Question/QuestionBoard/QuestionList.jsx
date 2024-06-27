@@ -4,7 +4,6 @@ import {
   Button,
   Center,
   Flex,
-  Heading,
   Input,
   Select,
   Table,
@@ -183,6 +182,18 @@ export function QuestionList() {
         )}
       </Box>
 
+      {account.isLoggedIn() && (
+        <Flex justify={"flex-end"}>
+          <Button
+            colorScheme={"teal"}
+            variant={"outline"}
+            onClick={() => navigate("/question/write")}
+          >
+            글쓰기
+          </Button>
+        </Flex>
+      )}
+
       <Center mb={10}>
         <Flex gap={2}>
           <Box>
@@ -213,7 +224,7 @@ export function QuestionList() {
       <Center>
         <Flex gap={1}>
           <Tooltip label="맨 앞 페이지" placement="bottom">
-            <Button onClick={() => handlePageButtonClick(1)}>
+            <Button onClick={() => handlePageButtonClick(1)} variant="outline">
               <FontAwesomeIcon icon={faAnglesLeft} />
             </Button>
           </Tooltip>
@@ -222,6 +233,7 @@ export function QuestionList() {
               <Tooltip label="이전 페이지" placement="bottom">
                 <Button
                   onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+                  variant="outline"
                 >
                   <FontAwesomeIcon icon={faAngleLeft} />
                 </Button>
@@ -247,6 +259,7 @@ export function QuestionList() {
               <Tooltip label="다음 페이지" placement="bottom">
                 <Button
                   onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+                  variant="outline"
                 >
                   <FontAwesomeIcon icon={faAngleRight} />
                 </Button>
@@ -256,23 +269,13 @@ export function QuestionList() {
           <Tooltip label="맨 끝 페이지" placement="bottom">
             <Button
               onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+              variant="outline"
             >
               <FontAwesomeIcon icon={faAnglesRight} />
             </Button>
           </Tooltip>
         </Flex>
       </Center>
-
-      {account.isLoggedIn() && (
-        <Flex justify={"flex-end"} mr={10} mt={2}>
-          <Button
-            colorScheme={"blue"}
-            onClick={() => navigate("/question/write")}
-          >
-            글쓰기
-          </Button>
-        </Flex>
-      )}
     </>
   );
 }
