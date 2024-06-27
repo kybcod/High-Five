@@ -90,17 +90,12 @@ export function QuestionList() {
 
   return (
     <>
-      <Box mt={5} mb={5}>
-        <Heading onClick={() => navigate("/question/list")} cursor={"pointer"}>
-          문의 게시판
-        </Heading>
-      </Box>
       <Box mb={7}>
         {questionList.length === 0 && (
           <Center m={20}>조회 결과가 없습니다.</Center>
         )}
         {questionList.length > 0 && (
-          <Table variant="simple">
+          <Table variant="simple" mt={20}>
             <Thead>
               <Tr>
                 <Th>No.</Th>
@@ -172,7 +167,7 @@ export function QuestionList() {
                       </Box>
                     )}
                   </Td>
-                  <Td width="10%" textAlign="center">
+                  <Td width="15%" textAlign="center">
                     {question.nickName}
                   </Td>
                   <Td width="10%" textAlign="center" fontSize={"sm"}>
@@ -188,7 +183,7 @@ export function QuestionList() {
         )}
       </Box>
 
-      <Center mb={3}>
+      <Center mb={10}>
         <Flex gap={2}>
           <Box>
             <Select
@@ -268,7 +263,7 @@ export function QuestionList() {
       </Center>
 
       {account.isLoggedIn() && (
-        <Flex justify={"flex-end"} mr={10}>
+        <Flex justify={"flex-end"} mr={10} mt={2}>
           <Button
             colorScheme={"blue"}
             onClick={() => navigate("/question/write")}
