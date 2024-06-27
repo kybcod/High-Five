@@ -5,6 +5,7 @@ import com.backend.domain.user.User;
 import com.backend.domain.user.UserFile;
 import com.backend.mapper.user.UserMapper;
 import com.backend.util.PageInfo;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,8 @@ public class UserService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
+    Timer timer = new Timer();
+
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
         // TODO. 주석풀기
@@ -63,8 +66,6 @@ public class UserService {
         mapper.insertCode(phoneNumber, verificationCode);
 //        }
 
-        Timer timer = new Timer();
-
         TimerTask timeOutCodeDelete = new TimerTask() {
             public void run() {
                 Integer leftCode = mapper.selectCodeByPhoneNumber(phoneNumber);
@@ -77,6 +78,11 @@ public class UserService {
         timer.schedule(timeOutCodeDelete, 180000);
 
         return verificationCode;
+    }
+
+    @PreDestroy
+    public void destroy() {
+        timer.cancel();
     }
 
     public boolean checkVerificationCode(String phoneNumber, int verificationCode) {

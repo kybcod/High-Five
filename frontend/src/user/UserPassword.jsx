@@ -6,12 +6,19 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
 import { useContext, useState } from "react";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
+import {
+  buttonStyle,
+  formLabel,
+  InputStyle,
+  title,
+} from "../component/css/style.js";
 
 export function UserPassword() {
   const [email, setEmail] = useState("");
@@ -60,8 +67,11 @@ export function UserPassword() {
   return (
     <Center>
       <Box>
-        <FormControl>
-          <FormLabel>이메일</FormLabel>
+        <Center>
+          <Text {...title}>비밀번호 찾기</Text>
+        </Center>
+        <FormControl mt={10}>
+          <FormLabel {...formLabel}>이메일</FormLabel>
           <Input onChange={(e) => setEmail(e.target.value)} />
         </FormControl>
         <UserPhoneNumber />
@@ -69,17 +79,15 @@ export function UserPassword() {
           <Center>
             <Box>
               <FormControl>
-                <FormLabel>비밀번호</FormLabel>
+                <FormLabel {...formLabel}>비밀번호</FormLabel>
                 <Input
-                  pr="4.5rem"
-                  variant="flushed"
+                  {...InputStyle}
                   type="password"
                   onChange={(e) => {
                     setPassword(e.target.value);
                     isValidPassword = false;
                   }}
                   isInvalid={isValidPassword ? false : true}
-                  errorBorderColor={"red.300"}
                 />
                 {isValidPassword || (
                   <FormHelperText>
@@ -89,12 +97,10 @@ export function UserPassword() {
                 )}
               </FormControl>
               <FormControl>
-                <FormLabel>비밀번호 확인</FormLabel>
+                <FormLabel {...formLabel}>비밀번호 확인</FormLabel>
                 <Input
-                  pr="4.5rem"
+                  {...InputStyle}
                   isInvalid={isCheckedPassword ? false : true}
-                  errorBorderColor={"red.300"}
-                  variant="flushed"
                   type="password"
                   onChange={(e) => setPasswordCheck(e.target.value)}
                 />
@@ -106,8 +112,12 @@ export function UserPassword() {
           </Center>
         )}
         {codeInfo.isCheckedCode && (
-          <Center>
-            <Button onClick={handleUpdatePassword} isDisabled={isDisabled}>
+          <Center mt={10}>
+            <Button
+              onClick={handleUpdatePassword}
+              isDisabled={isDisabled}
+              {...buttonStyle}
+            >
               비밀번호 재설정
             </Button>
           </Center>
