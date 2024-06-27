@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Text, Flex, Button } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 
 export function FAQ() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -41,12 +42,8 @@ export function FAQ() {
         <Button
           onClick={() => handleCategoryChange("all")}
           m={2}
-          bg={category === "all" ? "red.400" : "gray.200"}
-          color={category === "all" ? "white" : "black"}
-          border={
-            category === "all" ? "2px solid red" : "2px solid transparent"
-          }
-          _hover={{ bg: category === "all" ? "red.500" : "gray.300" }}
+          colorScheme="teal"
+          variant={category === "all" ? "solid" : "outline"}
         >
           전체
         </Button>
@@ -55,12 +52,8 @@ export function FAQ() {
             key={cat.id}
             onClick={() => handleCategoryChange(cat.id)}
             m={2}
-            bg={category === cat.id ? "red.400" : "gray.200"}
-            color={category === cat.id ? "white" : "black"}
-            border={
-              category === cat.id ? "2px solid red" : "2px solid transparent"
-            }
-            _hover={{ bg: category === cat.id ? "red.500" : "gray.300" }}
+            colorScheme="teal"
+            variant={category === "cat.id" ? "solid" : "outline"}
           >
             {cat.name}
           </Button>
@@ -79,7 +72,13 @@ export function FAQ() {
               <Box fontWeight="bold" flex="1" textAlign="left">
                 Q. {item.title}
               </Box>
-              <Box flex="0">{expanded.includes(item.id) ? "▲" : "▼"}</Box>
+              <Box flex="0">
+                {expanded.includes(item.id) ? (
+                  <TriangleUpIcon />
+                ) : (
+                  <TriangleDownIcon />
+                )}
+              </Box>
             </Flex>
             <Box
               maxHeight={expanded.includes(item.id) ? "1000px" : "0"}
