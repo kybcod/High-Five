@@ -6,7 +6,7 @@ export const InputStyle = {
   variant: "flushed",
   pb: 3,
   focusBorderColor: "gray.200",
-  errorBorderColor: "orange.200",
+  errorBorderColor: "teal.200",
 };
 
 export const InputGroupStyle = {
@@ -16,8 +16,8 @@ export const InputGroupStyle = {
 export const InputGroupButton = {
   h: "1.75rem",
   size: "md",
-  colorScheme: "orange",
-  variant: "ghost",
+  colorScheme: "teal",
+  variant: "outline",
 };
 
 export const formLabel = {

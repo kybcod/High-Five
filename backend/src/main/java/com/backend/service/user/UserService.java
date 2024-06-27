@@ -267,7 +267,7 @@ public class UserService {
         String fileSrc = "";
         if (profileImage != null) {
             // jwt 토큰에 넣을 ec2 file path
-            fileSrc = STR."\{srcPrefix}user/\{user.getId()}/\{profileImage}";
+            fileSrc = STR."\{srcPrefix}user/\{user.getId()}/\{profileImage.getOriginalFilename()}";
 
             String dbFileName = mapper.selectFileNameByUserId(user.getId());
 
