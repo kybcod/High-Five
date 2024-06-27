@@ -1,4 +1,4 @@
-import { Box, Button, Center, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, Heading, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -8,17 +8,19 @@ import {
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { ProductGrid } from "./ProductGrid.jsx";
+import { CategorySwitchCase } from "../component/CategorySwitchCase.jsx";
 
 export function ProductList() {
   const [productList, setProductList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [likes, setLikes] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   const account = useContext(LoginContext);
+  const category = searchParams.get("category") || "";
+  const translatedCategoryName = CategorySwitchCase({ categoryName: category });
 
   useEffect(() => {
     axios.get(`/api/products/search?${searchParams}`).then((res) => {
@@ -39,7 +41,7 @@ export function ProductList() {
       setProductList(products);
       setPageInfo(res.data.pageInfo);
     });
-  }, [searchParams, account]);
+  }, [searchParams]);
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
@@ -66,7 +68,9 @@ export function ProductList() {
 
   return (
     <Box>
-      <Heading my={6}></Heading>
+      <Flex mb={10} align={"center"} justifyContent={"center"}>
+        <Heading>{translatedCategoryName}</Heading>
+      </Flex>
       <ProductGrid
         productList={productList}
         likes={likes}

@@ -323,8 +323,8 @@ export function ProductDetails() {
                   borderWidth={3}
                   variant={"outline"}
                   colorScheme={"teal"}
-                  w="30%"
-                  h={"60px"}
+                  w="100%"
+                  h={"50px"}
                   fontSize={"lg"}
                   onClick={() => navigate(`/edit/${product.id}`)}
                 >

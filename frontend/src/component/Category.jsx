@@ -13,6 +13,7 @@ import { HamburgerIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBasketShopping,
+  faGlobe,
   faHeartPulse,
   faMobileScreenButton,
   faShirt,
@@ -50,10 +51,17 @@ export function Category() {
         </Flex>
         <MenuList border="1px solid green" borderRadius={0} bg="white">
           <MenuItem
+            onClick={() => handleCategoryClick("")}
+            icon={<FontAwesomeIcon icon={faGlobe} />}
+            _hover={{ bg: "green.50" }}
+            _focus={{ bg: "green.50" }}
+          >
+            전체
+          </MenuItem>
+          <MenuItem
             onClick={() => handleCategoryClick("clothes")}
             icon={<FontAwesomeIcon icon={faShirt} />}
             _hover={{ bg: "green.50" }}
-            _focus={{ bg: "green.50" }}
           >
             의류
           </MenuItem>
