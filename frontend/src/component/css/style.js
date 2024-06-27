@@ -18,6 +18,8 @@ export const InputGroupButton = {
   size: "md",
   colorScheme: "teal",
   variant: "outline",
+  fontSize: "sm",
+  p: 1,
 };
 
 export const formLabel = {

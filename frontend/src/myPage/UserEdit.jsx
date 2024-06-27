@@ -225,6 +225,7 @@ export function UserEdit() {
             <Input
               variant="flushed"
               placeholer={"닉네임 중복 확인 필수"}
+              fontSize={"xs"}
               value={user.nickName}
               onChange={(e) => {
                 setUser({ ...user, nickName: e.target.value });

@@ -62,10 +62,13 @@ public class UserController {
     @GetMapping("users/confirmation")
     public ResponseEntity verifyCode(String phoneNumber, int verificationCode) {
         phoneNumber = phoneNumber.replaceAll("-", "");
-        if (service.checkVerificationCode(phoneNumber, verificationCode)) {
-            return ResponseEntity.ok().build();
+        if (phoneNumber.length() == 11) {
+            if (service.checkVerificationCode(phoneNumber, verificationCode)) {
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.badRequest().build();
     }
 
     // user 수정

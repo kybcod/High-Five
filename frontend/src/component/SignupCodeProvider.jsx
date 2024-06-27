@@ -81,6 +81,7 @@ export function SignupCodeProvider({ children }) {
       .then(() => {
         successToast("휴대폰 번호가 인증되었습니다");
         setIsCheckedCode(true);
+        clearInterval(timerId.current);
       })
       .catch((err) => {
         if (err.response.status === 400) {
@@ -93,7 +94,9 @@ export function SignupCodeProvider({ children }) {
           );
         }
       })
-      .finally(() => setIsSendingCode(false));
+      .finally(() => {
+        setIsSendingCode(false);
+      });
   }
 
   return (

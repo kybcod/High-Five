@@ -34,7 +34,7 @@ export function UserPhoneNumber() {
               codeInfo.handleInputPhoneNumber(e.target.value);
             }}
           />
-          <InputRightElement width="4.5rem">
+          <InputRightElement width={codeInfo.isSendingCode ? "6rem" : "4.5rem"}>
             {codeInfo.isSendingCode && (
               <Text mr={2} color={"gray.800"}>
                 {codeInfo.min +
