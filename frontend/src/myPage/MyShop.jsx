@@ -99,57 +99,16 @@ export function MyShop() {
             <GridItem key={product.id}>
               <Card
                 boxShadow={"none"}
-                borderStyle={"solid"}
-                borderColor={"black.300"}
+                borderColor={"gray.200"}
                 borderWidth={"1px"}
                 cursor={"pointer"}
                 maxW="sm"
                 h="100%"
-                borderRadius="0"
+                borderBottomRadius={"0"}
+                overflow="hidden"
               >
-                <CardBody position={"relative"} h={"100%"}>
-                  {product.status && (
-                    <Badge
-                      position={"absolute"}
-                      top={"1"}
-                      left={"1"}
-                      colorScheme={"yellow"}
-                    >
-                      {product.endTimeFormat}
-                    </Badge>
-                  )}
-                  {!product.status &&
-                    product.productBidList &&
-                    product.productBidList.length > 0 && (
-                      <Badge
-                        cursor={"pointer"}
-                        position={"absolute"}
-                        top={"1"}
-                        left={"1"}
-                        colorScheme={"purple"}
-                        onClick={() => {
-                          navigate(
-                            `/chat/product/${product.id}/buyer/${product.productBidList[0].successBidUserId}`,
-                          );
-                        }}
-                      >
-                        낙찰자 : {product.productBidList[0].successBidNickName}
-                      </Badge>
-                    )}
-                  {!product.status &&
-                    (!product.productBidList ||
-                      product.productBidList.length === 0) && (
-                      <Badge
-                        position={"absolute"}
-                        top={"1"}
-                        left={"1"}
-                        colorScheme={"purple"}
-                      >
-                        <Text>낙찰자가 없습니다.</Text>
-                      </Badge>
-                    )}
-
-                  <Box mt={2} w="30%%">
+                <CardBody position={"relative"} h={"100%"} p={0}>
+                  <Box position="relative">
                     {product.status ? (
                       <>
                         {product.productFileList && (
@@ -168,8 +127,6 @@ export function MyShop() {
                         transition="transform 0.2s"
                         _hover={{ transform: "scale(1.02)" }}
                         position={"relative"}
-                        w={"100%"}
-                        h={"200px"}
                       >
                         <Image
                           src={product.productFileList[0].filePath}
@@ -201,18 +158,47 @@ export function MyShop() {
                       </Box>
                     )}
                   </Box>
-                  <Text mt={2} as={"b"} noOfLines={1} fontSize="lg">
-                    {product.title}
-                  </Text>
-                  <Flex justifyContent={"space-between"}>
+                  <Box p={3}>
+                    <Text fontSize="lg" fontWeight="bold" noOfLines={1} mb={2}>
+                      {product.title}
+                    </Text>
                     <Text color="blue.600" fontSize="lg">
                       {product.startPrice
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                       원
                     </Text>
-                    <Text>{product.timeFormat}</Text>
-                  </Flex>
+                    <Flex justifyContent="space-between" alignItems="center">
+                      <Text>{product.timeFormat}</Text>
+                      {product.status && (
+                        <Badge colorScheme={"yellow"}>
+                          {product.endTimeFormat}
+                        </Badge>
+                      )}
+                      {!product.status &&
+                        product.productBidList &&
+                        product.productBidList.length > 0 && (
+                          <Badge
+                            colorScheme={"purple"}
+                            onClick={() => {
+                              navigate(
+                                `/chat/product/${product.id}/buyer/${product.productBidList[0].successBidUserId}`,
+                              );
+                            }}
+                          >
+                            낙찰자 :{" "}
+                            {product.productBidList[0].successBidNickName}
+                          </Badge>
+                        )}
+                      {!product.status &&
+                        (!product.productBidList ||
+                          product.productBidList.length === 0) && (
+                          <Badge colorScheme={"purple"}>
+                            <Text>낙찰자가 없습니다.</Text>
+                          </Badge>
+                        )}
+                    </Flex>
+                  </Box>
                   {product.status || (
                     <Box display="flex" justifyContent="center">
                       <Button
@@ -232,6 +218,8 @@ export function MyShop() {
           ))}
         </Grid>
       )}
+
+      {/*더보기 접기 버튼*/}
       {productList.length > 0 && (
         <Box display={"flex"} justifyContent={"center"}>
           <LoadMoreAndFoldButton

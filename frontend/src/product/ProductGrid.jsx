@@ -39,7 +39,6 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                   src={product.productFileList[0].filePath}
                   w="100%"
                   h="200px"
-                  objectFit="cover"
                   transition="transform 0.2s"
                   _hover={{ transform: "scale(1.05)" }}
                 />

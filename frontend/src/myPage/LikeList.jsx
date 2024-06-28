@@ -17,7 +17,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -160,16 +159,16 @@ export function LikeList() {
             <GridItem key={product.id}>
               <Card
                 boxShadow={"none"}
-                borderStyle={"solid"}
-                borderColor={"black.300"}
+                borderColor={"gray.200"}
                 borderWidth={"1px"}
                 cursor={"pointer"}
                 maxW="sm"
                 h="100%"
-                borderRadius="0"
+                borderBottomRadius={"0"}
+                overflow="hidden"
               >
-                <CardBody position="relative" h="100%">
-                  <Box mt={2} w="100%">
+                <CardBody position="relative" h="100%" p={0}>
+                  <Box position={"relative"}>
                     {product.status ? (
                       <>
                         {product.productFileList && (
@@ -182,22 +181,27 @@ export function LikeList() {
                             _hover={{ transform: "scale(1.02)" }}
                           />
                         )}
-                        <Badge
-                          position="absolute"
-                          top="1"
-                          left="1"
-                          colorScheme="yellow"
-                        >
-                          {product.endTimeFormat}
-                        </Badge>
+
+                        {account.isLoggedIn() && (
+                          <Box
+                            position="absolute"
+                            bottom={2}
+                            right={2}
+                            onClick={() => handleLikeClick(product.id)}
+                          >
+                            <FontAwesomeIcon
+                              icon={likes[product.id] ? fullHeart : emptyHeart}
+                              style={{ color: "red" }}
+                              size="lg"
+                            />
+                          </Box>
+                        )}
                       </>
                     ) : (
                       <Box
                         transition="transform 0.2s"
                         _hover={{ transform: "scale(1.02)" }}
                         position={"relative"}
-                        w={"100%"}
-                        h={"200px"}
                       >
                         <Image
                           src={product.productFileList[0].filePath}
@@ -229,45 +233,43 @@ export function LikeList() {
                       </Box>
                     )}
                   </Box>
-                  <Stack mt="6" spacing="3">
-                    <Flex justifyContent={"space-between"}>
-                      <Text as={"b"} noOfLines={1} fontSize="lg">
-                        {product.title}
+                  <Box p={3}>
+                    <Text
+                      mb={2}
+                      fontWeight={"bold"}
+                      noOfLines={1}
+                      fontSize="lg"
+                    >
+                      {product.title}
+                    </Text>
+                    <Text color="blue.600" fontSize="lg">
+                      {product.startPrice
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      원
+                    </Text>
+                    <Flex
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                    >
+                      <Text mt={2} fontSize={"sm"}>
+                        {product.timeFormat}
                       </Text>
-
-                      {account.isLoggedIn() && (
-                        <Box onClick={() => handleLikeClick(product.id)}>
-                          {(() => {
-                            const isLiked = likes[product.id];
-                            const icon = isLiked ? fullHeart : emptyHeart;
-                            return (
-                              <FontAwesomeIcon
-                                icon={icon}
-                                style={{ color: "red" }}
-                                cursor="pointer"
-                                size="xl"
-                              />
-                            );
-                          })()}
-                        </Box>
+                      {product.status && (
+                        <Badge colorScheme="yellow">
+                          {product.endTimeFormat}
+                        </Badge>
                       )}
                     </Flex>
-                    <Flex justifyContent={"space-between"}>
-                      <Text color="blue.600" fontSize="lg">
-                        {product.startPrice
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                        원
-                      </Text>
-                      <Text>{product.timeFormat}</Text>
-                    </Flex>
-                  </Stack>
+                  </Box>
                 </CardBody>
               </Card>
             </GridItem>
           ))}
         </Grid>
       )}
+
+      {/*더보기 접기 버튼*/}
       {likeProductList.length > 0 && (
         <Box display={"flex"} justifyContent={"center"}>
           <LoadMoreAndFoldButton
