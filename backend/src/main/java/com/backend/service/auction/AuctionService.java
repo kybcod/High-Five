@@ -41,10 +41,10 @@ public class AuctionService {
         }
     }
 
-    public Map<String, Object> getBidListByUserId(Integer userId, Pageable pageable, int sort) {
+    public Map<String, Object> getBidListByUserId(Integer userId, Pageable pageable, int bidSort) {
 
         // 해당 userId가 입찰에 참여한 bid(productList)
-        List<BidList> bidList = mapper.selectBidListByUserIdWithPagination(userId, pageable, sort);
+        List<BidList> bidList = mapper.selectBidListByUserIdWithPagination(userId, pageable, bidSort);
         productService.settingFilePath(bidList.stream().map(BidList::getProduct).toList());
 
         // 더보기 : 페이지

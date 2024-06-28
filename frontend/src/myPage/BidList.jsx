@@ -32,11 +32,11 @@ export function BidList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const currentPage = parseInt(searchParams.get("page") || "1");
-    const sort = parseInt(searchParams.get("sort") || "0");
+    const currentPage = parseInt(searchParams.get("bidPage") || "1");
+    const bidSort = parseInt(searchParams.get("bidSort") || "0");
 
     axios
-      .get(`/api/bids/${userId}/list?page=${currentPage}&sort=${sort}`)
+      .get(`/api/bids/${userId}/list?bidPage=${currentPage}&bidSort=${bidSort}`)
       .then((res) => {
         console.log(res.data);
         if (currentPage === 1) {
@@ -63,11 +63,11 @@ export function BidList() {
 
   // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 페이지1, 최신순으로 재렌더링
   useEffect(() => {
-    const currentPage = parseInt(searchParams.get("page") || "1");
-    const sort = parseInt(searchParams.get("sort") || "0");
-    if (currentPage > 1 || sort > 0) {
-      searchParams.set("page", "1");
-      searchParams.set("sort", "0");
+    const currentPage = parseInt(searchParams.get("bidPage") || "1");
+    const bidSort = parseInt(searchParams.get("bidSort") || "0");
+    if (currentPage > 1 || bidSort > 0) {
+      searchParams.set("bidPage", "1");
+      searchParams.set("bidSort", "0");
       setSearchParams(searchParams);
     }
   }, []);
@@ -89,15 +89,15 @@ export function BidList() {
   function handleMoreClick() {
     if (!hasNextPage) return;
 
-    const currentPage = parseInt(searchParams.get("page") || "1");
-    searchParams.set("page", currentPage + 1);
+    const currentPage = parseInt(searchParams.get("bidPage") || "1");
+    searchParams.set("bidPage", currentPage + 1);
     setSearchParams(searchParams);
   }
 
   function handleFoldClick() {
     const scrollDuration = 500;
     setTimeout(() => {
-      searchParams.set("page", 1);
+      searchParams.set("bidPage", 1);
       setSearchParams(searchParams);
     }, scrollDuration);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -105,7 +105,7 @@ export function BidList() {
 
   function handleSortChange(sortValue) {
     setSortOption(sortValue);
-    searchParams.set("sort", sortValue);
+    searchParams.set("bidSort", sortValue);
     setSearchParams(searchParams);
   }
 

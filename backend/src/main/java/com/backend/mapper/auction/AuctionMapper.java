@@ -41,10 +41,10 @@ public interface AuctionMapper {
             WHERE b.user_id = #{userId}
             GROUP BY p.id
             ORDER BY
-                CASE WHEN #{sort} = 0 THEN b.updated END DESC,
-                CASE WHEN #{sort} = 1 THEN COUNT(pl.id) END DESC,
-                CASE WHEN #{sort} = 2 THEN p.start_price END ASC,
-                CASE WHEN #{sort} = 3 THEN p.start_price END DESC,
+                CASE WHEN #{bidSort} = 0 THEN b.updated END DESC,
+                CASE WHEN #{bidSort} = 1 THEN COUNT(pl.id) END DESC,
+                CASE WHEN #{bidSort} = 2 THEN p.start_price END ASC,
+                CASE WHEN #{bidSort} = 3 THEN p.start_price END DESC,
                 p.id DESC
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
@@ -52,7 +52,7 @@ public interface AuctionMapper {
             @Result(property = "id", column = "id"),
             @Result(property = "product", column = "product_id", one = @One(select = "selectProductByProductId")),
     })
-    List<BidList> selectBidListByUserIdWithPagination(Integer userId, Pageable pageable, int sort);
+    List<BidList> selectBidListByUserIdWithPagination(Integer userId, Pageable pageable, int bidSort);
 
     @Select("""
             SELECT * FROM product

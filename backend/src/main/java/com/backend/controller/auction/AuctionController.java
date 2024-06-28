@@ -37,8 +37,8 @@ public class AuctionController {
 
     @Description("마이페이지 : 입찰 내역")
     @GetMapping("{userId}/list")
-    public Map<String, Object> getBids(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "0") int sort) {
-        return service.getBidListByUserId(userId, PageRequest.of(page - 1, 9), sort);
+    public Map<String, Object> getBids(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int bidPage, @RequestParam(defaultValue = "0") int bidSort) {
+        return service.getBidListByUserId(userId, PageRequest.of(bidPage - 1, 9), bidSort);
     }
 
 
