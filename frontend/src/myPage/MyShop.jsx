@@ -15,6 +15,7 @@ import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
+import { SortButton } from "../component/SortButton.jsx";
 
 export function MyShop() {
   const { userId } = useParams();
@@ -86,47 +87,7 @@ export function MyShop() {
 
   return (
     <Box>
-      <Flex justifyContent={"flex-end"} mb={4}>
-        <Button
-          fontSize={"small"}
-          fontWeight={"normal"}
-          color={sortOption === "0" ? "red" : "black"}
-          variant="unstyled"
-          onClick={() => handleSortChange("0")}
-        >
-          최신순
-        </Button>
-        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
-        <Button
-          variant="unstyled"
-          fontWeight={"normal"}
-          onClick={() => handleSortChange("1")}
-          fontSize={"small"}
-          color={sortOption === "1" ? "red" : "black"}
-        >
-          인기순
-        </Button>
-        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
-        <Button
-          variant="unstyled"
-          fontWeight={"normal"}
-          onClick={() => handleSortChange("2")}
-          fontSize={"small"}
-          color={sortOption === "2" ? "red" : "black"}
-        >
-          저가순
-        </Button>
-        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
-        <Button
-          variant="unstyled"
-          fontWeight={"normal"}
-          onClick={() => handleSortChange("3")}
-          fontSize={"small"}
-          color={sortOption === "3" ? "red" : "black"}
-        >
-          고가순
-        </Button>
-      </Flex>
+      <SortButton sortOption={sortOption} handleSortChange={handleSortChange} />
 
       {productList.length === 0 ? (
         <Text align="center" fontSize="xl" fontWeight="bold" mt={4}>

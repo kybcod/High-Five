@@ -12,6 +12,7 @@ import { useSearchParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { ProductGrid } from "./ProductGrid.jsx";
 import { CategorySwitchCase } from "../component/CategorySwitchCase.jsx";
+import { SortButton } from "../component/SortButton.jsx";
 
 export function ProductList() {
   const [productList, setProductList] = useState([]);
@@ -116,47 +117,10 @@ export function ProductList() {
           )}
         </Box>
 
-        <Flex>
-          <Button
-            fontSize={"small"}
-            fontWeight={"normal"}
-            color={sortOption === "0" ? "red" : "black"}
-            variant="unstyled"
-            onClick={() => handleSortChange("0")}
-          >
-            최신순
-          </Button>
-          <Box m={2} height="24px" borderLeft="1px solid #ccc" />
-          <Button
-            variant="unstyled"
-            fontWeight={"normal"}
-            onClick={() => handleSortChange("1")}
-            fontSize={"small"}
-            color={sortOption === "1" ? "red" : "black"}
-          >
-            인기순
-          </Button>
-          <Box m={2} height="24px" borderLeft="1px solid #ccc" />
-          <Button
-            variant="unstyled"
-            fontWeight={"normal"}
-            onClick={() => handleSortChange("2")}
-            fontSize={"small"}
-            color={sortOption === "2" ? "red" : "black"}
-          >
-            저가순
-          </Button>
-          <Box m={2} height="24px" borderLeft="1px solid #ccc" />
-          <Button
-            variant="unstyled"
-            fontWeight={"normal"}
-            onClick={() => handleSortChange("3")}
-            fontSize={"small"}
-            color={sortOption === "3" ? "red" : "black"}
-          >
-            고가순
-          </Button>
-        </Flex>
+        <SortButton
+          sortOption={sortOption}
+          handleSortChange={handleSortChange}
+        />
       </Flex>
       <ProductGrid
         productList={productList}
