@@ -114,10 +114,8 @@ public class UserService {
         User db = mapper.selectUserByEmail(user.getEmail());
         String fileSrc = "";
         String fileName = mapper.selectFileNameByUserId(db.getId());
-        System.out.println("fileName = " + fileName);
         if (fileName != null) {
             fileSrc = STR."\{srcPrefix}user/\{db.getId()}/\{fileName}";
-            System.out.println("fileSrc = " + fileSrc);
         }
 
         if (db != null) {
