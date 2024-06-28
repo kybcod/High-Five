@@ -22,19 +22,17 @@ const CustomModal = ({
   body,
   buttonContent,
 }) => {
-  const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
   const axiosRequest = {
-    // get: () => axios.get(url),
-    // post: () => axios.post(url, bodyData),
     put: async (url) => {
+      setIsLoading(true);
       try {
         const response = await axios.put(url);
-        setProcessing(false);
-        if (method !== "get") onClose();
+        onClose();
         toast({
           title: "신고하기 완료",
           status: "success",
@@ -44,7 +42,7 @@ const CustomModal = ({
         });
         console.log("Response:", response.data);
       } catch (error) {
-        if (method !== "get") onClose();
+        onClose();
         toast({
           title: "신고하기 실패",
           status: "error",
@@ -53,14 +51,16 @@ const CustomModal = ({
           isClosable: true,
         });
         console.error("Error:", error);
-        setProcessing(false);
+      } finally {
+        setIsLoading(false);
       }
     },
     delete: async (url) => {
+      setIsLoading(true);
       try {
         const response = await axios.delete(url);
         setProcessing(false);
-        if (method !== "get") onClose();
+        onClose();
         toast({
           title: "채팅방 나가기 완료",
           status: "success",
@@ -71,7 +71,7 @@ const CustomModal = ({
         console.log("Response:", response.data);
         navigate(-1);
       } catch (error) {
-        if (method !== "get") onClose();
+        onClose();
         toast({
           title: "채팅방 나가기 실패",
           status: "error",
@@ -81,9 +81,12 @@ const CustomModal = ({
         });
         console.error("Error:", error);
         setProcessing(false);
+      } finally {
+        setIsLoading(false);
       }
     },
   };
+
   const handelAction = () => {
     setProcessing(true);
     axiosRequest[method](url, body); // bodyData 추가 예정
@@ -95,14 +98,7 @@ const CustomModal = ({
       <ModalContent>
         <ModalHeader>{header}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          {/*{loading ? (*/}
-          {/*  <Spinner />*/}
-          {/*) : (*/}
-          {/*  // <div>{data ? JSON.stringify(data) : "No data available"}</div>*/}
-          {/*)}*/}
-          {body}
-        </ModalBody>
+        <ModalBody>{body}</ModalBody>
         <ModalFooter>
           <Button
             size="sm"
@@ -113,7 +109,6 @@ const CustomModal = ({
             mr={3}
             hidden={method === "get"}
             onClick={handelAction}
-            // isLoading={deleting}
           >
             {buttonContent}
           </Button>
