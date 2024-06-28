@@ -12,7 +12,6 @@ export function FAQ() {
   const [expanded, setExpanded] = useState([]);
 
   useEffect(() => {
-    console.log(`Fetching data for category: ${category}`);
     axios
       .get(`/api/question/faq?category=${category}`)
       .then((res) => {
@@ -33,7 +32,6 @@ export function FAQ() {
   };
 
   const handleCategoryChange = (newCategory) => {
-    console.log(`Changing category to: ${newCategory}`);
     setSearchParams({ category: newCategory });
     setExpanded([]);
   };
@@ -68,8 +66,8 @@ export function FAQ() {
               onClick={() => toggleExpand(item.id)}
               cursor="pointer"
               justifyContent="space-between"
-              p={6}
-              borderBottom="1px solid #e8e8e8"
+              p={5}
+              borderBottom="1px solid black"
             >
               <Box fontWeight="bold" flex="1" textAlign="left">
                 Q. {item.title}
@@ -88,9 +86,14 @@ export function FAQ() {
               transition="max-height 1s ease-in-out"
             >
               {expanded.includes(item.id) && (
-                <Box p={4} bg="gray.100">
-                  <Text whiteSpace={"pre-line"} m={"20px"}>
-                    A. {item.content}
+                <Box p={4} bg="#f5f5f5">
+                  <Text whiteSpace={"pre-line"} m={"20px"} lineHeight={"1.8"}>
+                    <Box as="span" fontWeight="bold">
+                      A.
+                    </Box>
+                    <Box fontSize={"15px"} m={3} as={"span"}>
+                      {item.content}
+                    </Box>
                   </Text>
                 </Box>
               )}
