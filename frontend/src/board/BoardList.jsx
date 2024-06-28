@@ -108,22 +108,27 @@ export function BoardList() {
                   <Td>
                     {board.title}
                     {board.numberOfImages > 0 && (
-                      <Badge>
-                        <Flex>
+                      <Badge ml={"10px"} variant={"outline"} w={"35px"}>
+                        <Flex justifyContent={"center"}>
                           <Box>
                             <FontAwesomeIcon icon={faImage} />
                           </Box>
-                          <Box>{board.numberOfImages}</Box>
+                          <Box ml={1}>{board.numberOfImages}</Box>
                         </Flex>
                       </Badge>
                     )}
                     {board.numberOfLikes > 0 && (
-                      <Badge>
-                        <Flex>
+                      <Badge
+                        ml={"10px"}
+                        colorScheme={"red"}
+                        variant={"outline"}
+                        w={"35px"}
+                      >
+                        <Flex justifyContent={"center"}>
                           <Box>
                             <FontAwesomeIcon icon={fullHeart} />
                           </Box>
-                          <Box>{board.numberOfLikes}</Box>
+                          <Box ml={1}>{board.numberOfLikes}</Box>
                         </Flex>
                       </Badge>
                     )}

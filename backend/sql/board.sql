@@ -65,3 +65,6 @@ SELECT *
 FROM user
 WHERE black_count > 0;
 
+ALTER TABLE board
+    MODIFY COLUMN id INT AUTO_INCREMENT;
+
