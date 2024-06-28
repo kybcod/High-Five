@@ -262,7 +262,7 @@ export function ProductDetails() {
           {/*판매 완료, 로그인이 안되어 있는 상태, 자신의 상품일 때 보이지 않음*/}
           {!account.isLoggedIn() || account.hasAccess(product.userId) || (
             <Box mb={5}>
-              <Flex w={"100%"}>
+              <Flex w={"100%"} justifyContent={"space-between"}>
                 <Box w={"100%"} mr={4}>
                   <Button
                     w={"100%"}
@@ -276,7 +276,7 @@ export function ProductDetails() {
                       />
                     }
                     colorScheme={like.like ? "red" : "gray"}
-                    variant="outline"
+                    color={like.like ? "white" : "black"}
                   >
                     <Text fontSize={"lg"}>{like.count} </Text>
                   </Button>
@@ -300,7 +300,7 @@ export function ProductDetails() {
                   )}
                 {(product.status && !account.isLoggedIn()) ||
                   account.hasAccess(product.userId) || (
-                    <Box w={"100%"} mr={4}>
+                    <Box w={"100%"}>
                       <Button
                         colorScheme="teal"
                         w="100%"
