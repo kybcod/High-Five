@@ -35,14 +35,6 @@ export function Header() {
     navigate(`/list?title=${title}`);
   }
 
-  // function handleCategoryClick(category) {
-  //   if (category === "") {
-  //     navigate(`/list`);
-  //   } else {
-  //     navigate(`/list?category=${category}`);
-  //   }
-  // }
-
   function handleMyAuctionOrLoginClick() {
     if (account.isLoggedIn()) {
       navigate(`/myPage/${account.id}`);

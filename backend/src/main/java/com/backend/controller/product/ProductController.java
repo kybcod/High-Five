@@ -46,9 +46,10 @@ public class ProductController {
     @Description("상품조회 - 페이징, 키워드, 카테고리 검색")
     public Map<String, Object> getListProduct(@RequestParam(defaultValue = "1") int page,
                                               @RequestParam(defaultValue = "") String title,
-                                              @RequestParam(defaultValue = "") String category
+                                              @RequestParam(defaultValue = "") String category,
+                                              @RequestParam(defaultValue = "0") int sort
     ) {
-        return service.getList(PageRequest.of(page - 1, 20), title, category);
+        return service.getList(PageRequest.of(page - 1, 20), title, category, sort);
     }
 
     @GetMapping("{id}")
@@ -96,14 +97,14 @@ public class ProductController {
     @Description("MyPage 판매 목록 : 상품조회 - 사용자별")
     public Map<String, Object> getUserProducts(@PathVariable Integer userId,
                                                @RequestParam(defaultValue = "1") int shopPage,
-                                               @RequestParam(defaultValue = "0") int sort) {
-        return service.getProductsByUserId(userId, PageRequest.of(shopPage - 1, 9), sort);
+                                               @RequestParam(defaultValue = "0") int shopSort) {
+        return service.getProductsByUserId(userId, PageRequest.of(shopPage - 1, 9), shopSort);
     }
 
     @GetMapping("user/{userId}/like")
     @Description("MyPage 찜 목록 : 상품조회 + 좋아요 - 사용자별")
-    public Map<String, Object> getUserProductsLike(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int likePage) {
-        return service.getProductsLikeByUserId(userId, PageRequest.of(likePage - 1, 9));
+    public Map<String, Object> getUserProductsLike(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int likePage, @RequestParam(defaultValue = "0") int likeSort) {
+        return service.getProductsLikeByUserId(userId, PageRequest.of(likePage - 1, 9), likeSort);
     }
 
 }
