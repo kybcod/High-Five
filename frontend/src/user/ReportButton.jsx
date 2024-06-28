@@ -30,7 +30,7 @@ function ReportButton({ userId }) {
   return (
     <Box>
       <Button
-        fontSize={"small"}
+        fontSize={"smaller"}
         width={"90px"}
         variant={"outline"}
         borderWidth={2}
