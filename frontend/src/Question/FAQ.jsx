@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Text, Flex, Button } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function FAQ() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,12 +39,17 @@ export function FAQ() {
 
   return (
     <Box>
-      <Flex mb={10} wrap="wrap" justify="center">
+      <Flex mb={10} wrap="wrap" justify="center" gap={10} p={10}>
         <Button
+          borderRadius={"unset"}
+          w={150}
+          h={50}
           onClick={() => handleCategoryChange("all")}
-          m={2}
-          colorScheme="teal"
-          variant={category === "all" ? "solid" : "outline"}
+          sx={{
+            bg: category === "all" ? "black" : "none",
+            color: category === "all" ? "white" : "black",
+            border: category === "all" ? "none" : "2px solid black",
+          }}
         >
           전체
         </Button>
@@ -51,9 +57,14 @@ export function FAQ() {
           <Button
             key={cat.id}
             onClick={() => handleCategoryChange(cat.id)}
-            m={2}
-            colorScheme="teal"
-            variant={category == cat.id ? "solid" : "outline"}
+            borderRadius={"unset"}
+            w={150}
+            h={50}
+            sx={{
+              bg: category == cat.id ? "black" : "none",
+              color: category == cat.id ? "white" : "black",
+              border: category == cat.id ? "none" : "2px solid black",
+            }}
           >
             {cat.name}
           </Button>
@@ -61,7 +72,7 @@ export function FAQ() {
       </Flex>
       <Flex direction="column" w="100%">
         {faq.map((item) => (
-          <Box key={item.id} borderBottom="1px solid #e8e8e8" overflow="hidden">
+          <Box key={item.id} overflow="hidden">
             <Flex
               onClick={() => toggleExpand(item.id)}
               cursor="pointer"
@@ -69,14 +80,19 @@ export function FAQ() {
               p={5}
               borderBottom="1px solid black"
             >
-              <Box fontWeight="bold" flex="1" textAlign="left">
+              <Box
+                fontWeight="600"
+                flex="1"
+                textAlign="left"
+                // fontSize={"1.1rem"}
+              >
                 Q. {item.title}
               </Box>
               <Box flex="0">
                 {expanded.includes(item.id) ? (
-                  <TriangleUpIcon />
+                  <FontAwesomeIcon icon={faChevronUp} />
                 ) : (
-                  <TriangleDownIcon />
+                  <FontAwesomeIcon icon={faChevronDown} />
                 )}
               </Box>
             </Flex>

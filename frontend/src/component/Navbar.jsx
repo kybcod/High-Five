@@ -1,6 +1,17 @@
-import { Box, Center, Flex, Spacer, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Spacer,
+  Text,
+} from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
 import { faHeadset, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +20,7 @@ import "./Navbar.css";
 export function Navbar() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Flex
@@ -20,7 +32,11 @@ export function Navbar() {
       fontSize={"lg"}
       cursor={"pointer"}
     >
-      <Box className="dropdown">
+      <Box
+        className="dropdown"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <Center
           onClick={() => navigate("/question/faq")}
           cursor="pointer"
@@ -31,10 +47,17 @@ export function Navbar() {
             고객센터
           </Text>
         </Center>
-        <Box className="dropdown-content" fontSize={"0.9rem"}>
-          <Link to="/question/faq">FAQ</Link>
-          <Link to="/question/list">1:1 문의게시판</Link>
-        </Box>
+        {isHovered && (
+          <Box
+            className="dropdown-content"
+            fontSize={"0.9rem"}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <Link to="/question/faq">FAQ</Link>
+            <Link to="/question/list">1:1 문의게시판</Link>
+          </Box>
+        )}
       </Box>
       <Center onClick={() => navigate("/board/list")} mx={2}>
         <Text fontSize={"small"} ml={2}>
