@@ -38,6 +38,7 @@ import { SignupPhoneNumber } from "./user/oauth/SignupPhoneNumber.jsx";
 import { theme } from "./Theme.jsx";
 import { FAQ } from "./Question/FAQ.jsx";
 import { Question } from "./Question/Question.jsx";
+import "./fonts.css";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");

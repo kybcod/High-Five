@@ -68,7 +68,7 @@ export function MyPage({ tab }) {
     navigate(`/myPage/${userId}/${indexTab[index]}`);
   };
 
-  if (product === null) {
+  if (product === null || user === null) {
     return <Spinner />;
   }
 
