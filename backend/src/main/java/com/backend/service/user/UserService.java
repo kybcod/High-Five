@@ -4,10 +4,11 @@ import com.backend.component.SmsUtil;
 import com.backend.domain.user.User;
 import com.backend.domain.user.UserFile;
 import com.backend.mapper.user.UserMapper;
+import com.backend.service.product.ProductService;
 import com.backend.util.PageInfo;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -43,6 +44,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtEncoder jwtEncoder;
     private final S3Client s3Client;
+    private final ProductService productService;
 
     @Value("${aws.s3.bucket.name}")
     String bucketName;
@@ -50,24 +52,28 @@ public class UserService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
+    Timer timer = new Timer();
+
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
-        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
+        // TODO. 주석풀기
+//        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
 
         Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
         if (dbCode != null) {
             mapper.deleteCodeByPhoneNumber(phoneNumber);
         }
 
-        if (response.getStatusCode().equals("2000")) {
-            mapper.insertCode(phoneNumber, verificationCode);
-        }
-
-        Timer timer = new Timer();
+//        if (response.getStatusCode().equals("2000")) {
+        mapper.insertCode(phoneNumber, verificationCode);
+//        }
 
         TimerTask timeOutCodeDelete = new TimerTask() {
             public void run() {
-                mapper.deleteCodeByVerificationCode(Integer.parseInt(verificationCode));
+                Integer leftCode = mapper.selectCodeByPhoneNumber(phoneNumber);
+                if (leftCode != null) {
+                    mapper.deleteCodeByVerificationCode(leftCode);
+                }
             }
         };
 
@@ -76,19 +82,28 @@ public class UserService {
         return verificationCode;
     }
 
+    @PreDestroy
+    public void destroy() {
+        timer.cancel();
+    }
+
     public boolean checkVerificationCode(String phoneNumber, int verificationCode) {
         Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
-        if (dbCode != null) {
-            mapper.deleteCodeByPhoneNumber(phoneNumber);
+
+        if (dbCode == null) {
+            return false;
         }
-        return verificationCode == dbCode;
+
+        if (verificationCode != dbCode) {
+            return false;
+        }
+
+        mapper.deleteCodeByPhoneNumber(phoneNumber);
+
+        return true;
     }
 
     public void addUser(User user) {
-        // kakao, google Oauth 로그인이면 랜덤 번호로 비밀번호 생성
-        if (user.getPassword().equals("oauth")) {
-            user.setPassword(((Math.random() * 8999) + 1000) + "Oauth!");
-        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         mapper.insertUser(user);
     }
@@ -152,6 +167,7 @@ public class UserService {
 
         User emailDB = mapper.selectUserByEmail(user.getEmail());
         User nickNameDB = mapper.selectUserByNickName(user.getNickName());
+        user.setPhoneNumber(user.getPhoneNumber().replaceAll("-", ""));
 
         if (emailDB != null) {
             return false;
@@ -186,7 +202,7 @@ public class UserService {
 
         // 회원 가입 시 비밀번호가 정규식 일치하는지 & 혹은 Oauth 로그인인지 확인
         String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
-        return user.getPassword().trim().matches(passwordPattern) || user.getPassword().equals("oauth");
+        return user.getPassword().trim().matches(passwordPattern);
     }
 
     // userId로 본인 확인
@@ -204,42 +220,25 @@ public class UserService {
         User user = mapper.selectUserById(id);
         String fileName = mapper.selectFileNameByUserId(id);
         UserFile userFile = UserFile.builder()
-                .fileName(fileName).src(STR."\{srcPrefix}user/\{user.getId()}/\{fileName}").build();
+                .fileName("null").src("null").build();
+        if (fileName != null) {
+            userFile = UserFile.builder()
+                    .fileName(fileName).src(STR."\{srcPrefix}user/\{user.getId()}/\{fileName}").build();
+        }
         user.setProfileImage(userFile);
         return user;
     }
 
     public void removeUserById(Integer id) {
-        // TODO. 지울것이 산더미,,
 
         // 권한 지우기
         mapper.deleteAuthorityById(id);
         // 프로필 사진 지우기
         mapper.deleteProfileImageById(id);
 
-        // chatMapper
-        // 채팅룸 지우기
-        // 메시지 지우기
-        // TODO.입찰내역 지우기
-
-        // boardMapper
-        // 자유 게시물 파일 지우기
-        // 자유 게시물 좋아요 지우기
-        // 자유 게시물 댓글 지우기
-        // 자유 게시물 지우기
-
-        // questionMapper
-        // QnA 게시물 파일 지우기
-        // QnA 게시물 좋아요 지우기
-        // QnA 게시물 댓글 지우기
-        // QnA 게시물 지우기
-
-        // productMapper
-        // 상품 좋아요 지우기
-        // 상품 파일 지우기
-        // 상품 리뷰 지우기
-        // 상품 게시물 지우기
-        // 결제 내역 지우기
+        // 상품 지우기
+        List<Integer> productIdList = mapper.selectProductIdByUserId(id);
+        productIdList.forEach(productService::remove);
 
         // 회원 지우기
         mapper.deleteUserById(id);
@@ -249,7 +248,7 @@ public class UserService {
         String fileSrc = "";
         if (profileImage != null) {
             // jwt 토큰에 넣을 ec2 file path
-            fileSrc = STR."\{srcPrefix}user/\{user.getId()}/\{profileImage}";
+            fileSrc = STR."\{srcPrefix}user/\{user.getId()}/\{profileImage.getOriginalFilename()}";
 
             String dbFileName = mapper.selectFileNameByUserId(user.getId());
 

@@ -174,4 +174,11 @@ public interface UserMapper {
                 WHERE code = #{code}
             """)
     int deleteCodeByVerificationCode(int code);
+
+    @Select("""
+                SELECT p.id
+                FROM product p JOIN user u ON u.id = p.user_id
+                WHERE u.id = #{userId}
+            """)
+    List<Integer> selectProductIdByUserId(Integer userId);
 }

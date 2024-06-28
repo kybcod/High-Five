@@ -28,7 +28,16 @@ export function SignupPhoneNumber() {
   useEffect(() => {
     const emailParam = searchParams.get("email");
     const nickNameParam = searchParams.get("nickName");
-    setUser({ email: emailParam, nickName: nickNameParam, phoneNumber: "" });
+    const phoneNumber = searchParams.get("phoneNumber");
+    setUser({
+      email: emailParam,
+      nickName: nickNameParam,
+      phoneNumber: phoneNumber,
+    });
+    console.log(phoneNumber);
+    codeInfo.setPhoneNumber(phoneNumber);
+    codeInfo.setIsCheckedCode(false);
+    codeInfo.setVerificationCode("");
   }, []);
 
   if (user === null) {
@@ -40,7 +49,7 @@ export function SignupPhoneNumber() {
     axios
       .post("/api/users", {
         ...user,
-        phoneNumber: "010" + codeInfo.phoneNumber,
+        phoneNumber: codeInfo.phoneNumber,
         password: "oauth",
       })
       .then(() => {

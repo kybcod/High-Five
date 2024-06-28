@@ -15,11 +15,11 @@ export function SignupCodeProvider({ children }) {
   const timerId = useRef(null);
   const { successToast, errorToast } = CustomToast();
 
-  useEffect(() => {
-    setPhoneNumber("");
-    setIsCheckedCode(false);
-    setVerificationCode("");
-  }, []);
+  // useEffect(() => {
+  //   setPhoneNumber("");
+  //   setIsCheckedCode(false);
+  //   setVerificationCode("");
+  // }, []);
 
   useEffect(() => {
     if (time.current === -1) {
@@ -27,7 +27,7 @@ export function SignupCodeProvider({ children }) {
     }
   }, [sec]);
 
-  let isWrongPhoneNumberLength = phoneNumber.length !== 8;
+  let isWrongPhoneNumberLength = phoneNumber.length !== 13;
   let isDisabledCheckButton = false;
 
   if (verificationCode.trim().length !== 4) {
@@ -40,7 +40,17 @@ export function SignupCodeProvider({ children }) {
 
   function handleInputPhoneNumber(input) {
     const prefix = "010-";
-    input = prefix + input.substring(prefix.length);
+
+    let numberPart = input.startsWith(prefix)
+      ? input.substring(prefix.length)
+      : input;
+
+    numberPart = numberPart
+      .replace(/[^0-9]/g, "")
+      .replace(/^(\d{4})(\d{4})$/, `$1-$2`);
+
+    input = prefix + numberPart;
+
     setPhoneNumber(input);
     setIsCheckedCode(false);
   }
@@ -59,11 +69,9 @@ export function SignupCodeProvider({ children }) {
     }, 1000);
 
     setIsSendingCode(true);
-    axios.get(`/api/users/codes?phoneNumber=010${phoneNumber}`).catch((err) => {
+    axios.get(`/api/users/codes?phoneNumber=${phoneNumber}`).catch((err) => {
       if (err.response.status === 400) {
-        errorToast(
-          "전화번호 자릿수가 올바르지 않습니다. 010을 제외한 8자를 입력해주세요",
-        );
+        errorToast("전화번호 자릿수가 올바르지 않습니다.");
       } else {
         errorToast("인증번호 전송 중 오류가 발생했습니다. 다시 시도해주세요");
       }
@@ -73,14 +81,17 @@ export function SignupCodeProvider({ children }) {
   function handleCheckCode() {
     axios
       .get(
-        `/api/users/confirmation?phoneNumber=010${phoneNumber}&verificationCode=${verificationCode}`,
+        `/api/users/confirmation?phoneNumber=${phoneNumber}&verificationCode=${verificationCode}`,
       )
       .then(() => {
         successToast("휴대폰 번호가 인증되었습니다");
         setIsCheckedCode(true);
+        clearInterval(timerId.current);
       })
       .catch((err) => {
         if (err.response.status === 400) {
+          errorToast("유효한 휴대폰 번호가 아닙니다");
+        } else if (err.response.status === 404) {
           errorToast("인증번호가 일치하지 않습니다");
         } else {
           errorToast(
@@ -88,7 +99,9 @@ export function SignupCodeProvider({ children }) {
           );
         }
       })
-      .finally(() => setIsSendingCode(false));
+      .finally(() => {
+        setIsSendingCode(false);
+      });
   }
 
   return (

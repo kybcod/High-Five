@@ -1,9 +1,10 @@
 import {
   Box,
   Button,
-  Flex,
   FormControl,
   FormLabel,
+  Heading,
+  HStack,
   Image,
   Input,
   Modal,
@@ -13,13 +14,18 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+
+const VerticalLine = ({ height, color, thickness }) => {
+  return <Box height={height} width={thickness} bg={color} />;
+};
 
 export function UserInfo() {
   const account = useContext(LoginContext);
@@ -68,35 +74,55 @@ export function UserInfo() {
   return (
     <Box>
       <Box>
-        <Image
-          fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
-          borderRadius="full"
-          boxSize="150px"
-          src={user.profileImage.src}
-        />
-        <FormControl>
-          <FormLabel>이메일 주소</FormLabel>
-          <Input
-            variant="flushed"
-            placeholer={"변경 불가"}
-            readOnly
-            value={user.email || ""}
+        <HStack>
+          <Image
+            fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
+            borderRadius="full"
+            boxSize="150px"
+            src={user.profileImage.src}
+            mr={3}
+            ml={3}
           />
-        </FormControl>
-        <FormControl>
-          <FormLabel>닉네임</FormLabel>
+          <VerticalLine
+            height="150px"
+            color="gray.200"
+            thickness="2px"
+            margin-left={"20px"}
+          />
+          <Box ml={5}>
+            <Heading mb={3}>{user.email || ""}</Heading>
+            <Text
+              color="teal.500"
+              onClick={() => navigate("/myPage/:userId/userEdit")}
+              as="u"
+            >
+              회원정보 수정
+            </Text>
+          </Box>
+        </HStack>
+        <FormControl mt={10}>
+          <FormLabel fontWeight="bold">닉네임</FormLabel>
           <Input variant="flushed" readOnly value={user.nickName || ""} />
         </FormControl>
-        <FormControl>
-          <FormLabel>가입일시</FormLabel>
-          <Input variant="flushed" readOnly value={user.signupDateAndTime} />
+        <FormControl mt={5}>
+          <FormLabel fontWeight="bold">가입일시</FormLabel>
+          <Input
+            variant="flushed"
+            readOnly
+            value={user.signupDateAndTime.substring(0, 13)}
+          />
         </FormControl>
-        <Flex gap={3}>
-          <Link onClick={() => navigate("/myPage/:userId/userEdit")}>
-            회원정보수정
-          </Link>
-          <Link onClick={onOpen}>회원 탈퇴</Link>
-        </Flex>
+        <Button
+          mt={6}
+          bgColor={"#F05650"}
+          onClick={onOpen}
+          color={"white"}
+          height={"33px"}
+          width={"120px"}
+          borderRadius={"5px"}
+        >
+          회원 탈퇴
+        </Button>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
