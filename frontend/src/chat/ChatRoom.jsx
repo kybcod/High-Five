@@ -76,11 +76,6 @@ export function ChatRoom() {
     onOpen: onOpenBlackUserPut,
     onClose: onCloseBlackUserPut,
   } = useDisclosure();
-  // const {
-  //   isOpen: isOpenReviewGet,
-  //   onOpen: onOpenReviewGet,
-  //   onClose: onCloseReviewGet,
-  // } = useDisclosure();
 
   // -- axios.get
   useEffect(() => {
@@ -555,14 +550,6 @@ export function ChatRoom() {
         buttonContent={"신고하기"}
         url={`/api/users/black/${data.user.id === tokenUserId ? data.seller.id : data.user.id}`}
       />
-      {/*<CustomModal*/}
-      {/*  isOpen={isOpenReviewGet}*/}
-      {/*  onClose={onCloseReviewGet}*/}
-      {/*  method={"get"}*/}
-      {/*  header={"판매자님에게 보내는 후기"}*/}
-      {/*  body={""}*/}
-      {/*  url={`/api/reviews/${data.product.id}`}*/}
-      {/*/>*/}
     </Box>
   );
 }
