@@ -64,7 +64,7 @@ export function Header() {
       <Flex align="center" justify="space-between" maxW="100%">
         {/* 로고 */}
         <Box>
-          <Box w={"200px"} onClick={() => navigate("/")}>
+          <Box cursor={"pointer"} w={"200px"} onClick={() => navigate("/")}>
             <Image src={"/img/fung.PNG"} />
           </Box>
         </Box>
@@ -82,11 +82,12 @@ export function Header() {
               onChange={(e) => setKeyword(e.target.value)}
             />
             <InputRightAddon
+              cursor={"pointer"}
               bg="transparent"
               border="none"
               onClick={() => handleSearchClick(keyword)}
             >
-              <FontAwesomeIcon icon={faSearch} />
+              <FontAwesomeIcon icon={faSearch} style={{ color: "teal" }} />
             </InputRightAddon>
           </InputGroup>
         </Flex>
