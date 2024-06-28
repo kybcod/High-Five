@@ -102,7 +102,7 @@ export function Category() {
           </MenuItem>
         </MenuList>
       </Menu>
-      <Divider mt={2} borderWidth={1} />
+      <Divider mt={2} borderWidth={1} borderColor={"green"} />
     </Box>
   );
 }
