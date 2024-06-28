@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "./CustomToast.jsx";
 
-export const SignupCodeContext = createContext(undefined);
+export const SignupCodeContext = createContext({});
 
 export function SignupCodeProvider({ children }) {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -15,13 +15,10 @@ export function SignupCodeProvider({ children }) {
   const timerId = useRef(null);
   const { successToast, errorToast } = CustomToast();
 
-  // useEffect(() => {
-  //   setPhoneNumber("");
-  //   setIsCheckedCode(false);
-  //   setVerificationCode("");
-  // }, []);
-
   useEffect(() => {
+    setPhoneNumber("");
+    setIsCheckedCode(false);
+    setVerificationCode("");
     if (time.current === -1) {
       clearInterval(timerId.current);
     }

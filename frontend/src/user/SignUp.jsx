@@ -52,28 +52,19 @@ export function SignUp() {
       const emailParam = searchParams.get("email");
       const nickNameParam = searchParams.get("nickName");
       const phoneNumber = searchParams.get("phoneNumber");
-      setEmail(emailParam);
-      setNickName(nickNameParam);
-      codeInfo.setPhoneNumber(phoneNumber);
-      setIsValidEmail(true);
-      setIsCheckedEmail(true);
+      if (email) {
+        setEmail(emailParam);
+        setIsValidEmail(true);
+        setIsCheckedEmail(true);
+      }
+      if (nickName) {
+        setNickName(nickNameParam);
+      }
+      if (phoneNumber) {
+        codeInfo.setPhoneNumber(phoneNumber);
+      }
     }
-
-    console.log("isAllChecked" + isAllChecked);
-    console.log("isCheckedEmail" + isCheckedEmail);
-    console.log("isValidEmail" + isValidEmail);
-    console.log("isValidPassword" + isValidPassword);
-    console.log("isCheckedNickName" + isCheckedNickName);
-    console.log("isOauthLogin" + isOauthLogin);
-    console.log("isDisabled" + isDisabled);
-    console.log("email 은 빈 스트링" + email.trim().length > 0);
-  }, [
-    isAllChecked,
-    isCheckedEmail,
-    isValidEmail,
-    isCheckedNickName,
-    isOauthLogin,
-  ]);
+  }, []);
 
   function handleSignUp() {
     setIsLoading(true);
