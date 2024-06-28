@@ -16,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { faKey, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { buttonStyle } from "../component/css/style.js";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -79,7 +80,7 @@ export function Login() {
         </Box>
         <Box mt={3}>
           <Center>
-            <Flex gap={10} fontSize={"md"}>
+            <Flex gap={10} fontSize={"sm"}>
               <Link to={"/signup"}>이메일 가입</Link>
               <Link to={"/user/email"}>이메일 찾기</Link>
               <Link to={"/user/password"}>비밀번호 찾기</Link>
@@ -87,14 +88,11 @@ export function Login() {
           </Center>
         </Box>
         <Box mt={5}>
-          <Button
-            height="38px"
-            width="400px"
-            onClick={handleLogin}
-            colorScheme={"green"}
-          >
+          <Button {...buttonStyle} onClick={handleLogin}>
             Login
           </Button>
+        </Box>
+        <Box>
           <a href="http://localhost:8080/oauth2/authorization/kakao">
             카카오 로그인
           </a>
