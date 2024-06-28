@@ -104,10 +104,6 @@ public class UserService {
     }
 
     public void addUser(User user) {
-        // kakao, google Oauth 로그인이면 랜덤 번호로 비밀번호 생성
-        if (user.getPassword().equals("oauth")) {
-            user.setPassword(((Math.random() * 8999) + 1000) + "Oauth!");
-        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         mapper.insertUser(user);
     }
@@ -208,7 +204,7 @@ public class UserService {
 
         // 회원 가입 시 비밀번호가 정규식 일치하는지 & 혹은 Oauth 로그인인지 확인
         String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
-        return user.getPassword().trim().matches(passwordPattern) || user.getPassword().equals("oauth");
+        return user.getPassword().trim().matches(passwordPattern);
     }
 
     // userId로 본인 확인
