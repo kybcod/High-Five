@@ -38,6 +38,7 @@ export function BoardList() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [totalBoardNumber, setTotalBoardNumber] = useState(0);
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
@@ -50,8 +51,10 @@ export function BoardList() {
     }
 
     axios.get(`/api/board/list?${searchParams}`).then((res) => {
+      console.log(res.data);
       setBoardList(res.data.boardList);
       setPageInfo(res.data.pageInfo);
+      setTotalBoardNumber(res.data.totalBoardNumber);
       setSearchKeyword("");
     });
   }, [searchParams]);
@@ -97,14 +100,16 @@ export function BoardList() {
               </Tr>
             )}
             {boardList.length > 0 &&
-              boardList.map((board) => (
+              boardList.map((board, index) => (
                 <Tr
                   onClick={() => navigate(`/board/${board.id}`)}
                   key={board.id}
                   cursor={"pointer"}
                   _hover={{ background: "gray.200" }}
                 >
-                  <Td>{board.id}</Td>
+                  <Td>
+                    {totalBoardNumber - pageInfo.currentPageNumber * 10 - index}
+                  </Td>
                   <Td>
                     {board.title}
                     {board.numberOfImages > 0 && (
@@ -174,7 +179,7 @@ export function BoardList() {
           <Button
             onClick={handleSearchButtonClick}
             background={"none"}
-            _hover={"none"}
+            _hover={{ background: "none" }}
             sx={{
               _focus: {
                 boxShadow: "none",

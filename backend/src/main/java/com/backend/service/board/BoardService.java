@@ -98,7 +98,7 @@ public class BoardService {
         pageInfo.setLeftPageNumber(leftPageNumber);
         pageInfo.setRightPageNumber(rightPageNumber);
 
-        return Map.of("boardList", boardList, "pageInfo", pageInfo);
+        return Map.of("boardList", boardList, "pageInfo", pageInfo, "totalBoardNumber", totalBoardNumber);
 
     }
 
