@@ -3,8 +3,9 @@ import React from "react";
 export const ArrowUpCircleIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="50"
-    height="50"
+    width="40"
+    height="40"
+    color="gray"
     fill="currentColor"
     className="bi bi-arrow-up-circle"
     viewBox="0 0 16 16"
@@ -24,9 +25,10 @@ export const ArrowDownCircleIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="
-      50"
-    height="50"
-    fill="black"
+      40"
+    height="40"
+    color="gray"
+    fill="currentColor"
     className="bi bi-arrow-down-circle"
     viewBox="0 0 16 16"
   >

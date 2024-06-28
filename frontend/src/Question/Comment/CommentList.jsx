@@ -53,7 +53,7 @@ export function CommentList({ questionId, isProcessing, setIsProcessing }) {
 
   const buttonStyle = (isTop) => ({
     position: "fixed",
-    bottom: isTop ? "220px" : "140px",
+    bottom: isTop ? "220px" : "150px",
     // right={["20px", "50px", "100px"]} // chakra ui 반응형으로 설정
     right: "30px",
     zIndex: 1000,
