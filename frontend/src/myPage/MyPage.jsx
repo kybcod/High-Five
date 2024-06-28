@@ -82,13 +82,7 @@ export function MyPage({ tab }) {
       >
         {/*  user 이미지*/}
         <TabList w={"30%"} m={3} mr={20}>
-          <Box
-            mb={4}
-            w="100%"
-            borderWidth="3px"
-            borderRadius="md"
-            boxShadow="md"
-          >
+          <Box mb={4} w="100%" border={"1px solid black"}>
             <Flex
               direction="column"
               justifyContent="center"
@@ -133,7 +127,6 @@ export function MyPage({ tab }) {
           </Box>
           <Tab
             border={"1px solid #eee"}
-            borderRadius="3px"
             _selected={{ borderColor: "green.500", fontWeight: "bold" }}
           >
             판매 목록
@@ -142,21 +135,18 @@ export function MyPage({ tab }) {
             <>
               <Tab
                 border={"1px solid #eee"}
-                borderRadius="3px"
                 _selected={{ borderColor: "green.500", fontWeight: "bold" }}
               >
                 찜 목록
               </Tab>
               <Tab
                 border={"1px solid #eee"}
-                borderRadius="3px"
                 _selected={{ borderColor: "green.500", fontWeight: "bold" }}
               >
                 입찰 내역
               </Tab>
               <Tab
                 border={"1px solid #eee"}
-                borderRadius="3px"
                 _selected={{ borderColor: "green.500", fontWeight: "bold" }}
               >
                 내 정보

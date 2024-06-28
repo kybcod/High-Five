@@ -98,7 +98,7 @@ export function ProductList() {
           {searchParams.get("category") && (
             <Text fontSize={"medium"} fontWeight={"bold"}>
               {" "}
-              총 {categoryCount} 개
+              총 {categoryCount} 건
             </Text>
           )}
           {searchParams.get("title") && productList.length !== 0 && (
@@ -110,7 +110,7 @@ export function ProductList() {
               <Text as="span" color="green" fontWeight={"bold"}>
                 {keywordCount}
               </Text>{" "}
-              개의 검색 결과입니다.
+              건의 검색 결과입니다.
             </Text>
           )}
         </Box>
@@ -192,6 +192,8 @@ export function ProductList() {
                 mr={"10px"}
                 onClick={() => handlePageButtonClick(pageNumber)}
                 key={pageNumber}
+                variant={"outline"}
+                borderWidth={3}
                 colorScheme={
                   pageNumber - 1 == pageInfo.currentPageNumber ? "teal" : "gray"
                 }

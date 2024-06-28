@@ -5,7 +5,6 @@ export function CategorySwitchCase({ categoryName }) {
     case "":
       translatedName = "전체";
       break;
-
     case "clothes":
       translatedName = "의류";
       break;
