@@ -23,6 +23,7 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
+  faImage,
   faImages,
   faLock,
   faMagnifyingGlass,
@@ -94,7 +95,7 @@ export function QuestionList() {
           <Center m={20}>조회 결과가 없습니다.</Center>
         )}
         {questionList.length > 0 && (
-          <Box mt={10} w="90%" mx="auto">
+          <Box mt={10} w="92%" mx="auto">
             <Table variant="simple">
               <Thead>
                 <Tr>
@@ -115,7 +116,7 @@ export function QuestionList() {
                     key={question.id}
                   >
                     <Td width="8%">{question.id}</Td>
-                    <Td width="37%">
+                    <Td width="42%">
                       <Flex gap={2}>
                         {question.secretWrite && (
                           <Box
@@ -133,13 +134,14 @@ export function QuestionList() {
                           <Badge colorScheme="green">New</Badge>
                         )}
                         {question.numberOfFiles > 0 && (
-                          <Box ml={2}>
-                            <FontAwesomeIcon
-                              icon={faImages}
-                              style={{ marginRight: "2px" }}
-                            />
-                            {question.numberOfFiles}
-                          </Box>
+                          <Badge ml={1} variant={"outline"} w={"35px"}>
+                            <Flex justifyContent={"center"}>
+                              <Box>
+                                <FontAwesomeIcon icon={faImage} />
+                              </Box>
+                              <Box ml={1}>{question.numberOfFiles}</Box>
+                            </Flex>
+                          </Badge>
                         )}
                         {question.numberOfComments > 0 && (
                           <Box
@@ -156,7 +158,7 @@ export function QuestionList() {
                         )}
                       </Flex>
                     </Td>
-                    <Td width="15%" textAlign="center">
+                    <Td width="12%" textAlign="center">
                       {question.numberOfComments > 0 ? (
                         <Box ml={2}>
                           <Badge variant="outline" colorScheme="green">
@@ -169,7 +171,7 @@ export function QuestionList() {
                         </Box>
                       )}
                     </Td>
-                    <Td width="15%" textAlign="center">
+                    <Td width="12%" textAlign="center">
                       {question.nickName}
                     </Td>
                     <Td width="10%" textAlign="center" fontSize={"sm"}>
