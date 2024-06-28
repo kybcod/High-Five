@@ -1,8 +1,10 @@
 package com.backend.service.board;
 
 import com.backend.domain.board.BoardComment;
+import com.backend.domain.user.UserFile;
 import com.backend.mapper.board.BoardCommentMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,12 @@ import java.util.List;
 public class BoardCommentService {
 
     final BoardCommentMapper mapper;
+
+    @Value("${aws.s3.bucket.name}")
+    String bucketName;
+
+    @Value("${image.src.prefix}")
+    String srcPrefix;
 
     public boolean validate(BoardComment boardComment) {
         if (boardComment == null) {
@@ -53,6 +61,18 @@ public class BoardCommentService {
 
     public List<BoardComment> commentList(Integer boardId) {
         List<BoardComment> boardCommentList = mapper.selectAllComment(boardId);
+
+        for (BoardComment boardComment : boardCommentList) {
+            String fileName = mapper.selectFileNameByUserId(boardComment.getUserId());
+            String src = STR."\{srcPrefix}user/\{boardComment.getUserId()}/\{fileName}";
+
+            UserFile userFile = UserFile.builder()
+                    .fileName(fileName)
+                    .src(src)
+                    .build();
+
+            boardComment.setProfileImage(userFile);
+        }
 
         return boardCommentList;
     }
