@@ -12,6 +12,7 @@ export function FAQ() {
   const [expanded, setExpanded] = useState([]);
 
   useEffect(() => {
+    console.log(`Fetching data for category: ${category}`);
     axios
       .get(`/api/question/faq?category=${category}`)
       .then((res) => {
@@ -32,6 +33,7 @@ export function FAQ() {
   };
 
   const handleCategoryChange = (newCategory) => {
+    console.log(`Changing category to: ${newCategory}`);
     setSearchParams({ category: newCategory });
     setExpanded([]);
   };
@@ -53,7 +55,7 @@ export function FAQ() {
             onClick={() => handleCategoryChange(cat.id)}
             m={2}
             colorScheme="teal"
-            variant={category === "cat.id" ? "solid" : "outline"}
+            variant={category == cat.id ? "solid" : "outline"}
           >
             {cat.name}
           </Button>
