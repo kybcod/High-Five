@@ -4,7 +4,6 @@ import { AbsoluteCenter, Box, Divider, Spinner } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { ProductGrid } from "./ProductGrid.jsx";
-import RecommendProductSlider from "../component/slider/RecommendProductSlider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
@@ -85,12 +84,12 @@ export function MainProduct() {
 
       {/*추천 상품*/}
 
-      <RecommendProductSlider
-        recommendProduct={recommendProduct}
-        likes={likes}
-        handleLikeClick={handleLikeClick}
-        account={account}
-      />
+      {/*<RecommendProductSlider*/}
+      {/*  recommendProduct={recommendProduct}*/}
+      {/*  likes={likes}*/}
+      {/*  handleLikeClick={handleLikeClick}*/}
+      {/*  account={account}*/}
+      {/*/>*/}
 
       {/*전체상품 */}
       <Box position="relative" marginY="20">

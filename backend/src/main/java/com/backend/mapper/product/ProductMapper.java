@@ -90,7 +90,7 @@ public interface ProductMapper {
                     p.status,
                     COUNT(pl.id)
             FROM product p LEFT JOIN product_like pl ON p.id = pl.product_id
-            WHERE p.title LIKE #{pattern}
+            WHERE p.title LIKE #{pattern} AND p.status = TRUE
             <if test="category != null and category != ''">
                 AND p.category = #{category}
             </if>
