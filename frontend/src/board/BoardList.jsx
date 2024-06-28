@@ -171,8 +171,20 @@ export function BoardList() {
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
-          <Button onClick={handleSearchButtonClick}>
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          <Button
+            onClick={handleSearchButtonClick}
+            background={"none"}
+            _hover={"none"}
+            sx={{
+              _focus: {
+                boxShadow: "none",
+              },
+              _active: {
+                bg: "transparent",
+              },
+            }}
+          >
+            <FontAwesomeIcon icon={faMagnifyingGlass} color={"teal"} />
           </Button>
         </Flex>
       </Center>
@@ -181,6 +193,9 @@ export function BoardList() {
           {pageInfo.prevPageNumber && (
             <Button
               onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+              variant={"outline"}
+              colorScheme={"teal"}
+              borderWidth={2}
             >
               <FontAwesomeIcon icon={faAnglesLeft} />
             </Button>
@@ -188,6 +203,9 @@ export function BoardList() {
           {pageInfo.leftPageNumber && (
             <Button
               onClick={() => handlePageButtonClick(pageInfo.leftPageNumber)}
+              variant={"outline"}
+              colorScheme={"teal"}
+              borderWidth={2}
             >
               <FontAwesomeIcon icon={faAngleLeft} />
             </Button>
@@ -197,12 +215,17 @@ export function BoardList() {
               key={pageNumber}
               onClick={() => handlePageButtonClick(pageNumber)}
             >
-              <Button>{pageNumber}</Button>
+              <Button variant={"outline"} colorScheme={"teal"} borderWidth={2}>
+                {pageNumber}
+              </Button>
             </ButtonGroup>
           ))}
           {pageInfo.rightPageNumber && (
             <Button
               onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+              variant={"outline"}
+              colorScheme={"teal"}
+              borderWidth={2}
             >
               <FontAwesomeIcon icon={faAngleRight} />
             </Button>
@@ -210,6 +233,9 @@ export function BoardList() {
           {pageInfo.nextPageNumber && (
             <Button
               onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+              variant={"outline"}
+              colorScheme={"teal"}
+              borderWidth={2}
             >
               <FontAwesomeIcon icon={faAnglesRight} />
             </Button>

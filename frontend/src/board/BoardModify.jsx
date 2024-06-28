@@ -131,7 +131,18 @@ export function BoardModify() {
             newFiles.splice(i, 1);
             setAddFileList(newFiles);
           }}
-          ml={3}
+          ml={1}
+          background={"none"}
+          _hover={"none"}
+          color={"red"}
+          sx={{
+            _focus: {
+              boxShadow: "none",
+            },
+            _active: {
+              bg: "transparent",
+            },
+          }}
         />
       </HStack>,
     );
@@ -168,7 +179,11 @@ export function BoardModify() {
             <FormHelperText mt={"10px"} mr={3}>
               총 용량은 10MB를 초과할 수 없습니다
             </FormHelperText>
-            <Button mb={"10px"} onClick={() => fileInputRef.current.click()}>
+            <Button
+              mb={"10px"}
+              colorScheme={"teal"}
+              onClick={() => fileInputRef.current.click()}
+            >
               파일첨부
             </Button>
             <Input
@@ -237,16 +252,25 @@ export function BoardModify() {
           sx={{ outline: "none" }}
         />
       </Box>
-      <Box>
-        <Button mt={"20px"} onClick={handleClickSaveButton}>
-          게시글 수정
-        </Button>
-      </Box>
-      <Box>
-        <Button mt={"10px"} onClick={onOpen}>
+      <Flex justifyContent={"flex-end"} mt={"15px"}>
+        <Button
+          onClick={onOpen}
+          colorScheme={"red"}
+          variant={"outline"}
+          borderWidth={2}
+        >
           게시글 삭제
         </Button>
-      </Box>
+        <Button
+          onClick={handleClickSaveButton}
+          colorScheme={"teal"}
+          variant={"outline"}
+          borderWidth={2}
+          ml={"10px"}
+        >
+          게시글 수정
+        </Button>
+      </Flex>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader>게시글 삭제</ModalHeader>
@@ -255,9 +279,16 @@ export function BoardModify() {
           </ModalBody>
           <ModalFooter>
             <Flex>
-              <Button onClick={onClose}>취소</Button>
-              <Button onClick={handleClickDeleteButton} colorScheme={"red"}>
+              <Button
+                onClick={handleClickDeleteButton}
+                colorScheme={"red"}
+                variant={"outline"}
+                borderWidth={2}
+              >
                 삭제
+              </Button>
+              <Button onClick={onClose} ml={"10px"}>
+                취소
               </Button>
             </Flex>
           </ModalFooter>
