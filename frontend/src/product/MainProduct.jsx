@@ -4,10 +4,12 @@ import { AbsoluteCenter, Box, Divider, Spinner } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { ProductGrid } from "./ProductGrid.jsx";
+import RecommendProductSlider from "../component/slider/RecommendProductSlider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
   const [todayProduct, setTodayProduct] = useState(null);
+  const [recommendProduct, setRecommendProduct] = useState(null);
   const navigate = useNavigate();
   const [likes, setLikes] = useState({});
   const account = useContext(LoginContext);
@@ -32,6 +34,7 @@ export function MainProduct() {
 
       setProductList(products);
       setTodayProduct(res.data.todayProduct);
+      setRecommendProduct(res.data.recommendProduct);
     });
   }, [account]);
 
@@ -51,7 +54,11 @@ export function MainProduct() {
       });
   }
 
-  if (productList === null) {
+  if (
+    productList === null ||
+    todayProduct === null ||
+    recommendProduct === null
+  ) {
     return <Spinner />;
   }
 
@@ -60,49 +67,38 @@ export function MainProduct() {
       <Box h="350px" w="100%" boxSizing="border-box" mx="auto">
         {/*<MainSlider />*/}
       </Box>
-
       {/* 오늘의 상품 */}
       <Box position="relative" marginY="20">
-        <Divider border={"1px solid gray"} />
+        <Divider border={"1px solid teal"} />
         <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
           📣 오늘의 경매 상품
         </AbsoluteCenter>
       </Box>
-      {todayProduct === null || todayProduct.length === 0 || (
-        <Box>
-          <ProductGrid
-            productList={todayProduct}
-            likes={likes}
-            handleLikeClick={handleLikeClick}
-            account={account}
-          />
-        </Box>
-      )}
-      {/* 전체 상품 */}
-      {/*<Box position="relative" marginY="20">*/}
-      {/*  <Divider border={"1px solid gray"} />*/}
-      {/*  <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">*/}
-      {/*    👍 전체 상품*/}
-      {/*  </AbsoluteCenter>*/}
-      {/*</Box>*/}
-      {/*{todayProduct === null || todayProduct.length === 0 || (*/}
-      {/*  <Box>*/}
-      {/*    <ProductGrid*/}
-      {/*      productList={todayProduct}*/}
-      {/*      likes={likes}*/}
-      {/*      handleLikeClick={handleLikeClick}*/}
-      {/*      account={account}*/}
-      {/*    />*/}
-      {/*  </Box>*/}
-      {/*)}*/}
-
-      <Box position="relative" marginY="20">
-        <Divider border={"1px solid gray"} />
-        <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
-          👍 전체 상품
-        </AbsoluteCenter>
+      <Box>
+        <ProductGrid
+          productList={todayProduct}
+          likes={likes}
+          handleLikeClick={handleLikeClick}
+          account={account}
+        />
       </Box>
 
+      {/*추천 상품*/}
+
+      <RecommendProductSlider
+        recommendProduct={recommendProduct}
+        likes={likes}
+        handleLikeClick={handleLikeClick}
+        account={account}
+      />
+
+      {/*전체상품 */}
+      <Box position="relative" marginY="20">
+        <Divider border={"1px solid teal"} />
+        <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
+          전체 상품
+        </AbsoluteCenter>
+      </Box>
       <Box>
         <ProductGrid
           productList={productList}

@@ -72,11 +72,19 @@ public class ProductService {
     }
 
     public Map<String, Object> list() {
+        //전체 상품
         List<Product> products = mapper.selectAll();
         settingFilePath(products);
+
+        // 오늘 상품
         List<Product> todayProduct = mapper.selectProductToday();
         settingFilePath(todayProduct);
-        return Map.of("products", products, "todayProduct", todayProduct);
+
+        // 추천 상품
+        List<Product> recommendProduct = mapper.selectRecommendProduct();
+        settingFilePath(recommendProduct);
+
+        return Map.of("products", products, "todayProduct", todayProduct, "recommendProduct", recommendProduct);
     }
 
 

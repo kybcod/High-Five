@@ -374,4 +374,18 @@ public interface ProductMapper {
             WHERE category = #{category}
             """)
     Integer selectCategoryCount(String category);
+
+    @Select("""
+            SELECT *
+            FROM product
+            WHERE status = 1
+            ORDER BY RAND()
+            LIMIT 10;
+            """)
+    @Results(id = "recommendProduct", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
+    List<Product> selectRecommendProduct();
+
 }
