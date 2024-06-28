@@ -1,18 +1,7 @@
 import { Box, Center, Grid } from "@chakra-ui/react";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 export function Category() {
-  const navigate = useNavigate();
-
-  function handleCategoryClick(category) {
-    if (category === "") {
-      navigate(`/list`);
-    } else {
-      navigate(`/list?category=${category}`);
-    }
-  }
-
   return (
     <Box bg="gray.200" p={4} borderRadius="md">
       <Grid

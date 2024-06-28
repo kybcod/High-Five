@@ -9,8 +9,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Comment } from "./Comment.jsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAnglesDown, faAnglesUp } from "@fortawesome/free-solid-svg-icons";
+import { ArrowUpCircleIcon, ArrowDownCircleIcon } from "../Icon.jsx";
 
 export function CommentList({ questionId, isProcessing, setIsProcessing }) {
   const [commentList, setCommentList] = useState([]);
@@ -61,9 +60,9 @@ export function CommentList({ questionId, isProcessing, setIsProcessing }) {
 
   const buttonStyle = (isTop) => ({
     position: "fixed",
-    bottom: isTop ? "50px" : "0px",
+    bottom: isTop ? "170px" : "90px",
     // right={["20px", "50px", "100px"]} // chakra ui 반응형으로 설정
-    right: "100px",
+    right: "30px",
     zIndex: 1000,
     cursor: "pointer",
     transition: "opacity 0.3s, visibility 0.3s",
@@ -94,10 +93,16 @@ export function CommentList({ questionId, isProcessing, setIsProcessing }) {
       {isVisible && (
         <>
           <Box onClick={scrollToTop} style={buttonStyle(true)}>
-            <FontAwesomeIcon icon={faAnglesUp} size="2xl" />
+            <ArrowUpCircleIcon
+              width={32}
+              height={32}
+              fill="green"
+              shadow={true}
+            />
+            {/*<FontAwesomeIcon icon={faCircleUp} size={"3x"} />*/}
           </Box>
           <Box onClick={scrollToDown} style={buttonStyle(false)}>
-            <FontAwesomeIcon icon={faAnglesDown} size="2xl" />
+            <ArrowDownCircleIcon />
           </Box>
         </>
       )}
