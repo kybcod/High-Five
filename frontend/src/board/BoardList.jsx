@@ -77,7 +77,7 @@ export function BoardList() {
         <Spacer />
       </Flex>
       <Box>
-        <Table>
+        <Table mt={"30px"}>
           <Thead>
             <Tr>
               <Th>No.</Th>
@@ -101,6 +101,8 @@ export function BoardList() {
                 <Tr
                   onClick={() => navigate(`/board/${board.id}`)}
                   key={board.id}
+                  cursor={"pointer"}
+                  _hover={{ background: "gray.200" }}
                 >
                   <Td>{board.id}</Td>
                   <Td>
@@ -145,6 +147,7 @@ export function BoardList() {
           colorScheme={"teal"}
           sx={{ borderWidth: 2 }}
           onClick={() => navigate(`/board`)}
+          mt={"20px"}
         >
           글쓰기
         </Button>
@@ -168,7 +171,7 @@ export function BoardList() {
           </Button>
         </Flex>
       </Center>
-      <Center mt={"10px"}>
+      <Center mt={"15px"}>
         <Flex gap={1}>
           {pageInfo.prevPageNumber && (
             <Button
