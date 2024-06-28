@@ -71,7 +71,7 @@ SELECT *
 FROM code;
 
 SELECT *
-FROM user;
+FROM user_file;
 
 UPDATE user
 SET black_count = 0

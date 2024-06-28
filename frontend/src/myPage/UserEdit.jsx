@@ -50,6 +50,7 @@ export function UserEdit() {
       const dbUser = res.data;
       setUser({ ...dbUser });
       setOldNickName(dbUser.nickName);
+      console.log(user.profileImage.src);
     });
   }, []);
 
@@ -140,6 +141,10 @@ export function UserEdit() {
     };
   };
 
+  if (user === null) {
+    return <Spinner />;
+  }
+
   return (
     <Box>
       <Box mt={10}>
@@ -149,12 +154,11 @@ export function UserEdit() {
             <Image
               width={"150px"}
               src={imgFile}
-              alt="프로필 이미지"
               borderRadius={"100px"}
               fallbackSrc={
-                user.profileImage.src
-                  ? user.profileImage.src
-                  : "https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
+                !user.profileImage || user.profileImage.src === "null"
+                  ? "https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
+                  : user.profileImage.src
               }
             />
             <Center mt={3}>

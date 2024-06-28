@@ -13,7 +13,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
 import InfoAgreeCheck from "./InfoAgreeCheck.jsx";
@@ -35,16 +35,45 @@ export function SignUp() {
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [isCheckedEmail, setIsCheckedEmail] = useState(false);
   const [isCheckedNickName, setIsCheckedNickName] = useState(false);
+  const [isOauthLogin, setIsOauthLogin] = useState(false);
   const { successToast, errorToast } = CustomToast();
   const codeInfo = useContext(SignupCodeContext);
   const navigate = useNavigate();
   const [isAllChecked, setIsAllChecked] = useState(false);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     codeInfo.setPhoneNumber("");
     codeInfo.setIsCheckedCode(false);
     codeInfo.setVerificationCode("");
-  }, []);
+
+    if (searchParams != null) {
+      setIsOauthLogin(true);
+      const emailParam = searchParams.get("email");
+      const nickNameParam = searchParams.get("nickName");
+      const phoneNumber = searchParams.get("phoneNumber");
+      setEmail(emailParam);
+      setNickName(nickNameParam);
+      codeInfo.setPhoneNumber(phoneNumber);
+      setIsValidEmail(true);
+      setIsCheckedEmail(true);
+    }
+
+    console.log("isAllChecked" + isAllChecked);
+    console.log("isCheckedEmail" + isCheckedEmail);
+    console.log("isValidEmail" + isValidEmail);
+    console.log("isValidPassword" + isValidPassword);
+    console.log("isCheckedNickName" + isCheckedNickName);
+    console.log("isOauthLogin" + isOauthLogin);
+    console.log("isDisabled" + isDisabled);
+    console.log("email 은 빈 스트링" + email.trim().length > 0);
+  }, [
+    isAllChecked,
+    isCheckedEmail,
+    isValidEmail,
+    isCheckedNickName,
+    isOauthLogin,
+  ]);
 
   function handleSignUp() {
     setIsLoading(true);
@@ -85,9 +114,11 @@ export function SignUp() {
   function handleCheckNickName() {
     axios
       .get(`/api/users/nickNames?nickName=${nickName}`)
-      .then(() => successToast("사용 가능한 닉네임입니다"))
-      .catch((err) => {
+      .then(() => {
+        successToast("사용 가능한 닉네임입니다");
         setIsCheckedNickName(true);
+      })
+      .catch((err) => {
         if (err.response.status === 400) {
           errorToast("닉네임은 10자까지 입력할 수 있습니다");
         } else if (err.response.status === 409) {
@@ -153,19 +184,25 @@ export function SignUp() {
               {...InputStyle}
               placeholder={"이메일 중복 확인 필수"}
               isInvalid={isCheckedEmail ? false : true}
+              value={email ? email : ""}
+              readOnly={isOauthLogin ? true : false}
               type={"email"}
               maxLength="30"
               onChange={(e) => {
                 setEmail(e.target.value);
                 setIsValidEmail(!e.target.validity.typeMismatch);
                 setIsCheckedEmail(false);
+                console.log("isCheckedEmail" + isCheckedEmail);
+                console.log("isValidEmail" + isValidEmail);
               }}
             />
             <InputRightElement width="4.5rem">
               <Button
                 {...InputGroupButton}
                 onClick={handleCheckEmail}
-                isDisabled={!isValidEmail || email.trim().length === 0}
+                isDisabled={
+                  !isValidEmail || email.trim().length === 0 || isOauthLogin
+                }
               >
                 중복확인
               </Button>
@@ -220,6 +257,7 @@ export function SignUp() {
                 setIsCheckedNickName(false);
               }}
               maxLength="10"
+              value={nickName ? nickName : ""}
               placeholder={"닉네임 중복 확인 필수"}
             />
             <InputRightElement width="4.5rem">

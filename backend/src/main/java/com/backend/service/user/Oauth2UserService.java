@@ -49,11 +49,11 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                     .phoneNumber(response.getPhoneNumber())
                     .build();
 
-            String profileImage = response.getProfileImage();
-            if (profileImage != null) {
-                // TODO. user 정보 변경 후 주석 해제
-//                user.setProfileImage(profileImage);
-            }
+//            String profileImage = response.getProfileImage();
+//            if (profileImage != null) {
+//                // TODO. user 정보 변경 후 주석 해제
+////                user.setProfileImage(profileImage);
+//            }
 
             // 네이버에서 받은 이메일 조회 후 해당 이메일이 없는 경우 insert
 //            if (platform.equals("naver")) {

@@ -67,6 +67,7 @@ export function UserPhoneNumber() {
         <FormLabel {...formLabel}>인증번호 입력</FormLabel>
         <InputGroup {...InputGroupStyle}>
           <Input
+            maxLength={4}
             {...InputStyle}
             onChange={(e) => codeInfo.handleInputCode(e.target.value)}
           />

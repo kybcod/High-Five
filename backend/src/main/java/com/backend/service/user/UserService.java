@@ -118,8 +118,10 @@ public class UserService {
         User db = mapper.selectUserByEmail(user.getEmail());
         String fileSrc = "";
         String fileName = mapper.selectFileNameByUserId(db.getId());
+        System.out.println("fileName = " + fileName);
         if (fileName != null) {
             fileSrc = STR."\{srcPrefix}user/\{db.getId()}/\{fileName}";
+            System.out.println("fileSrc = " + fileSrc);
         }
 
         if (db != null) {
@@ -224,7 +226,11 @@ public class UserService {
         User user = mapper.selectUserById(id);
         String fileName = mapper.selectFileNameByUserId(id);
         UserFile userFile = UserFile.builder()
-                .fileName(fileName).src(STR."\{srcPrefix}user/\{user.getId()}/\{fileName}").build();
+                .fileName("null").src("null").build();
+        if (fileName != null) {
+            userFile = UserFile.builder()
+                    .fileName(fileName).src(STR."\{srcPrefix}user/\{user.getId()}/\{fileName}").build();
+        }
         user.setProfileImage(userFile);
         return user;
     }
