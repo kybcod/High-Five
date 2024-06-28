@@ -48,6 +48,7 @@ export function BidList() {
         }
         setPageInfo(res.data.pageInfo);
         setHasNextPage(res.data.hasNextPage);
+        setSortOption(bidSort.toString());
 
         axios.get(`/api/products/like/${userId}`).then((initLike) => {
           // initLike : 좋아요 상태인 productId들

@@ -38,6 +38,7 @@ export function LikeList() {
   const [likeProductList, setLikeProductList] = useState([]);
   const [likes, setLikes] = useState({});
   const [pageInfo, setPageInfo] = useState({});
+  const [sortOption, setSortOption] = useState("0");
   const [hasNextPage, setHasNextPage] = useState(true);
   const [reviewList, setReviewList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -47,8 +48,11 @@ export function LikeList() {
 
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("likePage") || "1");
+    const likeSort = parseInt(searchParams.get("likeSort") || "0");
     axios
-      .get(`/api/products/user/${userId}/like?likePage=${currentPage}`)
+      .get(
+        `/api/products/user/${userId}/like?likePage=${currentPage}&likeSort=${likeSort}`,
+      )
       .then((res) => {
         console.log(res.data);
         if (currentPage === 1) {
@@ -73,14 +77,18 @@ export function LikeList() {
         });
         setPageInfo(res.data.pageInfo);
         setHasNextPage(res.data.hasNextPage);
+        setSortOption(likeSort.toString());
       });
   }, [searchParams]);
 
-  // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 1페이지로 렌더링
+  // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 페이지1, 최신순으로 재렌더링
+
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("likePage") || "1");
-    if (currentPage > 1) {
+    const likeSort = parseInt(searchParams.get("likeSort") || "0");
+    if (currentPage > 1 || likeSort > 0) {
       searchParams.set("likePage", "1");
+      searchParams.set("likeSort", "0");
       setSearchParams(searchParams);
     }
   }, []);
@@ -131,8 +139,56 @@ export function LikeList() {
       .finally();
   };
 
+  function handleSortChange(sortValue) {
+    setSortOption(sortValue);
+    searchParams.set("likeSort", sortValue);
+    setSearchParams(searchParams);
+  }
+
   return (
     <Box>
+      <Flex justifyContent={"flex-end"} mb={4}>
+        <Button
+          fontSize={"small"}
+          fontWeight={"normal"}
+          color={sortOption === "0" ? "red" : "black"}
+          variant="unstyled"
+          onClick={() => handleSortChange("0")}
+        >
+          최신순
+        </Button>
+        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
+        <Button
+          variant="unstyled"
+          fontWeight={"normal"}
+          onClick={() => handleSortChange("1")}
+          fontSize={"small"}
+          color={sortOption === "1" ? "red" : "black"}
+        >
+          인기순
+        </Button>
+        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
+        <Button
+          variant="unstyled"
+          fontWeight={"normal"}
+          onClick={() => handleSortChange("2")}
+          fontSize={"small"}
+          color={sortOption === "2" ? "red" : "black"}
+        >
+          저가순
+        </Button>
+        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
+        <Button
+          variant="unstyled"
+          fontWeight={"normal"}
+          onClick={() => handleSortChange("3")}
+          fontSize={"small"}
+          color={sortOption === "3" ? "red" : "black"}
+        >
+          고가순
+        </Button>
+      </Flex>
+
       {likeProductList.length === 0 ? (
         <Text align="center" fontSize="xl" fontWeight="bold" mt={4}>
           찜한 상품이 없습니다.

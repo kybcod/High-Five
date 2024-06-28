@@ -41,6 +41,7 @@ export function MyShop() {
         }
         setPageInfo(res.data.pageInfo);
         setHasNextPage(res.data.hasNextPage);
+        setSortOption(shopSort.toString());
       })
       .catch((error) => {
         console.error("Failed to fetch products", error);

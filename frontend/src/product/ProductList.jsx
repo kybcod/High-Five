@@ -49,7 +49,12 @@ export function ProductList() {
         setPageInfo(res.data.pageInfo);
         setKeywordCount(res.data.keywordCount);
         setCategoryCount(res.data.categoryCount);
+        setSortOption(sort.toString());
       });
+  }, [searchParams]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" }); // 페이지가 변경될 때 맨 위로 스크롤
   }, [searchParams]);
 
   const pageNumbers = [];
@@ -83,12 +88,18 @@ export function ProductList() {
 
   return (
     <Box>
+      <Flex justifyContent={"center"} align={"center"}>
+        {searchParams.get("category") && (
+          <Heading>{translatedCategoryName}</Heading>
+        )}
+      </Flex>
       <Flex mb={10} justifyContent={"space-between"} align={"center"}>
         <Box>
           {searchParams.get("category") && (
-            <Heading>
-              {translatedCategoryName} {categoryCount} 개
-            </Heading>
+            <Text fontSize={"medium"} fontWeight={"bold"}>
+              {" "}
+              총 {categoryCount} 개
+            </Text>
           )}
           {searchParams.get("title") && productList.length !== 0 && (
             <Text>
