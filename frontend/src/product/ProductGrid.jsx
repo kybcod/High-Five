@@ -32,8 +32,6 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
             maxW="sm"
             h="100%"
             borderRadius="0"
-            transition="transform 0.2s"
-            _hover={{ transform: "scale(1.05)" }}
           >
             <CardBody position="relative" h="100%">
               <Box mt={2} w="100%">
@@ -45,6 +43,8 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                         src={product.productFileList[0].filePath}
                         w="100%"
                         h="200px"
+                        transition="transform 0.2s"
+                        _hover={{ transform: "scale(1.02)" }}
                       />
                     )}
                     <Badge
@@ -66,6 +66,8 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                       position="absolute"
                       top="0"
                       left="0"
+                      transition="transform 0.2s"
+                      _hover={{ transform: "scale(1.02)" }}
                     />
                     <Text
                       onClick={() => navigate(`/product/${product.id}`)}

@@ -206,8 +206,6 @@ export function LikeList() {
                 maxW="sm"
                 h="100%"
                 borderRadius="0"
-                transition="transform 0.2s"
-                _hover={{ transform: "scale(1.05)" }}
               >
                 <CardBody position="relative" h="100%">
                   <Box mt={2} w="100%">
@@ -219,6 +217,8 @@ export function LikeList() {
                             src={product.productFileList[0].filePath}
                             w="100%"
                             h="200px"
+                            transition="transform 0.2s"
+                            _hover={{ transform: "scale(1.02)" }}
                           />
                         )}
                         <Badge
@@ -231,7 +231,13 @@ export function LikeList() {
                         </Badge>
                       </>
                     ) : (
-                      <Box position={"relative"} w={"100%"} h={"200px"}>
+                      <Box
+                        transition="transform 0.2s"
+                        _hover={{ transform: "scale(1.02)" }}
+                        position={"relative"}
+                        w={"100%"}
+                        h={"200px"}
+                      >
                         <Image
                           src={product.productFileList[0].filePath}
                           w="100%"

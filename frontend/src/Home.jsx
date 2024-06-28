@@ -26,6 +26,7 @@ export function Home() {
           <Outlet />
         </Box>
       </Box>
+
       <Box mt={20}>
         <Footer />
       </Box>

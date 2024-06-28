@@ -145,8 +145,6 @@ export function MyShop() {
                 maxW="sm"
                 h="100%"
                 borderRadius="0"
-                transition="transform 0.2s"
-                _hover={{ transform: "scale(1.05)" }}
               >
                 <CardBody position={"relative"} h={"100%"}>
                   {product.status && (
@@ -199,11 +197,19 @@ export function MyShop() {
                             src={product.productFileList[0].filePath}
                             w={"100%"}
                             h={"200px"}
+                            transition="transform 0.2s"
+                            _hover={{ transform: "scale(1.02)" }}
                           />
                         )}
                       </>
                     ) : (
-                      <Box position={"relative"} w={"100%"} h={"200px"}>
+                      <Box
+                        transition="transform 0.2s"
+                        _hover={{ transform: "scale(1.02)" }}
+                        position={"relative"}
+                        w={"100%"}
+                        h={"200px"}
+                      >
                         <Image
                           src={product.productFileList[0].filePath}
                           w="100%"

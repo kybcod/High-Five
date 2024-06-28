@@ -171,8 +171,6 @@ export function BidList() {
                 maxW="sm"
                 h="100%"
                 borderRadius="0"
-                transition="transform 0.2s"
-                _hover={{ transform: "scale(1.05)" }}
               >
                 <CardBody position="relative" h="100%">
                   <Box mt={2} w="100%">
@@ -199,6 +197,8 @@ export function BidList() {
                             w="100%"
                             h="200px" // 이미지 높이 조정
                             objectFit="cover" // 이미지가 카드 안에 꽉 차도록 설정
+                            transition="transform 0.2s"
+                            _hover={{ transform: "scale(1.02)" }}
                           />
                         )}
 
@@ -212,7 +212,13 @@ export function BidList() {
                         </Badge>
                       </>
                     ) : (
-                      <Box position={"relative"} w={"100%"} h={"200px"}>
+                      <Box
+                        transition="transform 0.2s"
+                        _hover={{ transform: "scale(1.02)" }}
+                        position={"relative"}
+                        w={"100%"}
+                        h={"200px"}
+                      >
                         <Image
                           src={bid.product.productFileList[0].filePath}
                           w="100%"
