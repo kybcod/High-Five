@@ -1,12 +1,5 @@
 import axios from "axios";
-import {
-  Box,
-  Card,
-  CardBody,
-  Stack,
-  StackDivider,
-  transition,
-} from "@chakra-ui/react";
+import { Box, Card, CardBody, Stack, StackDivider } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Comment } from "./Comment.jsx";
 import { ArrowUpCircleIcon, ArrowDownCircleIcon } from "../Icon.jsx";
@@ -60,7 +53,7 @@ export function CommentList({ questionId, isProcessing, setIsProcessing }) {
 
   const buttonStyle = (isTop) => ({
     position: "fixed",
-    bottom: isTop ? "170px" : "90px",
+    bottom: isTop ? "220px" : "140px",
     // right={["20px", "50px", "100px"]} // chakra ui 반응형으로 설정
     right: "30px",
     zIndex: 1000,
@@ -93,13 +86,7 @@ export function CommentList({ questionId, isProcessing, setIsProcessing }) {
       {isVisible && (
         <>
           <Box onClick={scrollToTop} style={buttonStyle(true)}>
-            <ArrowUpCircleIcon
-              width={32}
-              height={32}
-              fill="green"
-              shadow={true}
-            />
-            {/*<FontAwesomeIcon icon={faCircleUp} size={"3x"} />*/}
+            <ArrowUpCircleIcon />
           </Box>
           <Box onClick={scrollToDown} style={buttonStyle(false)}>
             <ArrowDownCircleIcon />

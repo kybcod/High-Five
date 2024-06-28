@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Text, Flex, Button } from "@chakra-ui/react";
+import { Box, Text, Flex, Button, Divider } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ArrowDownCircleIcon, ArrowUpCircleIcon } from "./Icon.jsx";
 
 export function FAQ() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -11,6 +12,31 @@ export function FAQ() {
   const [faq, setFaq] = useState([]);
   const [categories, setCategories] = useState([]);
   const [expanded, setExpanded] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // 스크롤 이벤트 핸들러 설정
+  const toggleVisibility = () => {
+    if (window.scrollY > 300) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  // 화면 맨 위로 스크롤
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const scrollToDown = () => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth",
+    });
+  };
 
   useEffect(() => {
     axios
@@ -32,6 +58,25 @@ export function FAQ() {
     });
   };
 
+  // 컴포넌트가 마운트될 때와 언마운트될 때 스크롤 이벤트를 등록하고 해제
+  useEffect(() => {
+    window.addEventListener("scroll", toggleVisibility);
+    return () => {
+      window.removeEventListener("scroll", toggleVisibility);
+    };
+  }, []);
+
+  const buttonStyle = (isTop) => ({
+    position: "fixed",
+    bottom: isTop ? "220px" : "140px",
+    // right={["20px", "50px", "100px"]} // chakra ui 반응형으로 설정
+    right: "30px",
+    zIndex: 1000,
+    cursor: "pointer",
+    transition: "opacity 0.3s, visibility 0.3s",
+    display: isVisible ? "block" : "none",
+  });
+
   const handleCategoryChange = (newCategory) => {
     setSearchParams({ category: newCategory });
     setExpanded([]);
@@ -39,7 +84,7 @@ export function FAQ() {
 
   return (
     <Box>
-      <Flex mb={10} wrap="wrap" justify="center" gap={10} p={10}>
+      <Flex mb={10} p={5} wrap="wrap" justify="center" gap={12}>
         <Button
           borderRadius={"unset"}
           w={150}
@@ -71,6 +116,7 @@ export function FAQ() {
         ))}
       </Flex>
       <Flex direction="column" w="100%">
+        <Divider orientation="horizontal" borderColor={"black"} />
         {faq.map((item) => (
           <Box key={item.id} overflow="hidden">
             <Flex
@@ -80,12 +126,7 @@ export function FAQ() {
               p={5}
               borderBottom="1px solid black"
             >
-              <Box
-                fontWeight="600"
-                flex="1"
-                textAlign="left"
-                // fontSize={"1.1rem"}
-              >
+              <Box fontWeight="600" flex="1" textAlign="left">
                 Q. {item.title}
               </Box>
               <Box flex="0">
@@ -102,21 +143,37 @@ export function FAQ() {
               transition="max-height 1s ease-in-out"
             >
               {expanded.includes(item.id) && (
-                <Box p={4} bg="#f5f5f5">
-                  <Text whiteSpace={"pre-line"} m={"20px"} lineHeight={"1.8"}>
-                    <Box as="span" fontWeight="bold">
-                      A.
-                    </Box>
-                    <Box fontSize={"15px"} m={3} as={"span"}>
+                <Flex p={4} bg="#f5f5f5">
+                  <Box as="span" fontWeight="bold" ml={3} mt={5}>
+                    A.
+                  </Box>
+                  <Text whiteSpace={"pre-line"} m={5} lineHeight={"1.8"}>
+                    <Box fontSize={"15px"} as={"span"}>
                       {item.content}
                     </Box>
                   </Text>
-                </Box>
+                </Flex>
               )}
             </Box>
           </Box>
         ))}
       </Flex>
+
+      {isVisible && (
+        <>
+          <Box onClick={scrollToTop} style={buttonStyle(true)}>
+            <ArrowUpCircleIcon
+              width={32}
+              height={32}
+              fill="green"
+              shadow={true}
+            />
+          </Box>
+          <Box onClick={scrollToDown} style={buttonStyle(false)}>
+            <ArrowDownCircleIcon />
+          </Box>
+        </>
+      )}
     </Box>
   );
 }

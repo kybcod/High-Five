@@ -1,15 +1,4 @@
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Spacer,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, Spacer, Text } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
