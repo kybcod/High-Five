@@ -163,6 +163,10 @@ export function BidList() {
           {bidList.map((bid) => (
             <GridItem key={bid.id}>
               <Card
+                boxShadow={"none"}
+                borderStyle={"solid"}
+                borderColor={"black.300"}
+                borderWidth={"1px"}
                 cursor={"pointer"}
                 maxW="sm"
                 h="100%"
@@ -192,7 +196,6 @@ export function BidList() {
                               navigate(`/product/${bid.product.id}`)
                             }
                             src={bid.product.productFileList[0].filePath}
-                            borderRadius="lg"
                             w="100%"
                             h="200px" // 이미지 높이 조정
                             objectFit="cover" // 이미지가 카드 안에 꽉 차도록 설정
@@ -212,7 +215,6 @@ export function BidList() {
                       <Box position={"relative"} w={"100%"} h={"200px"}>
                         <Image
                           src={bid.product.productFileList[0].filePath}
-                          borderRadius="lg"
                           w="100%"
                           h="200px" // 이미지 높이 조정
                           objectFit="cover" // 이미지가 카드 안에 꽉 차도록 설정

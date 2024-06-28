@@ -24,6 +24,10 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
       {productList.map((product) => (
         <GridItem key={product.id}>
           <Card
+            boxShadow={"none"}
+            borderStyle={"solid"}
+            borderColor={"black.300"}
+            borderWidth={"1px"}
             cursor={"pointer"}
             maxW="sm"
             h="100%"
@@ -56,7 +60,6 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                   <Box position={"relative"} w={"100%"} h={"200px"}>
                     <Image
                       src={product.productFileList[0].filePath}
-                      borderRadius="lg"
                       w="100%"
                       h="200px"
                       filter="brightness(50%)"

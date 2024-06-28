@@ -198,6 +198,10 @@ export function LikeList() {
           {likeProductList.map((product) => (
             <GridItem key={product.id}>
               <Card
+                boxShadow={"none"}
+                borderStyle={"solid"}
+                borderColor={"black.300"}
+                borderWidth={"1px"}
                 cursor={"pointer"}
                 maxW="sm"
                 h="100%"
@@ -213,7 +217,6 @@ export function LikeList() {
                           <Image
                             onClick={() => navigate(`/product/${product.id}`)}
                             src={product.productFileList[0].filePath}
-                            borderRadius="lg"
                             w="100%"
                             h="200px"
                           />
@@ -231,7 +234,6 @@ export function LikeList() {
                       <Box position={"relative"} w={"100%"} h={"200px"}>
                         <Image
                           src={product.productFileList[0].filePath}
-                          borderRadius="lg"
                           w="100%"
                           h="200px"
                           filter="brightness(50%)"
