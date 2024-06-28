@@ -89,11 +89,17 @@ export function UserEdit() {
     axios
       .get(`/api/users/nickNames?nickName=${user.nickName}`)
       .then(() => {
-        errorToast("이미 존재하는 닉네임입니다");
-      })
-      .catch(() => {
         successToast("사용 가능한 닉네임입니다");
         setIsCheckedNickName(true);
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          errorToast("닉네임은 10자까지 입력할 수 있습니다");
+        } else if (err.response.status === 409) {
+          errorToast("이미 존재하는 닉네임입니다");
+        } else {
+          errorToast("이메일 조회 중 에러가 발생했습니다");
+        }
       });
   }
 
@@ -128,7 +134,7 @@ export function UserEdit() {
     disabled = true;
   }
 
-  if (!isValidPassword) {
+  if (!isValidPassword && user.password.length > 0) {
     disabled = true;
   }
 
