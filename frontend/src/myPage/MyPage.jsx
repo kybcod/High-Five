@@ -126,6 +126,7 @@ export function MyPage({ tab }) {
             </Flex>
           </Box>
           <Tab
+            height={"50px"}
             border={"1px solid #eee"}
             _selected={{ borderColor: "green.500", fontWeight: "bold" }}
           >
@@ -134,18 +135,21 @@ export function MyPage({ tab }) {
           {userId == account.id && (
             <>
               <Tab
+                height={"50px"}
                 border={"1px solid #eee"}
                 _selected={{ borderColor: "green.500", fontWeight: "bold" }}
               >
                 찜 목록
               </Tab>
               <Tab
+                height={"50px"}
                 border={"1px solid #eee"}
                 _selected={{ borderColor: "green.500", fontWeight: "bold" }}
               >
                 입찰 내역
               </Tab>
               <Tab
+                height={"50px"}
                 border={"1px solid #eee"}
                 _selected={{ borderColor: "green.500", fontWeight: "bold" }}
               >

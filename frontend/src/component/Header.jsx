@@ -71,7 +71,7 @@ export function Header() {
 
         {/* 검색 */}
         <Flex align={"center"}>
-          <InputGroup border={"1px solid green"}>
+          <InputGroup border={"2px solid teal"}>
             <Input
               _focus={{ boxShadow: "none" }}
               bg="transparent"

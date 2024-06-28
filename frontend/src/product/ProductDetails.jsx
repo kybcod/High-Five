@@ -433,13 +433,14 @@ export function ProductDetails() {
             <Button
               variant="outline"
               colorScheme="blue"
+              borderWidth={2}
               onClick={handleJoinClick}
               isLoading={isProcessing}
               loadingText="처리중"
             >
               확인
             </Button>
-            <Button variant="outline" onClick={onClose} ml={3}>
+            <Button variant="outline" borderWidth={2} onClick={onClose} ml={3}>
               취소
             </Button>
           </ModalFooter>

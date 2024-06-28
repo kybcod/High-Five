@@ -51,7 +51,7 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                       position="absolute"
                       top="1.5"
                       left="2"
-                      colorScheme="teal"
+                      colorScheme="yellow"
                     >
                       {product.endTimeFormat}
                     </Badge>

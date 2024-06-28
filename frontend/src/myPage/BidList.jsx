@@ -167,7 +167,7 @@ export function BidList() {
                           position="absolute"
                           top="1"
                           left="1"
-                          colorScheme="teal"
+                          colorScheme="yellow"
                         >
                           {bid.product.endTimeFormat}
                         </Badge>

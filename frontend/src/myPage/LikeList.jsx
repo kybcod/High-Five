@@ -186,7 +186,7 @@ export function LikeList() {
                           position="absolute"
                           top="1"
                           left="1"
-                          colorScheme="teal"
+                          colorScheme="yellow"
                         >
                           {product.endTimeFormat}
                         </Badge>

@@ -78,11 +78,28 @@ export function MainProduct() {
           />
         </Box>
       )}
+      {/* 전체 상품 */}
+      {/*<Box position="relative" marginY="20">*/}
+      {/*  <Divider border={"1px solid gray"} />*/}
+      {/*  <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">*/}
+      {/*    👍 전체 상품*/}
+      {/*  </AbsoluteCenter>*/}
+      {/*</Box>*/}
+      {/*{todayProduct === null || todayProduct.length === 0 || (*/}
+      {/*  <Box>*/}
+      {/*    <ProductGrid*/}
+      {/*      productList={todayProduct}*/}
+      {/*      likes={likes}*/}
+      {/*      handleLikeClick={handleLikeClick}*/}
+      {/*      account={account}*/}
+      {/*    />*/}
+      {/*  </Box>*/}
+      {/*)}*/}
 
       <Box position="relative" marginY="20">
         <Divider border={"1px solid gray"} />
         <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
-          👍 상품 추천
+          👍 전체 상품
         </AbsoluteCenter>
       </Box>
 

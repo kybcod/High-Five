@@ -277,8 +277,11 @@ export function SignUp() {
             onClick={handleSignUp}
             isLoading={isLoading}
             isDisabled={isDisabled}
+            fontSize={"lg"}
+            variant={"outline"}
+            borderWidth={3}
           >
-            SignUp
+            회원가입
           </Button>
         </Center>
       </Box>
