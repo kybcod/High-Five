@@ -14,6 +14,8 @@ public class ChatRoom {
     private Integer sellerId;
     private Integer userId;
     private LocalDateTime inserted;
+    private Boolean userExit;
+    private Boolean sellerExit;
 
     // -- chatList
     @JsonIgnore
