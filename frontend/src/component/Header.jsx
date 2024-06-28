@@ -60,7 +60,7 @@ export function Header() {
   }
 
   return (
-    <Box mb={6} height={"70px"}>
+    <Box mb={10} height={"70px"}>
       <Flex align="center" justify="space-between" maxW="100%">
         {/* 로고 */}
         <Box>
