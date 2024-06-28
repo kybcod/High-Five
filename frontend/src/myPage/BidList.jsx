@@ -25,6 +25,7 @@ export function BidList() {
   const [bidList, setBidList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [hasNextPage, setHasNextPage] = useState(true);
+  const [sortOption, setSortOption] = useState("0");
   const [searchParams, setSearchParams] = useSearchParams();
   const [likes, setLikes] = useState({});
   const { account } = useContext(LoginContext);
@@ -32,36 +33,41 @@ export function BidList() {
 
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("page") || "1");
+    const sort = parseInt(searchParams.get("sort") || "0");
 
-    axios.get(`/api/bids/${userId}/list?page=${currentPage}`).then((res) => {
-      console.log(res.data);
-      if (currentPage === 1) {
-        // 첫 번째 페이지
-        setBidList(res.data.bidList);
-      } else {
-        // 이후 페이지 : 기존 리스트에 추가
-        setBidList((prevList) => [...prevList, ...res.data.bidList]);
-      }
-      setPageInfo(res.data.pageInfo);
-      setHasNextPage(res.data.hasNextPage);
+    axios
+      .get(`/api/bids/${userId}/list?page=${currentPage}&sort=${sort}`)
+      .then((res) => {
+        console.log(res.data);
+        if (currentPage === 1) {
+          // 첫 번째 페이지
+          setBidList(res.data.bidList);
+        } else {
+          // 이후 페이지 : 기존 리스트에 추가
+          setBidList((prevList) => [...prevList, ...res.data.bidList]);
+        }
+        setPageInfo(res.data.pageInfo);
+        setHasNextPage(res.data.hasNextPage);
 
-      axios.get(`/api/products/like/${userId}`).then((initLike) => {
-        // initLike : 좋아요 상태인 productId들
-        console.log(initLike);
-        const likeData = initLike.data.reduce((acc, productId) => {
-          acc[productId] = true;
-          return acc;
-        }, {});
-        setLikes(likeData);
+        axios.get(`/api/products/like/${userId}`).then((initLike) => {
+          // initLike : 좋아요 상태인 productId들
+          console.log(initLike);
+          const likeData = initLike.data.reduce((acc, productId) => {
+            acc[productId] = true;
+            return acc;
+          }, {});
+          setLikes(likeData);
+        });
       });
-    });
   }, [searchParams]);
 
-  // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 1페이지로 렌더링
+  // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 페이지1, 최신순으로 재렌더링
   useEffect(() => {
-    const currentPage = parseInt(searchParams.get("likePage") || "1");
-    if (currentPage > 1) {
-      searchParams.set("likePage", "1");
+    const currentPage = parseInt(searchParams.get("page") || "1");
+    const sort = parseInt(searchParams.get("sort") || "0");
+    if (currentPage > 1 || sort > 0) {
+      searchParams.set("page", "1");
+      searchParams.set("sort", "0");
       setSearchParams(searchParams);
     }
   }, []);
@@ -97,8 +103,56 @@ export function BidList() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function handleSortChange(sortValue) {
+    setSortOption(sortValue);
+    searchParams.set("sort", sortValue);
+    setSearchParams(searchParams);
+  }
+
   return (
     <Box>
+      <Flex justifyContent={"flex-end"} mb={4}>
+        <Button
+          fontSize={"small"}
+          fontWeight={"normal"}
+          color={sortOption === "0" ? "red" : "black"}
+          variant="unstyled"
+          onClick={() => handleSortChange("0")}
+        >
+          최신순
+        </Button>
+        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
+        <Button
+          variant="unstyled"
+          fontWeight={"normal"}
+          onClick={() => handleSortChange("1")}
+          fontSize={"small"}
+          color={sortOption === "1" ? "red" : "black"}
+        >
+          인기순
+        </Button>
+        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
+        <Button
+          variant="unstyled"
+          fontWeight={"normal"}
+          onClick={() => handleSortChange("2")}
+          fontSize={"small"}
+          color={sortOption === "2" ? "red" : "black"}
+        >
+          저가순
+        </Button>
+        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
+        <Button
+          variant="unstyled"
+          fontWeight={"normal"}
+          onClick={() => handleSortChange("3")}
+          fontSize={"small"}
+          color={sortOption === "3" ? "red" : "black"}
+        >
+          고가순
+        </Button>
+      </Flex>
+
       {bidList.length === 0 ? (
         <Text align="center" fontSize="xl" fontWeight="bold" mt={4}>
           경매에 참여한 상품이 없습니다.

@@ -28,9 +28,11 @@ export function MyShop() {
 
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("shopPage") || "1");
-    const sort = parseInt(searchParams.get("sort") || "0");
+    const shopSort = parseInt(searchParams.get("shopSort") || "0");
     axios
-      .get(`/api/products/user/${userId}?shopPage=${currentPage}&sort=${sort}`)
+      .get(
+        `/api/products/user/${userId}?shopPage=${currentPage}&shopSort=${shopSort}`,
+      )
       .then((res) => {
         if (currentPage === 1) {
           setProductList(res.data.productList);
@@ -45,10 +47,14 @@ export function MyShop() {
       });
   }, [searchParams]);
 
+  // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 페이지1, 최신순으로 재렌더링
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("shopPage") || "1");
-    if (currentPage > 1) {
+    const shopSort = parseInt(searchParams.get("shopSort") || "0");
+
+    if (currentPage > 1 || shopSort > 0) {
       searchParams.set("shopPage", "1");
+      searchParams.set("shopSort", "0");
       setSearchParams(searchParams);
     }
   }, []);
@@ -72,26 +78,51 @@ export function MyShop() {
   }
 
   function handleSortChange(sortValue) {
-    searchParams.set("sort", sortValue);
+    setSortOption(sortValue);
+    searchParams.set("shopSort", sortValue);
     setSearchParams(searchParams);
   }
 
   return (
     <Box>
       <Flex justifyContent={"flex-end"} mb={4}>
-        <Button variant="unstyled" onClick={() => handleSortChange("0")}>
+        <Button
+          fontSize={"small"}
+          fontWeight={"normal"}
+          color={sortOption === "0" ? "red" : "black"}
+          variant="unstyled"
+          onClick={() => handleSortChange("0")}
+        >
           최신순
         </Button>
         <Box m={2} height="24px" borderLeft="1px solid #ccc" />
-        <Button variant="unstyled" onClick={() => handleSortChange("1")}>
+        <Button
+          variant="unstyled"
+          fontWeight={"normal"}
+          onClick={() => handleSortChange("1")}
+          fontSize={"small"}
+          color={sortOption === "1" ? "red" : "black"}
+        >
           인기순
         </Button>
         <Box m={2} height="24px" borderLeft="1px solid #ccc" />
-        <Button variant="unstyled" onClick={() => handleSortChange("2")}>
+        <Button
+          variant="unstyled"
+          fontWeight={"normal"}
+          onClick={() => handleSortChange("2")}
+          fontSize={"small"}
+          color={sortOption === "2" ? "red" : "black"}
+        >
           저가순
         </Button>
         <Box m={2} height="24px" borderLeft="1px solid #ccc" />
-        <Button variant="unstyled" onClick={() => handleSortChange("3")}>
+        <Button
+          variant="unstyled"
+          fontWeight={"normal"}
+          onClick={() => handleSortChange("3")}
+          fontSize={"small"}
+          color={sortOption === "3" ? "red" : "black"}
+        >
           고가순
         </Button>
       </Flex>

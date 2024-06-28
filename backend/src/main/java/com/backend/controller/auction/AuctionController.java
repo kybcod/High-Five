@@ -37,8 +37,8 @@ public class AuctionController {
 
     @Description("마이페이지 : 입찰 내역")
     @GetMapping("{userId}/list")
-    public Map<String, Object> getBids(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page) {
-        return service.getBidListByUserId(userId, PageRequest.of(page - 1, 9));
+    public Map<String, Object> getBids(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "0") int sort) {
+        return service.getBidListByUserId(userId, PageRequest.of(page - 1, 9), sort);
     }
 
 
@@ -49,15 +49,4 @@ public class AuctionController {
         auctionStatusService.updateProductState();
     }
 
-//    @GetMapping("{userId}/list")
-//    @PreAuthorize("isAuthenticated()")
-//    public ResponseEntity getBids(@PathVariable Integer userId, Authentication authentication, @RequestParam(defaultValue = "1") int page) {
-//        System.out.println(authentication.getName());
-//        System.out.println("userId = " + userId);
-//        if (!Integer.valueOf(authentication.getName()).equals(userId)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-//        service.getBidListByUserId(userId, PageRequest.of(page - 1, 9));
-//        return ResponseEntity.ok().build();
-//    }
 }

@@ -37,15 +37,22 @@ public interface AuctionMapper {
             SELECT *
             FROM bid_list b
                      JOIN product p ON b.product_id = p.id
+                    LEFT JOIN product_like pl ON pl.product_id = p.id
             WHERE b.user_id = #{userId}
-            ORDER BY b.updated DESC, p.end_time, p.id
+            GROUP BY p.id
+            ORDER BY
+                CASE WHEN #{sort} = 0 THEN b.updated END DESC,
+                CASE WHEN #{sort} = 1 THEN COUNT(pl.id) END DESC,
+                CASE WHEN #{sort} = 2 THEN p.start_price END ASC,
+                CASE WHEN #{sort} = 3 THEN p.start_price END DESC,
+                p.id DESC
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productBidList", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "product", column = "product_id", one = @One(select = "selectProductByProductId")),
     })
-    List<BidList> selectBidListByUserIdWithPagination(Integer userId, Pageable pageable);
+    List<BidList> selectBidListByUserIdWithPagination(Integer userId, Pageable pageable, int sort);
 
     @Select("""
             SELECT * FROM product
