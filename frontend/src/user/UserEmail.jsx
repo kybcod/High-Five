@@ -49,7 +49,7 @@ export function UserEmail() {
             </Center>
           </Box>
         </Center>
-        <Divider borderColor={"green"} mt={7} />
+        <Divider borderColor={"teal"} mt={7} />
         <UserPhoneNumber />
         <Center mt={10}>
           <Button

@@ -23,7 +23,7 @@ function InfoAgreeCheck({ isAllChecked, setIsAllChecked }) {
 
   return (
     <>
-      <Stack mt={7} spacing={1}>
+      <Stack mt={10} spacing={1}>
         <Checkbox
           iconSize={"0.5rem"}
           pl={4}

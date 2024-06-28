@@ -77,10 +77,13 @@ export function UserPassword() {
       <Box width={"500px"}>
         <Center>
           <Box>
-            <Text {...title}>비밀번호 찾기</Text>
+            <Center>
+              <Text {...title}>비밀번호 찾기</Text>
+            </Center>
+            <Text>핸드폰 인증 후 비밀번호 재설정이 가능합니다</Text>
           </Box>
         </Center>
-        <Divider borderColor={"green"} mt={7} />
+        <Divider borderColor={"teal"} mt={7} />
         <FormControl mt={10}>
           <FormLabel {...formLabel}>이메일</FormLabel>
           <Input {...InputStyle} onChange={(e) => setEmail(e.target.value)} />
