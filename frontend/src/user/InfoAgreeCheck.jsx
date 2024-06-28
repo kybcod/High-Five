@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Checkbox, Stack } from "@chakra-ui/react";
 
-function SignupButton({ isAllChecked, setIsAllChecked }) {
+function InfoAgreeCheck({ isAllChecked, setIsAllChecked }) {
   const [checkedItems, setCheckedItems] = useState([false, false]);
 
   useEffect(() => {
@@ -23,10 +23,12 @@ function SignupButton({ isAllChecked, setIsAllChecked }) {
 
   return (
     <>
-      <Stack mt={1} spacing={1}>
+      <Stack mt={10} spacing={1}>
         <Checkbox
+          iconSize={"0.5rem"}
+          pl={4}
           height={"50px"}
-          size="md"
+          size="sm"
           isChecked={isAllChecked}
           onChange={handleAllCheckedChange}
           border={"1px"}
@@ -37,6 +39,7 @@ function SignupButton({ isAllChecked, setIsAllChecked }) {
           전체동의
         </Checkbox>
         <Checkbox
+          pl={4}
           size="sm"
           isChecked={checkedItems[0]}
           onChange={(e) => handleCheckboxChange(0, e.target.checked)}
@@ -44,6 +47,7 @@ function SignupButton({ isAllChecked, setIsAllChecked }) {
           이용약관 동의 (필수)
         </Checkbox>
         <Checkbox
+          pl={4}
           size="sm"
           isChecked={checkedItems[1]}
           onChange={(e) => handleCheckboxChange(1, e.target.checked)}
@@ -55,4 +59,4 @@ function SignupButton({ isAllChecked, setIsAllChecked }) {
   );
 }
 
-export default SignupButton;
+export default InfoAgreeCheck;

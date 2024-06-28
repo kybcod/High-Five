@@ -5,37 +5,38 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputLeftAddon,
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { useContext } from "react";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
+import {
+  formLabel,
+  InputGroupButton,
+  InputGroupStyle,
+  InputStyle,
+} from "../component/css/style.js";
 
 export function UserPhoneNumber() {
   const codeInfo = useContext(SignupCodeContext);
 
   return (
     <Box>
-      <FormControl>
-        <InputGroup size="md">
-          <InputLeftAddon bg={"none"} border={"none"}>
-            010
-          </InputLeftAddon>
+      <FormControl mt={7}>
+        <FormLabel {...formLabel}>전화번호</FormLabel>
+        <InputGroup {...InputGroupStyle}>
           <Input
-            pr="4.5rem"
-            variant="flushed"
-            type="number"
+            {...InputStyle}
+            maxLength={13}
             value={codeInfo.phoneNumber}
-            placeholder={"phone number"}
             onChange={(e) => {
               codeInfo.handleInputPhoneNumber(e.target.value);
             }}
           />
-          <InputRightElement width="4.5rem">
+          <InputRightElement width={codeInfo.isSendingCode ? "6rem" : "4.5rem"}>
             {codeInfo.isSendingCode && (
-              <Text>
+              <Text mr={2} color={"gray.800"}>
                 {codeInfo.min +
                   ":" +
                   (codeInfo.sec < 10 ? "0" + codeInfo.sec : codeInfo.sec)}
@@ -43,8 +44,7 @@ export function UserPhoneNumber() {
             )}
             {codeInfo.isSendingCode || (
               <Button
-                h="1.75rem"
-                size="sm"
+                {...InputGroupButton}
                 onClick={codeInfo.handleSendCode}
                 isDisabled={codeInfo.isWrongPhoneNumberLength}
               >
@@ -53,8 +53,7 @@ export function UserPhoneNumber() {
             )}
             {codeInfo.isSendingCode && (
               <Button
-                h="1.75rem"
-                size="sm"
+                {...InputGroupButton}
                 onClick={codeInfo.handleSendCode}
                 isDisabled={codeInfo.isWrongPhoneNumberLength}
               >
@@ -64,21 +63,18 @@ export function UserPhoneNumber() {
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      <FormControl>
-        <FormLabel>인증번호 입력</FormLabel>
-        <InputGroup size="md">
+      <FormControl mt={7}>
+        <FormLabel {...formLabel}>인증번호 입력</FormLabel>
+        <InputGroup {...InputGroupStyle}>
           <Input
-            pr="4.5rem"
-            variant="flushed"
-            type="number"
-            placeholder={"인증번호를 입력하세요"}
+            maxLength={4}
+            {...InputStyle}
             onChange={(e) => codeInfo.handleInputCode(e.target.value)}
           />
           <InputRightElement width="4.5rem">
             {codeInfo.isCheckedCode || (
               <Button
-                h="1.75rem"
-                size="sm"
+                {...InputGroupButton}
                 onClick={codeInfo.handleCheckCode}
                 isDisabled={codeInfo.isDisabledCheckButton}
               >

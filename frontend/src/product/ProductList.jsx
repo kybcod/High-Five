@@ -1,18 +1,4 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Card,
-  CardBody,
-  Center,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  Image,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Center, Flex, Heading, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -20,41 +6,57 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
-  faHeart as fullHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import { useSearchParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
+import { ProductGrid } from "./ProductGrid.jsx";
+import { CategorySwitchCase } from "../component/CategorySwitchCase.jsx";
+import { SortButton } from "../component/SortButton.jsx";
 
 export function ProductList() {
   const [productList, setProductList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [likes, setLikes] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   const account = useContext(LoginContext);
+  const [keywordCount, setKeywordCount] = useState(0);
+  const [categoryCount, setCategoryCount] = useState(0);
+  const [sortOption, setSortOption] = useState("0");
+  const category = searchParams.get("category") || "";
+  const translatedCategoryName = CategorySwitchCase({ categoryName: category });
 
   useEffect(() => {
-    axios.get(`/api/products/search?${searchParams}`).then((res) => {
-      const products = res.data.content;
-      const initialLikes = products.reduce((acc, product) => {
-        acc[product.id] = product.like || false;
-        return acc;
-      }, {});
+    const sort = parseInt(searchParams.get("sort") || "0");
 
-      if (account?.id) {
-        axios.get(`/api/products/like/${account.id}`).then((res) => {
-          res.data.forEach((productId) => {
-            initialLikes[productId] = true;
+    axios
+      .get(`/api/products/search?${searchParams}&sort=${sort}`)
+      .then((res) => {
+        const products = res.data.content;
+        const initialLikes = products.reduce((acc, product) => {
+          acc[product.id] = product.like || false;
+          return acc;
+        }, {});
+
+        if (account?.id) {
+          axios.get(`/api/products/like/${account.id}`).then((res) => {
+            res.data.forEach((productId) => {
+              initialLikes[productId] = true;
+            });
+            setLikes(initialLikes);
           });
-          setLikes(initialLikes);
-        });
-      }
-      setProductList(products);
-      setPageInfo(res.data.pageInfo);
-    });
-  }, [searchParams, account]);
+        }
+        setProductList(products);
+        setPageInfo(res.data.pageInfo);
+        setKeywordCount(res.data.keywordCount);
+        setCategoryCount(res.data.categoryCount);
+        setSortOption(sort.toString());
+      });
+  }, [searchParams]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" }); // 페이지가 변경될 때 맨 위로 스크롤
+  }, [searchParams]);
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
@@ -79,119 +81,53 @@ export function ProductList() {
       });
   }
 
+  function handleSortChange(sortValue) {
+    setSortOption(sortValue);
+    searchParams.set("sort", sortValue);
+    searchParams.set("page", "1");
+    setSearchParams(searchParams);
+  }
+
   return (
     <Box>
-      {/*<Category />*/}
-      <Heading my={6}></Heading>
-      <Grid
-        templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(5, 1fr)" }}
-        gap={6}
-      >
-        {productList.map((product) => (
-          <GridItem key={product.id}>
-            <Card
-              cursor={"pointer"}
-              maxW="sm"
-              h="100%"
-              borderWidth="1px"
-              borderColor={"#eee"}
-              borderRadius="lg"
-              overflow="hidden"
-              boxShadow="md"
-              transition="transform 0.2s"
-              _hover={{ transform: "scale(1.05)" }}
-            >
-              <CardBody position="relative" h="100%">
-                <Box mt={2} w="100%">
-                  {product.status ? (
-                    <>
-                      {product.productFileList && (
-                        <Image
-                          onClick={() => navigate(`/product/${product.id}`)}
-                          src={product.productFileList[0].filePath}
-                          borderRadius="lg"
-                          w="100%"
-                          h="200px"
-                        />
-                      )}
-                      <Badge
-                        position="absolute"
-                        top="1.5"
-                        left="2"
-                        colorScheme="teal"
-                      >
-                        {product.endTimeFormat}
-                      </Badge>
-                    </>
-                  ) : (
-                    <Box position={"relative"} w={"100%"} h={"200px"}>
-                      <Image
-                        src={product.productFileList[0].filePath}
-                        borderRadius="lg"
-                        w="100%"
-                        h="200px"
-                        filter="brightness(50%)"
-                        position="absolute"
-                        top="0"
-                        left="0"
-                      />
-                      <Text
-                        onClick={() => navigate(`/product/${product.id}`)}
-                        cursor={"pointer"}
-                        borderRadius="lg"
-                        w="100%"
-                        h="200px"
-                        position="absolute"
-                        top="0"
-                        left="0"
-                        color={"white"}
-                        display={"flex"}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                        fontSize={"2xl"}
-                        as="b"
-                      >
-                        판매완료
-                      </Text>
-                    </Box>
-                  )}
-                </Box>
-                <Stack mt="4" spacing="2">
-                  <Flex justifyContent="space-between" alignItems="center">
-                    <Text
-                      fontSize="lg"
-                      fontWeight="bold"
-                      noOfLines={1}
-                      onClick={() => navigate(`/product/${product.id}`)}
-                    >
-                      {product.title}
-                    </Text>
-                    {account.isLoggedIn() && (
-                      <Box onClick={() => handleLikeClick(product.id)}>
-                        <FontAwesomeIcon
-                          icon={likes[product.id] ? fullHeart : emptyHeart}
-                          style={{ color: "red" }}
-                          cursor="pointer"
-                          size="lg"
-                        />
-                      </Box>
-                    )}
-                  </Flex>
-                  <Flex justifyContent="space-between">
-                    <Text color="blue.600" fontSize="lg">
-                      {product.startPrice
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-                      원
-                    </Text>
-                    <Text>{product.timeFormat}</Text>
-                  </Flex>
-                </Stack>
-              </CardBody>
-            </Card>
-          </GridItem>
-        ))}
-      </Grid>
+      <Flex justifyContent={"center"} align={"center"}>
+        {searchParams.get("category") && (
+          <Heading>{translatedCategoryName}</Heading>
+        )}
+      </Flex>
+      <Flex mb={10} justifyContent={"space-between"} align={"center"}>
+        <Box>
+          {searchParams.get("category") && (
+            <Text fontSize={"medium"} fontWeight={"bold"}>
+              {" "}
+              총 {categoryCount} 건
+            </Text>
+          )}
+          {searchParams.get("title") && productList.length !== 0 && (
+            <Text>
+              <Text as="span" fontWeight={"bold"}>
+                "{searchParams.get("title")}"
+              </Text>{" "}
+              에 대한{" "}
+              <Text as="span" color="green" fontWeight={"bold"}>
+                {keywordCount}
+              </Text>{" "}
+              건의 검색 결과입니다.
+            </Text>
+          )}
+        </Box>
+
+        <SortButton
+          sortOption={sortOption}
+          handleSortChange={handleSortChange}
+        />
+      </Flex>
+      <ProductGrid
+        productList={productList}
+        likes={likes}
+        handleLikeClick={handleLikeClick}
+        account={account}
+      />
 
       {/*페이지네이션*/}
       <Center>
@@ -221,6 +157,8 @@ export function ProductList() {
                 mr={"10px"}
                 onClick={() => handlePageButtonClick(pageNumber)}
                 key={pageNumber}
+                variant={"outline"}
+                borderWidth={3}
                 colorScheme={
                   pageNumber - 1 == pageInfo.currentPageNumber ? "teal" : "gray"
                 }

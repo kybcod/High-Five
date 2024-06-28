@@ -11,13 +11,13 @@ import {
   FormLabel,
   Heading,
   Input,
+  Image,
   Stack,
   StackDivider,
   Text,
   Textarea,
-  useToast,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../../component/CustomToast.jsx";
@@ -29,6 +29,7 @@ export function QuestionWrite() {
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
   const [secretWrite, setsecretWrite] = useState(false);
+  const [previewList, setPreviewList] = useState([]);
 
   const navigate = useNavigate();
 
@@ -73,6 +74,12 @@ export function QuestionWrite() {
     setsecretWrite(!secretWrite);
   }
 
+  function handleInsertFiles(e) {
+    const selectFiles = Array.from(e.target.files);
+    setFiles(selectFiles);
+    setPreviewList(selectFiles.map((file) => URL.createObjectURL(file)));
+  }
+
   return (
     <Box m={8}>
       <Box mt={5}>
@@ -109,7 +116,7 @@ export function QuestionWrite() {
             multiple
             type="file"
             accept="image/*"
-            onChange={(e) => setFiles(e.target.files)}
+            onChange={handleInsertFiles}
           />
           <FormHelperText>
             이미지 파일만 업로드할 수 있습니다.
@@ -125,7 +132,12 @@ export function QuestionWrite() {
             </CardHeader>
             <CardBody>
               <Stack divider={<StackDivider />} spacing={4}>
-                {fileNameList}
+                {previewList.map((src, index) => (
+                  <Box key={index} mb={3}>
+                    {fileNameList[index]}
+                    <Image src={src} blockSize="300px" />
+                  </Box>
+                ))}
               </Stack>
             </CardBody>
           </Card>

@@ -3,7 +3,7 @@ import { Center, Flex } from "@chakra-ui/react";
 export default function Footer() {
   return (
     <Flex
-      border={"1px solid black"}
+      borderTop={"1px solid black"}
       p={4}
       align="center"
       h={20}

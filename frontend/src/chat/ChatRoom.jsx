@@ -38,6 +38,7 @@ import {
   faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import CustomModal from "./CustomModal.jsx";
 
 export function ChatRoom() {
   const { productId, buyerId } = useParams();
@@ -64,6 +65,17 @@ export function ChatRoom() {
   const [reviewList, setReviewList] = useState([]);
   const [reviewId, setReviewId] = useState([]);
   const tokenUserId = Number(account.id);
+  // -- Modal
+  const {
+    isOpen: isOpenChatRoomDelete,
+    onOpen: onOpenChatRoomDelete,
+    onClose: onCloseChatRoomDelete,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenBlackUserPut,
+    onOpen: onOpenBlackUserPut,
+    onClose: onCloseBlackUserPut,
+  } = useDisclosure();
 
   // -- axios.get
   useEffect(() => {
@@ -127,7 +139,7 @@ export function ChatRoom() {
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
     // client.activate(); // 활성화
-    setStompClient(client);
+    // setStompClient(client);
 
     return () => {
       if (stompClient) {
@@ -324,17 +336,6 @@ export function ChatRoom() {
   };
   const buttonConfig = determineButton();
 
-  const handleBlackUser = () => {
-    const blackUser =
-      data.user.id === tokenUserId ? data.seller.id : data.user.id;
-    axios
-      .put(`/api/users/black/${blackUser}`)
-      // TODO : status 추가 예정
-      .then(() => {})
-      .catch()
-      .finally();
-  };
-
   // -- spinner
   if (data.chatRoom == null) {
     return <Spinner />;
@@ -377,15 +378,21 @@ export function ChatRoom() {
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </MenuButton>
               <MenuList>
-                <MenuItem gap={2} onClick={handleBlackUser}>
+                <MenuItem
+                  gap={2}
+                  onClick={() => {
+                    onOpenBlackUserPut();
+                  }}
+                >
                   <FontAwesomeIcon icon={faCircleExclamation} />
                   신고하기
                 </MenuItem>
-                {/* TODO : 채팅방 나가기 */}
                 <MenuItem
                   color={"red"}
                   gap={2}
-                  onClick={() => navigate(`/api/chats/${data.chatRoom.id}`)}
+                  onClick={() => {
+                    onOpenChatRoomDelete();
+                  }}
                 >
                   <FontAwesomeIcon icon={faTrashCan} />
                   채팅방 나가기
@@ -525,6 +532,24 @@ export function ChatRoom() {
           <ModalCloseButton />
         </ModalContent>
       </Modal>
+      <CustomModal
+        isOpen={isOpenChatRoomDelete}
+        onClose={onCloseChatRoomDelete}
+        method={"delete"}
+        header={"채팅방 나가기"}
+        body={"채팅방을 나가시겠습니까?"}
+        buttonContent={"나가기"}
+        url={`/api/chats/${data.chatRoom.id}`}
+      />
+      <CustomModal
+        isOpen={isOpenBlackUserPut}
+        onClose={onCloseBlackUserPut}
+        method={"put"}
+        header={"신고하시겠습니까?"}
+        body={"허위 신고 적발 시 불이익을 받게됩니다"}
+        buttonContent={"신고하기"}
+        url={`/api/users/black/${data.user.id === tokenUserId ? data.seller.id : data.user.id}`}
+      />
     </Box>
   );
 }

@@ -2,10 +2,7 @@ package com.backend.mapper.chat;
 
 import com.backend.domain.chat.Chat;
 import com.backend.domain.chat.ChatRoom;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -34,7 +31,8 @@ public interface ChatMapper {
     @Select("""
             SELECT *
             FROM chat_room
-            WHERE user_id = #{tokenUserId} OR seller_id = #{tokenUserId}
+            WHERE user_id = #{tokenUserId} AND user_exit = FALSE 
+               OR seller_id = #{tokenUserId} AND seller_exit = FALSE
             """)
     List<ChatRoom> selectChatRoomListByUserId(Integer tokenUserId);
 
@@ -75,4 +73,36 @@ public interface ChatMapper {
             ORDER BY id DESC
             """)
     int selectNotReadCountById(Integer id, Integer tokenUserId);
+
+    @Select("""
+            SELECT * FROM chat_room WHERE id = #{id}
+            """)
+    ChatRoom selectChatRoomById(Integer id);
+
+    @Update("""
+            UPDATE chat_room
+            SET seller_exit = #{changeValue}
+            WHERE id = #{id}
+                AND seller_id = #{tokenUserId}
+                AND seller_exit = #{prevValue}
+            """)
+    int updateSellerExitById(Integer id, Integer tokenUserId, Boolean changeValue, Boolean prevValue);
+
+    @Update("""
+            UPDATE chat_room
+            SET user_exit = #{changeValue}
+            WHERE id = #{id}
+                AND user_id = #{tokenUserId}
+                AND user_exit = #{prevValue}
+            """)
+    int updateUserExitById(Integer id, Integer tokenUserId, Boolean changeValue, Boolean prevValue);
+
+    @Delete("""
+            DELETE chat, chat_room
+            FROM chat 
+            LEFT JOIN chat_room
+            ON chat.chat_room_id = chat_room.id
+            WHERE chat.chat_room_id = #{chatRoomId}
+            """)
+    int deleteAllChatById(Integer chatRoomId);
 }

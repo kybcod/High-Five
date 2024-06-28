@@ -2,30 +2,18 @@ import {
   Box,
   Button,
   Flex,
+  Image,
   Input,
   InputGroup,
   InputRightAddon,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Text,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBasketShopping,
-  faHeartPulse,
-  faMobileScreenButton,
-  faSearch,
-  faShirt,
-  faTicket,
-  faUtensils,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { faComments, faUser } from "@fortawesome/free-regular-svg-icons"; // Import regular style FontAwesome icons
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import { faScaleUnbalanced } from "@fortawesome/free-solid-svg-icons/faScaleUnbalanced";
 
 export function Header() {
@@ -47,87 +35,38 @@ export function Header() {
     navigate(`/list?title=${title}`);
   }
 
-  function handleCategoryClick(category) {
-    if (category === "") {
-      navigate(`/list`);
+  function handleMyAuctionOrLoginClick() {
+    if (account.isLoggedIn()) {
+      navigate(`/myPage/${account.id}`);
     } else {
-      navigate(`/list?category=${category}`);
+      navigate(`/login`);
+    }
+  }
+
+  function handleSaleOrLoginClick() {
+    if (account.isLoggedIn()) {
+      navigate(`/write`); // 로그인 상태일 때 write 페이지로 이동
+    } else {
+      navigate(`/login`); // 비로그인 상태일 때 로그인 페이지로 이동
+    }
+  }
+
+  function handleTalkOrLoginClick() {
+    if (account.isLoggedIn()) {
+      navigate(`/chat/list`);
+    } else {
+      navigate(`/login`);
     }
   }
 
   return (
-    <Box height={"70px"}>
+    <Box mb={10} height={"70px"}>
       <Flex align="center" justify="space-between" maxW="100%">
-        <Menu>
-          <Box ml={2} align="center">
-            <MenuButton
-              bg="transparent"
-              _hover={{ bg: "transparent" }}
-              _active={{ bg: "transparent" }}
-              as={Button}
-              leftIcon={<HamburgerIcon />}
-            >
-              카테고리
-            </MenuButton>
-          </Box>
-          <MenuList>
-            <MenuItem
-              onClick={() => handleCategoryClick("clothes")}
-              icon={<FontAwesomeIcon icon={faShirt} />}
-              _hover={{ color: "green", bg: "transparent" }}
-              _focus={{ bg: "transparent" }}
-            >
-              의류
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleCategoryClick("goods")}
-              icon={<FontAwesomeIcon icon={faBasketShopping} />}
-              _hover={{ color: "green", bg: "transparent" }}
-            >
-              잡화
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleCategoryClick("food")}
-              icon={<FontAwesomeIcon icon={faUtensils} />}
-              _hover={{ color: "green", bg: "transparent" }}
-            >
-              식품
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleCategoryClick("digital")}
-              icon={<FontAwesomeIcon icon={faMobileScreenButton} />}
-              _hover={{ color: "green", bg: "transparent" }}
-            >
-              디지털
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleCategoryClick("sport")}
-              icon={<FontAwesomeIcon icon={faHeartPulse} />}
-              _hover={{ color: "green", bg: "transparent" }}
-            >
-              스포츠
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleCategoryClick("e-coupon")}
-              icon={<FontAwesomeIcon icon={faTicket} />}
-              _hover={{ color: "green", bg: "transparent" }}
-            >
-              e-쿠폰
-            </MenuItem>
-          </MenuList>
-        </Menu>
-
         {/* 로고 */}
         <Box>
-          <Text
-            fontWeight={"bold"}
-            fontSize={"2xl"}
-            color={"green"}
-            cursor={"pointer"}
-            onClick={() => navigate("/")}
-          >
-            LIVE AUCTION{" "}
-          </Text>
+          <Box w={"200px"} onClick={() => navigate("/")}>
+            <Image src={"/img/fung.PNG"} />
+          </Box>
         </Box>
 
         {/* 검색 */}
@@ -154,42 +93,32 @@ export function Header() {
 
         {/* 마이경매, 판매하기, 경매톡 */}
         <Flex align="center" justifyContent="center">
-          {account.isLoggedIn() && (
-            <>
-              <Box textAlign="center">
-                <Button
-                  variant="unstyled"
-                  onClick={() => navigate(`/myPage/${account.id}`)}
-                >
-                  <FontAwesomeIcon icon={faUser} size="xl" />
-                </Button>
-                <Text fontSize="small" mt={1}>
-                  마이경매
-                </Text>
-              </Box>
+          <Box textAlign="center">
+            <Button variant="unstyled" onClick={handleMyAuctionOrLoginClick}>
+              <FontAwesomeIcon icon={faUser} size="xl" />
+            </Button>
+            <Text fontSize="small" mt={1}>
+              마이경매
+            </Text>
+          </Box>
 
-              <Box textAlign="center" ml={4}>
-                <Button onClick={() => navigate("/write")} variant="unstyled">
-                  <FontAwesomeIcon icon={faScaleUnbalanced} size="xl" />
-                </Button>
-                <Text fontSize="small" mt={1}>
-                  판매하기
-                </Text>
-              </Box>
+          <Box textAlign="center" ml={4}>
+            <Button onClick={handleSaleOrLoginClick} variant="unstyled">
+              <FontAwesomeIcon icon={faScaleUnbalanced} size="xl" />
+            </Button>
+            <Text fontSize="small" mt={1}>
+              판매하기
+            </Text>
+          </Box>
 
-              <Box textAlign="center" ml={4} mr={4}>
-                <Button
-                  onClick={() => navigate("/chat/list")}
-                  variant="unstyled"
-                >
-                  <FontAwesomeIcon icon={faComments} size="xl" />
-                </Button>
-                <Text fontSize="small" mt={1}>
-                  경매톡
-                </Text>
-              </Box>
-            </>
-          )}
+          <Box textAlign="center" ml={4} mr={4}>
+            <Button onClick={handleTalkOrLoginClick} variant="unstyled">
+              <FontAwesomeIcon icon={faComments} size="xl" />
+            </Button>
+            <Text fontSize="small" mt={1}>
+              채팅방
+            </Text>
+          </Box>
         </Flex>
       </Flex>
     </Box>
