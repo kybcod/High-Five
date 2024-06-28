@@ -83,6 +83,7 @@ export function ProductList() {
   function handleSortChange(sortValue) {
     setSortOption(sortValue);
     searchParams.set("sort", sortValue);
+    searchParams.set("page", "1");
     setSearchParams(searchParams);
   }
 

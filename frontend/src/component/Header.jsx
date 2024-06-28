@@ -60,23 +60,13 @@ export function Header() {
   }
 
   return (
-    <Box mb={4} height={"70px"}>
+    <Box mb={6} height={"70px"}>
       <Flex align="center" justify="space-between" maxW="100%">
         {/* 로고 */}
         <Box>
-          <Text
-            fontWeight={"bold"}
-            fontSize={"2xl"}
-            color={"green"}
-            cursor={"pointer"}
-            onClick={() => navigate("/")}
-          >
-            {/*LIVE AUCTION{" "}*/}
-            <Box w={"250px"}>
-              <Image src={"/img/function.png"} />
-              {/*<Image src={"/img/live.PNG"} />*/}
-            </Box>
-          </Text>
+          <Box w={"200px"} onClick={() => navigate("/")}>
+            <Image src={"/img/fung.PNG"} />
+          </Box>
         </Box>
 
         {/* 검색 */}
