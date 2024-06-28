@@ -82,13 +82,7 @@ export function MyPage({ tab }) {
       >
         {/*  user 이미지*/}
         <TabList w={"30%"} m={3} mr={20}>
-          <Box
-            mb={4}
-            w="100%"
-            borderWidth="3px"
-            borderRadius="md"
-            boxShadow="md"
-          >
+          <Box mb={4} w="100%" border={"1px solid black"}>
             <Flex
               direction="column"
               justifyContent="center"
@@ -99,8 +93,8 @@ export function MyPage({ tab }) {
                 src={user.profileImage.src}
                 alt="상점 프로필 이미지"
                 boxSize="100px"
+                fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
                 borderRadius="full"
-                fallbackSrc="https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800"
                 mb={4}
               />
               <Heading textAlign="center" size="md">
@@ -133,7 +127,6 @@ export function MyPage({ tab }) {
           </Box>
           <Tab
             border={"1px solid #eee"}
-            borderRadius="3px"
             _selected={{ borderColor: "green.500", fontWeight: "bold" }}
           >
             판매 목록
@@ -142,21 +135,18 @@ export function MyPage({ tab }) {
             <>
               <Tab
                 border={"1px solid #eee"}
-                borderRadius="3px"
                 _selected={{ borderColor: "green.500", fontWeight: "bold" }}
               >
                 찜 목록
               </Tab>
               <Tab
                 border={"1px solid #eee"}
-                borderRadius="3px"
                 _selected={{ borderColor: "green.500", fontWeight: "bold" }}
               >
                 입찰 내역
               </Tab>
               <Tab
                 border={"1px solid #eee"}
-                borderRadius="3px"
                 _selected={{ borderColor: "green.500", fontWeight: "bold" }}
               >
                 내 정보

@@ -20,23 +20,18 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
   const navigate = useNavigate();
 
   return (
-    <Grid
-      templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(5, 1fr)" }}
-      gap={6}
-    >
+    <Grid templateColumns={"repeat(5, 1fr)"} gap={6}>
       {productList.map((product) => (
         <GridItem key={product.id}>
           <Card
+            boxShadow={"none"}
+            borderStyle={"solid"}
+            borderColor={"black.300"}
+            borderWidth={"1px"}
             cursor={"pointer"}
             maxW="sm"
             h="100%"
-            borderWidth="1px"
-            borderColor={"#eee"}
-            borderRadius="lg"
-            overflow="hidden"
-            boxShadow="md"
-            transition="transform 0.2s"
-            _hover={{ transform: "scale(1.05)" }}
+            borderRadius="0"
           >
             <CardBody position="relative" h="100%">
               <Box mt={2} w="100%">
@@ -46,9 +41,10 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                       <Image
                         onClick={() => navigate(`/product/${product.id}`)}
                         src={product.productFileList[0].filePath}
-                        borderRadius="lg"
                         w="100%"
                         h="200px"
+                        transition="transform 0.2s"
+                        _hover={{ transform: "scale(1.02)" }}
                       />
                     )}
                     <Badge
@@ -64,13 +60,14 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                   <Box position={"relative"} w={"100%"} h={"200px"}>
                     <Image
                       src={product.productFileList[0].filePath}
-                      borderRadius="lg"
                       w="100%"
                       h="200px"
                       filter="brightness(50%)"
                       position="absolute"
                       top="0"
                       left="0"
+                      transition="transform 0.2s"
+                      _hover={{ transform: "scale(1.02)" }}
                     />
                     <Text
                       onClick={() => navigate(`/product/${product.id}`)}

@@ -80,14 +80,21 @@ public class ProductService {
     }
 
 
-    public Map<String, Object> getList(Pageable pageable, String title, String category) {
-        List<Product> content = mapper.selectWithPageable(pageable, title, category);
+    public Map<String, Object> getList(Pageable pageable, String title, String category, int sort) {
+        List<Product> content = mapper.selectWithPageable(pageable, title, category, sort);
         settingFilePath(content);
 
         int total = mapper.selectTotalCount(title, category);
         Page<Product> page = new PageImpl<>(content, pageable, total);
         PageInfo pageInfo = new PageInfo().setting(page);
-        return Map.of("content", content, "pageInfo", pageInfo);
+
+//        키워드에 대한 검색 결과 갯수
+        Integer keywordCount = mapper.selectKeywordCount(title);
+        Integer categoryCount = mapper.selectCategoryCount(category);
+
+        return Map.of("content", content, "pageInfo", pageInfo,
+                "keywordCount", keywordCount,
+                "categoryCount", categoryCount);
     }
 
     public Map<String, Object> get(Integer id, Authentication authentication) {
@@ -186,8 +193,8 @@ public class ProductService {
     }
 
 
-    public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable) {
-        List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable);
+    public Map<String, Object> getProductsByUserId(Integer userId, Pageable pageable, int sort) {
+        List<Product> productList = mapper.selectProductsByUserIdWithPagination(userId, pageable, sort);
         String userNickName = mapper.selectUserNickName(userId);
 
         for (Product product : productList) {
@@ -214,9 +221,9 @@ public class ProductService {
         );
     }
 
-    public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable) {
+    public Map<String, Object> getProductsLikeByUserId(Integer userId, Pageable pageable, int likeSort) {
         // 좋아요
-        List<Product> likeProductList = mapper.selectLikeSelectByUserId(userId, pageable);
+        List<Product> likeProductList = mapper.selectLikeSelectByUserId(userId, pageable, likeSort);
         settingFilePath(likeProductList);
 
         int total = mapper.selectCountLikeByUserId(userId);

@@ -17,7 +17,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Stack,
   Text,
   useDisclosure,
@@ -32,13 +31,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ArrowDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
+import { SortButton } from "../component/SortButton.jsx";
 
 export function LikeList() {
   const { userId } = useParams();
-  const [likeProductList, setLikeProductList] = useState(null);
+  const [likeProductList, setLikeProductList] = useState([]);
   const [likes, setLikes] = useState({});
   const [pageInfo, setPageInfo] = useState({});
+  const [sortOption, setSortOption] = useState("0");
   const [hasNextPage, setHasNextPage] = useState(true);
   const [reviewList, setReviewList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -47,9 +48,12 @@ export function LikeList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const currentPage = parseInt(searchParams.get("page") || "1");
+    const currentPage = parseInt(searchParams.get("likePage") || "1");
+    const likeSort = parseInt(searchParams.get("likeSort") || "0");
     axios
-      .get(`/api/products/user/${userId}/like?page=${currentPage}`)
+      .get(
+        `/api/products/user/${userId}/like?likePage=${currentPage}&likeSort=${likeSort}`,
+      )
       .then((res) => {
         console.log(res.data);
         if (currentPage === 1) {
@@ -74,12 +78,21 @@ export function LikeList() {
         });
         setPageInfo(res.data.pageInfo);
         setHasNextPage(res.data.hasNextPage);
+        setSortOption(likeSort.toString());
       });
   }, [searchParams]);
 
-  if (likeProductList === null) {
-    return <Spinner />;
-  }
+  // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 페이지1, 최신순으로 재렌더링
+
+  useEffect(() => {
+    const currentPage = parseInt(searchParams.get("likePage") || "1");
+    const likeSort = parseInt(searchParams.get("likeSort") || "0");
+    if (currentPage > 1 || likeSort > 0) {
+      searchParams.set("likePage", "1");
+      searchParams.set("likeSort", "0");
+      setSearchParams(searchParams);
+    }
+  }, []);
 
   function handleLikeClick(productId) {
     axios
@@ -100,15 +113,15 @@ export function LikeList() {
   function handleMoreClick() {
     if (!hasNextPage) return;
 
-    const currentPage = parseInt(searchParams.get("page") || "1");
-    searchParams.set("page", currentPage + 1);
+    const currentPage = parseInt(searchParams.get("likePage") || "1");
+    searchParams.set("likePage", currentPage + 1);
     setSearchParams(searchParams);
   }
 
   function handleFoldClick() {
     const scrollDuration = 500;
     setTimeout(() => {
-      searchParams.set("page", 1);
+      searchParams.set("likePage", 1);
       setSearchParams(searchParams);
     }, scrollDuration);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -127,8 +140,16 @@ export function LikeList() {
       .finally();
   };
 
+  function handleSortChange(sortValue) {
+    setSortOption(sortValue);
+    searchParams.set("likeSort", sortValue);
+    setSearchParams(searchParams);
+  }
+
   return (
     <Box>
+      <SortButton sortOption={sortOption} handleSortChange={handleSortChange} />
+
       {likeProductList.length === 0 ? (
         <Text align="center" fontSize="xl" fontWeight="bold" mt={4}>
           찜한 상품이 없습니다.
@@ -138,16 +159,14 @@ export function LikeList() {
           {likeProductList.map((product) => (
             <GridItem key={product.id}>
               <Card
+                boxShadow={"none"}
+                borderStyle={"solid"}
+                borderColor={"black.300"}
+                borderWidth={"1px"}
                 cursor={"pointer"}
                 maxW="sm"
                 h="100%"
-                borderWidth="1px"
-                borderColor={"#eee"}
-                borderRadius="lg"
-                overflow="hidden"
-                boxShadow="md"
-                transition="transform 0.2s"
-                _hover={{ transform: "scale(1.05)" }}
+                borderRadius="0"
               >
                 <CardBody position="relative" h="100%">
                   <Box mt={2} w="100%">
@@ -157,9 +176,10 @@ export function LikeList() {
                           <Image
                             onClick={() => navigate(`/product/${product.id}`)}
                             src={product.productFileList[0].filePath}
-                            borderRadius="lg"
                             w="100%"
                             h="200px"
+                            transition="transform 0.2s"
+                            _hover={{ transform: "scale(1.02)" }}
                           />
                         )}
                         <Badge
@@ -172,10 +192,15 @@ export function LikeList() {
                         </Badge>
                       </>
                     ) : (
-                      <Box position={"relative"} w={"100%"} h={"200px"}>
+                      <Box
+                        transition="transform 0.2s"
+                        _hover={{ transform: "scale(1.02)" }}
+                        position={"relative"}
+                        w={"100%"}
+                        h={"200px"}
+                      >
                         <Image
                           src={product.productFileList[0].filePath}
-                          borderRadius="lg"
                           w="100%"
                           h="200px"
                           filter="brightness(50%)"
@@ -237,22 +262,6 @@ export function LikeList() {
                       <Text>{product.timeFormat}</Text>
                     </Flex>
                   </Stack>
-                  {product.status || (
-                    <Box display="flex" justifyContent="center">
-                      <Button
-                        hidden={product.reviewStatus === false}
-                        mt={2}
-                        w={"100%"}
-                        colorScheme={"green"}
-                        onClick={() => {
-                          onOpen();
-                          handleGetReviewButtonClick(product.id);
-                        }}
-                      >
-                        상품 후기
-                      </Button>
-                    </Box>
-                  )}
                 </CardBody>
               </Card>
             </GridItem>
@@ -261,31 +270,12 @@ export function LikeList() {
       )}
       {likeProductList.length > 0 && (
         <Box display={"flex"} justifyContent={"center"}>
-          {hasNextPage ? (
-            <Button
-              w={"30%"}
-              colorScheme={"white"}
-              color={"black"}
-              mt={4}
-              onClick={handleMoreClick}
-              rightIcon={<ArrowDownIcon />}
-            >
-              더보기
-            </Button>
-          ) : (
-            likeProductList.length > 9 && (
-              <Button
-                w={"30%"}
-                colorScheme={"white"}
-                color={"black"}
-                mt={4}
-                rightIcon={<ChevronUpIcon />}
-                onClick={handleFoldClick}
-              >
-                접기
-              </Button>
-            )
-          )}
+          <LoadMoreAndFoldButton
+            hasNextPage={hasNextPage}
+            productListLength={likeProductList.length}
+            onMoreClick={handleMoreClick}
+            onFoldClick={handleFoldClick}
+          />
         </Box>
       )}
       {/* 후기 작성 모달 */}

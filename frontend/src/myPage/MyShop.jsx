@@ -8,69 +8,87 @@ import {
   Grid,
   GridItem,
   Image,
-  Spinner,
   Text,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
+import { SortButton } from "../component/SortButton.jsx";
 
 export function MyShop() {
   const { userId } = useParams();
-  const [productList, setProductList] = useState(null);
+  const [productList, setProductList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const [hasNextPage, setHasNextPage] = useState(true);
+  const [sortOption, setSortOption] = useState("0");
   const account = useContext(LoginContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const currentPage = parseInt(searchParams.get("page") || "1");
+    const currentPage = parseInt(searchParams.get("shopPage") || "1");
+    const shopSort = parseInt(searchParams.get("shopSort") || "0");
     axios
-      .get(`/api/products/user/${userId}?page=${currentPage}`)
+      .get(
+        `/api/products/user/${userId}?shopPage=${currentPage}&shopSort=${shopSort}`,
+      )
       .then((res) => {
-        console.log(res.data);
         if (currentPage === 1) {
-          // 첫 번째 페이지
           setProductList(res.data.productList);
         } else {
-          // 이후 페이지 : 기존 리스트에 추가
           setProductList((prevList) => [...prevList, ...res.data.productList]);
         }
         setPageInfo(res.data.pageInfo);
         setHasNextPage(res.data.hasNextPage);
+        setSortOption(shopSort.toString());
       })
       .catch((error) => {
         console.error("Failed to fetch products", error);
       });
   }, [searchParams]);
 
+  // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 페이지1, 최신순으로 재렌더링
+  useEffect(() => {
+    const currentPage = parseInt(searchParams.get("shopPage") || "1");
+    const shopSort = parseInt(searchParams.get("shopSort") || "0");
+
+    if (currentPage > 1 || shopSort > 0) {
+      searchParams.set("shopPage", "1");
+      searchParams.set("shopSort", "0");
+      setSearchParams(searchParams);
+    }
+  }, []);
+
   function handleMoreClick() {
     if (!hasNextPage) return;
 
-    const currentPage = parseInt(searchParams.get("page") || "1");
-    searchParams.set("page", currentPage + 1);
+    const currentPage = parseInt(searchParams.get("shopPage") || "1");
+    searchParams.set("shopPage", currentPage + 1);
     setSearchParams(searchParams);
   }
 
   function handleFoldClick() {
     const scrollDuration = 500;
     setTimeout(() => {
-      searchParams.set("page", 1);
+      searchParams.set("shopPage", "1");
       setSearchParams(searchParams);
     }, scrollDuration);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  if (productList === null) {
-    return <Spinner />;
+  function handleSortChange(sortValue) {
+    setSortOption(sortValue);
+    searchParams.set("shopSort", sortValue);
+    setSearchParams(searchParams);
   }
 
   return (
     <Box>
+      <SortButton sortOption={sortOption} handleSortChange={handleSortChange} />
+
       {productList.length === 0 ? (
         <Text align="center" fontSize="xl" fontWeight="bold" mt={4}>
           판매한 상품이 없습니다.
@@ -80,19 +98,16 @@ export function MyShop() {
           {productList.map((product) => (
             <GridItem key={product.id}>
               <Card
+                boxShadow={"none"}
+                borderStyle={"solid"}
+                borderColor={"black.300"}
+                borderWidth={"1px"}
                 cursor={"pointer"}
                 maxW="sm"
                 h="100%"
-                borderWidth="1px"
-                borderColor={"#eee"}
-                borderRadius="lg"
-                overflow="hidden"
-                boxShadow="md"
-                transition="transform 0.2s"
-                _hover={{ transform: "scale(1.05)" }}
+                borderRadius="0"
               >
                 <CardBody position={"relative"} h={"100%"}>
-                  {/* 판매 상태 true 이면 endTime Badge */}
                   {product.status && (
                     <Badge
                       position={"absolute"}
@@ -103,7 +118,6 @@ export function MyShop() {
                       {product.endTimeFormat}
                     </Badge>
                   )}
-                  {/* 판매 상태 false 이면 낙찰자 Badge */}
                   {!product.status &&
                     product.productBidList &&
                     product.productBidList.length > 0 && (
@@ -136,25 +150,29 @@ export function MyShop() {
                     )}
 
                   <Box mt={2} w="30%%">
-                    {/*판매 상태 true 이면 이미지*/}
-                    {/*판매 상태 False 이면 판매완료 이미지*/}
                     {product.status ? (
                       <>
                         {product.productFileList && (
                           <Image
                             onClick={() => navigate(`/product/${product.id}`)}
                             src={product.productFileList[0].filePath}
-                            borderRadius={"lg"}
                             w={"100%"}
                             h={"200px"}
+                            transition="transform 0.2s"
+                            _hover={{ transform: "scale(1.02)" }}
                           />
                         )}
                       </>
                     ) : (
-                      <Box position={"relative"} w={"100%"} h={"200px"}>
+                      <Box
+                        transition="transform 0.2s"
+                        _hover={{ transform: "scale(1.02)" }}
+                        position={"relative"}
+                        w={"100%"}
+                        h={"200px"}
+                      >
                         <Image
                           src={product.productFileList[0].filePath}
-                          borderRadius="lg"
                           w="100%"
                           h="200px"
                           filter="brightness(50%)"
@@ -197,7 +215,13 @@ export function MyShop() {
                   </Flex>
                   {product.status || (
                     <Box display="flex" justifyContent="center">
-                      <Button mt={2} w={"100%"} colorScheme={"green"}>
+                      <Button
+                        mt={2}
+                        w={"100%"}
+                        variant={"outline"}
+                        colorScheme={"teal"}
+                        borderWidth={3}
+                      >
                         상품 후기
                       </Button>
                     </Box>
@@ -210,31 +234,12 @@ export function MyShop() {
       )}
       {productList.length > 0 && (
         <Box display={"flex"} justifyContent={"center"}>
-          {hasNextPage ? (
-            <Button
-              w={"30%"}
-              colorScheme={"white"}
-              color={"black"}
-              mt={4}
-              onClick={handleMoreClick}
-              rightIcon={<ArrowDownIcon />}
-            >
-              더보기
-            </Button>
-          ) : (
-            productList.length > 9 && (
-              <Button
-                w={"30%"}
-                colorScheme={"white"}
-                color={"black"}
-                mt={4}
-                rightIcon={<ChevronUpIcon />}
-                onClick={handleFoldClick}
-              >
-                접기
-              </Button>
-            )
-          )}
+          <LoadMoreAndFoldButton
+            hasNextPage={hasNextPage}
+            productListLength={productList.length}
+            onMoreClick={handleMoreClick}
+            onFoldClick={handleFoldClick}
+          />
         </Box>
       )}
     </Box>

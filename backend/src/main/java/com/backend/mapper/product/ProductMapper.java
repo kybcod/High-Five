@@ -87,13 +87,20 @@ public interface ProductMapper {
                     p.start_time,
                     p.end_time,
                     p.content,
-                    p.status
-            FROM product p
+                    p.status,
+                    COUNT(pl.id)
+            FROM product p LEFT JOIN product_like pl ON p.id = pl.product_id
             WHERE p.title LIKE #{pattern}
             <if test="category != null and category != ''">
                 AND p.category = #{category}
             </if>
-            ORDER BY p.status DESC, p.end_time
+            GROUP BY p.id
+            ORDER BY 
+                    CASE WHEN #{sort} = 0 THEN start_time END DESC,
+                    CASE WHEN #{sort} = 1 THEN COUNT(pl.id) END DESC,
+                    CASE WHEN #{sort} = 2 THEN start_price END ASC,
+                    CASE WHEN #{sort} = 3 THEN start_price END DESC,
+                    p.id
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             </script>
             """)
@@ -101,7 +108,7 @@ public interface ProductMapper {
             @Result(property = "id", column = "id"),
             @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
     })
-    List<Product> selectWithPageable(Pageable pageable, String keyword, String category);
+    List<Product> selectWithPageable(Pageable pageable, String keyword, String category, int sort);
 
     @Select("""
             <script>
@@ -183,20 +190,27 @@ public interface ProductMapper {
                    p.content,
                    p.view_count,
                    p.status,
-                p.review_status,
-                u.nick_name AS userNickName
+                   p.review_status,
+                   u.nick_name AS userNickName,
+                   COUNT(pl.id) AS likes
             FROM product p
-                     JOIN user u
-                          ON p.user_id = u.id
+            JOIN user u ON p.user_id = u.id
+            LEFT JOIN product_like pl ON pl.product_id = p.id
             WHERE p.user_id = #{userId}
-            ORDER BY p.start_time DESC
+            GROUP BY p.id 
+            ORDER BY
+                CASE WHEN #{sort} = 0 THEN p.start_time END DESC,
+                CASE WHEN #{sort} = 1 THEN COUNT(pl.id) END DESC,
+                CASE WHEN #{sort} = 2 THEN p.start_price END ASC,
+                CASE WHEN #{sort} = 3 THEN p.start_price END DESC,
+                p.id DESC  
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productListByUserId", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
     })
-    List<Product> selectProductsByUserIdWithPagination(Integer userId, Pageable pageable);
+    List<Product> selectProductsByUserIdWithPagination(Integer userId, Pageable pageable, int sort);
 
     @Select("""
             SELECT COUNT(*)
@@ -226,7 +240,7 @@ public interface ProductMapper {
             @Result(property = "id", column = "id"),
             @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
     })
-    List<Product> selectLikeSelectByUserId(Integer userId, Pageable pageable);
+    List<Product> selectLikeSelectByUserId(Integer userId, Pageable pageable, int likeSort);
 
     @Select("""
             SELECT COUNT(*)
@@ -343,4 +357,21 @@ public interface ProductMapper {
             @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
     })
     List<Product> selectProductToday();
+
+    @Select("""
+            <script>
+            <bind name="pattern" value="'%' + keyword + '%'" />
+            SELECT COUNT(*)
+            FROM product
+            WHERE title LIKE #{pattern}
+            </script>
+            """)
+    Integer selectKeywordCount(String title);
+
+    @Select("""
+            SELECT COUNT(*) 
+            FROM product
+            WHERE category = #{category}
+            """)
+    Integer selectCategoryCount(String category);
 }
