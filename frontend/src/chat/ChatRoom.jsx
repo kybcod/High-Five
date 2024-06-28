@@ -40,8 +40,12 @@ import {
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import CustomModal from "./CustomModal.jsx";
 
-export function ChatRoom() {
-  const { productId, buyerId } = useParams();
+export function ChatRoom({ pId, bId }) {
+  let { productId, buyerId } = useParams();
+  if (pId != null && bId != null) {
+    productId = pId;
+    buyerId = bId;
+  }
   const account = useContext(LoginContext);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -336,45 +340,70 @@ export function ChatRoom() {
   };
   const buttonConfig = determineButton();
 
+  const handleStoreButtonClick = () => {
+    if (data.seller.id === tokenUserId) {
+      navigate(`/myPage/${data.user.id}/shop`);
+    } else {
+      navigate(`/myPage/${data.seller.id}/shop`);
+    }
+  };
+
   // -- spinner
   if (data.chatRoom == null) {
     return <Spinner />;
   }
 
   return (
-    <Box w={"70%"} border={"1px solid gray"}>
-      <Box border={"1px solid red"}>
+    <Box
+      w={pId !== undefined ? "100%" : "80%"}
+      border={"2px solid #efefef"}
+      borderRadius={"10px"}
+      h={"100%"}
+    >
+      <Box borderBottom={"2px solid #efefef"}>
         <Flex>
           {/* 뒤로 가기 */}
-          <Box w={"10%"} border={"1px solid gray"}>
+          <Box w={"10%"}>
             <Button
               onClick={() => {
                 disConnect();
                 navigate(-1);
               }}
+              variant={"outline"}
+              // color={"#2F4858"}
+              color={"#00946F"}
+              borderColor={"#ffffff"}
+              w={"100%"}
             >
               <FontAwesomeIcon icon={faAngleLeft} />
             </Button>
           </Box>
           {/* 상대방 상점 */}
-          <Center cursor={"pointer"} w={"80%"} border={"1px solid blue"}>
+          <Center cursor={"pointer"} w={"80%"}>
             <Box fontSize={"xl"}>
-              {data.seller.id === tokenUserId ? (
-                <Text onClick={() => navigate(`/myPage/${data.user.id}/shop`)}>
-                  {data.user.nickName}
-                </Text>
-              ) : (
-                <Text
-                  onClick={() => navigate(`/myPage/${data.seller.id}/shop`)}
-                >
-                  {data.seller.nickName}
-                </Text>
-              )}
+              <Button
+                variant="link"
+                onClick={handleStoreButtonClick}
+                color={"teal"}
+                size={"lg"}
+                as={"b"}
+              >
+                {data.seller.id === tokenUserId
+                  ? `${data.user.nickName}`
+                  : `${data.seller.nickName}`}
+              </Button>
             </Box>
           </Center>
-          <Box w={"10%"} border={"1px solid yellow"}>
+          <Box w={"10%"}>
             <Menu>
-              <MenuButton as={Button}>
+              <MenuButton
+                as={Button}
+                w={"100%"}
+                variant={"outline"}
+                borderColor={"#ffffff"}
+                // color={"#2F4858"}
+                color={"#00946F"}
+              >
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </MenuButton>
               <MenuList>
@@ -402,14 +431,14 @@ export function ChatRoom() {
           </Box>
         </Flex>
       </Box>
-      <Box border={"1px solid green"}>
+      <Box borderBottom={"2px solid #efefef"} mb={2}>
         <Stack direction={"row"} align={"center"}>
           <Button
             w={"80%"}
-            variant="link"
-            isDisabled={
-              data.product.title == "삭제된 상품입니다." ? true : false
-            }
+            variant={"link"}
+            // color={"#2F4858"}
+            color={"teal"}
+            isDisabled={data.product.title === "삭제된 상품입니다."}
             onClick={() => navigate(`/product/${data.product.id}`)}
           >
             {data.product.title}
@@ -418,7 +447,9 @@ export function ChatRoom() {
           {buttonConfig && (
             <Button
               w={"20%"}
-              variant="ghost"
+              variant={"outline"}
+              borderColor={"#ffffff"}
+              color={"#00946F"}
               onClick={buttonConfig.action}
               isDisabled={buttonConfig.disabled}
             >
@@ -430,12 +461,14 @@ export function ChatRoom() {
       <Box>
         <Box>
           <VStack
-            h={"500px"}
+            h={"455px"}
+            // h={"100%"}
             spacing={4}
             flex={1}
             // flexDirection={"column-reverse"}
             overflowY={"auto"}
             w={"full"}
+            borderBottom={"2px solid #efefef"}
           >
             {messageList.map((msg, index) => (
               <Flex
@@ -451,11 +484,14 @@ export function ChatRoom() {
                   alignItems={
                     msg.userId === tokenUserId ? "flex-end" : "flex-start"
                   }
+                  ml={msg.userId !== tokenUserId && 3}
+                  mr={msg.userId === tokenUserId && 3}
                 >
                   <Box
+                    border={"1px solid #f1f1f1"}
                     textAlign={msg.userId === tokenUserId ? "right" : "left"}
-                    bg={msg.userId === tokenUserId ? "green.200" : "gray.100"}
-                    borderRadius="18px"
+                    bg={msg.userId === tokenUserId ? "#efefef" : "#fcfcfc"}
+                    borderRadius={"15px"}
                     p={2}
                     maxW="100%"
                     mb={1}
@@ -470,16 +506,22 @@ export function ChatRoom() {
               </Flex>
             ))}
           </VStack>
-          <Box>
+          <Box p={1}>
             <Flex>
               <Input
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                focusBorderColor={"#006E7B"}
+                w={"80%"}
               />
               <Button
                 isDisabled={message.trim().length === 0}
                 onClick={sendMessage}
+                variant="outline"
+                color={"#006E7B"}
+                borderColor={"#efefef"}
+                w={"20%"}
               >
                 send
               </Button>
@@ -525,6 +567,7 @@ export function ChatRoom() {
               isDisabled={reviewId.length === 0}
               onClick={handleSaveReviewButtonClick}
               hidden={data.product.reviewStatus === true}
+              colorScheme={"teal"}
             >
               후기 보내기
             </Button>
