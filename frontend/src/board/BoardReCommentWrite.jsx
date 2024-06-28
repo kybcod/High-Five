@@ -62,7 +62,6 @@ export function BoardReCommentWrite({
             : "답글을 작성하시려면 로그인 하세요"
         }
         value={content}
-        resize={"none"}
         onChange={(e) => setContent(e.target.value)}
       />
       <Stack>

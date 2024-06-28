@@ -235,7 +235,6 @@ export function BoardModify() {
           border={"transparent"}
           focusBorderColor={"transparent"}
           sx={{ outline: "none" }}
-          resize={"none"}
         />
       </Box>
       <Box>

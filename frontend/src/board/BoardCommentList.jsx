@@ -81,7 +81,14 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
   return (
     boardCommentList &&
     boardCommentList.length > 0 && (
-      <Card>
+      <Card
+        borderWidth="1px"
+        borderStyle="solid"
+        borderColor="gray.200"
+        borderRadius="md"
+        boxShadow={"none"}
+        mt={"20px"}
+      >
         <CardBody>
           {boardCommentList.map((boardComment) => (
             <Stack key={boardComment.id}>
@@ -90,7 +97,11 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                   {isEditingId === boardComment.id || (
                     <Flex>
                       <Text>{boardComment.nickName}</Text>
-                      <Textarea defaultValue={boardComment.content} readOnly />
+                      <Textarea
+                        defaultValue={boardComment.content}
+                        resize={"none"}
+                        readOnly
+                      />
                       {account.hasAccess(boardComment.userId) && (
                         <Stack>
                           <Button
@@ -161,6 +172,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                           defaultValue={subComment.content}
                           readOnly
                           size="sm"
+                          resize={"none"}
                         />
                         {account.hasAccess(subComment.userId) && (
                           <Stack>
