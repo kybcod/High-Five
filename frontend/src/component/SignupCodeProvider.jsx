@@ -40,12 +40,17 @@ export function SignupCodeProvider({ children }) {
 
   function handleInputPhoneNumber(input) {
     const prefix = "010-";
-    input =
-      prefix +
-      input
-        .substring(prefix.length)
-        .replace(/[^0-9]/g, "")
-        .replace(/^(\d{4})(\d{4})$/, `$1-$2`);
+
+    let numberPart = input.startsWith(prefix)
+      ? input.substring(prefix.length)
+      : input;
+
+    numberPart = numberPart
+      .replace(/[^0-9]/g, "")
+      .replace(/^(\d{4})(\d{4})$/, `$1-$2`);
+
+    input = prefix + numberPart;
+
     setPhoneNumber(input);
     setIsCheckedCode(false);
   }

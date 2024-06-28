@@ -28,8 +28,14 @@ export function SignupPhoneNumber() {
   useEffect(() => {
     const emailParam = searchParams.get("email");
     const nickNameParam = searchParams.get("nickName");
-    setUser({ email: emailParam, nickName: nickNameParam, phoneNumber: "" });
-    codeInfo.setPhoneNumber("");
+    const phoneNumber = searchParams.get("phoneNumber");
+    setUser({
+      email: emailParam,
+      nickName: nickNameParam,
+      phoneNumber: phoneNumber,
+    });
+    console.log(phoneNumber);
+    codeInfo.setPhoneNumber(phoneNumber);
     codeInfo.setIsCheckedCode(false);
     codeInfo.setVerificationCode("");
   }, []);
