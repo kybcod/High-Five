@@ -11,7 +11,6 @@ import {
   Grid,
   GridItem,
   Image,
-  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -23,7 +22,7 @@ import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
 
 export function BidList() {
   const { userId } = useParams();
-  const [bidList, setBidList] = useState(null);
+  const [bidList, setBidList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [hasNextPage, setHasNextPage] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -58,9 +57,14 @@ export function BidList() {
     });
   }, [searchParams]);
 
-  if (bidList === null) {
-    return <Spinner />;
-  }
+  // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 1페이지로 렌더링
+  useEffect(() => {
+    const currentPage = parseInt(searchParams.get("likePage") || "1");
+    if (currentPage > 1) {
+      searchParams.set("likePage", "1");
+      setSearchParams(searchParams);
+    }
+  }, []);
 
   function handleLikeClick(productId) {
     axios

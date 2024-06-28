@@ -17,7 +17,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Stack,
   Text,
   useDisclosure,
@@ -36,7 +35,7 @@ import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
 
 export function LikeList() {
   const { userId } = useParams();
-  const [likeProductList, setLikeProductList] = useState(null);
+  const [likeProductList, setLikeProductList] = useState([]);
   const [likes, setLikes] = useState({});
   const [pageInfo, setPageInfo] = useState({});
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -47,9 +46,9 @@ export function LikeList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const currentPage = parseInt(searchParams.get("page") || "1");
+    const currentPage = parseInt(searchParams.get("likePage") || "1");
     axios
-      .get(`/api/products/user/${userId}/like?page=${currentPage}`)
+      .get(`/api/products/user/${userId}/like?likePage=${currentPage}`)
       .then((res) => {
         console.log(res.data);
         if (currentPage === 1) {
@@ -77,9 +76,14 @@ export function LikeList() {
       });
   }, [searchParams]);
 
-  if (likeProductList === null) {
-    return <Spinner />;
-  }
+  // 새로고침, 다른 페이지 이동 후 다시 돌아왔을 때 1페이지로 렌더링
+  useEffect(() => {
+    const currentPage = parseInt(searchParams.get("likePage") || "1");
+    if (currentPage > 1) {
+      searchParams.set("likePage", "1");
+      setSearchParams(searchParams);
+    }
+  }, []);
 
   function handleLikeClick(productId) {
     axios
@@ -100,15 +104,15 @@ export function LikeList() {
   function handleMoreClick() {
     if (!hasNextPage) return;
 
-    const currentPage = parseInt(searchParams.get("page") || "1");
-    searchParams.set("page", currentPage + 1);
+    const currentPage = parseInt(searchParams.get("likePage") || "1");
+    searchParams.set("likePage", currentPage + 1);
     setSearchParams(searchParams);
   }
 
   function handleFoldClick() {
     const scrollDuration = 500;
     setTimeout(() => {
-      searchParams.set("page", 1);
+      searchParams.set("likePage", 1);
       setSearchParams(searchParams);
     }, scrollDuration);
     window.scrollTo({ top: 0, behavior: "smooth" });

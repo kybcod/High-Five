@@ -95,15 +95,15 @@ public class ProductController {
     @GetMapping("user/{userId}")
     @Description("MyPage 판매 목록 : 상품조회 - 사용자별")
     public Map<String, Object> getUserProducts(@PathVariable Integer userId,
-                                               @RequestParam(defaultValue = "1") int page,
+                                               @RequestParam(defaultValue = "1") int shopPage,
                                                @RequestParam(defaultValue = "0") int sort) {
-        return service.getProductsByUserId(userId, PageRequest.of(page - 1, 9), sort);
+        return service.getProductsByUserId(userId, PageRequest.of(shopPage - 1, 9), sort);
     }
 
     @GetMapping("user/{userId}/like")
     @Description("MyPage 찜 목록 : 상품조회 + 좋아요 - 사용자별")
-    public Map<String, Object> getUserProductsLike(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int page) {
-        return service.getProductsLikeByUserId(userId, PageRequest.of(page - 1, 9));
+    public Map<String, Object> getUserProductsLike(@PathVariable Integer userId, @RequestParam(defaultValue = "1") int likePage) {
+        return service.getProductsLikeByUserId(userId, PageRequest.of(likePage - 1, 9));
     }
 
 }

@@ -8,8 +8,6 @@ import {
   Grid,
   GridItem,
   Image,
-  Select,
-  Spinner,
   Text,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
@@ -20,26 +18,23 @@ import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
 
 export function MyShop() {
   const { userId } = useParams();
-  const [productList, setProductList] = useState(null);
+  const [productList, setProductList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const [hasNextPage, setHasNextPage] = useState(true);
-  const [sortOption, setSortOption] = useState(0);
+  const [sortOption, setSortOption] = useState("0");
   const account = useContext(LoginContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const currentPage = parseInt(searchParams.get("page") || "1");
-    const sort = parseInt(searchParams.get("sort") || sortOption);
+    const currentPage = parseInt(searchParams.get("shopPage") || "1");
+    const sort = parseInt(searchParams.get("sort") || "0");
     axios
-      .get(`/api/products/user/${userId}?page=${currentPage}&sort=${sort}`)
+      .get(`/api/products/user/${userId}?shopPage=${currentPage}&sort=${sort}`)
       .then((res) => {
-        console.log(res.data);
         if (currentPage === 1) {
-          // 첫 번째 페이지
           setProductList(res.data.productList);
         } else {
-          // 이후 페이지 : 기존 리스트에 추가
           setProductList((prevList) => [...prevList, ...res.data.productList]);
         }
         setPageInfo(res.data.pageInfo);
@@ -50,47 +45,55 @@ export function MyShop() {
       });
   }, [searchParams]);
 
+  useEffect(() => {
+    const currentPage = parseInt(searchParams.get("shopPage") || "1");
+    if (currentPage > 1) {
+      searchParams.set("shopPage", "1");
+      setSearchParams(searchParams);
+    }
+  }, []);
+
   function handleMoreClick() {
     if (!hasNextPage) return;
 
-    const currentPage = parseInt(searchParams.get("page") || "1");
-    searchParams.set("page", currentPage + 1);
+    const currentPage = parseInt(searchParams.get("shopPage") || "1");
+    searchParams.set("shopPage", currentPage + 1);
     setSearchParams(searchParams);
   }
 
   function handleFoldClick() {
     const scrollDuration = 500;
     setTimeout(() => {
-      searchParams.set("page", 1);
+      searchParams.set("shopPage", "1");
       setSearchParams(searchParams);
     }, scrollDuration);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  if (productList === null) {
-    return <Spinner />;
-  }
-
-  function handleSortChange(event) {
-    setSortOption(parseInt(event.target.value));
-    searchParams.set("sort", event.target.value);
+  function handleSortChange(sortValue) {
+    searchParams.set("sort", sortValue);
     setSearchParams(searchParams);
   }
 
   return (
     <Box>
       <Flex justifyContent={"flex-end"} mb={4}>
-        <Select
-          width={"200px"}
-          value={sortOption}
-          onChange={(e) => handleSortChange(e)}
-        >
-          <option value="0">최신순</option>
-          <option value="1">인기순</option>
-          <option value="2">저가순</option>
-          <option value="3">고가순</option>
-        </Select>
+        <Button variant="unstyled" onClick={() => handleSortChange("0")}>
+          최신순
+        </Button>
+        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
+        <Button variant="unstyled" onClick={() => handleSortChange("1")}>
+          인기순
+        </Button>
+        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
+        <Button variant="unstyled" onClick={() => handleSortChange("2")}>
+          저가순
+        </Button>
+        <Box m={2} height="24px" borderLeft="1px solid #ccc" />
+        <Button variant="unstyled" onClick={() => handleSortChange("3")}>
+          고가순
+        </Button>
       </Flex>
 
       {productList.length === 0 ? (
@@ -110,7 +113,6 @@ export function MyShop() {
                 _hover={{ transform: "scale(1.05)" }}
               >
                 <CardBody position={"relative"} h={"100%"}>
-                  {/* 판매 상태 true 이면 endTime Badge */}
                   {product.status && (
                     <Badge
                       position={"absolute"}
@@ -121,7 +123,6 @@ export function MyShop() {
                       {product.endTimeFormat}
                     </Badge>
                   )}
-                  {/* 판매 상태 false 이면 낙찰자 Badge */}
                   {!product.status &&
                     product.productBidList &&
                     product.productBidList.length > 0 && (
@@ -154,8 +155,6 @@ export function MyShop() {
                     )}
 
                   <Box mt={2} w="30%%">
-                    {/*판매 상태 true 이면 이미지*/}
-                    {/*판매 상태 False 이면 판매완료 이미지*/}
                     {product.status ? (
                       <>
                         {product.productFileList && (

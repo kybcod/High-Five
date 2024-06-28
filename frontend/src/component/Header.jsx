@@ -134,7 +134,7 @@ export function Header() {
               <FontAwesomeIcon icon={faComments} size="xl" />
             </Button>
             <Text fontSize="small" mt={1}>
-              경매톡
+              채팅방
             </Text>
           </Box>
         </Flex>
