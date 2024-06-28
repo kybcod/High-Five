@@ -39,75 +39,82 @@ export function ChatRoomList() {
   }
 
   return (
-    <Box width={"40%"}>
-      <Heading>채팅방 목록</Heading>
-
-      {/* 상품 제목, 닉네임, 대화내용, 대화시간 */}
-      {data.map((item, index) => (
-        <Box key={index} border={"1px solid gray"} height={"110px"}>
-          <Box m={2}>
-            <Button
-              size="lg"
-              variant="link"
-              whiteSpace={"nowrap"}
-              textOverflow={"ellipsis"}
-              overflow={"hidden"}
-              onClick={() => navigate(`/product/${item.product.id}`)}
-              isDisabled={
-                item.product.title == "삭제된 상품입니다." ? true : false
-              }
-            >
-              {item.product.title}
-            </Button>
-          </Box>
-          <Box m={2}>
-            <Flex>
-              <HStack spacing={4}>
-                <Center bgColor={"blue"}>
-                  <Button
-                    variant="link"
-                    onClick={() => navigate(`/myPage/${item.user.id}/shop`)}
-                    isDisabled={
-                      item.user.nickName == "탈퇴한 회원" ? true : false
-                    }
-                  >
-                    {item.user.nickName}
-                  </Button>
-                </Center>
-                <Box fontSize={"xs"} color={"blue.300"}>
-                  {item.chat.inserted}
-                </Box>
-              </HStack>
-            </Flex>
-          </Box>
-          <Box
-            bgColor={"gray.200"}
-            m={2}
-            h={"30px"}
-            lineHeight={"30px"}
-            cursor={"pointer"}
-            onClick={() =>
-              navigate(
-                `/chat/product/${item.product.id}/buyer/${item.chatRoom.userId}`,
-              )
-            }
-          >
-            <Flex>
-              <Box
-                w={"90%"}
-                whiteSpace={"nowrap"}
-                textOverflow={"ellipsis"}
-                overflow={"hidden"}
-              >
-                {item.chat.message}
-              </Box>
-              <Box w={"10%"} color={"blue.500"}>
-                {item.chat.count > 0 && item.chat.count}
-              </Box>
-            </Flex>
-          </Box>
+    <Box border={"1px solid blue"}>
+      <Center>
+        <Box mb={10}>
+          <Heading>채팅방 목록</Heading>
         </Box>
-      ))}
+      </Center>
+      <Flex>
+        <Box border={"1px solid gray"} overflow={"auto"} w={"40%"}>
+          {/* 상품 제목, 닉네임, 대화내용, 대화시간 */}
+          {data.map((item, index) => (
+            <Box key={index} border={"1px solid gray"} height={"120px"}>
+              <Box m={2}>
+                <Button
+                  size="lg"
+                  variant="link"
+                  whiteSpace={"nowrap"}
+                  textOverflow={"ellipsis"}
+                  overflow={"hidden"}
+                  onClick={() => navigate(`/product/${item.product.id}`)}
+                  isDisabled={
+                    item.product.title == "삭제된 상품입니다." ? true : false
+                  }
+                >
+                  {item.product.title}
+                </Button>
+              </Box>
+              <Box m={2}>
+                <Flex>
+                  <HStack spacing={4}>
+                    <Center bgColor={"blue"}>
+                      <Button
+                        variant="link"
+                        onClick={() => navigate(`/myPage/${item.user.id}/shop`)}
+                        isDisabled={
+                          item.user.nickName == "탈퇴한 회원" ? true : false
+                        }
+                      >
+                        {item.user.nickName}
+                      </Button>
+                    </Center>
+                    <Box fontSize={"xs"} color={"blue.300"}>
+                      {item.chat.inserted}
+                    </Box>
+                  </HStack>
+                </Flex>
+              </Box>
+              <Box
+                bgColor={"gray.200"}
+                m={2}
+                h={"30px"}
+                lineHeight={"30px"}
+                cursor={"pointer"}
+                onClick={() => {
+                  navigate(
+                    `/chat/product/${item.product.id}/buyer/${item.chatRoom.userId}`,
+                  );
+                }}
+              >
+                <Flex>
+                  <Box
+                    w={"90%"}
+                    whiteSpace={"nowrap"}
+                    textOverflow={"ellipsis"}
+                    overflow={"hidden"}
+                  >
+                    {item.chat.message}
+                  </Box>
+                  <Box w={"10%"} color={"blue.500"}>
+                    {item.chat.count > 0 && item.chat.count}
+                  </Box>
+                </Flex>
+              </Box>
+            </Box>
+          ))}
+        </Box>
+      </Flex>
     </Box>
   );
 }

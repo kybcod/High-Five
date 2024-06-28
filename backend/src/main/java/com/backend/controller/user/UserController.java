@@ -47,6 +47,9 @@ public class UserController {
     // 회원가입 시 인증코드 받기
     @GetMapping("users/codes")
     public ResponseEntity sendCode(String phoneNumber) {
+        // TODO. 주석 삭제
+        phoneNumber = phoneNumber.replaceAll("-", "");
+        System.out.println("phoneNumber = " + phoneNumber);
         if (phoneNumber.length() == 11) {
             String verificationCode = service.sendMessage(phoneNumber);
             System.out.println("verificationCode = " + verificationCode);
@@ -58,10 +61,14 @@ public class UserController {
     // 인증코드 일치 확인
     @GetMapping("users/confirmation")
     public ResponseEntity verifyCode(String phoneNumber, int verificationCode) {
-        if (service.checkVerificationCode(phoneNumber, verificationCode)) {
-            return ResponseEntity.ok().build();
+        phoneNumber = phoneNumber.replaceAll("-", "");
+        if (phoneNumber.length() == 11) {
+            if (service.checkVerificationCode(phoneNumber, verificationCode)) {
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.badRequest().build();
     }
 
     // user 수정
@@ -70,8 +77,12 @@ public class UserController {
     public ResponseEntity updateUser(User user, Authentication authentication,
                                      @RequestParam(value = "profileImages[]", required = false) MultipartFile profileImage) throws IOException {
         if (service.identificationToModify(user)) {
+            // TODO. 주석해제합시다용
+//            if (service.signUpVerification(user)) {
             Map<String, Object> token = service.updateUser(user, authentication, profileImage);
             return ResponseEntity.ok(token);
+//            }
+//            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -109,12 +120,12 @@ public class UserController {
         String emailPattern = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
 
         if (!email.trim().matches(emailPattern)) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409 응답
     }
 
     // 회원가입 시 닉네임 중복 확인
@@ -122,10 +133,14 @@ public class UserController {
     public ResponseEntity nickNames(String nickName) {
         User user = service.getUserByNickName(nickName);
 
-        if (user == null) {
-            return ResponseEntity.notFound().build();
+        if (nickName.length() > 10) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return ResponseEntity.ok().build();
+
+        if (user == null) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409 응답
     }
 
     // user 리스트 조회
@@ -146,6 +161,7 @@ public class UserController {
     // 전화번호로 이메일 찾기
     @GetMapping("/users/emails/{phoneNumber}")
     public ResponseEntity getEmails(@PathVariable String phoneNumber) {
+        phoneNumber = phoneNumber.replaceAll("-", "");
         if (phoneNumber.length() == 11) {
             String email = service.getEmailByPhoneNumber(phoneNumber);
             if (email != null) {

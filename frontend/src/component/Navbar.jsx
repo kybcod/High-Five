@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Spacer, Text } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
 import { faHeadset, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,8 +13,9 @@ export function Navbar() {
 
   return (
     <Flex
-      borderBottom={"1px solid gray"}
-      h={"50px"}
+      bgColor={"#99D8AF"}
+      // bgColor={"#fae76b"}
+      h={"30px"}
       p={4}
       justifyContent={"space-between"}
       align="center"

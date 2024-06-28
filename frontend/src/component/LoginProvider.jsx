@@ -49,6 +49,8 @@ export function LoginProvider({ children }) {
     setId("");
     setNickName("");
     setAuthority([]);
+    setEmail("");
+    setNickName("");
   }
 
   return (

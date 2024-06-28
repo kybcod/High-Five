@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileUpload } from "./FileUpload.jsx";
-import { FormFields } from "../componentStyle/FormFields.jsx";
+import { FormFields } from "../../component/FormFields.jsx";
 
 export function ProductUpload() {
   const [title, setTitle] = useState("");
@@ -173,8 +173,9 @@ export function ProductUpload() {
             fontSize={"lg"}
             isLoading={loading}
             type="submit"
-            colorScheme="blue"
-            size="lg"
+            borderWidth={3}
+            variant={"outline"}
+            colorScheme={"teal"}
             onClick={handleUploadClick}
           >
             상품 업로드

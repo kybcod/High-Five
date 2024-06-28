@@ -11,5 +11,5 @@ public interface OAuth2UserInfo {
 
     String getPhoneNumber();
 
-    String getProfileImage();
+//    String getProfileImage();
 }

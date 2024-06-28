@@ -2,16 +2,25 @@ import {
   Box,
   Button,
   Center,
+  Divider,
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
+import {
+  buttonStyle,
+  formLabel,
+  InputStyle,
+  title,
+} from "../component/css/style.js";
 
 export function UserPassword() {
   const [email, setEmail] = useState("");
@@ -19,6 +28,12 @@ export function UserPassword() {
   const [passwordCheck, setPasswordCheck] = useState("");
   const codeInfo = useContext(SignupCodeContext);
   const { successToast, errorToast } = CustomToast();
+
+  useEffect(() => {
+    codeInfo.setPhoneNumber("");
+    codeInfo.setIsCheckedCode(false);
+    codeInfo.setVerificationCode("");
+  }, []);
 
   function handleUpdatePassword() {
     axios
@@ -28,9 +43,7 @@ export function UserPassword() {
         if (err.response.status === 404) {
           errorToast("입력한 정보에 맞는 회원 정보가 없습니다");
         } else {
-          successToast(
-            "비밀번호 변경 중 문제가 발생했습니다. 다시 시도해주세요",
-          );
+          errorToast("비밀번호 변경 중 문제가 발생했습니다. 다시 시도해주세요");
         }
       });
   }
@@ -61,27 +74,37 @@ export function UserPassword() {
 
   return (
     <Center>
-      <Box>
-        <FormControl>
-          <FormLabel>이메일</FormLabel>
-          <Input onChange={(e) => setEmail(e.target.value)} />
+      <Box width={"500px"}>
+        <Center>
+          <Box>
+            <Center>
+              <Text {...title}>비밀번호 찾기</Text>
+            </Center>
+            <Text>핸드폰 인증 후 비밀번호 재설정이 가능합니다</Text>
+          </Box>
+        </Center>
+        <Divider borderColor={"teal"} mt={7} />
+        <FormControl mt={10}>
+          <FormLabel {...formLabel}>이메일</FormLabel>
+          <Input {...InputStyle} onChange={(e) => setEmail(e.target.value)} />
         </FormControl>
         <UserPhoneNumber />
         {codeInfo.isCheckedCode && (
-          <Center>
-            <Box>
-              <FormControl>
-                <FormLabel>비밀번호</FormLabel>
+          <Center mt={10}>
+            <Box border={"1px"} borderColor={"gray.200"} p={5}>
+              <Center>
+                <Heading fontSize={"lg"}>새 비밀번호를 입력해주세요</Heading>
+              </Center>
+              <FormControl mt={7}>
+                <FormLabel {...formLabel}>비밀번호</FormLabel>
                 <Input
-                  pr="4.5rem"
-                  variant="flushed"
+                  {...InputStyle}
                   type="password"
                   onChange={(e) => {
                     setPassword(e.target.value);
                     isValidPassword = false;
                   }}
                   isInvalid={isValidPassword ? false : true}
-                  errorBorderColor={"red.300"}
                 />
                 {isValidPassword || (
                   <FormHelperText>
@@ -90,13 +113,11 @@ export function UserPassword() {
                   </FormHelperText>
                 )}
               </FormControl>
-              <FormControl>
-                <FormLabel>비밀번호 확인</FormLabel>
+              <FormControl mt={7}>
+                <FormLabel {...formLabel}>비밀번호 확인</FormLabel>
                 <Input
-                  pr="4.5rem"
+                  {...InputStyle}
                   isInvalid={isCheckedPassword ? false : true}
-                  errorBorderColor={"red.300"}
-                  variant="flushed"
                   type="password"
                   onChange={(e) => setPasswordCheck(e.target.value)}
                 />
@@ -108,8 +129,12 @@ export function UserPassword() {
           </Center>
         )}
         {codeInfo.isCheckedCode && (
-          <Center>
-            <Button onClick={handleUpdatePassword} isDisabled={isDisabled}>
+          <Center mt={10}>
+            <Button
+              onClick={handleUpdatePassword}
+              isDisabled={isDisabled}
+              {...buttonStyle}
+            >
               비밀번호 재설정
             </Button>
           </Center>

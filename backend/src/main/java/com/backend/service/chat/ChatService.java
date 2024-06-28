@@ -126,7 +126,19 @@ public class ChatService {
 
     public void insertMessage(Chat chat) {
         // read_check FALSE 이전 메세지 있으면 TRUE 변경 - apic test 시 axios.get 요청 안 함
-        int success = mapper.updateReadCheck(chat.getChatRoomId(), chat.getUserId());
+        int readCheckSuccess = mapper.updateReadCheck(chat.getChatRoomId(), chat.getUserId());
+
+        ChatRoom chatRoom = mapper.selectChatRoomById(chat.getChatRoomId());
+
+        Boolean prevValue = true;
+        Boolean changeValue = false;
+
+        if (chatRoom.getSellerId() != chat.getUserId() && chatRoom.getSellerExit() != false) {
+            int success = mapper.updateSellerExitById(chat.getChatRoomId(), chatRoom.getSellerId(), changeValue, prevValue);
+        } else if (chatRoom.getUserId() != chat.getUserId() && chatRoom.getUserExit() != false) {
+            int success = mapper.updateUserExitById(chat.getChatRoomId(), chatRoom.getUserId(), changeValue, prevValue);
+        }
+
         mapper.insertMessage(chat);
     }
 
@@ -166,7 +178,7 @@ public class ChatService {
 
             // -- chat : message, inserted
             Chat chat = mapper.selectMessageByRoomId(chatRoom);
-            // -- chat readCheck count
+            // -- chat : readCheck count
             int count = mapper.selectNotReadCountById(chatRoom.getId(), tokenUserId);
 
             if (chat == null) {
@@ -175,7 +187,7 @@ public class ChatService {
                 newChat.setInserted(LocalDateTime.now());
                 chat = newChat;
             }
-            
+
             Map<String, Object> chatMap = new HashMap<>(chat.getChatMessageAndInserted());
             chatMap.put("count", count);
 
@@ -187,5 +199,25 @@ public class ChatService {
             result.add(map);
         }
         return result;
+    }
+
+    public Integer deleteChatRoomById(Integer chatRoomId, Authentication authentication) {
+        Integer tokenUserId = Integer.valueOf(authentication.getName());
+
+        ChatRoom chatRoom = mapper.selectChatRoomById(chatRoomId);
+
+        int success = 0;
+        Boolean prevValue = false;
+        Boolean changeValue = true;
+
+        if (chatRoom.getSellerId() == tokenUserId && chatRoom.getUserExit() == false) {
+            success = mapper.updateSellerExitById(chatRoomId, tokenUserId, changeValue, prevValue);
+        } else if (chatRoom.getUserId() == tokenUserId && chatRoom.getSellerExit() == false) {
+            success = mapper.updateUserExitById(chatRoomId, tokenUserId, changeValue, prevValue);
+        } else {
+            success = mapper.deleteAllChatById(chatRoomId);
+        }
+
+        return success;
     }
 }
