@@ -28,6 +28,7 @@ public interface BoardMapper {
                     b.content,
                     u.nick_name nickName,
                     b.inserted,
+                    b.view_count viewCount,
                     COUNT(DISTINCT f.file_name) AS number_of_images,
                     COUNT(DISTINCT l.user_id) AS number_of_likes,
                     COUNT(DISTINCT c.id) AS number_of_comments
@@ -159,4 +160,11 @@ public interface BoardMapper {
             WHERE user_id = #{userId}
             """)
     String selectFileNameByUserId(Integer userId);
+
+    @Update("""
+            UPDATE board
+            SET view_count = view_count + 1
+            WHERE id = #{id}
+            """)
+    Integer viewCountByBoardClick(Integer id);
 }

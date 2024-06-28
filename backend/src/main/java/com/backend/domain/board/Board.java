@@ -23,6 +23,7 @@ public class Board {
     private Integer numberOfImages;
     private Integer numberOfLikes;
     private Integer numberOfComments;
+    private Integer viewCount;
 
     public String getInserted() {
         LocalDateTime now = LocalDateTime.now();

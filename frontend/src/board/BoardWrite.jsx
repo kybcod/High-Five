@@ -135,7 +135,6 @@ export function BoardWrite() {
             placeholder={"내용을 입력해주세요"}
             mt={"5px"}
             rows={10}
-            resize={"none"}
           />
         </FormControl>
       </Box>

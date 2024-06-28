@@ -1,5 +1,6 @@
 package com.backend.domain.board;
 
+import com.backend.domain.user.UserFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,8 @@ public class BoardComment {
     private Integer boardId;
     private Integer userId;
     private String nickName;
-
+    private UserFile profileImage;
+    
     private String content;
     private LocalDateTime inserted;
     private Integer commentId;

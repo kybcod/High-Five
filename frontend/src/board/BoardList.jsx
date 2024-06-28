@@ -21,6 +21,10 @@ import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faAngleLeft,
+  faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
   faComment,
   faHeart as fullHeart,
   faImage,
@@ -71,16 +75,16 @@ export function BoardList() {
       <Flex>
         <Heading>자유게시판 목록</Heading>
         <Spacer />
-        <Button onClick={() => navigate(`/board`)}>글쓰기</Button>
       </Flex>
       <Box>
-        <Table>
+        <Table mt={"30px"}>
           <Thead>
             <Tr>
               <Th>No.</Th>
               <Th>제목</Th>
               <Th>작성자</Th>
               <Th>댓글수</Th>
+              <Th>조회수</Th>
               <Th>작성시간</Th>
             </Tr>
           </Thead>
@@ -97,27 +101,34 @@ export function BoardList() {
                 <Tr
                   onClick={() => navigate(`/board/${board.id}`)}
                   key={board.id}
+                  cursor={"pointer"}
+                  _hover={{ background: "gray.200" }}
                 >
                   <Td>{board.id}</Td>
                   <Td>
                     {board.title}
                     {board.numberOfImages > 0 && (
-                      <Badge>
-                        <Flex>
+                      <Badge ml={"10px"} variant={"outline"} w={"35px"}>
+                        <Flex justifyContent={"center"}>
                           <Box>
                             <FontAwesomeIcon icon={faImage} />
                           </Box>
-                          <Box>{board.numberOfImages}</Box>
+                          <Box ml={1}>{board.numberOfImages}</Box>
                         </Flex>
                       </Badge>
                     )}
                     {board.numberOfLikes > 0 && (
-                      <Badge>
-                        <Flex>
+                      <Badge
+                        ml={"10px"}
+                        colorScheme={"red"}
+                        variant={"outline"}
+                        w={"35px"}
+                      >
+                        <Flex justifyContent={"center"}>
                           <Box>
                             <FontAwesomeIcon icon={fullHeart} />
                           </Box>
-                          <Box>{board.numberOfLikes}</Box>
+                          <Box ml={1}>{board.numberOfLikes}</Box>
                         </Flex>
                       </Badge>
                     )}
@@ -127,6 +138,7 @@ export function BoardList() {
                     <FontAwesomeIcon icon={faComment} size={"sm"} />
                     {board.numberOfComments}
                   </Td>
+                  <Td>{board.viewCount}</Td>
                   <Td>{board.inserted}</Td>
                   <Td hidden>{board.content}</Td>
                 </Tr>
@@ -134,8 +146,19 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          variant={"outline"}
+          colorScheme={"teal"}
+          sx={{ borderWidth: 2 }}
+          onClick={() => navigate(`/board`)}
+          mt={"20px"}
+        >
+          글쓰기
+        </Button>
+      </Box>
       <Center mt={"10px"}>
-        <Flex>
+        <Flex gap={2}>
           <Select
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
@@ -153,15 +176,45 @@ export function BoardList() {
           </Button>
         </Flex>
       </Center>
-      <Center mt={"10px"}>
-        {pageNumbers.map((pageNumber) => (
-          <ButtonGroup
-            key={pageNumber}
-            onClick={() => handlePageButtonClick(pageNumber)}
-          >
-            <Button>{pageNumber}</Button>
-          </ButtonGroup>
-        ))}
+      <Center mt={"15px"}>
+        <Flex gap={1}>
+          {pageInfo.prevPageNumber && (
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAnglesLeft} />
+            </Button>
+          )}
+          {pageInfo.leftPageNumber && (
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.leftPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </Button>
+          )}
+          {pageNumbers.map((pageNumber) => (
+            <ButtonGroup
+              key={pageNumber}
+              onClick={() => handlePageButtonClick(pageNumber)}
+            >
+              <Button>{pageNumber}</Button>
+            </ButtonGroup>
+          ))}
+          {pageInfo.rightPageNumber && (
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAngleRight} />
+            </Button>
+          )}
+          {pageInfo.nextPageNumber && (
+            <Button
+              onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+            >
+              <FontAwesomeIcon icon={faAnglesRight} />
+            </Button>
+          )}
+        </Flex>
       </Center>
     </Box>
   );

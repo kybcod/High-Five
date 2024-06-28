@@ -76,9 +76,27 @@ public class BoardService {
 
         int totalBoardNumber = mapper.selectTotalBoardCount(type, keyword);
         Page<Board> pageImpl = new PageImpl<>(boardList, pageable, totalBoardNumber);
-        System.out.println(totalBoardNumber);
         PageInfo pageInfo = new PageInfo().setting(pageImpl);
-        System.out.println(totalBoardNumber);
+
+
+        Integer lastPageNumber = (totalBoardNumber - 1) / 10 + 1;
+        Integer leftPageNumber = (page - 1) / 5 * 5 + 1;
+        Integer rightPageNumber = leftPageNumber + 4;
+        rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
+        leftPageNumber = rightPageNumber - 4;
+        leftPageNumber = Math.max(leftPageNumber, 1);
+        Integer prevPageNumber = leftPageNumber - 1;
+        Integer nextPageNumber = rightPageNumber + 1;
+
+        if (prevPageNumber > 0) {
+            pageInfo.setPrevPageNumber(prevPageNumber);
+        }
+        if (nextPageNumber <= lastPageNumber) {
+            pageInfo.setNextPageNumber(nextPageNumber);
+        }
+        pageInfo.setLastPageNumber(lastPageNumber);
+        pageInfo.setLeftPageNumber(leftPageNumber);
+        pageInfo.setRightPageNumber(rightPageNumber);
 
         return Map.of("boardList", boardList, "pageInfo", pageInfo);
 
@@ -111,6 +129,8 @@ public class BoardService {
         boardLike.put("count", mapper.selectCountLikeByBoardId(id));
         result.put("board", board);
         result.put("boardLike", boardLike);
+
+        mapper.viewCountByBoardClick(id);
 
         return result;
 
