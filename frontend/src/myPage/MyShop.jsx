@@ -94,7 +94,7 @@ export function MyShop() {
           판매한 상품이 없습니다.
         </Text>
       ) : (
-        <Grid templateColumns={"repeat(3, 1fr)"} gap={20}>
+        <Grid templateColumns={"repeat(3, 1fr)"} gap={16}>
           {productList.map((product) => (
             <GridItem key={product.id}>
               <Card

@@ -154,7 +154,7 @@ export function LikeList() {
           찜한 상품이 없습니다.
         </Text>
       ) : (
-        <Grid templateColumns={"repeat(3, 1fr)"} gap={20}>
+        <Grid templateColumns={"repeat(3, 1fr)"} gap={16}>
           {likeProductList.map((product) => (
             <GridItem key={product.id}>
               <Card

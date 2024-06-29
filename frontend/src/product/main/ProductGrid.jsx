@@ -19,7 +19,7 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
   const navigate = useNavigate();
 
   return (
-    <Grid templateColumns={"repeat(4, 1fr)"} gap={20}>
+    <Grid templateColumns={"repeat(4, 1fr)"} gap={16}>
       {productList.map((product) => (
         <GridItem key={product.id}>
           <Card
