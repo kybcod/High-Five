@@ -69,7 +69,7 @@ export function MainProduct() {
       </Box>
 
       {/*오늘의 경매 상품*/}
-      <Box position="relative" marginY="20" textAlign="center">
+      <Box marginY="20" textAlign="center" border={"1px solid black"}>
         <Text fontSize={"xl"} fontWeight={"bold"}>
           🔥 오늘의 경매 상품
         </Text>
@@ -86,7 +86,7 @@ export function MainProduct() {
       </Box>
 
       {/*추천 상품*/}
-      <Box>
+      <Box border={"1px solid black"} marginY="10">
         <Text fontSize={"larger"} fontWeight={"bold"}>
           📣 추천 상품
         </Text>
@@ -102,7 +102,7 @@ export function MainProduct() {
       </Box>
 
       {/*실시간 판매 랭킹  */}
-      <Box position="relative" marginY="10">
+      <Box marginY="20" border={"1px solid black"}>
         <Text fontSize={"larger"} fontWeight={"bold"}>
           🏆 실시간 판매 랭킹 🏆
         </Text>

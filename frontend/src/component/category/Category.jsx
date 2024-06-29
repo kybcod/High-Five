@@ -36,7 +36,7 @@ export function Category() {
         label: "식품",
       },
       {
-        src: "https://velog.velcdn.com/images/kpo12345/post/981459ec-bc49-49b4-bcfe-42dc9eba27c0/image.png",
+        src: "https://velog.velcdn.com/images/kpo12345/post/556f8da4-eac6-48b0-bd32-0d0e0500a31a/image.png",
         category: "digital",
         label: "디지털",
       },

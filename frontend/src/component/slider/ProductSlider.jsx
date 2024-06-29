@@ -12,20 +12,16 @@ import {
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-  faHeart as fullHeart,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import { SampleNextArrow } from "../../product/main/SampleNextArrow.jsx";
+import { SamplePrevArrow } from "../../product/main/SamplePrevArrow.jsx";
+import { useNavigate } from "react-router-dom";
 
-const RecommendProductSlider = ({
-  recommendProduct,
-  likes,
-  handleLikeClick,
-  account,
-}) => {
+const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
   const sliderRef = React.useRef(null);
+
+  const [currentSlide, setCurrentSlide] = React.useState(0);
 
   const settings = {
     dots: false,
@@ -35,9 +31,8 @@ const RecommendProductSlider = ({
     slidesToScroll: 4,
     arrows: false, // 기본 화살표 숨기기
     afterChange: setCurrentSlide,
+    centerMode: false,
   };
-
-  const [currentSlide, setCurrentSlide] = React.useState(0);
 
   const next = () => {
     if (sliderRef.current) {
@@ -51,41 +46,27 @@ const RecommendProductSlider = ({
     }
   };
 
+  const navigate = useNavigate();
+
   return (
     <Box>
-      <Box marginY="10">
-        <Text fontSize={"larger"} fontWeight={"bold"}>
-          추천 상품
-        </Text>
-        <Text fontSize={"medium"} fontWeight={"bold"}>
-          Recommend Product
-        </Text>
-      </Box>
-
       <Box position="relative">
         {currentSlide > 0 && <SamplePrevArrow onClick={previous} />}
-        {currentSlide < recommendProduct.length - settings.slidesToShow && (
+        {currentSlide < product.length - settings.slidesToShow && (
           <SampleNextArrow onClick={next} />
         )}
-
         {/* 슬라이더 */}
         <Slider
           {...settings}
           ref={sliderRef}
           style={{ width: "100%", height: "100%" }}
         >
-          {recommendProduct.map((product, index) => (
+          {product.map((product, index) => (
             <Box key={index} width={"100%"} px={2}>
-              <Box
-                alignItems="center"
-                justifyContent="space-between"
-                width="100%"
-              >
+              <Flex alignItems="center" justifyContent="center" width="100%">
                 <Card
-                  w={"100%"}
+                  w={"70%"}
                   boxShadow={"none"}
-                  borderColor={"white"}
-                  borderWidth={"1px"}
                   cursor={"pointer"}
                   maxW="sm"
                   h="100%"
@@ -112,7 +93,7 @@ const RecommendProductSlider = ({
                           <FontAwesomeIcon
                             icon={likes[product.id] ? fullHeart : emptyHeart}
                             style={{ color: "red" }}
-                            size="lg"
+                            size="xl"
                           />
                         </Box>
                       )}
@@ -143,25 +124,21 @@ const RecommendProductSlider = ({
                       >
                         {product.title}
                       </Text>
-                      <Text fontSize="xl" mb={1} fontWeight={"bold"}>
+                      <Text fontSize="xl" mb={2} fontWeight={"bold"}>
                         ₩{" "}
                         {product.startPrice
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                       </Text>
                       <Flex justifyContent="space-between" alignItems="center">
-                        <Badge
-                          fontSize={"medium"}
-                          bgColor={"gray.100"}
-                          color={"teal"}
-                        >
+                        <Badge color={"black"} colorScheme={"yellow"}>
                           {product.endTimeFormat}
                         </Badge>
                       </Flex>
                     </Box>
                   </CardBody>
                 </Card>
-              </Box>
+              </Flex>
             </Box>
           ))}
         </Slider>
@@ -170,41 +147,4 @@ const RecommendProductSlider = ({
   );
 };
 
-// 커스텀 화살표 컴포넌트
-const SampleNextArrow = ({ onClick }) => {
-  return (
-    <Box
-      position="absolute"
-      top="50%"
-      transform="translateY(-50%)"
-      right="10px"
-      color="gray"
-      fontSize="50px"
-      zIndex="1"
-      cursor="pointer"
-      onClick={onClick}
-    >
-      <FontAwesomeIcon icon={faChevronRight} />
-    </Box>
-  );
-};
-
-const SamplePrevArrow = ({ onClick }) => {
-  return (
-    <Box
-      position="absolute"
-      top="50%"
-      transform="translateY(-50%)"
-      left="10px"
-      color="gray"
-      fontSize="50px"
-      zIndex="1"
-      cursor="pointer"
-      onClick={onClick}
-    >
-      <FontAwesomeIcon icon={faChevronLeft} />
-    </Box>
-  );
-};
-
-export default RecommendProductSlider;
+export default ProductSlider;
