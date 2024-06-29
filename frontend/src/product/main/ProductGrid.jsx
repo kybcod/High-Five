@@ -53,7 +53,7 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                     <FontAwesomeIcon
                       icon={likes[product.id] ? fullHeart : emptyHeart}
                       style={{ color: "red" }}
-                      size="lg"
+                      size="xl"
                     />
                   </Box>
                 )}
@@ -79,18 +79,14 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                 <Text fontSize="xl" fontWeight="bold" noOfLines={1} mb={1}>
                   {product.title}
                 </Text>
-                <Text fontSize="xl" mb={1} fontWeight={"bold"}>
+                <Text fontSize="xl" mb={2} fontWeight={"bold"}>
                   ₩{" "}
                   {product.startPrice
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </Text>
                 <Flex justifyContent="space-between" alignItems="center">
-                  <Badge
-                    fontSize={"medium"}
-                    bgColor={"gray.100"}
-                    color={"teal"}
-                  >
+                  <Badge color={"black"} colorScheme={"yellow"}>
                     {product.endTimeFormat}
                   </Badge>
                 </Flex>

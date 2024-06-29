@@ -3,8 +3,8 @@ import axios from "axios";
 import { Box, Spinner, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { ProductGrid } from "./ProductGrid.jsx";
-import RecommendProductSlider from "../component/slider/RecommendProductSlider.jsx";
+import ProductSlider from "../component/slider/ProductSlider.jsx";
+import { Category } from "../component/category/Category.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
@@ -67,26 +67,18 @@ export function MainProduct() {
       <Box h="350px" w="100%" boxSizing="border-box" mx="auto">
         {/*<MainSlider />*/}
       </Box>
-      {/* 오늘의 상품 */}
-      {/*<Box position="relative" marginY="20">*/}
-      {/*  <Divider border={"1px solid teal"} />*/}
-      {/*  <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">*/}
-      {/*    📣 오늘의 경매 상품*/}
-      {/*  </AbsoluteCenter>*/}
-      {/*</Box>*/}
 
-      <Box position="relative" marginY="10">
-        <Text fontSize={"larger"} fontWeight={"bold"}>
-          오늘의 경매 상품
+      {/*오늘의 경매 상품*/}
+      <Box position="relative" marginY="20" textAlign="center">
+        <Text fontSize={"xl"} fontWeight={"bold"}>
+          🔥 오늘의 경매 상품
         </Text>
-        <Text fontSize={"medium"} fontWeight={"bold"}>
-          Today Auction Product
+        <Text fontSize={"smaller"} color={"gray"}>
+          오늘 아니면 놓치는 구매 찬스!
         </Text>
-      </Box>
-
-      <Box>
-        <ProductGrid
-          productList={todayProduct}
+        {/*상품*/}
+        <ProductSlider
+          product={todayProduct}
           likes={likes}
           handleLikeClick={handleLikeClick}
           account={account}
@@ -94,24 +86,33 @@ export function MainProduct() {
       </Box>
 
       {/*추천 상품*/}
+      <Box>
+        <Text fontSize={"larger"} fontWeight={"bold"}>
+          📣 추천 상품
+        </Text>
+        <Text fontSize={"medium"} fontWeight={"bold"} mb={10}>
+          Recommend Product
+        </Text>
+        <ProductSlider
+          product={recommendProduct}
+          likes={likes}
+          handleLikeClick={handleLikeClick}
+          account={account}
+        />
+      </Box>
 
-      <RecommendProductSlider
-        recommendProduct={recommendProduct}
-        likes={likes}
-        handleLikeClick={handleLikeClick}
-        account={account}
-      />
-
-      {/*전체상품 */}
-
+      {/*실시간 판매 랭킹  */}
       <Box position="relative" marginY="10">
         <Text fontSize={"larger"} fontWeight={"bold"}>
-          카테고리별 상품
+          🏆 실시간 판매 랭킹 🏆
         </Text>
         <Text fontSize={"medium"} fontWeight={"bold"}>
           Today Auction Product
         </Text>
       </Box>
+
+      {/*카테고리 상품 */}
+      <Category />
 
       {/*<Box position="relative" marginY="20">*/}
       {/*  <Divider border={"1px solid teal"} />*/}
