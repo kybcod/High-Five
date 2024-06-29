@@ -5,6 +5,7 @@ import {
   Card,
   CardBody,
   Center,
+  Divider,
   Flex,
   FormControl,
   FormLabel,
@@ -19,8 +20,12 @@ import {
   ModalOverlay,
   Spinner,
   StackDivider,
+  Table,
+  Td,
   Text,
   Textarea,
+  Tfoot,
+  Tr,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
@@ -78,20 +83,19 @@ export function QuestionView() {
       <Box mt={2}>
         <Text value={question.id} />
       </Box>
-
       {account.hasAccess(question.userId) && (
         <Box>
-          <Flex justify={"flex-end"} mr={10} mt={5} gap={8}>
+          <Flex justify={"flex-end"} mr={10} mt={5} mb={5} gap={8}>
             <EditIcon
-              w={8}
-              h={8}
+              w={6}
+              h={6}
               color="blue.500"
               cursor="pointer"
               onClick={() => navigate(`/question/edit/${id}`)}
             />
             <DeleteIcon
-              w={8}
-              h={8}
+              w={6}
+              h={6}
               color="red.500"
               onClick={onOpen}
               cursor="pointer"
@@ -99,33 +103,45 @@ export function QuestionView() {
           </Flex>
         </Box>
       )}
-
-      <Box mt={2}>
-        <FormControl>
-          <FormLabel>
-            {question.secretWrite && (
-              <FontAwesomeIcon icon={faLock} style={{ marginRight: "8px" }} />
-            )}
+      <Divider borderColor={"black"} />
+      <Table fontSize={"sm"}>
+        <Tr>
+          <Td bg="rgb(247,245,248)" w={"15%"} fontWeight={700}>
             제목
-          </FormLabel>
-          <Input value={question.title} readOnly></Input>
-        </FormControl>
-      </Box>
-
-      <Flex mt={5} gap={20}>
-        {/*<HStack spacing="24px">*/}
-        <HStack divider={<StackDivider borderColor="gray.200" />} spacing={2}>
-          <Box>작성자</Box>
-          <Text>{question.nickName}</Text>
-        </HStack>
-        <HStack divider={<StackDivider borderColor="gray.200" />} spacing={2}>
-          <Text w={"100px"}>작성시간</Text>
-          <Input value={question.insertedAll} readOnly />
-        </HStack>
-        <Box>
-          {question.isNewBadge && <Badge colorScheme="green">New</Badge>}
-        </Box>
-      </Flex>
+          </Td>
+          <Td display={"flex"}>
+            {" "}
+            {question.secretWrite && (
+              <Image src={"/img/lock.svg"} boxSize={"16px"} marginRight={1} />
+            )}
+            {question.title}{" "}
+            <Box ml={3}>
+              {question.isNewBadge && (
+                <Badge colorScheme="green" fontSize={"10px"}>
+                  New
+                </Badge>
+              )}
+            </Box>
+          </Td>
+        </Tr>
+        <Tr>
+          <Td bg="rgb(247,245,248)" w={"15%"} fontWeight={700}>
+            작성자
+          </Td>
+          <Td>{question.nickName}</Td>
+        </Tr>
+        <Tr>
+          <Td bg="rgb(247,245,248)" w={"15%"} fontWeight={700}>
+            작성일
+          </Td>
+          <Td>{question.inserted}</Td>
+        </Tr>
+        <Tr>
+          <Td colSpan={2} whiteSpace={"pre-wrap"} pt={50} pb={50}>
+            {question.content}
+          </Td>
+        </Tr>
+      </Table>
 
       <Box>
         <Box mt={5}>
@@ -142,31 +158,22 @@ export function QuestionView() {
           )}
         </Box>
       </Box>
-
       <Box>
-        <Box mt={5}>
-          <FormControl>
-            <FormLabel>문의 상세내용</FormLabel>
-          </FormControl>
-        </Box>
-        <Box mt={4}>
-          <Textarea value={question.content} readOnly></Textarea>
-        </Box>
-
         {/*댓글 컴포넌트*/}
         <CommentComponent questionId={question.id} />
 
-        <Center m={10}>
+        <Flex justifyContent="flex-start">
           <Button
             colorScheme={"teal"}
-            w={"200px"}
+            w={"100px"}
+            variant={"outline"}
+            borderRadius={"unset"}
             onClick={() => navigate("/question/list")}
           >
             글 목록
           </Button>
-        </Center>
+        </Flex>
       </Box>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

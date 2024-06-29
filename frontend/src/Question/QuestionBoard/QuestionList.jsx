@@ -25,8 +25,6 @@ import {
   faAnglesLeft,
   faAnglesRight,
   faImage,
-  faImages,
-  faLock,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { LoginContext } from "../../component/LoginProvider.jsx";
@@ -67,6 +65,13 @@ export function QuestionList() {
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
     pageNumbers.push(i);
   }
+
+  // 페이지 번호를 계산하는 함수
+  const getPageNumber = (index) => {
+    return (
+      pageInfo.totalPostNumber - ((pageInfo.currentPageNumber - 1) * 10 + index)
+    );
+  };
 
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
@@ -109,7 +114,7 @@ export function QuestionList() {
                 </Tr>
               </Thead>
               <Tbody>
-                {questionList.map((question) => (
+                {questionList.map((question, index) => (
                   <Tr
                     _hover={{ bgColor: "gray.300" }}
                     cursor={"pointer"}
@@ -117,7 +122,7 @@ export function QuestionList() {
                     key={question.id}
                     fontSize={"sm"}
                   >
-                    <Td width="8%">{question.id}</Td>
+                    <Td width="8%">{getPageNumber(index)}</Td>
                     <Td width="12%" textAlign="center">
                       {question.numberOfComments > 0 ? (
                         <Box ml={2}>
@@ -131,7 +136,7 @@ export function QuestionList() {
                         </Box>
                       )}
                     </Td>
-                    <Td width="42%" fontSize={"15px"}>
+                    <Td width="42%" fontSize={"15px"} whiteSpace={"wrap"}>
                       <Flex gap={2}>
                         {question.secretWrite && (
                           <Flex gap={3}>

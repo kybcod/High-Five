@@ -105,6 +105,7 @@ public class QuestionService {
         pageInfo.put("lastPageNumber", lastPageNumber);
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
+        pageInfo.put("totalPostNumber", countAll);
 
         List<Question> questions = mapper.selectUsingPageable(offset, searchType, keyword);
         questions.forEach(q -> q.setIsNewBadge(q.getIsNewBadge()));
