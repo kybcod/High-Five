@@ -14,7 +14,8 @@ export function Navbar() {
   return (
     <Flex
       bgColor={"#99D8AF"}
-      // bgColor={"#fae76b"}
+      // bgColor={"#05a482"}
+      // bgColor={"#057a7a"}
       h={"30px"}
       p={4}
       justifyContent={"space-between"}

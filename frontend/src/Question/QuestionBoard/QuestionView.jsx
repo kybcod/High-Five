@@ -4,14 +4,9 @@ import {
   Button,
   Card,
   CardBody,
-  Center,
   Divider,
   Flex,
-  FormControl,
-  FormLabel,
-  HStack,
   Image,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -19,12 +14,9 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  StackDivider,
   Table,
   Td,
   Text,
-  Textarea,
-  Tfoot,
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -36,7 +28,7 @@ import { CommentComponent } from "../Comment/CommentComponent.jsx";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { CustomToast } from "../../component/CustomToast.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 export function QuestionView() {
   const { id } = useParams();
@@ -104,7 +96,7 @@ export function QuestionView() {
         </Box>
       )}
       <Divider borderColor={"black"} />
-      <Table fontSize={"sm"}>
+      <Table fontSize={"15px"}>
         <Tr>
           <Td bg="rgb(247,245,248)" w={"15%"} fontWeight={700}>
             제목
@@ -161,6 +153,26 @@ export function QuestionView() {
       <Box>
         {/*댓글 컴포넌트*/}
         <CommentComponent questionId={question.id} />
+
+        <Box mb={10} mt={20}>
+          <Divider borderColor={"gray"} />
+          <Flex h={10} alignItems={"center"} textAlign={"center"}>
+            <Box w={"5%"}>
+              <FontAwesomeIcon icon={faChevronUp} />
+            </Box>
+            <Box w={"10%"}>이전글</Box>
+            <Box ml={3}>{question.title}</Box>
+          </Flex>
+          <Divider borderColor={"gray"} />
+          <Flex h={10} alignItems={"center"} textAlign={"center"}>
+            <Box w={"5%"}>
+              <FontAwesomeIcon icon={faChevronDown} />
+            </Box>
+            <Box w={"10%"}>다음글</Box>
+            <Box ml={3}>{question.title}</Box>
+          </Flex>
+          <Divider borderColor={"gray"} />
+        </Box>
 
         <Flex justifyContent="flex-start">
           <Button
