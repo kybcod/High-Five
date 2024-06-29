@@ -18,8 +18,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   faCamera,
   faCheck,
+  faPenToSquare,
   faTimesCircle,
   faTrashAlt,
+  faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { FormFields } from "../component/FormFields.jsx";
 import { ModalComponent } from "../component/ModalComponent.jsx";
@@ -330,11 +332,12 @@ export function ProductEdit() {
         onClick={handleUpdateClick}
         isLoading={updateLoading}
         loadingText="처리중"
-        header="수정하기"
+        header="수정"
         body="정말로 수정하시겠습니까?"
         confirmText="확인"
         colorScheme="blue"
         icon={faCheck}
+        headerIcon={faPenToSquare}
         cancelText="취소"
       />
 
@@ -345,11 +348,12 @@ export function ProductEdit() {
         onClick={handleDeleteClick}
         isLoading={deleteLoading}
         loadingText="처리중"
-        header="삭제하기"
+        header="삭제"
         body="정말로 삭제하시겠습니까?"
         confirmText="확인"
         colorScheme="red"
         icon={faTrashAlt}
+        headerIcon={faTriangleExclamation}
         cancelText="취소"
       />
     </Box>

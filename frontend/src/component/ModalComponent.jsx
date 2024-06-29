@@ -23,12 +23,16 @@ export function ModalComponent({
   colorScheme,
   icon,
   cancelText,
+  headerIcon,
 }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{header}</ModalHeader>
+        <ModalHeader>
+          {" "}
+          <FontAwesomeIcon icon={headerIcon} /> {header}
+        </ModalHeader>
         <ModalBody>{body}</ModalBody>
         <ModalFooter>
           <Button
