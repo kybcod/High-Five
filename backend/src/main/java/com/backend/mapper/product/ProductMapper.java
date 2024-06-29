@@ -229,11 +229,19 @@ public interface ProductMapper {
                    p.content,
                    p.status,
                    p.user_id,
-                   p.review_status
+                   p.review_status,
+                   pl.like_count
             FROM product p
-                     JOIN product_like pl ON p.id = pl.product_id
-            WHERE pl.user_id = #{userId}
-            ORDER BY p.end_time
+                     LEFT JOIN (select product_id, COUNT(*) as like_count from product_like group by `product_id`) pl
+                               ON p.id = pl.product_id
+                     LEFT JOIN product_like pl2 on p.id = pl2.product_id
+            WHERE pl2.user_id = #{userId}
+            ORDER BY 
+                    CASE WHEN #{likeSort} = 0 THEN  pl2.id END DESC,
+                    CASE WHEN #{likeSort} = 1 THEN  like_count END DESC,
+                    CASE WHEN #{likeSort} = 2 THEN  p.start_price END ASC,
+                    CASE WHEN #{likeSort} = 3 THEN  p.start_price END DESC,
+                    p.id DESC
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productAndProductLikeList", value = {
@@ -380,7 +388,7 @@ public interface ProductMapper {
             FROM product
             WHERE status = 1
             ORDER BY RAND()
-            LIMIT 10;
+            LIMIT 12;
             """)
     @Results(id = "recommendProduct", value = {
             @Result(property = "id", column = "id"),

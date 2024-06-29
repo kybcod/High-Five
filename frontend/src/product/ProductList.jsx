@@ -94,6 +94,7 @@ export function ProductList() {
         {searchParams.get("category") && (
           <Heading>{translatedCategoryName}</Heading>
         )}
+        {searchParams.size === 0 && <Heading>전체</Heading>}
       </Flex>
       <Flex mb={10} justifyContent={"space-between"} align={"center"}>
         <Box>

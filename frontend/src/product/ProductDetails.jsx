@@ -211,13 +211,29 @@ export function ProductDetails() {
                 )}
               />
               <Box ml={4} display="flex" alignItems="center">
+                <Text fontSize={"medium"} w={"100px"} mr={4}>
+                  시작가
+                </Text>
+                <Text fontSize="medium" ml={1}>
+                  {formattedPrice(product.startPrice)} 원
+                </Text>
+              </Box>
+            </ListItem>
+
+            <ListItem display="flex" alignItems="center" mb={10}>
+              <ListIcon
+                as={() => (
+                  <FontAwesomeIcon icon={faCheckCircle} color="#adb5bd" />
+                )}
+              />
+              <Box ml={4} display="flex" alignItems="center">
                 <Text fontSize={"medium"} mr={4} w={"100px"}>
                   판매자
                 </Text>
                 <Tooltip label="판매자 페이지로 이동">
                   <Text
-                    textDecoration="underline"
-                    fontSize="xl"
+                    // textDecoration="underline"
+                    fontSize="medium"
                     cursor="pointer"
                     onClick={() => navigate(`/myPage/${product.userId}/shop`)}
                     ml={1}
@@ -237,7 +253,7 @@ export function ProductDetails() {
                 <Text fontSize={"medium"} w={"100px"} mr={4}>
                   종료 시간
                 </Text>
-                <Text fontSize="xl" ml={1}>
+                <Text fontSize="medium" ml={1}>
                   {product.endTimeDetailsFormat}
                 </Text>
               </Box>
@@ -252,7 +268,7 @@ export function ProductDetails() {
                 <Text fontSize={"medium"} w={"100px"} mr={4}>
                   참여 인원
                 </Text>
-                <Text fontSize="xl" ml={1}>
+                <Text fontSize="medium" ml={1}>
                   {product.numberOfJoin}명
                 </Text>
               </Box>

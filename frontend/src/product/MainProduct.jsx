@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { AbsoluteCenter, Box, Divider, Spinner } from "@chakra-ui/react";
+import { Box, Spinner, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { ProductGrid } from "./ProductGrid.jsx";
+import RecommendProductSlider from "../component/slider/RecommendProductSlider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
@@ -67,12 +68,22 @@ export function MainProduct() {
         {/*<MainSlider />*/}
       </Box>
       {/* 오늘의 상품 */}
-      <Box position="relative" marginY="20">
-        <Divider border={"1px solid teal"} />
-        <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
-          📣 오늘의 경매 상품
-        </AbsoluteCenter>
+      {/*<Box position="relative" marginY="20">*/}
+      {/*  <Divider border={"1px solid teal"} />*/}
+      {/*  <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">*/}
+      {/*    📣 오늘의 경매 상품*/}
+      {/*  </AbsoluteCenter>*/}
+      {/*</Box>*/}
+
+      <Box position="relative" marginY="10">
+        <Text fontSize={"larger"} fontWeight={"bold"}>
+          오늘의 경매 상품
+        </Text>
+        <Text fontSize={"medium"} fontWeight={"bold"}>
+          Today Auction Product
+        </Text>
       </Box>
+
       <Box>
         <ProductGrid
           productList={todayProduct}
@@ -84,28 +95,38 @@ export function MainProduct() {
 
       {/*추천 상품*/}
 
-      {/*<RecommendProductSlider*/}
-      {/*  recommendProduct={recommendProduct}*/}
-      {/*  likes={likes}*/}
-      {/*  handleLikeClick={handleLikeClick}*/}
-      {/*  account={account}*/}
-      {/*/>*/}
+      <RecommendProductSlider
+        recommendProduct={recommendProduct}
+        likes={likes}
+        handleLikeClick={handleLikeClick}
+        account={account}
+      />
 
       {/*전체상품 */}
-      <Box position="relative" marginY="20">
-        <Divider border={"1px solid teal"} />
-        <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
-          전체 상품
-        </AbsoluteCenter>
+
+      <Box position="relative" marginY="10">
+        <Text fontSize={"larger"} fontWeight={"bold"}>
+          카테고리별 상품
+        </Text>
+        <Text fontSize={"medium"} fontWeight={"bold"}>
+          Today Auction Product
+        </Text>
       </Box>
-      <Box>
-        <ProductGrid
-          productList={productList}
-          likes={likes}
-          handleLikeClick={handleLikeClick}
-          account={account}
-        />
-      </Box>
+
+      {/*<Box position="relative" marginY="20">*/}
+      {/*  <Divider border={"1px solid teal"} />*/}
+      {/*  <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">*/}
+      {/*    전체 상품*/}
+      {/*  </AbsoluteCenter>*/}
+      {/*</Box>*/}
+      {/*<Box>*/}
+      {/*  <ProductGrid*/}
+      {/*    productList={productList}*/}
+      {/*    likes={likes}*/}
+      {/*    handleLikeClick={handleLikeClick}*/}
+      {/*    account={account}*/}
+      {/*  />*/}
+      {/*</Box>*/}
     </Box>
   );
 }

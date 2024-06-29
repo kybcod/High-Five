@@ -19,12 +19,13 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
   const navigate = useNavigate();
 
   return (
-    <Grid templateColumns={"repeat(5, 1fr)"} gap={6}>
+    <Grid templateColumns={"repeat(4, 1fr)"} gap={20}>
       {productList.map((product) => (
         <GridItem key={product.id}>
           <Card
+            w={"85%"}
             boxShadow={"none"}
-            borderColor={"gray.200"}
+            borderColor={"white"}
             borderWidth={"1px"}
             cursor={"pointer"}
             maxW="sm"
@@ -38,7 +39,7 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                   onClick={() => navigate(`/product/${product.id}`)}
                   src={product.productFileList[0].filePath}
                   w="100%"
-                  h="200px"
+                  h="250px"
                   transition="transform 0.2s"
                   _hover={{ transform: "scale(1.05)" }}
                 />
@@ -75,20 +76,23 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                 )}
               </Box>
               <Box p={3}>
-                <Text fontSize="lg" fontWeight="bold" noOfLines={1} mb={2}>
+                <Text fontSize="xl" fontWeight="bold" noOfLines={1} mb={1}>
                   {product.title}
                 </Text>
-                <Text color="blue.600" fontSize="xl">
+                <Text fontSize="xl" mb={1} fontWeight={"bold"}>
+                  ₩{" "}
                   {product.startPrice
                     .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-                  원
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </Text>
                 <Flex justifyContent="space-between" alignItems="center">
-                  <Text mt={2} fontSize={"sm"}>
-                    {product.timeFormat}
-                  </Text>
-                  <Badge colorScheme={"yellow"}>{product.endTimeFormat}</Badge>
+                  <Badge
+                    fontSize={"medium"}
+                    bgColor={"gray.100"}
+                    color={"teal"}
+                  >
+                    {product.endTimeFormat}
+                  </Badge>
                 </Flex>
               </Box>
             </CardBody>
