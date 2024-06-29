@@ -56,7 +56,7 @@ const PrevArrow = (props) => {
 
 function SimpleSlider({ images, isBrightness }) {
   const settings = {
-    dots: images.length > 1,
+    dots: true,
     infinite: images.length > 1,
     speed: 500,
     slidesToShow: 1,
@@ -71,7 +71,7 @@ function SimpleSlider({ images, isBrightness }) {
   return (
     <Slider {...settings}>
       {images.map((file, index) => (
-        <Box key={index} position="relative" width="100%" height="500px">
+        <Box key={index} position="relative" width="100%" height="475px">
           <Image
             src={file.filePath}
             className="slick-custom-image"
