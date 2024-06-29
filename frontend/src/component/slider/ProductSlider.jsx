@@ -115,7 +115,7 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
                         </Box>
                       )}
                     </Box>
-                    <Box p={3}>
+                    <Box p={3} textAlign="left">
                       <Text
                         fontSize="xl"
                         fontWeight="bold"
@@ -130,11 +130,9 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                       </Text>
-                      <Flex justifyContent="space-between" alignItems="center">
-                        <Badge color={"black"} colorScheme={"yellow"}>
-                          {product.endTimeFormat}
-                        </Badge>
-                      </Flex>
+                      <Badge color={"black"} colorScheme={"yellow"}>
+                        {product.endTimeFormat}
+                      </Badge>
                     </Box>
                   </CardBody>
                 </Card>
