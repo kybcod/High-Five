@@ -65,7 +65,8 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
             <Box key={index} width={"100%"} px={2}>
               <Flex alignItems="center" justifyContent="center" width="100%">
                 <Card
-                  w={"70%"}
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  w={"80%"}
                   boxShadow={"none"}
                   cursor={"pointer"}
                   maxW="sm"
@@ -76,7 +77,6 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
                   <CardBody position="relative" h="100%" p={0}>
                     <Box position="relative">
                       <Image
-                        onClick={() => navigate(`/product/${product.id}`)}
                         src={product.productFileList[0].filePath}
                         w="100%"
                         h="250px"
@@ -88,7 +88,12 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
                           position="absolute"
                           bottom={2}
                           right={2}
-                          onClick={() => handleLikeClick(product.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLikeClick(product.id);
+                          }}
+                          transition="transform 0.2s"
+                          _hover={{ transform: "scale(1.1)" }}
                         >
                           <FontAwesomeIcon
                             icon={likes[product.id] ? fullHeart : emptyHeart}
@@ -116,20 +121,20 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
                       )}
                     </Box>
                     <Box p={3} textAlign="left">
-                      <Text
-                        fontSize="xl"
-                        fontWeight="bold"
-                        noOfLines={1}
-                        mb={1}
-                      >
+                      <Text fontSize="lg" fontWeight="500" noOfLines={1} mb={1}>
                         {product.title}
                       </Text>
-                      <Text fontSize="xl" mb={2} fontWeight={"bold"}>
-                        ₩{" "}
-                        {product.startPrice
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      </Text>
+                      <Flex mb={3} alignItems="baseline">
+                        <Text fontSize="xl" fontWeight="bold" mr={2}>
+                          {product.startPrice
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                          원
+                        </Text>
+                        <Text fontSize="sm" color="gray.500">
+                          (시작가)
+                        </Text>
+                      </Flex>
                       <Badge color={"black"} colorScheme={"yellow"}>
                         {product.endTimeFormat}
                       </Badge>
