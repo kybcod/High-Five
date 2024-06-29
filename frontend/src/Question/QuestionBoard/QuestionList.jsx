@@ -101,8 +101,8 @@ export function QuestionList() {
               <Thead>
                 <Tr>
                   <Th>No.</Th>
-                  <Th>제목</Th>
                   <Th textAlign="center">답변상태</Th>
+                  <Th>제목</Th>
                   <Th textAlign="center">작성자</Th>
                   <Th textAlign="center">조회수</Th>
                   <Th textAlign="center">작성일시</Th>
@@ -115,9 +115,23 @@ export function QuestionList() {
                     cursor={"pointer"}
                     onClick={() => handleSecretTextClick(question)}
                     key={question.id}
+                    fontSize={"sm"}
                   >
                     <Td width="8%">{question.id}</Td>
-                    <Td width="42%">
+                    <Td width="12%" textAlign="center">
+                      {question.numberOfComments > 0 ? (
+                        <Box ml={2}>
+                          <Badge variant="outline" colorScheme="green">
+                            답변완료
+                          </Badge>
+                        </Box>
+                      ) : (
+                        <Box ml={2}>
+                          <Badge variant="outline">답변대기</Badge>
+                        </Box>
+                      )}
+                    </Td>
+                    <Td width="42%" fontSize={"15px"}>
                       <Flex gap={2}>
                         {question.secretWrite && (
                           <Flex gap={3}>
@@ -136,10 +150,10 @@ export function QuestionList() {
                             {/*    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"*/}
                             {/*  />*/}
                             {/*</svg>*/}
-                            <FontAwesomeIcon
-                              icon={faLock}
-                              style={{ marginRight: "4px" }}
-                            />
+                            {/*<FontAwesomeIcon*/}
+                            {/*  icon={faLock}*/}
+                            {/*  style={{ marginRight: "4px" }}*/}
+                            {/*/>*/}
                             <span style={{ color: "gray", fontSize: "14px" }}>
                               비밀글
                             </span>
@@ -175,25 +189,12 @@ export function QuestionList() {
                       </Flex>
                     </Td>
                     <Td width="12%" textAlign="center">
-                      {question.numberOfComments > 0 ? (
-                        <Box ml={2}>
-                          <Badge variant="outline" colorScheme="green">
-                            답변완료
-                          </Badge>
-                        </Box>
-                      ) : (
-                        <Box ml={2}>
-                          <Badge variant="outline">답변대기</Badge>
-                        </Box>
-                      )}
-                    </Td>
-                    <Td width="12%" textAlign="center">
                       {question.nickName}
                     </Td>
                     <Td width="10%" textAlign="center" fontSize={"sm"}>
                       {question.numberOfCount}
                     </Td>
-                    <Td width="20%" textAlign="center" fontSize={"sm"}>
+                    <Td width="15%" textAlign="center" fontSize={"sm"}>
                       {question.inserted}
                     </Td>
                   </Tr>

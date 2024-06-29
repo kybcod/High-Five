@@ -11,7 +11,8 @@ export function CommentComponent({ questionId }) {
     <Box>
       <Box mt={20}>
         <Heading>
-          <FontAwesomeIcon icon={faComments} /> 관리자 댓글
+          {/*<FontAwesomeIcon icon={faComments} /> */}
+          COMMENTS
         </Heading>
       </Box>
       <Box mt={10}>

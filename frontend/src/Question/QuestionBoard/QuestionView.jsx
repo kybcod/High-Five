@@ -129,25 +129,28 @@ export function QuestionView() {
 
       <Box>
         <Box mt={5}>
+          {question.fileList && (
+            <Flex flexWrap={"wrap"} justifyContent={"space-evenly"}>
+              {question.fileList.map((file) => (
+                <Card key={file.name}>
+                  <CardBody>
+                    <Image blockSize="300px" src={file.src} />
+                  </CardBody>
+                </Card>
+              ))}
+            </Flex>
+          )}
+        </Box>
+      </Box>
+
+      <Box>
+        <Box mt={5}>
           <FormControl>
             <FormLabel>문의 상세내용</FormLabel>
           </FormControl>
         </Box>
         <Box mt={4}>
           <Textarea value={question.content} readOnly></Textarea>
-        </Box>
-
-        <Box>
-          <Box mt={5}>
-            {question.fileList &&
-              question.fileList.map((file) => (
-                <Card m={3} key={file.name}>
-                  <CardBody>
-                    <Image w={"600px"} src={file.src} />
-                  </CardBody>
-                </Card>
-              ))}
-          </Box>
         </Box>
 
         {/*댓글 컴포넌트*/}
