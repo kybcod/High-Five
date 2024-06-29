@@ -8,15 +8,6 @@ import {
   Grid,
   GridItem,
   Image,
-  List,
-  ListItem,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -24,10 +15,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import {
-  faCircleCheck,
-  faHeart as fullHeart,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadMoreAndFoldButton from "./customButton/LoadMoreAndFoldButton.jsx";
@@ -126,19 +114,6 @@ export function LikeList() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  const handleGetReviewButtonClick = (productId) => {
-    // TODO : 후기 조회 버튼 status 추가 예정
-    axios
-      .get(`/api/reviews/${productId}`)
-      .then((res) => {
-        if (res.data != null) {
-          setReviewList(res.data);
-        }
-      })
-      .catch()
-      .finally();
-  };
-
   function handleSortChange(sortValue) {
     setSortOption(sortValue);
     searchParams.set("likeSort", sortValue);
@@ -171,10 +146,9 @@ export function LikeList() {
                 display="flex"
                 flexDirection="column"
               >
-                <CardBody position="relative" flex="1" h="100%" p={0}>
+                <CardBody position="relative" h="100%" p={0}>
                   <Box position={"relative"}>
                     <Image
-                      onClick={() => navigate(`/product/${product.id}`)}
                       src={product.productFileList[0].filePath}
                       w="100%"
                       h="250px"
@@ -247,21 +221,23 @@ export function LikeList() {
                         </Badge>
                       )}
                     </Flex>
+                    {!product.status && (
+                      <Box display="flex" justifyContent="center">
+                        <Button
+                          mt={2}
+                          w={"100%"}
+                          variant={"outline"}
+                          borderWidth={3}
+                          colorScheme={"teal"}
+                          color={"teal"}
+                        >
+                          상품 후기
+                        </Button>
+                      </Box>
+                    )}
                   </Box>
                 </CardBody>
               </Card>
-              {!product.status && (
-                <Box mt={2}>
-                  <Button
-                    w={"100%"}
-                    variant={"outline"}
-                    colorScheme={"teal"}
-                    borderWidth={2}
-                  >
-                    상품 후기
-                  </Button>
-                </Box>
-              )}
             </GridItem>
           ))}
         </Grid>
@@ -278,28 +254,6 @@ export function LikeList() {
           />
         </Box>
       )}
-      {/* 후기 작성 모달 */}
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>판매자님에게 보내는 후기</ModalHeader>
-          <ModalBody>
-            <List>
-              {reviewList.map((review) => (
-                <ListItem key={review.id}>
-                  <FontAwesomeIcon icon={faCircleCheck} />
-                  &nbsp;
-                  {review.content}
-                </ListItem>
-              ))}
-            </List>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
-          <ModalCloseButton />
-        </ModalContent>
-      </Modal>
     </Box>
   );
 }

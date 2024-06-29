@@ -111,7 +111,7 @@ export function MyShop() {
                 display="flex"
                 flexDirection="column"
               >
-                <CardBody position={"relative"} flex="1" p={0}>
+                <CardBody position={"relative"} p={0}>
                   <Box position="relative">
                     <Image
                       src={product.productFileList[0].filePath}
@@ -158,7 +158,12 @@ export function MyShop() {
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         원
                       </Text>
-                      <Badge colorScheme={product.status ? "yellow" : "purple"}>
+                      <Badge
+                        colorScheme={product.status ? "yellow" : "purple"}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
                         {product.status
                           ? product.endTimeFormat
                           : product.productBidList &&
@@ -167,21 +172,26 @@ export function MyShop() {
                             : "낙찰자가 없습니다."}
                       </Badge>
                     </Flex>
+                    {!product.status && (
+                      <Box display="flex" justifyContent="center">
+                        <Button
+                          mt={2}
+                          w={"100%"}
+                          variant={"outline"}
+                          borderWidth={3}
+                          colorScheme={"teal"}
+                          color={"teal"}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        >
+                          상품 후기
+                        </Button>
+                      </Box>
+                    )}
                   </Box>
                 </CardBody>
               </Card>
-              {!product.status && (
-                <Box mt={2}>
-                  <Button
-                    w={"100%"}
-                    variant={"outline"}
-                    colorScheme={"teal"}
-                    borderWidth={2}
-                  >
-                    상품 후기
-                  </Button>
-                </Box>
-              )}
             </GridItem>
           ))}
         </Grid>
