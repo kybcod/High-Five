@@ -120,6 +120,11 @@ public class QuestionService {
         if (question == null) {
             return null;
         }
+        Integer prevId = mapper.getPrevId(id);
+        Integer nextId = mapper.getNextId(id);
+        question.setPrevId(prevId);
+        question.setNextId(nextId);
+
         List<String> filesNames = mapper.selectFileByQuestionId(id);
         List<QuestionFile> files = filesNames.stream()
                 .map(name -> new QuestionFile(name, STR."\{srcPrefix}\{question.getId()}/\{name}"))

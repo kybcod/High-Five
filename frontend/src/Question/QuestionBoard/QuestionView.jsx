@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import { CommentComponent } from "../Comment/CommentComponent.jsx";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -44,8 +44,10 @@ export function QuestionView() {
       .then((res) => {
         setQuestion(res.data);
       })
-      .catch(() => {
-        errorToast("해당 게시글이 없습니다.");
+      .catch((err) => {
+        err.response.status === 403
+          ? errorToast("권한이 없는 사용자입니다")
+          : errorToast("해당 게시글이 없습니다.");
         navigate("/question/list");
       });
   }, [id]);
@@ -161,15 +163,35 @@ export function QuestionView() {
               <FontAwesomeIcon icon={faChevronUp} />
             </Box>
             <Box w={"10%"}>이전글</Box>
-            <Box ml={3}>{question.title}</Box>
+            <Box
+              ml={3}
+              cursor="pointer"
+              onClick={() => {
+                navigate(`/question/${question.prevId}`);
+                window.scrollTo({ top: 240 });
+              }}
+            >
+              {question.title}
+            </Box>
           </Flex>
           <Divider borderColor={"gray"} />
           <Flex h={10} alignItems={"center"} textAlign={"center"}>
             <Box w={"5%"}>
               <FontAwesomeIcon icon={faChevronDown} />
             </Box>
-            <Box w={"10%"}>다음글</Box>
-            <Box ml={3}>{question.title}</Box>
+            <Box w={"10%"}>
+              <a href={`/question/${question.nextId}`}>다음글</a>
+            </Box>
+            <Box
+              ml={3}
+              cursor="pointer"
+              onClick={() => {
+                navigate(`/question/${question.nextId}`);
+                window.scrollTo({ top: 240 });
+              }}
+            >
+              {question.title}
+            </Box>
           </Flex>
           <Divider borderColor={"gray"} />
         </Box>

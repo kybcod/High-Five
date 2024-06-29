@@ -120,4 +120,14 @@ public interface QuestionMapper {
 
     @Select("SELECT * FROM faqCategory")
     List<FaqCategory> getAllCategories();
+
+    @Select("""
+            SELECT id as prevId  FROM question_board WHERE id<#{id} ORDER BY id DESC LIMIT 1;
+            """)
+    Integer getPrevId(Integer id);
+
+    @Select("""
+            SELECT id as nextId  FROM question_board WHERE id>#{id} ORDER BY id ASC LIMIT 1;
+            """)
+    Integer getNextId(Integer id);
 }
