@@ -1,25 +1,5 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/react";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
-import { HamburgerIcon } from "@chakra-ui/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBasketShopping,
-  faGlobe,
-  faHeartPulse,
-  faMobileScreenButton,
-  faShirt,
-  faTicket,
-  faUtensils,
-} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 export function Category() {
@@ -33,76 +13,97 @@ export function Category() {
     }
   }
 
+  const CategoryIcons = () => {
+    const icons = [
+      {
+        src: "https://velog.velcdn.com/images/kpo12345/post/eea5266c-da58-4757-8098-5e264c5849e8/image.png",
+        category: "",
+        label: "전체",
+      },
+      {
+        src: "https://velog.velcdn.com/images/kpo12345/post/8a989e0e-2e8c-4826-8ae4-8341d4adf866/image.png",
+        category: "clothes",
+        label: "의류",
+      },
+      {
+        src: "https://velog.velcdn.com/images/kpo12345/post/8211034e-699f-48d3-b8a1-bde6b80aa528/image.png",
+        category: "goods",
+        label: "잡화",
+      },
+      {
+        src: "https://velog.velcdn.com/images/kpo12345/post/0f750a71-2154-4d03-80ba-3fb00af8e778/image.png",
+        category: "food",
+        label: "식품",
+      },
+      {
+        src: "https://velog.velcdn.com/images/kpo12345/post/981459ec-bc49-49b4-bcfe-42dc9eba27c0/image.png",
+        category: "digital",
+        label: "디지털",
+      },
+      {
+        src: "https://velog.velcdn.com/images/kpo12345/post/ffe2bf01-4e1d-4e49-90c7-707b1606d868/image.png",
+        category: "sport",
+        label: "스포츠",
+      },
+      {
+        src: "https://velog.velcdn.com/images/kpo12345/post/cf32da64-e5bf-4d81-9866-a9ae727d2228/image.png",
+        category: "e-coupon",
+        label: "e-쿠폰",
+      },
+    ];
+
+    return (
+      <Flex position="relative" justifyContent="space-evenly">
+        {icons.map((icon, index) => (
+          <Box
+            cursor={"pointer"}
+            key={index}
+            borderColor="#A6D57D"
+            borderWidth={"1px"}
+            borderRadius="10px"
+            boxSize="120px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            onClick={() => handleCategoryClick(icon.category)} // 아이콘 클릭 시 handleCategoryClick 호출
+            flexDirection="column"
+            textAlign="center"
+            m={2}
+          >
+            <Image src={icon.src} boxSize="50%" borderRadius="50%" />
+            <Text fontWeight={"bold"} mt={2} fontSize="sm">
+              {icon.label}
+            </Text>
+          </Box>
+        ))}
+      </Flex>
+    );
+  };
+
   return (
-    <Box>
-      <Menu>
-        <Flex justifyContent="flex-start">
-          <MenuButton
-            as={Button}
-            bg="transparent"
-            _hover={{ bg: "transparent" }}
-            _active={{ bg: "transparent" }}
-            leftIcon={<HamburgerIcon />}
-            size="lg"
-            px={2} // 가로 내부 패딩 조정
-          >
-            카테고리
-          </MenuButton>
-        </Flex>
-        <MenuList border="1px solid green" borderRadius={0} bg="white">
-          <MenuItem
-            onClick={() => handleCategoryClick("")}
-            icon={<FontAwesomeIcon icon={faGlobe} />}
-            _hover={{ bg: "green.50" }}
-            _focus={{ bg: "green.50" }}
-          >
-            전체
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleCategoryClick("clothes")}
-            icon={<FontAwesomeIcon icon={faShirt} />}
-            _hover={{ bg: "green.50" }}
-          >
-            의류
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleCategoryClick("goods")}
-            icon={<FontAwesomeIcon icon={faBasketShopping} />}
-            _hover={{ bg: "green.50" }}
-          >
-            잡화
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleCategoryClick("food")}
-            icon={<FontAwesomeIcon icon={faUtensils} />}
-            _hover={{ bg: "green.50" }}
-          >
-            식품
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleCategoryClick("digital")}
-            icon={<FontAwesomeIcon icon={faMobileScreenButton} />}
-            _hover={{ bg: "green.50" }}
-          >
-            디지털
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleCategoryClick("sport")}
-            icon={<FontAwesomeIcon icon={faHeartPulse} />}
-            _hover={{ bg: "green.50" }}
-          >
-            스포츠
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleCategoryClick("e-coupon")}
-            icon={<FontAwesomeIcon icon={faTicket} />}
-            _hover={{ bg: "green.50" }}
-          >
-            e-쿠폰
-          </MenuItem>
-        </MenuList>
-      </Menu>
-      <Divider mt={2} borderWidth={1} borderColor={"teal"} />
+    <Box
+      mt={20}
+      position="relative"
+      bgColor={"#F4F4F4"}
+      height="300px"
+      width="100%"
+    >
+      <Flex
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        height="100%"
+      >
+        <Text fontSize={"larger"} fontWeight={"bold"}>
+          카테고리 상품
+        </Text>
+        <Text fontSize={"medium"} fontWeight={"bold"}>
+          Category Product
+        </Text>
+        <Box mt={10} width={"100%"}>
+          <CategoryIcons />
+        </Box>
+      </Flex>
     </Box>
   );
 }
