@@ -35,7 +35,7 @@ public interface QuestionMapper {
     Question selectById(Integer id);
 
     @Select("""
-            SELECT file_name FROM question_board_file WHERE question_id=#{id}
+            SELECT file_name FROM question_board_file WHERE question_id=#{id} ORDER BY id;
             """)
     List<String> selectFileByQuestionId(Integer id);
 

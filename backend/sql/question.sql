@@ -161,7 +161,7 @@ SET title='채팅방은 무엇인가요?'
 WHERE id = 5;
 
 UPDATE faq
-SET content='낙찰이 되면 채팅방에서 결제하기 버튼을 눌러 결제를 진행합니다.'
+SET content='낙찰이 되면 채팅방에서 결제하기 버튼을 눌러 결제를 진행합니다.\n카드 결제와 간편결제를 이용하실 수 있습니다.\n카드사의 페이 서비스 및 PAYCO, L.PAY, SSGPAY, toss Pay, SAMSUNG Pay 로 결제가 가능합니다.'
 WHERE id = 4;
 
 INSERT INTO faq(category, title, content)
@@ -199,4 +199,16 @@ ALTER TABLE question_board_file
 
 ALTER TABLE question_board_file
     ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
+
+ALTER TABLE question_board_file
+    DROP FOREIGN KEY question_board_file_ibfk_1;
+
+desc question_board_file;
+
+ALTER TABLE question_board_file
+    MODIFY COLUMN id INT AUTO_INCREMENT FIRST;
+
+ALTER TABLE question_board_file
+    ADD CONSTRAINT question_board_file_ibfk_1
+        FOREIGN KEY (question_id) REFERENCES question_board (id);
 
