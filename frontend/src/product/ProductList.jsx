@@ -10,9 +10,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSearchParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { ProductGrid } from "./ProductGrid.jsx";
-import { CategorySwitchCase } from "../component/CategorySwitchCase.jsx";
-import { SortButton } from "../component/SortButton.jsx";
+import { ProductGrid } from "./main/ProductGrid.jsx";
+import { CategorySwitchCase } from "../component/category/CategorySwitchCase.jsx";
+import { SortButton } from "../myPage/customButton/SortButton.jsx";
 
 export function ProductList() {
   const [productList, setProductList] = useState([]);

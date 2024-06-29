@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { Navbar } from "./component/Navbar.jsx";
 import { Header } from "./component/Header.jsx";
 import Footer from "./component/Footer.jsx";
-import { CategoryMenu } from "./component/CategoryMenu.jsx";
+import { CategoryMenu } from "./component/category/CategoryMenu.jsx";
 
 export function Home() {
   return (

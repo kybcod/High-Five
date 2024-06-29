@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
 import { faHeadset, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./Navbar.css";
+import "./css/Navbar.css";
 
 export function Navbar() {
   const navigate = useNavigate();

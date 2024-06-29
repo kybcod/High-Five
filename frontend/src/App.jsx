@@ -35,7 +35,7 @@ import { UserPassword } from "./user/UserPassword.jsx";
 import { Payment } from "./pay/Payment.jsx";
 import { UserAuthSuccess } from "./user/oauth/UserAuthSuccess.jsx";
 import { SignupPhoneNumber } from "./user/oauth/SignupPhoneNumber.jsx";
-import { theme } from "./Theme.jsx";
+import { theme } from "./component/Theme.jsx";
 import { FAQ } from "./Question/FAQ.jsx";
 import { Question } from "./Question/Question.jsx";
 import "./fonts.css";
