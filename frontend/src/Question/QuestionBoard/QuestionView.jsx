@@ -29,6 +29,8 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { CustomToast } from "../../component/CustomToast.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import * as PropTypes from "prop-types";
+import { ConditionalTitle } from "../ConditionalTitle.jsx";
 
 export function QuestionView() {
   const { id } = useParams();
@@ -165,34 +167,14 @@ export function QuestionView() {
                   <FontAwesomeIcon icon={faChevronUp} />
                 </Box>
                 <Box w={"10%"}>이전글</Box>
-                <Box
-                  ml={3}
-                  cursor="pointer"
-                  onClick={() => {
-                    navigate(`/question/${question.prevId}`);
-                    window.scrollTo({ top: 240 });
-                  }}
-                >
-                  {question.prevSecret ? (
-                    <Flex gap={2}>
-                      <Image src={"/img/lock.svg"} />
-                      {!account.hasAccess(question.userId) ? (
-                        <span style={{ color: "gray", fontSize: "14px" }}>
-                          비밀글
-                        </span>
-                      ) : (
-                        (account.isAdmin(account.userId) ||
-                          account.hasAccess(question.userId)) && (
-                          <span style={{ color: "gray", fontSize: "14px" }}>
-                            {question.prevTitle}
-                          </span>
-                        )
-                      )}
-                    </Flex>
-                  ) : (
-                    <span>{question.prevTitle}</span>
-                  )}
-                </Box>
+                <ConditionalTitle
+                  secret={question.prevSecret}
+                  hasAccess={(prevUserId) => account.hasAccess(prevUserId)}
+                  isAdmin={() => account.isAdmin(account.userId)}
+                  title={question.prevTitle}
+                  userId={question.prevUserId}
+                  navigateTo={() => navigate(`/question/${question.prevId}`)}
+                />
               </Flex>
               <Divider borderColor={"gray"} />
             </>
@@ -207,16 +189,14 @@ export function QuestionView() {
                 <Box w={"10%"}>
                   <a href={`/question/${question.nextId}`}>다음글</a>
                 </Box>
-                <Box
-                  ml={3}
-                  cursor="pointer"
-                  onClick={() => {
-                    navigate(`/question/${question.nextId}`);
-                    window.scrollTo({ top: 240 });
-                  }}
-                >
-                  {question.nextTitle}
-                </Box>
+                <ConditionalTitle
+                  secret={question.nextSecret}
+                  hasAccess={(nextUserId) => account.hasAccess(nextUserId)}
+                  isAdmin={() => account.isAdmin(account.userId)}
+                  title={question.nextTitle}
+                  userId={question.nextUserId}
+                  navigateTo={() => navigate(`/question/${question.nextId}`)}
+                />
               </Flex>
               <Divider borderColor={"gray"} />
             </>

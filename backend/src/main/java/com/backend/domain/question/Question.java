@@ -33,6 +33,8 @@ public class Question {
     private String nextTitle;
     private Boolean prevSecret;
     private Boolean nextSecret;
+    private Integer prevUserId;
+    private Integer nextUserId;
 
     public String getInserted() {
         LocalDateTime midnightToday = LocalDateTime.now().with(LocalTime.MIDNIGHT);

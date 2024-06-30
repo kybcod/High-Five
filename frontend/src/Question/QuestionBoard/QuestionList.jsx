@@ -146,19 +146,17 @@ export function QuestionList() {
                             {/*  style={{ marginRight: "4px" }}*/}
                             {/*/>*/}
                             <Image src={"/img/lock.svg"} />
-                            {!account.hasAccess(question.userId) ? (
+                            {!account.hasAccess(question.userId) &&
+                            !account.isAdmin(account.userId) ? (
                               <span style={{ color: "gray", fontSize: "14px" }}>
                                 비밀글
                               </span>
                             ) : (
-                              account.isAdmin(account.userId) ||
-                              (account.hasAccess(question.userId) && (
-                                <span
-                                  style={{ color: "gray", fontSize: "14px" }}
-                                >
-                                  {question.title}
-                                </span>
-                              ))
+                              <span
+                                style={{ color: "black", fontSize: "14px" }}
+                              >
+                                {question.title}
+                              </span>
                             )}
                           </Flex>
                         ) : (

@@ -127,12 +127,14 @@ public class QuestionService {
             question.setPrevId(prevQuestion.getPrevId());
             question.setPrevTitle(prevQuestion.getPrevTitle());
             question.setPrevSecret(prevQuestion.getPrevSecret());
+            question.setPrevUserId(prevQuestion.getPrevUserId());
         }
 
         if (nextQuestion != null) {
             question.setNextId(nextQuestion.getNextId());
             question.setNextTitle(nextQuestion.getNextTitle());
             question.setNextSecret(nextQuestion.getNextSecret());
+            question.setNextUserId(nextQuestion.getNextUserId());
         }
 
         List<String> filesNames = mapper.selectFileByQuestionId(id);
