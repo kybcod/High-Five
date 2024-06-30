@@ -84,7 +84,11 @@ public class ProductService {
         List<Product> recommendProduct = mapper.selectRecommendProduct();
         settingFilePath(recommendProduct);
 
-        return Map.of("products", products, "todayProduct", todayProduct, "recommendProduct", recommendProduct);
+        //실시간 인기 상품
+        List<Product> livePopularProduct = mapper.selectPopularProduct();
+        settingFilePath(livePopularProduct);
+
+        return Map.of("products", products, "todayProduct", todayProduct, "recommendProduct", recommendProduct, "livePopularProduct", livePopularProduct);
     }
 
 

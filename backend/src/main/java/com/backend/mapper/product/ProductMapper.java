@@ -232,12 +232,11 @@ public interface ProductMapper {
                    p.review_status,
                    pl.like_count
             FROM product p
-                     LEFT JOIN (select product_id, COUNT(*) as like_count from product_like group by `product_id`) pl
+                     LEFT JOIN (select id, product_id, user_id, COUNT(*) as like_count from product_like group by `product_id`) pl
                                ON p.id = pl.product_id
-                     LEFT JOIN product_like pl2 on p.id = pl2.product_id
-            WHERE pl2.user_id = #{userId}
+            WHERE pl.user_id = #{userId}
             ORDER BY 
-                    CASE WHEN #{likeSort} = 0 THEN  pl2.id END DESC,
+                    CASE WHEN #{likeSort} = 0 THEN  pl.id END DESC,
                     CASE WHEN #{likeSort} = 1 THEN  like_count END DESC,
                     CASE WHEN #{likeSort} = 2 THEN  p.start_price END ASC,
                     CASE WHEN #{likeSort} = 3 THEN  p.start_price END DESC,
@@ -395,5 +394,31 @@ public interface ProductMapper {
             @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
     })
     List<Product> selectRecommendProduct();
+
+    //TODO :고치기
+    @Select("""
+            SELECT p.id,
+                    p.title,
+                    p.category,
+                    p.start_price,
+                    p.start_time,
+                    p.end_time,
+                    p.content,
+                    p.status,
+                    p.user_id,
+                    p.review_status,
+                    COUNT(bl.product_id) AS JoinCount
+             FROM bid_list bl
+                      JOIN product p ON bl.product_id = p.id
+            WHERE p.status = 1
+             GROUP BY product_id
+             ORDER BY JoinCount DESC, p.id
+             LIMIT 24
+            """)
+    @Results(id = "popularProduct", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
+    List<Product> selectPopularProduct();
 
 }
