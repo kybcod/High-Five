@@ -2,20 +2,20 @@ import {
   Box,
   Button,
   Center,
+  Divider,
   Flex,
   FormControl,
   Heading,
+  Image,
   Input,
   InputGroup,
-  InputLeftAddon,
+  Text,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { CustomToast } from "../component/CustomToast.jsx";
-import { faKey, faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { buttonStyle } from "../component/css/style.js";
 
 export function Login() {
@@ -49,16 +49,19 @@ export function Login() {
     <Center>
       <Box>
         <Center>
-          <Heading>Live Auction</Heading>
+          <Box>
+            <Heading>Live Auction</Heading>
+            <Center mt={1} fontSize={"lg"} fontWeight={"bold"}>
+              <Text>로그인</Text>
+            </Center>
+          </Box>
         </Center>
         <Box mt={10}>
           <FormControl>
             <InputGroup width={"400px"}>
-              <InputLeftAddon color="gray.300">
-                <FontAwesomeIcon icon={faUser} />
-              </InputLeftAddon>
               <Input
-                placeholder={"Username"}
+                placeholder={"이메일을 입력하세요"}
+                sx={{ "::placeholder": { fontSize: "sm" } }}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </InputGroup>
@@ -67,11 +70,9 @@ export function Login() {
         <Box mt={3}>
           <FormControl>
             <InputGroup width={"400px"}>
-              <InputLeftAddon color="gray.300">
-                <FontAwesomeIcon icon={faKey} />
-              </InputLeftAddon>
               <Input
-                placeholder={"••••"}
+                placeholder={"비밀번호를 입력하세요"}
+                sx={{ "::placeholder": { fontSize: "sm" } }}
                 type={"password"}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -80,29 +81,43 @@ export function Login() {
         </Box>
         <Box mt={3}>
           <Center>
-            <Flex gap={10} fontSize={"sm"}>
+            <Flex gap={10} fontSize={"sm"} color={"gray.700"}>
               <Link to={"/signup"}>이메일 가입</Link>
               <Link to={"/user/email"}>이메일 찾기</Link>
               <Link to={"/user/password"}>비밀번호 찾기</Link>
             </Flex>
           </Center>
         </Box>
-        <Box mt={5}>
+        <Box mt={8}>
           <Button {...buttonStyle} onClick={handleLogin}>
-            Login
+            로그인
           </Button>
         </Box>
-        <Box>
+        <Divider mt={7} border={"1px solid"} borderColor={"gray.200"} />
+        {/* 카카오 로그인, 구글 로그인, 네이버 로그인 순서*/}
+        <Center mt={5} fontSize={"sm"}>
+          <Text>간편 로그인</Text>
+        </Center>
+        <Flex mt={5} justifyContent={"center"} gap={7}>
           <a href="http://localhost:8080/oauth2/authorization/kakao">
-            카카오 로그인
-          </a>
-          <a href="http://localhost:8080/oauth2/authorization/naver">
-            네이버 로그인
+            <Image
+              width={"50px"}
+              src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Ft1vHi%2FbtsIiWtmqdW%2FMFrKl7D3oAVOmICc4zTVuk%2Fimg.webp"
+            />
           </a>
           <a href="http://localhost:8080/oauth2/authorization/google">
-            구글 로그인
+            <Image
+              width={"50px"}
+              src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb22uox%2FbtsIhMyuE9r%2FO3yYJ4lf8iWgzslXfvE5X0%2Fimg.png"
+            />
           </a>
-        </Box>
+          <a href="http://localhost:8080/oauth2/authorization/naver">
+            <Image
+              width={"50px"}
+              src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FnrXzH%2FbtsIjibSXmY%2FhuvZ5Dc784XBP392KnCx8k%2Fimg.png"
+            />
+          </a>
+        </Flex>
       </Box>
     </Center>
   );
