@@ -21,11 +21,15 @@ import {
   Tr,
   Td,
   Flex,
+  CardFooter,
+  Switch,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../../component/CustomToast.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export function QuestionWrite() {
   const [title, setTitle] = useState("");
@@ -33,8 +37,9 @@ export function QuestionWrite() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
-  const [secretWrite, setsecretWrite] = useState(false);
+  const [secretWrite, setSecretWrite] = useState(false);
   const [previewList, setPreviewList] = useState([]);
+  const [removeFileList, setRemoveFileList] = useState([]);
 
   const navigate = useNavigate();
 
@@ -44,7 +49,7 @@ export function QuestionWrite() {
       .postForm("/api/question", {
         title,
         content,
-        files,
+        files: files.filter((_, index) => !removeFileList.includes(index)),
         secretWrite,
       })
       .then(() => {
@@ -66,23 +71,25 @@ export function QuestionWrite() {
     isDisableSaveButton = true;
   }
 
-  const fileNameList = [];
-  for (let i = 0; i < files.length; i++) {
-    fileNameList.push(
-      <Box>
-        <Text fontSize={"md"}>{files[i].name}</Text>
-      </Box>,
-    );
-  }
-
-  function handlesecretWrite() {
-    setsecretWrite(!secretWrite);
+  function handleSecretWrite() {
+    setSecretWrite(!secretWrite);
   }
 
   function handleInsertFiles(e) {
     const selectFiles = Array.from(e.target.files);
-    setFiles(selectFiles);
-    setPreviewList(selectFiles.map((file) => URL.createObjectURL(file)));
+    setFiles([...files, ...selectFiles]);
+    setPreviewList([
+      ...previewList,
+      ...selectFiles.map((file) => URL.createObjectURL(file)),
+    ]);
+  }
+
+  function handleRemoveFile(index) {
+    if (removeFileList.includes(index)) {
+      setRemoveFileList(removeFileList.filter((i) => i !== index));
+    } else {
+      setRemoveFileList([...removeFileList, index]);
+    }
   }
 
   return (
@@ -108,7 +115,7 @@ export function QuestionWrite() {
               <Checkbox
                 mr={2}
                 isChecked={secretWrite}
-                onChange={handlesecretWrite}
+                onChange={handleSecretWrite}
               />
               비밀글
             </Td>
@@ -155,7 +162,7 @@ export function QuestionWrite() {
                   <br />한 파일당 1MB를 초과할 수 없으며 총 용량은 10MB입니다.
                 </FormHelperText>
               </FormControl>
-              {fileNameList.length > 0 && (
+              {files.length > 0 && (
                 <Box mb={7}>
                   <Card>
                     <CardHeader>
@@ -169,10 +176,37 @@ export function QuestionWrite() {
                         justifyContent={"space-around"}
                       >
                         {previewList.map((src, index) => (
-                          <Box key={index} mb={3}>
-                            {fileNameList[index]}
-                            <Image src={src} boxSize="300px" />
-                          </Box>
+                          <Card key={index} m={1}>
+                            <CardFooter>
+                              <Flex gap={3} alignItems="center">
+                                <Box>
+                                  <FontAwesomeIcon
+                                    icon={faTrashCan}
+                                    onClick={() => handleRemoveFile(index)}
+                                  />
+                                </Box>
+                                <Box>
+                                  <Switch
+                                    colorScheme={"pink"}
+                                    isChecked={removeFileList.includes(index)}
+                                    onChange={() => handleRemoveFile(index)}
+                                  />
+                                </Box>
+                                <Text>{files[index].name}</Text>
+                              </Flex>
+                            </CardFooter>
+                            <CardBody>
+                              <Image
+                                src={src}
+                                sx={
+                                  removeFileList.includes(index)
+                                    ? { filter: "blur(8px)" }
+                                    : {}
+                                }
+                                w={"320px"}
+                              />
+                            </CardBody>
+                          </Card>
                         ))}
                       </Box>
                     </CardBody>
