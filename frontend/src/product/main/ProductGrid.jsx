@@ -46,7 +46,7 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                 {account.isLoggedIn() && (
                   <Box
                     position="absolute"
-                    bottom={2}
+                    top={2}
                     right={2}
                     onClick={(e) => {
                       e.stopPropagation();

@@ -23,6 +23,7 @@ export function ProductList() {
   const [keywordCount, setKeywordCount] = useState(0);
   const [categoryCount, setCategoryCount] = useState(0);
   const [sortOption, setSortOption] = useState("0");
+  const [allTotalCount, setAllTotalCount] = useState(0);
   const category = searchParams.get("category") || "";
   const translatedCategoryName = CategorySwitchCase({ categoryName: category });
 
@@ -51,6 +52,7 @@ export function ProductList() {
         setKeywordCount(res.data.keywordCount);
         setCategoryCount(res.data.categoryCount);
         setSortOption(sort.toString());
+        setAllTotalCount(res.data.allTotalCount);
       });
   }, [searchParams]);
 
@@ -102,6 +104,12 @@ export function ProductList() {
             <Text fontSize={"medium"} fontWeight={"bold"}>
               {" "}
               총 {categoryCount} 건
+            </Text>
+          )}
+          {searchParams.size === 0 && (
+            <Text fontSize={"medium"} fontWeight={"bold"}>
+              {" "}
+              총 {allTotalCount} 건
             </Text>
           )}
           {searchParams.get("title") && productList.length !== 0 && (
@@ -168,7 +176,7 @@ export function ProductList() {
               </Button>
             ))}
 
-            {pageInfo.nextPageNumber < pageInfo.lastPageNumber && (
+            {pageInfo.nextPageNumber < pageInfo.lastPageNumber - 1 && (
               <Button
                 mr={"10px"}
                 onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
@@ -178,7 +186,9 @@ export function ProductList() {
             )}
             {pageInfo.currentPageNumber === pageInfo.lastPageNumber - 1 || (
               <Button
-                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+                onClick={() =>
+                  handlePageButtonClick(pageInfo.lastPageNumber - 1)
+                }
               >
                 <FontAwesomeIcon icon={faAnglesRight} />
               </Button>

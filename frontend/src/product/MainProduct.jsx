@@ -5,11 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import ProductSlider from "../component/slider/ProductSlider.jsx";
 import { Category } from "../component/category/Category.jsx";
+import LivePopularProductSlider from "./main/LivePopularProductSlider.jsx";
+import { MainSlider } from "../component/slider/MainSlider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
   const [todayProduct, setTodayProduct] = useState(null);
   const [recommendProduct, setRecommendProduct] = useState(null);
+  const [livePopularProduct, setLivePopularProduct] = useState(null);
   const navigate = useNavigate();
   const [likes, setLikes] = useState({});
   const account = useContext(LoginContext);
@@ -35,6 +38,7 @@ export function MainProduct() {
       setProductList(products);
       setTodayProduct(res.data.todayProduct);
       setRecommendProduct(res.data.recommendProduct);
+      setLivePopularProduct(res.data.livePopularProduct);
     });
   }, [account]);
 
@@ -57,7 +61,8 @@ export function MainProduct() {
   if (
     productList === null ||
     todayProduct === null ||
-    recommendProduct === null
+    recommendProduct === null ||
+    livePopularProduct === null
   ) {
     return <Spinner />;
   }
@@ -65,15 +70,15 @@ export function MainProduct() {
   return (
     <Box>
       <Box h="350px" w="100%" boxSizing="border-box" mx="auto">
-        {/*<MainSlider />*/}
+        <MainSlider />
       </Box>
 
       {/*오늘의 경매 상품*/}
-      <Box marginY="20" textAlign="center" border={"1px solid black"}>
-        <Text fontSize={"xl"} fontWeight={"bold"}>
+      <Box marginY="36" textAlign="center">
+        <Text fontSize={"xl"} fontWeight={"bold"} mb={3}>
           🔥 오늘의 경매 상품
         </Text>
-        <Text fontSize={"smaller"} color={"gray"}>
+        <Text fontSize={"smaller"} color={"gray"} mb={3}>
           오늘 아니면 놓치는 구매 찬스!
         </Text>
         {/*상품*/}
@@ -86,12 +91,12 @@ export function MainProduct() {
       </Box>
 
       {/*추천 상품*/}
-      <Box border={"1px solid black"} marginY="10">
-        <Text fontSize={"larger"} fontWeight={"bold"}>
+      <Box marginY="36" textAlign="center">
+        <Text fontSize={"xl"} fontWeight={"bold"} mb={3}>
           📣 추천 상품
         </Text>
-        <Text fontSize={"medium"} fontWeight={"bold"} mb={10}>
-          Recommend Product
+        <Text fontSize={"smaller"} color={"gray"} mb={3}>
+          오늘은 이거다!
         </Text>
         <ProductSlider
           product={recommendProduct}
@@ -102,32 +107,23 @@ export function MainProduct() {
       </Box>
 
       {/*실시간 판매 랭킹  */}
-      <Box marginY="20" border={"1px solid black"}>
-        <Text fontSize={"larger"} fontWeight={"bold"}>
-          🏆 실시간 판매 랭킹 🏆
+      <Box marginY="36" textAlign="center">
+        <Text fontSize={"xl"} fontWeight={"bold"} mb={3}>
+          🏆 실시간 경매 참여 랭킹 🏆
         </Text>
-        <Text fontSize={"medium"} fontWeight={"bold"}>
-          Today Auction Product
+        <Text fontSize={"smaller"} color={"gray"} mb={3}>
+          핫하다 핫해!
         </Text>
+        <LivePopularProductSlider
+          product={livePopularProduct}
+          likes={likes}
+          handleLikeClick={handleLikeClick}
+          account={account}
+        />
       </Box>
 
       {/*카테고리 상품 */}
       <Category />
-
-      {/*<Box position="relative" marginY="20">*/}
-      {/*  <Divider border={"1px solid teal"} />*/}
-      {/*  <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">*/}
-      {/*    전체 상품*/}
-      {/*  </AbsoluteCenter>*/}
-      {/*</Box>*/}
-      {/*<Box>*/}
-      {/*  <ProductGrid*/}
-      {/*    productList={productList}*/}
-      {/*    likes={likes}*/}
-      {/*    handleLikeClick={handleLikeClick}*/}
-      {/*    account={account}*/}
-      {/*  />*/}
-      {/*</Box>*/}
     </Box>
   );
 }

@@ -103,10 +103,11 @@ public class ProductService {
 //        키워드에 대한 검색 결과 갯수
         Integer keywordCount = mapper.selectKeywordCount(title);
         Integer categoryCount = mapper.selectCategoryCount(category);
+        Integer allTotalCount = mapper.selectAllTotalCount();
 
         return Map.of("content", content, "pageInfo", pageInfo,
                 "keywordCount", keywordCount,
-                "categoryCount", categoryCount);
+                "categoryCount", categoryCount, "allTotalCount", allTotalCount);
     }
 
     public Map<String, Object> get(Integer id, Authentication authentication) {

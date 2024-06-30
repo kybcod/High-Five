@@ -26,7 +26,7 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
   const settings = {
     dots: false,
     infinite: false,
-    speed: 500,
+    speed: 700,
     slidesToShow: 4,
     slidesToScroll: 4,
     arrows: false, // 기본 화살표 숨기기
@@ -86,7 +86,7 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
                       {account.isLoggedIn() && (
                         <Box
                           position="absolute"
-                          bottom={2}
+                          top={2}
                           right={2}
                           onClick={(e) => {
                             e.stopPropagation();

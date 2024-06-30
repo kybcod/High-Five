@@ -387,7 +387,7 @@ public interface ProductMapper {
             FROM product
             WHERE status = 1
             ORDER BY RAND()
-            LIMIT 12;
+            LIMIT 15;
             """)
     @Results(id = "recommendProduct", value = {
             @Result(property = "id", column = "id"),
@@ -413,12 +413,15 @@ public interface ProductMapper {
             WHERE p.status = 1
              GROUP BY product_id
              ORDER BY JoinCount DESC, p.id
-             LIMIT 24
+             LIMIT 20
             """)
     @Results(id = "popularProduct", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
     })
     List<Product> selectPopularProduct();
+
+    @Select("SELECT COUNT(*) FROM product")
+    Integer selectAllTotalCount();
 
 }

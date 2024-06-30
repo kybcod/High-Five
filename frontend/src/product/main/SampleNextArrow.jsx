@@ -8,7 +8,7 @@ export const SampleNextArrow = ({ onClick }) => {
     <Box
       width={"50px"}
       height={"50px"}
-      bgColor={"white"}
+      bgColor={"#F7F7F7"}
       borderRadius="50%"
       position="absolute"
       transform="translateY(-50%)"

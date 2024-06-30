@@ -6,7 +6,6 @@ import {
   Card,
   CardBody,
   Flex,
-  Heading,
   Image,
   Text,
 } from "@chakra-ui/react";
@@ -75,13 +74,14 @@ const LivePopularProductSlider = ({
               >
                 <Card
                   onClick={() => navigate(`/product/${product.id}`)}
-                  w={"60%"}
+                  w={"65%"}
                   boxShadow={"none"}
                   cursor={"pointer"}
                   maxW="sm"
                   h="100%"
-                  borderBottomRadius={"0"}
+                  borderRadius={"5px"}
                   overflow="hidden"
+                  bgColor={"#F7F7F7"}
                 >
                   <CardBody position="relative" h="100%" p={0}>
                     <Box position="relative">
@@ -92,24 +92,34 @@ const LivePopularProductSlider = ({
                         transition="transform 0.2s"
                         _hover={{ transform: "scale(1.05)" }}
                       />
-                      <Heading
-                        w={12}
-                        bgColor={"white"}
-                        position="absolute"
-                        top={1}
-                        left={1}
+                      <Box
                         display={"flex"}
                         justifyContent={"center"}
                         alignItems={"center"}
-                        textAlign={"center"}
                       >
-                        {index + 1}
-                      </Heading>
+                        <Text
+                          fontSize={"xl"}
+                          fontWeight={"600"}
+                          w={10}
+                          h={10}
+                          bgColor={"white"}
+                          borderRadius={"5px"}
+                          position="absolute"
+                          top={2}
+                          left={2}
+                          display={"flex"}
+                          justifyContent={"center"}
+                          alignItems={"center"}
+                          textAlign={"center"}
+                        >
+                          {index + 1}
+                        </Text>
+                      </Box>
 
                       {account.isLoggedIn() && (
                         <Box
                           position="absolute"
-                          bottom={2}
+                          top={2}
                           right={2}
                           onClick={(e) => {
                             e.stopPropagation();
