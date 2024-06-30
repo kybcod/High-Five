@@ -77,12 +77,11 @@ public class UserController {
     public ResponseEntity updateUser(User user, Authentication authentication,
                                      @RequestParam(value = "profileImages[]", required = false) MultipartFile profileImage) throws IOException {
         if (service.identificationToModify(user)) {
-            // TODO. 주석해제합시다용
-//            if (service.signUpVerification(user)) {
-            Map<String, Object> token = service.updateUser(user, authentication, profileImage);
-            return ResponseEntity.ok(token);
-//            }
-//            return ResponseEntity.badRequest().build();
+            if (service.updateVerification(user)) {
+                Map<String, Object> token = service.updateUser(user, authentication, profileImage);
+                return ResponseEntity.ok(token);
+            }
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

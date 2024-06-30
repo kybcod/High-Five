@@ -346,4 +346,12 @@ public class UserService {
         }
         return false;
     }
+
+    public boolean updateVerification(User user) {
+        if (!user.getPassword().isEmpty()) {
+            String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
+            return user.getPassword().trim().matches(passwordPattern);
+        }
+        return true;
+    }
 }

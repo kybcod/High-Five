@@ -162,6 +162,7 @@ export function UserEdit() {
           <Box mr={7}>
             <Image
               width={"150px"}
+              height="150px"
               src={imgFile}
               borderRadius={"full"}
               fallbackSrc={

@@ -76,6 +76,8 @@ export function UserInfo() {
       <Box>
         <HStack>
           <Image
+            width={"150px"}
+            height="150px"
             fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
             borderRadius="full"
             boxSize="150px"
