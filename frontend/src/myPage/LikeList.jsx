@@ -1,7 +1,6 @@
 import {
   Badge,
   Box,
-  Button,
   Card,
   CardBody,
   Flex,
@@ -120,6 +119,19 @@ export function LikeList() {
     setSearchParams(searchParams);
   }
 
+  const handleGetReviewButtonClick = (productId) => {
+    // TODO : 후기 조회 버튼 status 추가 예정
+    axios
+      .get(`/api/reviews/${productId}`)
+      .then((res) => {
+        if (res.data != null) {
+          setReviewList(res.data);
+        }
+      })
+      .catch()
+      .finally();
+  };
+
   return (
     <Box>
       <SortButton sortOption={sortOption} handleSortChange={handleSortChange} />
@@ -221,20 +233,6 @@ export function LikeList() {
                         </Badge>
                       )}
                     </Flex>
-                    {!product.status && (
-                      <Box display="flex" justifyContent="center">
-                        <Button
-                          mt={2}
-                          w={"100%"}
-                          variant={"outline"}
-                          borderWidth={3}
-                          colorScheme={"teal"}
-                          color={"teal"}
-                        >
-                          상품 후기
-                        </Button>
-                      </Box>
-                    )}
                   </Box>
                 </CardBody>
               </Card>

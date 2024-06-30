@@ -240,7 +240,8 @@ export function BidList() {
                             borderWidth={3}
                             colorScheme={"whiteAlpha"}
                             color={"gray"}
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               navigate(
                                 `/chat/product/${bid.product.id}/buyer/${bid.userId}`,
                               );
@@ -261,7 +262,8 @@ export function BidList() {
                             borderWidth={3}
                             colorScheme={"teal"}
                             color={"teal"}
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               navigate(
                                 `/chat/product/${bid.product.id}/buyer/${bid.userId}`,
                               );
