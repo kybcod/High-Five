@@ -232,11 +232,12 @@ public interface ProductMapper {
                    p.review_status,
                    pl.like_count
             FROM product p
-                     LEFT JOIN (select id, product_id, user_id, COUNT(*) as like_count from product_like group by `product_id`) pl
-                               ON p.id = pl.product_id
-            WHERE pl.user_id = #{userId}
+                     LEFT JOIN (select product_id, COUNT(*) as like_count from product_like group by `product_id`) pl
+                                ON p.id = pl.product_id
+                     LEFT JOIN product_like pl2 on p.id = pl2.product_id
+            WHERE pl2.user_id = #{userId}
             ORDER BY 
-                    CASE WHEN #{likeSort} = 0 THEN  pl.id END DESC,
+                    CASE WHEN #{likeSort} = 0 THEN  pl2.id END DESC,
                     CASE WHEN #{likeSort} = 1 THEN  like_count END DESC,
                     CASE WHEN #{likeSort} = 2 THEN  p.start_price END ASC,
                     CASE WHEN #{likeSort} = 3 THEN  p.start_price END DESC,

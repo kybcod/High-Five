@@ -6,7 +6,6 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import ProductSlider from "../component/slider/ProductSlider.jsx";
 import { Category } from "../component/category/Category.jsx";
 import LivePopularProductSlider from "./main/LivePopularProductSlider.jsx";
-import { MainSlider } from "../component/slider/MainSlider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
@@ -70,7 +69,7 @@ export function MainProduct() {
   return (
     <Box>
       <Box h="350px" w="100%" boxSizing="border-box" mx="auto">
-        <MainSlider />
+        {/*<MainSlider />*/}
       </Box>
 
       {/*오늘의 경매 상품*/}
