@@ -319,6 +319,10 @@ public class UserService {
         userList.forEach(user -> user.setAuthority(mapper.selectAuthoritiesByUserId(user.getId())));
 
         int totalUserNumber = mapper.selectTotalUserCount();
+        int newId = offset + 1;
+        for (int i = 0; i < userList.size(); i++) {
+            userList.get(i).setId(newId++);
+        }
         Page<User> pageImpl = new PageImpl<>(userList, pageable, totalUserNumber);
         PageInfo paeInfo = new PageInfo().setting(pageImpl);
 
