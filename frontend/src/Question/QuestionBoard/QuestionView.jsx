@@ -29,7 +29,6 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { CustomToast } from "../../component/CustomToast.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import * as PropTypes from "prop-types";
 import { ConditionalTitle } from "../ConditionalTitle.jsx";
 
 export function QuestionView() {
@@ -50,8 +49,7 @@ export function QuestionView() {
         err.response.status === 403
           ? // errorToast("비밀글에 접근할 권한이 없습니다.")
             alert("비밀글에 접근할 권한이 없습니다.")
-          : errorToast("해당 게시글이 없습니다.");
-        navigate("/question/list");
+          : (errorToast("해당 게시글이 없습니다."), navigate("/question/list"));
       });
   }, [id]);
 
@@ -77,9 +75,7 @@ export function QuestionView() {
 
   return (
     <Box m={8}>
-      <Box mt={2}>
-        <Text value={question.id} />
-      </Box>
+      {/*<Box mt={2}>/!*<Text value={question.id} />*!/</Box>*/}
       {account.hasAccess(question.userId) && (
         <Box>
           <Flex justify={"flex-end"} mr={10} mt={5} mb={5} gap={8}>
@@ -143,7 +139,7 @@ export function QuestionView() {
       <Box>
         <Box mt={5}>
           {question.fileList && (
-            <Flex flexWrap={"wrap"} justifyContent={"space-evenly"}>
+            <Flex flexWrap={"wrap"} gap={5} justifyContent={"space-evenly"}>
               {question.fileList.map((file) => (
                 <Card key={file.name}>
                   <CardBody>

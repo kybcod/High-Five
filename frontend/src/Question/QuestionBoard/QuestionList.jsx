@@ -138,7 +138,7 @@ export function QuestionList() {
                       )}
                     </Td>
                     <Td width="42%" fontSize={"15px"} whiteSpace={"wrap"}>
-                      <Flex gap={2}>
+                      <Flex gap={2} wrap={"wrap"}>
                         {question.secretWrite ? (
                           <Flex gap={2}>
                             {/*<FontAwesomeIcon*/}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Text, Flex, Button, Divider } from "@chakra-ui/react";
+import { Box, Text, Flex, Button, Divider, Spinner } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -65,6 +65,10 @@ export function FAQ() {
       window.removeEventListener("scroll", toggleVisibility);
     };
   }, []);
+
+  if (faq === null) {
+    return <Spinner />;
+  }
 
   const buttonStyle = (isTop) => ({
     position: "fixed",

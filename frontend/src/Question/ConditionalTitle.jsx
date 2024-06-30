@@ -27,7 +27,7 @@ export function ConditionalTitle({
           )}
         </Flex>
       ) : (
-        <span>{title}</span>
+        <span style={{ fontSize: "14px" }}>{title}</span>
       )}
     </Box>
   );
