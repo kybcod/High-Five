@@ -21,6 +21,7 @@ import {
   InputStyle,
   title,
 } from "../component/css/style.js";
+import { useSearchParams } from "react-router-dom";
 
 export function UserPassword() {
   const [email, setEmail] = useState("");
@@ -28,9 +29,19 @@ export function UserPassword() {
   const [passwordCheck, setPasswordCheck] = useState("");
   const codeInfo = useContext(SignupCodeContext);
   const { successToast, errorToast } = CustomToast();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    codeInfo.setPhoneNumber("");
+    const emailParam = searchParams.get("email");
+    const phoneNumber = searchParams.get("phoneNumber");
+    if (emailParam) {
+      setEmail(emailParam);
+    }
+    if (phoneNumber) {
+      codeInfo.setPhoneNumber(phoneNumber);
+    } else {
+      codeInfo.setPhoneNumber("");
+    }
     codeInfo.setIsCheckedCode(false);
     codeInfo.setVerificationCode("");
   }, []);
@@ -86,7 +97,11 @@ export function UserPassword() {
         <Divider borderColor={"teal"} mt={7} />
         <FormControl mt={10}>
           <FormLabel {...formLabel}>이메일</FormLabel>
-          <Input {...InputStyle} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            {...InputStyle}
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+          />
         </FormControl>
         <UserPhoneNumber />
         {codeInfo.isCheckedCode && (
