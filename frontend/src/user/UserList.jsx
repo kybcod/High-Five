@@ -117,7 +117,14 @@ export function UserList() {
             />
           </Box>
           <Box>
-            <Button onClick={handleSearchClick}>검색</Button>
+            <Button
+              onClick={handleSearchClick}
+              variant={"outline"}
+              colorScheme={"teal"}
+              border={"2px"}
+            >
+              검색
+            </Button>
           </Box>
         </Flex>
       </Center>

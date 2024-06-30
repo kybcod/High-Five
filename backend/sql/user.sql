@@ -59,7 +59,7 @@ SET black_count = 0
 WHERE id = 57;
 
 SELECT *
-FROM user_file;
+FROM user;
 
 # ALTER TABLE user_file
 #     CHANGE file_name file_src VARCHAR(500);
