@@ -199,7 +199,6 @@ public class UserService {
             return false;
         }
 
-        // 회원 가입 시 비밀번호가 정규식 일치하는지 & 혹은 Oauth 로그인인지 확인
         String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
         return user.getPassword().trim().matches(passwordPattern);
     }

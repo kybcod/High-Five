@@ -51,11 +51,10 @@ public class UserController {
     // 회원가입 시 인증코드 받기
     @GetMapping("users/codes")
     public ResponseEntity sendCode(String phoneNumber) {
-        // TODO. 주석 삭제
         phoneNumber = phoneNumber.replaceAll("-", "");
-        System.out.println("phoneNumber = " + phoneNumber);
         if (phoneNumber.length() == 11) {
             String verificationCode = service.sendMessage(phoneNumber);
+            // TODO. 주석 삭제
             System.out.println("verificationCode = " + verificationCode);
             return ResponseEntity.ok(verificationCode);
         }
