@@ -316,6 +316,7 @@ public class UserService {
         int offset = (page - 1) * 10;
         Pageable pageable = PageRequest.of(page - 1, 10);
         List<User> userList = mapper.selectUserList(offset, type, keyword);
+        userList.forEach(user -> user.setAuthority(mapper.selectAuthoritiesByUserId(user.getId())));
 
         int totalUserNumber = mapper.selectTotalUserCount();
         Page<User> pageImpl = new PageImpl<>(userList, pageable, totalUserNumber);

@@ -22,7 +22,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { buttonStyle } from "../component/css/style.js";
@@ -271,9 +271,22 @@ export function UserEdit() {
               variant="flushed"
               onChange={(e) => setOldPassword(e.target.value)}
             />
-            <Button onClick={onClose}>취소</Button>
-            <Button onClick={handleUserUpdate} isLoading={isLoading}>
+            <Button
+              onClick={handleUserUpdate}
+              isLoading={isLoading}
+              variant="outline"
+              colorScheme="teal"
+              borderWidth={2}
+            >
               확인
+            </Button>
+            <Button
+              onClick={onClose}
+              variant="outline"
+              colorScheme="gray"
+              borderWidth={2}
+            >
+              취소
             </Button>
           </ModalFooter>
         </ModalContent>

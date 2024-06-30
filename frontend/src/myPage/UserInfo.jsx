@@ -128,9 +128,22 @@ export function UserInfo() {
               variant="flushed"
               onChange={(e) => setOldPassword(e.target.value)}
             />
-            <Button onClick={onClose}>취소</Button>
-            <Button onClick={handleUserDelete} isLoading={isLoading}>
+            <Button
+              onClick={handleUserDelete}
+              isLoading={isLoading}
+              variant="outline"
+              colorScheme="teal"
+              borderWidth={2}
+            >
               삭제
+            </Button>
+            <Button
+              onClick={onClose}
+              variant="outline"
+              colorScheme="teal"
+              borderWidth={2}
+            >
+              취소
             </Button>
           </ModalFooter>
         </ModalContent>
