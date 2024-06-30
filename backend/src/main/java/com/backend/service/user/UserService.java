@@ -167,7 +167,6 @@ public class UserService {
 
         User emailDB = mapper.selectUserByEmail(user.getEmail());
         User nickNameDB = mapper.selectUserByNickName(user.getNickName());
-        user.setPhoneNumber(user.getPhoneNumber().replaceAll("-", ""));
 
         if (emailDB != null) {
             return false;
@@ -353,5 +352,10 @@ public class UserService {
             return user.getPassword().trim().matches(passwordPattern);
         }
         return true;
+    }
+
+    public boolean checkUniquePhoneNumber(String phoneNumber) {
+        String email = mapper.selectEmailByPhoneNumber(phoneNumber);
+        return email == null;
     }
 }

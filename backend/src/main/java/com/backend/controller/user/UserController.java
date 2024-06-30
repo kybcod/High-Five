@@ -36,9 +36,13 @@ public class UserController {
     // user 회원 가입
     @PostMapping("users")
     public ResponseEntity addUser(@RequestBody User user) {
+        user.setPhoneNumber(user.getPhoneNumber().replaceAll("-", ""));
         if (service.signUpVerification(user)) {
-            service.addUser(user);
-            return ResponseEntity.ok().build();
+            if (service.checkUniquePhoneNumber(user.getPhoneNumber())) {
+                service.addUser(user);
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         return ResponseEntity.badRequest().build();
     }
