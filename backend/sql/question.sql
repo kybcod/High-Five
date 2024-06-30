@@ -212,3 +212,5 @@ ALTER TABLE question_board_file
     ADD CONSTRAINT question_board_file_ibfk_1
         FOREIGN KEY (question_id) REFERENCES question_board (id);
 
+desc question_board;
+

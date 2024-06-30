@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import { CommentComponent } from "../Comment/CommentComponent.jsx";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -171,7 +171,15 @@ export function QuestionView() {
                 window.scrollTo({ top: 240 });
               }}
             >
-              {question.title}
+              {question.prevSecret && (
+                <Flex gap={2}>
+                  <Image src={"/img/lock.svg"} />
+                  <span style={{ color: "gray", fontSize: "14px" }}>
+                    비밀글
+                  </span>
+                </Flex>
+              )}
+              {question.prevSecret || question.prevTitle}
             </Box>
           </Flex>
           <Divider borderColor={"gray"} />
@@ -190,7 +198,7 @@ export function QuestionView() {
                 window.scrollTo({ top: 240 });
               }}
             >
-              {question.title}
+              {question.nextTitle}
             </Box>
           </Flex>
           <Divider borderColor={"gray"} />

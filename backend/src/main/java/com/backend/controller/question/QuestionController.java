@@ -52,12 +52,11 @@ public class QuestionController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasAuthority('SCOPE_admin') OR isAuthenticated()")
     public ResponseEntity getQuestion(@PathVariable Integer id, Authentication authentication) {
         Question question = service.get(id);
-        if (!service.hasAccess(id, authentication)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+//        if (!service.hasAccess(id, authentication)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//        }
         if (question != null) {
             return ResponseEntity.ok().body(question);
         } else

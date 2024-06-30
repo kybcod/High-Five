@@ -25,8 +25,14 @@ public class Question {
     private Integer numberOfComments;
     private Boolean isNewBadge;
     private Boolean secretWrite; //비밀글이면 TRUE, 아니면 FALSE
+
+    // 이전글, 다음글
     private Integer prevId;
     private Integer nextId;
+    private String prevTitle;
+    private String nextTitle;
+    private Boolean prevSecret;
+    private Boolean nextSecret;
 
     public String getInserted() {
         LocalDateTime midnightToday = LocalDateTime.now().with(LocalTime.MIDNIGHT);

@@ -120,10 +120,20 @@ public class QuestionService {
         if (question == null) {
             return null;
         }
-        Integer prevId = mapper.getPrevId(id);
-        Integer nextId = mapper.getNextId(id);
-        question.setPrevId(prevId);
-        question.setNextId(nextId);
+        Question prevQuestion = mapper.getPrevId(id);
+        Question nextQuestion = mapper.getNextId(id);
+
+        if (prevQuestion != null) {
+            question.setPrevId(prevQuestion.getPrevId());
+            question.setPrevTitle(prevQuestion.getPrevTitle());
+            question.setPrevSecret(prevQuestion.getPrevSecret());
+        }
+
+        if (nextQuestion != null) {
+            question.setNextId(nextQuestion.getNextId());
+            question.setNextTitle(nextQuestion.getNextTitle());
+            question.setNextSecret(nextQuestion.getNextSecret());
+        }
 
         List<String> filesNames = mapper.selectFileByQuestionId(id);
         List<QuestionFile> files = filesNames.stream()

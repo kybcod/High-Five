@@ -122,12 +122,12 @@ public interface QuestionMapper {
     List<FaqCategory> getAllCategories();
 
     @Select("""
-            SELECT id as prevId  FROM question_board WHERE id<#{id} ORDER BY id DESC LIMIT 1;
+            SELECT id prevId, title prevTitle, secret_write prevSecret FROM question_board WHERE id<#{id} ORDER BY id DESC LIMIT 1;
             """)
-    Integer getPrevId(Integer id);
+    Question getPrevId(Integer id);
 
     @Select("""
-            SELECT id as nextId  FROM question_board WHERE id>#{id} ORDER BY id ASC LIMIT 1;
+            SELECT id nextId, title nextTitle, secret_write nextSecret FROM question_board WHERE id>#{id} ORDER BY id ASC LIMIT 1;
             """)
-    Integer getNextId(Integer id);
+    Question getNextId(Integer id);
 }
