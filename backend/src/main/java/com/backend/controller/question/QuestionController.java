@@ -54,13 +54,17 @@ public class QuestionController {
     @GetMapping("{id}")
     public ResponseEntity getQuestion(@PathVariable Integer id, Authentication authentication) {
         Question question = service.get(id);
-//        if (!service.hasAccess(id, authentication)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-        if (question != null) {
+        if (question.getSecretWrite()) {
+            if (!service.hasAccess(id, authentication)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
             return ResponseEntity.ok().body(question);
-        } else
+        }
+
+        if (question == null) {
             return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(question);
     }
 
     @DeleteMapping("{id}")

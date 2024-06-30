@@ -48,7 +48,8 @@ export function QuestionView() {
       })
       .catch((err) => {
         err.response.status === 403
-          ? errorToast("권한이 없는 사용자입니다")
+          ? // errorToast("비밀글에 접근할 권한이 없습니다.")
+            alert("비밀글에 접근할 권한이 없습니다.")
           : errorToast("해당 게시글이 없습니다.");
         navigate("/question/list");
       });
@@ -65,7 +66,7 @@ export function QuestionView() {
       })
       .catch((err) => {
         err.response.status === 403
-          ? errorToast("권한이 없는 사용자입니다")
+          ? errorToast("권한이 없는 사용자 입니다.")
           : errorToast("게시물 삭제 중 오류가 발생하였습니다.");
       });
   }
