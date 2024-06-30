@@ -114,7 +114,7 @@ public interface ProductMapper {
             <script>
             <bind name="pattern" value="'%' + keyword + '%'" />
             SELECT COUNT(*) FROM product p
-            WHERE p.title LIKE #{pattern}
+            WHERE p.title LIKE #{pattern} AND status = TRUE
             <if test="category != null and category != ''">
                 AND p.category = #{category}
             </if>
@@ -371,15 +371,15 @@ public interface ProductMapper {
             <bind name="pattern" value="'%' + keyword + '%'" />
             SELECT COUNT(*)
             FROM product
-            WHERE title LIKE #{pattern}
+            WHERE title LIKE #{pattern} AND status = TRUE
             </script>
             """)
     Integer selectKeywordCount(String title);
 
     @Select("""
             SELECT COUNT(*) 
-            FROM product
-            WHERE category = #{category}
+            FROM product 
+            WHERE category = #{category} AND status = TRUE
             """)
     Integer selectCategoryCount(String category);
 
@@ -421,7 +421,7 @@ public interface ProductMapper {
     })
     List<Product> selectPopularProduct();
 
-    @Select("SELECT COUNT(*) FROM product")
+    @Select("SELECT COUNT(*) FROM product WHERE status = TRUE")
     Integer selectAllTotalCount();
 
 }

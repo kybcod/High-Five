@@ -49,7 +49,7 @@ public class ProductController {
                                               @RequestParam(defaultValue = "") String category,
                                               @RequestParam(defaultValue = "0") int sort
     ) {
-        return service.getList(PageRequest.of(page - 1, 16), title, category, sort);
+        return service.getList(PageRequest.of(page - 1, 20), title, category, sort);
     }
 
     @GetMapping("{id}")

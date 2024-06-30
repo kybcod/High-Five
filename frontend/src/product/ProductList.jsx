@@ -33,6 +33,7 @@ export function ProductList() {
     axios
       .get(`/api/products/search?${searchParams}&sort=${sort}`)
       .then((res) => {
+        console.log(res.data);
         const products = res.data.content;
         const initialLikes = products.reduce((acc, product) => {
           acc[product.id] = product.like || false;
@@ -176,7 +177,7 @@ export function ProductList() {
               </Button>
             ))}
 
-            {pageInfo.nextPageNumber < pageInfo.lastPageNumber - 1 && (
+            {pageInfo.nextPageNumber < pageInfo.lastPageNumber && (
               <Button
                 mr={"10px"}
                 onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
@@ -186,9 +187,7 @@ export function ProductList() {
             )}
             {pageInfo.currentPageNumber === pageInfo.lastPageNumber - 1 || (
               <Button
-                onClick={() =>
-                  handlePageButtonClick(pageInfo.lastPageNumber - 1)
-                }
+                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
               >
                 <FontAwesomeIcon icon={faAnglesRight} />
               </Button>
