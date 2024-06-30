@@ -201,7 +201,7 @@ export function UserEdit() {
             <Text>변경 시에만 비밀번호와 닉네임을 입력해주세요</Text>
           </Box>
         </HStack>
-        <FormControl mt={7}>
+        <FormControl mt={12}>
           <FormLabel>비밀번호</FormLabel>
           <Input
             type={"password"}
@@ -242,11 +242,11 @@ export function UserEdit() {
                 setIsCheckedNickName(false);
               }}
             />
-            <InputRightElement width="4.5rem">
+            <InputRightElement width="6rem">
               <Button
                 onClick={handleDuplicated}
                 isDisabled={!disabledNickNameCheckButton}
-                h="1.75rem"
+                h="2rem"
                 size="md"
                 colorScheme="teal"
                 variant="outline"
