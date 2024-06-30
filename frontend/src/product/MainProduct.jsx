@@ -6,6 +6,7 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import ProductSlider from "../component/slider/ProductSlider.jsx";
 import { Category } from "../component/category/Category.jsx";
 import LivePopularProductSlider from "./main/LivePopularProductSlider.jsx";
+import { MainSlider } from "../component/slider/MainSlider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
@@ -68,7 +69,7 @@ export function MainProduct() {
   return (
     <Box>
       <Box h="350px" w="100%" boxSizing="border-box" mx="auto">
-        {/*<MainSlider />*/}
+        <MainSlider />
       </Box>
 
       {/*오늘의 경매 상품*/}
@@ -76,7 +77,7 @@ export function MainProduct() {
         <Text fontSize={"xl"} fontWeight={"bold"} mb={3}>
           🔥 오늘의 경매 상품
         </Text>
-        <Text fontSize={"smaller"} color={"gray"} mb={3}>
+        <Text fontSize={"smaller"} color={"gray"} mb={10}>
           오늘 아니면 놓치는 구매 찬스!
         </Text>
         {/*상품*/}
@@ -93,7 +94,7 @@ export function MainProduct() {
         <Text fontSize={"xl"} fontWeight={"bold"} mb={3}>
           📣 추천 상품
         </Text>
-        <Text fontSize={"smaller"} color={"gray"} mb={3}>
+        <Text fontSize={"smaller"} color={"gray"} mb={10}>
           오늘은 이거다!
         </Text>
         <ProductSlider
@@ -109,7 +110,7 @@ export function MainProduct() {
         <Text fontSize={"xl"} fontWeight={"bold"} mb={3}>
           🏆 실시간 경매 참여 랭킹 🏆
         </Text>
-        <Text fontSize={"smaller"} color={"gray"} mb={3}>
+        <Text fontSize={"smaller"} color={"gray"} mb={10}>
           핫하다 핫해!
         </Text>
         <LivePopularProductSlider

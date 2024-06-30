@@ -27,11 +27,10 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
     dots: false,
     infinite: false,
     speed: 700,
-    slidesToShow: 4,
+    slidesToShow: product.length < 4 ? product.length : 4,
     slidesToScroll: 4,
     arrows: false, // 기본 화살표 숨기기
     afterChange: setCurrentSlide,
-    centerMode: false,
   };
 
   const next = () => {
@@ -50,102 +49,118 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
 
   return (
     <Box>
-      <Box position="relative">
-        {currentSlide > 0 && <SamplePrevArrow onClick={previous} />}
-        {currentSlide < product.length - settings.slidesToShow && (
-          <SampleNextArrow onClick={next} />
-        )}
-        {/* 슬라이더 */}
-        <Slider
-          {...settings}
-          ref={sliderRef}
-          style={{ width: "100%", height: "100%" }}
-        >
-          {product.map((product, index) => (
-            <Box key={index} width={"100%"} px={2}>
-              <Flex alignItems="center" justifyContent="center" width="100%">
-                <Card
-                  onClick={() => navigate(`/product/${product.id}`)}
-                  w={"80%"}
-                  boxShadow={"none"}
-                  cursor={"pointer"}
-                  maxW="sm"
-                  h="100%"
-                  borderBottomRadius={"0"}
-                  overflow="hidden"
-                >
-                  <CardBody position="relative" h="100%" p={0}>
-                    <Box position="relative">
-                      <Image
-                        src={product.productFileList[0].filePath}
-                        w="100%"
-                        h="250px"
-                        transition="transform 0.2s"
-                        _hover={{ transform: "scale(1.05)" }}
-                      />
-                      {account.isLoggedIn() && (
-                        <Box
-                          position="absolute"
-                          top={2}
-                          right={2}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleLikeClick(product.id);
-                          }}
+      {product.length === 0 && (
+        <Text mt={10} fontSize={"lg"} fontWeight={600}>
+          오늘의 경매 상품이 없습니다.
+        </Text>
+      )}
+      {product.length > 0 && (
+        <Box position="relative">
+          {currentSlide > 0 && <SamplePrevArrow onClick={previous} />}
+          {currentSlide < product.length - settings.slidesToShow && (
+            <SampleNextArrow onClick={next} />
+          )}
+          {/* 슬라이더 */}
+          <Slider
+            {...settings}
+            ref={sliderRef}
+            style={{ width: "100%", height: "100%" }}
+          >
+            {product.map((product, index) => (
+              <Box key={index} width={"100%"} px={2}>
+                <Flex alignItems="center" justifyContent="center" width="100%">
+                  <Card
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    w={"80%"}
+                    boxShadow={"none"}
+                    cursor={"pointer"}
+                    maxW="sm"
+                    h="100%"
+                    borderBottomRadius={"0"}
+                    overflow="hidden"
+                  >
+                    <CardBody position="relative" h="100%" p={0}>
+                      <Box position="relative">
+                        <Image
+                          src={product.productFileList[0].filePath}
+                          w="100%"
+                          h="250px"
                           transition="transform 0.2s"
-                          _hover={{ transform: "scale(1.1)" }}
+                          _hover={{ transform: "scale(1.05)" }}
+                        />
+                        {account.isLoggedIn() && (
+                          <Box
+                            position="absolute"
+                            top={2}
+                            right={2}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleLikeClick(product.id);
+                            }}
+                            transition="transform 0.2s"
+                            _hover={{ transform: "scale(1.1)" }}
+                          >
+                            <FontAwesomeIcon
+                              icon={likes[product.id] ? fullHeart : emptyHeart}
+                              style={{ color: "red" }}
+                              size="xl"
+                            />
+                          </Box>
+                        )}
+                        {!product.status && (
+                          <Box
+                            position="absolute"
+                            top={0}
+                            left={0}
+                            right={0}
+                            bottom={0}
+                            bg="blackAlpha.600"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <Text
+                              color="white"
+                              fontSize="2xl"
+                              fontWeight="bold"
+                            >
+                              판매완료
+                            </Text>
+                          </Box>
+                        )}
+                      </Box>
+                      <Box p={3} textAlign="left">
+                        <Text
+                          fontSize="lg"
+                          fontWeight="500"
+                          noOfLines={1}
+                          mb={1}
                         >
-                          <FontAwesomeIcon
-                            icon={likes[product.id] ? fullHeart : emptyHeart}
-                            style={{ color: "red" }}
-                            size="xl"
-                          />
-                        </Box>
-                      )}
-                      {!product.status && (
-                        <Box
-                          position="absolute"
-                          top={0}
-                          left={0}
-                          right={0}
-                          bottom={0}
-                          bg="blackAlpha.600"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Text color="white" fontSize="2xl" fontWeight="bold">
-                            판매완료
+                          {product.title}
+                        </Text>
+                        <Flex mb={3} alignItems="baseline">
+                          <Text fontSize="xl" fontWeight="bold" mr={2}>
+                            {product.startPrice
+                              .toString()
+                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                            원
                           </Text>
-                        </Box>
-                      )}
-                    </Box>
-                    <Box p={3} textAlign="left">
-                      <Text fontSize="lg" fontWeight="500" noOfLines={1} mb={1}>
-                        {product.title}
-                      </Text>
-                      <Flex mb={3} alignItems="baseline">
-                        <Text fontSize="xl" fontWeight="bold" mr={2}>
-                          {product.startPrice
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-                          원
-                        </Text>
-                        <Text fontSize="sm" color="gray.500">
-                          (시작가)
-                        </Text>
-                      </Flex>
-                      <Badge color={"black"} colorScheme={"yellow"}>
-                        {product.endTimeFormat}
-                      </Badge>
-                    </Box>
-                  </CardBody>
-                </Card>
-              </Flex>
-            </Box>
-          ))}
-        </Slider>
-      </Box>
+                          <Text fontSize="sm" color="gray.500">
+                            (시작가)
+                          </Text>
+                        </Flex>
+                        <Badge color={"black"} colorScheme={"yellow"}>
+                          {product.endTimeFormat}
+                        </Badge>
+                      </Box>
+                    </CardBody>
+                  </Card>
+                </Flex>
+              </Box>
+            ))}
+          </Slider>
+        </Box>
+      )}
     </Box>
   );
 };
