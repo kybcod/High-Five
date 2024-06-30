@@ -90,24 +90,6 @@ export function BoardView() {
       });
   }
 
-  function handleClickPrev() {
-    const prevBoarId = board.id - 1;
-
-    axios.get(`/api/board/${prevBoarId}`).then((res) => {
-      setBoard(res.data.board);
-      setBoardLike(res.data.boardLike);
-    });
-  }
-
-  function handleClickNext() {
-    const nextBoardId = board.id + 1;
-
-    axios.get(`/api/board/${nextBoardId}`).then((res) => {
-      setBoard(res.data.board);
-      setBoardLike(res.data.boardLike);
-    });
-  }
-
   function handleReport() {
     axios
       .put(`/api/users/black/${board.userId}`)
@@ -226,10 +208,6 @@ export function BoardView() {
           </Text>
         </Box>
       </Box>
-      <Flex justifyContent={"space-evenly"} mt={"15px"}>
-        <Text onClick={handleClickPrev}>⟨ 이전글</Text>
-        <Text onClick={handleClickNext}>다음글 ⟩</Text>
-      </Flex>
       <Box>
         <BoardCommentComponent boardId={board_id} />
       </Box>
