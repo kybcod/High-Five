@@ -4,7 +4,7 @@ import { Box, Text, Flex, Button, Divider, Spinner } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ArrowDownCircleIcon, ArrowUpCircleIcon } from "./Icon.jsx";
+import Scroll from "./Scroll.jsx";
 
 export function FAQ() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,31 +12,6 @@ export function FAQ() {
   const [faq, setFaq] = useState([]);
   const [categories, setCategories] = useState([]);
   const [expanded, setExpanded] = useState([]);
-  const [isVisible, setIsVisible] = useState(false);
-
-  // 스크롤 이벤트 핸들러 설정
-  const toggleVisibility = () => {
-    if (window.scrollY > 300) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
-  };
-
-  // 화면 맨 위로 스크롤
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
-  const scrollToDown = () => {
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth",
-    });
-  };
 
   useEffect(() => {
     axios
@@ -58,28 +33,9 @@ export function FAQ() {
     });
   };
 
-  // 컴포넌트가 마운트될 때와 언마운트될 때 스크롤 이벤트를 등록하고 해제
-  useEffect(() => {
-    window.addEventListener("scroll", toggleVisibility);
-    return () => {
-      window.removeEventListener("scroll", toggleVisibility);
-    };
-  }, []);
-
   if (faq === null) {
     return <Spinner />;
   }
-
-  const buttonStyle = (isTop) => ({
-    position: "fixed",
-    bottom: isTop ? "220px" : "150px",
-    // right={["20px", "50px", "100px"]} // chakra ui 반응형으로 설정
-    right: "30px",
-    zIndex: 1000,
-    cursor: "pointer",
-    transition: "opacity 0.3s, visibility 0.3s",
-    display: isVisible ? "block" : "none",
-  });
 
   const handleCategoryChange = (newCategory) => {
     setSearchParams({ category: newCategory });
@@ -162,22 +118,7 @@ export function FAQ() {
           </Box>
         ))}
       </Flex>
-
-      {isVisible && (
-        <>
-          <Box onClick={scrollToTop} style={buttonStyle(true)}>
-            <ArrowUpCircleIcon
-              width={32}
-              height={32}
-              fill="green"
-              shadow={true}
-            />
-          </Box>
-          <Box onClick={scrollToDown} style={buttonStyle(false)}>
-            <ArrowDownCircleIcon />
-          </Box>
-        </>
-      )}
+      <Scroll isTop={true} />
     </Box>
   );
 }

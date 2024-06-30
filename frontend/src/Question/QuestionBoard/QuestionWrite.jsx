@@ -133,6 +133,8 @@ export function QuestionWrite() {
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="내용을 입력해주세요"
                 maxLength="5000"
+                rows={"10"}
+                resize={"none"}
               />
             </Td>
           </Tr>
@@ -160,14 +162,19 @@ export function QuestionWrite() {
                       <Heading size="md">선택된 파일 목록</Heading>
                     </CardHeader>
                     <CardBody>
-                      <Stack divider={<StackDivider />} spacing={4}>
+                      <Box
+                        display="flex"
+                        flexWrap={"wrap"}
+                        gap={5}
+                        justifyContent={"space-around"}
+                      >
                         {previewList.map((src, index) => (
                           <Box key={index} mb={3}>
                             {fileNameList[index]}
-                            <Image src={src} blockSize="300px" />
+                            <Image src={src} boxSize="300px" />
                           </Box>
                         ))}
-                      </Stack>
+                      </Box>
                     </CardBody>
                   </Card>
                 </Box>
@@ -182,7 +189,7 @@ export function QuestionWrite() {
             isLoading={loading}
             isDisabled={isDisableSaveButton}
             colorScheme={"teal"}
-            w={120}
+            w={"100px"}
             variant={"outline"}
             borderRadius={"unset"}
           >

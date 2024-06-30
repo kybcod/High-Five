@@ -127,7 +127,7 @@ export function QuestionView() {
           <Td bg="rgb(247,245,248)" w={"15%"} fontWeight={700}>
             작성일
           </Td>
-          <Td>{question.inserted}</Td>
+          <Td>{question.insertedAll}</Td>
         </Tr>
         <Tr>
           <Td colSpan={2} whiteSpace={"pre-wrap"} pt={50} pb={50}>
@@ -137,13 +137,13 @@ export function QuestionView() {
       </Table>
 
       <Box>
-        <Box mt={5}>
+        <Box mt={30}>
           {question.fileList && (
             <Flex flexWrap={"wrap"} gap={5} justifyContent={"space-evenly"}>
               {question.fileList.map((file) => (
                 <Card key={file.name}>
                   <CardBody>
-                    <Image blockSize="300px" src={file.src} />
+                    <Image boxSize="300px" src={file.src} />
                   </CardBody>
                 </Card>
               ))}
@@ -200,7 +200,7 @@ export function QuestionView() {
           )}
         </Box>
 
-        <Flex justifyContent="flex-start">
+        <Flex justifyContent="space-between">
           <Button
             colorScheme={"teal"}
             w={"100px"}
@@ -209,6 +209,15 @@ export function QuestionView() {
             onClick={() => navigate("/question/list")}
           >
             글 목록
+          </Button>
+          <Button
+            colorScheme={"teal"}
+            w={"100px"}
+            variant={"outline"}
+            borderRadius={"unset"}
+            onClick={() => navigate("/question/write")}
+          >
+            글쓰기
           </Button>
         </Flex>
       </Box>

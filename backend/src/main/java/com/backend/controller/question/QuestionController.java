@@ -55,12 +55,11 @@ public class QuestionController {
     public ResponseEntity getQuestion(@PathVariable Integer id, Authentication authentication) {
         Question question = service.get(id);
         if (question.getSecretWrite()) {
-            if (!service.hasAccess(id, authentication)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            if (service.hasAccess(id, authentication) || authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("SCOPE_admin"))) {
+                return ResponseEntity.ok().body(question);
             }
-            return ResponseEntity.ok().body(question);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
         if (question == null) {
             return ResponseEntity.notFound().build();
         }
