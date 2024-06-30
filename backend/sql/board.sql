@@ -108,7 +108,4 @@ WHERE black_count > 0;
 ALTER TABLE board
     MODIFY COLUMN id INT AUTO_INCREMENT;
 
-# 보드 아이디를 순서대로, 수정삭제해도 아이디 오름차순 설정 위해 임시 아이디
-ALTER TABLE board
-    ADD COLUMN board_no INT;
 

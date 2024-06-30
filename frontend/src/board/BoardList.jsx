@@ -140,7 +140,11 @@ export function BoardList() {
                   </Td>
                   <Td>{board.nickName}</Td>
                   <Td>
-                    <FontAwesomeIcon icon={faComment} size={"sm"} />
+                    <FontAwesomeIcon
+                      icon={faComment}
+                      size={"sm"}
+                      style={{ marginRight: "5px" }}
+                    />
                     {board.numberOfComments}
                   </Td>
                   <Td>{board.viewCount}</Td>
