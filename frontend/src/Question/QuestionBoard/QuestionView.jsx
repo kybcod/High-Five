@@ -158,50 +158,69 @@ export function QuestionView() {
 
         <Box mb={10} mt={20}>
           <Divider borderColor={"gray"} />
-          <Flex h={10} alignItems={"center"} textAlign={"center"}>
-            <Box w={"5%"}>
-              <FontAwesomeIcon icon={faChevronUp} />
-            </Box>
-            <Box w={"10%"}>이전글</Box>
-            <Box
-              ml={3}
-              cursor="pointer"
-              onClick={() => {
-                navigate(`/question/${question.prevId}`);
-                window.scrollTo({ top: 240 });
-              }}
-            >
-              {question.prevSecret && (
-                <Flex gap={2}>
-                  <Image src={"/img/lock.svg"} />
-                  <span style={{ color: "gray", fontSize: "14px" }}>
-                    비밀글
-                  </span>
-                </Flex>
-              )}
-              {question.prevSecret || question.prevTitle}
-            </Box>
-          </Flex>
-          <Divider borderColor={"gray"} />
-          <Flex h={10} alignItems={"center"} textAlign={"center"}>
-            <Box w={"5%"}>
-              <FontAwesomeIcon icon={faChevronDown} />
-            </Box>
-            <Box w={"10%"}>
-              <a href={`/question/${question.nextId}`}>다음글</a>
-            </Box>
-            <Box
-              ml={3}
-              cursor="pointer"
-              onClick={() => {
-                navigate(`/question/${question.nextId}`);
-                window.scrollTo({ top: 240 });
-              }}
-            >
-              {question.nextTitle}
-            </Box>
-          </Flex>
-          <Divider borderColor={"gray"} />
+          {question.prevId && (
+            <>
+              <Flex h={10} alignItems={"center"} textAlign={"center"}>
+                <Box w={"5%"}>
+                  <FontAwesomeIcon icon={faChevronUp} />
+                </Box>
+                <Box w={"10%"}>이전글</Box>
+                <Box
+                  ml={3}
+                  cursor="pointer"
+                  onClick={() => {
+                    navigate(`/question/${question.prevId}`);
+                    window.scrollTo({ top: 240 });
+                  }}
+                >
+                  {question.prevSecret ? (
+                    <Flex gap={2}>
+                      <Image src={"/img/lock.svg"} />
+                      {!account.hasAccess(question.userId) ? (
+                        <span style={{ color: "gray", fontSize: "14px" }}>
+                          비밀글
+                        </span>
+                      ) : (
+                        (account.isAdmin(account.userId) ||
+                          account.hasAccess(question.userId)) && (
+                          <span style={{ color: "gray", fontSize: "14px" }}>
+                            {question.prevTitle}
+                          </span>
+                        )
+                      )}
+                    </Flex>
+                  ) : (
+                    <span>{question.prevTitle}</span>
+                  )}
+                </Box>
+              </Flex>
+              <Divider borderColor={"gray"} />
+            </>
+          )}
+
+          {question.nextId && (
+            <>
+              <Flex h={10} alignItems={"center"} textAlign={"center"}>
+                <Box w={"5%"}>
+                  <FontAwesomeIcon icon={faChevronDown} />
+                </Box>
+                <Box w={"10%"}>
+                  <a href={`/question/${question.nextId}`}>다음글</a>
+                </Box>
+                <Box
+                  ml={3}
+                  cursor="pointer"
+                  onClick={() => {
+                    navigate(`/question/${question.nextId}`);
+                    window.scrollTo({ top: 240 });
+                  }}
+                >
+                  {question.nextTitle}
+                </Box>
+              </Flex>
+              <Divider borderColor={"gray"} />
+            </>
+          )}
         </Box>
 
         <Flex justifyContent="flex-start">

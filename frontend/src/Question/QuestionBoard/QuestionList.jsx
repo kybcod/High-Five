@@ -139,17 +139,32 @@ export function QuestionList() {
                     </Td>
                     <Td width="42%" fontSize={"15px"} whiteSpace={"wrap"}>
                       <Flex gap={2}>
-                        <Flex gap={3}>
-                          {/*<Image src={"/img/lock.svg"} />*/}
-                          <FontAwesomeIcon
-                            icon={faLock}
-                            style={{ marginRight: "4px" }}
-                          />
-                          <span style={{ color: "gray", fontSize: "14px" }}>
-                            비밀글
-                          </span>
-                        </Flex>
-                        ){question.secretWrite || question.title}
+                        {question.secretWrite ? (
+                          <Flex gap={2}>
+                            {/*<FontAwesomeIcon*/}
+                            {/*  icon={faLock}*/}
+                            {/*  style={{ marginRight: "4px" }}*/}
+                            {/*/>*/}
+                            <Image src={"/img/lock.svg"} />
+                            {!account.hasAccess(question.userId) ? (
+                              <span style={{ color: "gray", fontSize: "14px" }}>
+                                비밀글
+                              </span>
+                            ) : (
+                              account.isAdmin(account.userId) ||
+                              (account.hasAccess(question.userId) && (
+                                <span
+                                  style={{ color: "gray", fontSize: "14px" }}
+                                >
+                                  {question.title}
+                                </span>
+                              ))
+                            )}
+                          </Flex>
+                        ) : (
+                          <span>{question.title}</span>
+                        )}
+
                         {question.isNewBadge && (
                           <Badge colorScheme="green">New</Badge>
                         )}
