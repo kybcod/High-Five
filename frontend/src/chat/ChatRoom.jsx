@@ -138,8 +138,8 @@ export function ChatRoom() {
     });
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    // client.activate(); // 활성화
-    // setStompClient(client);
+    client.activate(); // 활성화
+    setStompClient(client);
 
     return () => {
       if (stompClient) {

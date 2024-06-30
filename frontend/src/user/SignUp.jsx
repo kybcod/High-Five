@@ -48,11 +48,11 @@ export function SignUp() {
     codeInfo.setVerificationCode("");
 
     if (searchParams != null) {
-      setIsOauthLogin(true);
       const emailParam = searchParams.get("email");
       const nickNameParam = searchParams.get("nickName");
       const phoneNumber = searchParams.get("phoneNumber");
       if (email) {
+        setIsOauthLogin(true);
         setEmail(emailParam);
         setIsValidEmail(true);
         setIsCheckedEmail(true);
@@ -89,9 +89,9 @@ export function SignUp() {
       .get(`/api/users/emails?email=${email}`)
       .then(() => {
         successToast("사용가능한 이메일입니다");
+        setIsCheckedEmail(true);
       })
       .catch((err) => {
-        setIsCheckedEmail(true);
         if (err.response.status === 400) {
           errorToast("유효한 이메일 형식이 아닙니다");
         } else if (err.response.status === 409) {

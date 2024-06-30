@@ -1,11 +1,11 @@
 import {
-  Avatar,
   Box,
   Button,
   FormControl,
   FormLabel,
   Heading,
   HStack,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -75,7 +75,7 @@ export function UserInfo() {
     <Box>
       <Box>
         <HStack>
-          <Avatar
+          <Image
             fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
             borderRadius="full"
             boxSize="150px"
@@ -127,6 +127,7 @@ export function UserInfo() {
             <Input
               variant="flushed"
               onChange={(e) => setOldPassword(e.target.value)}
+              type={"password"}
             />
             <Button
               onClick={handleUserDelete}
