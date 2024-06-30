@@ -65,7 +65,7 @@ export function Header() {
         {/* 로고 */}
         <Box>
           <Box cursor={"pointer"} w={"200px"} onClick={() => navigate("/")}>
-            <Image src={"/img/fung.PNG"} />
+            <Image src={"/img/fung1.png"} />
           </Box>
         </Box>
 
