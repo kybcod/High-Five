@@ -396,7 +396,6 @@ public interface ProductMapper {
     })
     List<Product> selectRecommendProduct();
 
-    //TODO :고치기
     @Select("""
             SELECT p.id,
                     p.title,

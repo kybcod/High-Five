@@ -52,7 +52,6 @@ export function MyPage({ tab }) {
 
   useEffect(() => {
     axios.get(`/api/products/user/${userId}`).then((res) => {
-      console.log(res.data);
       setProduct(res.data.productList);
       setUserNickName(res.data.userNickName);
       setTotalSalesCount(res.data.totalSalesCount);

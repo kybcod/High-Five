@@ -41,7 +41,6 @@ export function LikeList() {
         `/api/products/user/${userId}/like?likePage=${currentPage}&likeSort=${likeSort}`,
       )
       .then((res) => {
-        console.log(res.data);
         if (currentPage === 1) {
           setLikeProductList(res.data.likeProductList);
         } else {

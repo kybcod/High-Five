@@ -38,7 +38,6 @@ export function BidList() {
     axios
       .get(`/api/bids/${userId}/list?bidPage=${currentPage}&bidSort=${bidSort}`)
       .then((res) => {
-        console.log(res.data);
         if (currentPage === 1) {
           // 첫 번째 페이지
           setBidList(res.data.bidList);
@@ -52,7 +51,6 @@ export function BidList() {
 
         axios.get(`/api/products/like/${userId}`).then((initLike) => {
           // initLike : 좋아요 상태인 productId들
-          console.log(initLike);
           const likeData = initLike.data.reduce((acc, productId) => {
             acc[productId] = true;
             return acc;

@@ -52,7 +52,6 @@ export function ProductDetails() {
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
-      console.log(res.data);
       setProduct(res.data.product);
       setExistingFilePreviews(res.data.productFileList || []);
       setLike(res.data.like);
