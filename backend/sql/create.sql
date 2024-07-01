@@ -10,24 +10,20 @@ CREATE TABLE user
     inserted     DATETIME     NOT NULL DEFAULT NOW()
 );
 
-# question board 테이블
-CREATE TABLE question_board
+# 회원가입 시 인증번호 테이블
+CREATE TABLE code
 (
-    id       INT PRIMARY KEY AUTO_INCREMENT,
-    user_id  INT           NOT NULL,
-    title    VARCHAR(50)   NOT NULL,
-    content  VARCHAR(2000) NOT NULL,
-    inserted DATETIME      NOT NULL DEFAULT NOW(),
-    number_of_count INT DEFAULT 0 NOT NULL,
-    secret_write BOOLEAN DEFAULT FALSE NOT NULL
+    phone_number VARCHAR(11) NOT NULL,
+    code         INT         NOT NULL,
+    PRIMARY KEY (phone_number, code)
 );
 
-# question board file 테이블
-CREATE TABLE question_board_file
+# 유저 프로필 사진 테이블
+CREATE TABLE user_file
 (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    question_id INT         NOT NULL REFERENCES question_board (id),
-    file_name   VARCHAR(200) NOT NULL
+    user_id   INT          NOT NULL REFERENCES user (id),
+    file_name VARCHAR(500) NOT NULL,
+    PRIMARY KEY (user_id, file_name)
 );
 
 # 권한 테이블
@@ -36,6 +32,28 @@ CREATE TABLE authority
     user_id INT         NOT NULL REFERENCES user (id),
     name    VARCHAR(10) NOT NULL,
     PRIMARY KEY (user_id, name)
+);
+
+
+-- question
+# question board 테이블
+CREATE TABLE question_board
+(
+    id              INT PRIMARY KEY AUTO_INCREMENT,
+    user_id         INT                   NOT NULL,
+    title           VARCHAR(50)           NOT NULL,
+    content         VARCHAR(2000)         NOT NULL,
+    inserted        DATETIME              NOT NULL DEFAULT NOW(),
+    number_of_count INT     DEFAULT 0     NOT NULL,
+    secret_write    BOOLEAN DEFAULT FALSE NOT NULL
+);
+
+# question board file 테이블
+CREATE TABLE question_board_file
+(
+    id          INT PRIMARY KEY AUTO_INCREMENT,
+    question_id INT          NOT NULL REFERENCES question_board (id),
+    file_name   VARCHAR(200) NOT NULL
 );
 
 # question board comment 테이블
@@ -48,6 +66,24 @@ CREATE TABLE question_board_comment
     inserted    DATETIME     NOT NULL DEFAULT NOW()
 );
 
+# FAQ 카테고리 테이블
+CREATE TABLE faqCategory
+(
+    id   INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(10) NOT NULL
+);
+
+# FAQ 테이블
+CREATE TABLE faq
+(
+    id       INT PRIMARY KEY AUTO_INCREMENT,
+    category INT,
+    title    VARCHAR(200)  NOT NULL,
+    content  VARCHAR(2000) NOT NULL,
+    FOREIGN KEY (category) REFERENCES faqCategory (id)
+);
+
+-- 자유 게시판
 # 자유 게시판
 CREATE TABLE board
 (
@@ -67,7 +103,7 @@ CREATE TABLE board_file
     PRIMARY KEY (board_id, file_name)
 );
 
-# board like 테이블
+# 자유 게시판 like 테이블
 CREATE TABLE board_like
 (
     board_id INT NOT NULL REFERENCES board (id),
@@ -88,6 +124,7 @@ CREATE TABLE board_comment
     reference_id     INT          NOT NULL DEFAULT 0
 );
 
+-- 상품
 # 상품 테이블
 CREATE TABLE product
 (
@@ -121,12 +158,6 @@ CREATE TABLE product_like
     user_id    INT NOT NULL REFERENCES user (id)
 );
 
-# 리뷰 목록 테이블
-CREATE TABLE review_list
-(
-    id      INT PRIMARY KEY AUTO_INCREMENT,
-    content VARCHAR(30) NOT NULL
-);
 
 # 입찰 내역 테이블
 CREATE TABLE bid_list
@@ -140,13 +171,32 @@ CREATE TABLE bid_list
 );
 
 
+-- 리뷰
+# 리뷰 테이블
+CREATE TABLE review
+(
+    product_id INT      NOT NULL REFERENCES product (id),
+    user_id    INT      NOT NULL,
+    review_id  JSON     NOT NULL,
+    inserted   DATETIME NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (product_id, user_id)
+);
+
+# 리뷰 목록 테이블
+CREATE TABLE review_list
+(
+    id      INT PRIMARY KEY AUTO_INCREMENT,
+    content VARCHAR(30) NOT NULL
+);
+
+
 # -- 변경 후
 # 채팅방 테이블
 CREATE TABLE chat_room
 (
     id          INT PRIMARY KEY AUTO_INCREMENT,
-    product_id  INT      NOT NULL REFERENCES product (id),
-    seller_id   INT      NOT NULL REFERENCES product (user_id),
+    product_id  INT      NOT NULL,
+    seller_id   INT      NOT NULL,
     user_id     INT      NOT NULL,
     inserted    DATETIME NOT NULL DEFAULT NOW(),
     user_exit   BOOLEAN  NOT NULL DEFAULT FALSE,
@@ -164,33 +214,7 @@ CREATE TABLE chat
     read_check   BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
-# 리뷰 테이블
-CREATE TABLE review
-(
-    product_id INT      NOT NULL REFERENCES product (id),
-    user_id    INT      NOT NULL,
-    review_id  JSON     NOT NULL,
-    inserted   DATETIME NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (product_id, user_id)
-);
-
-# 회원가입 시 인증번호 테이블
-CREATE TABLE code
-(
-    phone_number VARCHAR(11) NOT NULL,
-    code         INT         NOT NULL,
-    PRIMARY KEY (phone_number, code)
-);
-
-# 유저 프로필 사진 테이블
-CREATE TABLE user_file
-(
-    user_id   INT          NOT NULL REFERENCES user (id),
-    file_name VARCHAR(500) NOT NULL,
-    PRIMARY KEY (user_id, file_name)
-);
-
-# 결제 테이블
+--  결제 테이블
 # 주문번호, 결제금액, bid_id(bidList), 결제 상태
 CREATE TABLE payment
 (
@@ -199,21 +223,4 @@ CREATE TABLE payment
     amount       INT          NOT NULL,
     bid_list_id  INT          NOT NULL,
     inserted     DATETIME     NOT NULL DEFAULT NOW()
-);
-
-# FAQ 카테고리 테이블
-CREATE TABLE faqCategory
-(
-    id   INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(10) NOT NULL
-);
-
-# FAQ 테이블
-CREATE TABLE faq
-(
-    id       INT PRIMARY KEY AUTO_INCREMENT,
-    category INT,
-    title    VARCHAR(200)  NOT NULL,
-    content  VARCHAR(2000) NOT NULL,
-    FOREIGN KEY (category) REFERENCES faqCategory (id)
 );
