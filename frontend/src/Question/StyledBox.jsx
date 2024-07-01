@@ -20,7 +20,7 @@ const StyledBox = ({ to, children }) => {
         py={2}
         fontSize={"1.2rem"}
         cursor="pointer"
-        borderBottom={isActive ? "2px solid red" : "none"}
+        borderBottom={isActive ? "2px solid black" : "none"}
         fontWeight={isActive ? "bold" : "600"}
         _hover={{ fontSize: "1.3rem", fontWeight: "bold" }}
       >

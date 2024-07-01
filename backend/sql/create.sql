@@ -17,15 +17,17 @@ CREATE TABLE question_board
     user_id  INT           NOT NULL REFERENCES user (id),
     title    VARCHAR(50)   NOT NULL,
     content  VARCHAR(2000) NOT NULL,
-    inserted DATETIME      NOT NULL DEFAULT NOW()
+    inserted DATETIME      NOT NULL DEFAULT NOW(),
+    number_of_count INT DEFAULT 0 NOT NULL,
+    secret_write BOOLEAN DEFAULT FALSE NOT NULL
 );
 
 # question board file 테이블
 CREATE TABLE question_board_file
 (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     question_id INT         NOT NULL REFERENCES question_board (id),
-    file_name   VARCHAR(50) NOT NULL,
-    PRIMARY KEY (question_id, file_name)
+    file_name   VARCHAR(200) NOT NULL
 );
 
 # 권한 테이블
@@ -192,4 +194,21 @@ CREATE TABLE payment
     amount       INT          NOT NULL,
     bid_list_id  INT          NOT NULL,
     inserted     DATETIME     NOT NULL DEFAULT NOW()
+);
+
+# FAQ 카테고리 테이블
+CREATE TABLE faqCategory
+(
+    id   INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(10) NOT NULL
+);
+
+# FAQ 테이블
+CREATE TABLE faq
+(
+    id       INT PRIMARY KEY AUTO_INCREMENT,
+    category INT,
+    title    VARCHAR(200)  NOT NULL,
+    content  VARCHAR(2000) NOT NULL,
+    FOREIGN KEY (category) REFERENCES faqCategory (id)
 );
