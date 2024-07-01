@@ -64,7 +64,8 @@ export function ChatRoomList() {
     <Box>
       <Box mb={7}>
         <Heading>
-          <FontAwesomeIcon icon={faComments} size={"xl"} color={"#2F4858"} />
+          <FontAwesomeIcon icon={faComments} size={"md"} color={"#2F4858"} />{" "}
+          채팅방
         </Heading>
       </Box>
       <Divider orientation="horizontal" mb={5} borderColor={"#2F4858"} />
@@ -158,6 +159,7 @@ export function ChatRoomList() {
             <ChatRoom
               pId={selectedChat.product.id}
               bId={selectedChat.chatRoom.userId}
+              onBackClick={handleBackClick}
             />
           )}
         </Box>
