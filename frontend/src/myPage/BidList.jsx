@@ -146,8 +146,9 @@ export function BidList() {
                     {/*{account.isLoggedIn() && (*/}
                     <Box
                       position="absolute"
-                      bottom={2}
+                      top={2}
                       right={2}
+                      zIndex={2}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleLikeClick(bid.product.id);
@@ -174,6 +175,7 @@ export function BidList() {
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        zIndex={1}
                       >
                         <Text color="white" fontSize="2xl" fontWeight="bold">
                           판매완료
@@ -187,11 +189,9 @@ export function BidList() {
                     <Text mb={1} fontWeight={"500"} noOfLines={1} fontSize="lg">
                       {bid.product.title}
                     </Text>
-                    <Flex
-                      justifyContent={"space-between"}
-                      alignItems={"center"}
-                    >
+                    <Flex mb={1} alignItems={"baseline"}>
                       <Text
+                        mr={2}
                         fontSize={
                           bid.product.startPrice.toString().length > 8
                             ? "sm"
@@ -203,28 +203,31 @@ export function BidList() {
                       >
                         {bid.product.startPrice
                           .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
                         원
                       </Text>
-                      {/*판매 종료가 안되면 endTime 벳지*/}
-                      {bid.product.status && (
-                        <Badge colorScheme="yellow">
-                          {bid.product.endTimeFormat}
-                        </Badge>
-                      )}
-
-                      {/*판매 종료가 되고 낙찰 성공 유무에 따른 뱃지*/}
-                      {bid.product.status || (
-                        <Badge
-                          key={bid.product.id}
-                          colorScheme={bid.bidStatus ? "blue" : "red"}
-                        >
-                          <Text fontWeight={"bold"}>
-                            {bid.bidStatus ? "낙찰 성공" : "낙찰 실패"}
-                          </Text>
-                        </Badge>
-                      )}
+                      <Text color={"gray.500"} fontSize={"sm"}>
+                        (시작가)
+                      </Text>
                     </Flex>
+                    {/*판매 종료가 안되면 endTime 벳지*/}
+                    {bid.product.status && (
+                      <Badge colorScheme="yellow">
+                        {bid.product.endTimeFormat}
+                      </Badge>
+                    )}
+
+                    {/*판매 종료가 되고 낙찰 성공 유무에 따른 뱃지*/}
+                    {bid.product.status || (
+                      <Badge
+                        key={bid.product.id}
+                        colorScheme={bid.bidStatus ? "blue" : "red"}
+                      >
+                        <Text fontWeight={"bold"}>
+                          {bid.bidStatus ? "낙찰 성공" : "낙찰 실패"}
+                        </Text>
+                      </Badge>
+                    )}
 
                     {/* TODO : 버튼 배치 */}
                     {!bid.product.status &&

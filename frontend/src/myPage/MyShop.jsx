@@ -142,7 +142,7 @@ export function MyShop() {
                     <Text fontSize="lg" fontWeight="500" noOfLines={1} mb={1}>
                       {product.title}
                     </Text>
-                    <Flex justifyContent="space-between" alignItems="center">
+                    <Flex mb={1} alignItems="baseline">
                       <Text
                         fontSize={
                           product.startPrice.toString().length > 8
@@ -152,26 +152,30 @@ export function MyShop() {
                               : "lg"
                         }
                         fontWeight="bold"
+                        mr={2}
                       >
                         {product.startPrice
                           .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
                         원
                       </Text>
-                      <Badge
-                        colorScheme={product.status ? "yellow" : "purple"}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        {product.status
-                          ? product.endTimeFormat
-                          : product.productBidList &&
-                              product.productBidList.length > 0
-                            ? `낙찰자: ${product.productBidList[0].successBidNickName}`
-                            : "낙찰자가 없습니다."}
-                      </Badge>
+                      <Text fontSize="sm" color="gray.500">
+                        (시작가)
+                      </Text>
                     </Flex>
+                    <Badge
+                      colorScheme={product.status ? "yellow" : "purple"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      {product.status
+                        ? product.endTimeFormat
+                        : product.productBidList &&
+                            product.productBidList.length > 0
+                          ? `낙찰자: ${product.productBidList[0].successBidNickName}`
+                          : "낙찰자가 없습니다."}
+                    </Badge>
                     {!product.status && (
                       <Box display="flex" justifyContent="center">
                         <Button

@@ -169,8 +169,9 @@ export function LikeList() {
 
                     {account.isLoggedIn() && (
                       <Box
+                        zIndex={2}
                         position="absolute"
-                        bottom={2}
+                        top={2}
                         right={2}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -198,6 +199,7 @@ export function LikeList() {
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        zIndex={1}
                       >
                         <Text color="white" fontSize="2xl" fontWeight="bold">
                           판매완료
@@ -210,8 +212,9 @@ export function LikeList() {
                     <Text fontSize="lg" fontWeight="500" noOfLines={1} mb={1}>
                       {product.title}
                     </Text>
-                    <Flex justifyContent="space-between" alignItems="center">
+                    <Flex mb={1} alignItems={"baseline"}>
                       <Text
+                        mr={2}
                         fontSize={
                           product.startPrice.toString().length > 8
                             ? "sm"
@@ -223,15 +226,18 @@ export function LikeList() {
                       >
                         {product.startPrice
                           .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
                         원
                       </Text>
-                      {product.status && (
-                        <Badge colorScheme="yellow">
-                          {product.endTimeFormat}
-                        </Badge>
-                      )}
+                      <Text fontSize={"sm"} color={"gray.500"}>
+                        (시작가)
+                      </Text>
                     </Flex>
+                    {product.status && (
+                      <Badge colorScheme="yellow">
+                        {product.endTimeFormat}
+                      </Badge>
+                    )}
                   </Box>
                 </CardBody>
               </Card>
