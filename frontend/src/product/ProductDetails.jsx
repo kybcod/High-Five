@@ -235,7 +235,6 @@ export function ProductDetails() {
                 <Tooltip label="해당 상품 삭제">
                   <Button
                     colorScheme={"red"}
-                    variant={"outline"}
                     ml={2}
                     onClick={deleteModal.onOpen}
                   >
