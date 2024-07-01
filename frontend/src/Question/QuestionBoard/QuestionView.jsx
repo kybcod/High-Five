@@ -95,6 +95,14 @@ export function QuestionView() {
               cursor="pointer"
               onClick={() => navigate(`/question/edit/${id}`)}
             />
+          </Flex>
+        </Box>
+      )}
+
+      {(account.isAdmin(account.userId) ||
+        account.hasAccess(question.userId)) && (
+        <Box>
+          <Flex justify={"flex-end"} mr={10} mt={5} mb={5} gap={8}>
             <DeleteIcon
               w={6}
               h={6}
@@ -105,6 +113,7 @@ export function QuestionView() {
           </Flex>
         </Box>
       )}
+
       <Divider borderColor={"black"} />
       <Table fontSize={"15px"}>
         <Tr>
@@ -257,7 +266,7 @@ export function QuestionView() {
 
       <Modal isOpen={isImageOpen} onClose={onImageClose} size="5xl">
         <ModalOverlay />
-        <ModalContent maxW="40vw" maxH="90vh">
+        <ModalContent maxW="50vw" maxH="90vh">
           <ModalCloseButton />
           <ModalBody
             p={0}
@@ -269,7 +278,7 @@ export function QuestionView() {
               src={selectedImage}
               alt="원본 이미지"
               objectFit="contain"
-              maxW="40vw"
+              maxW="50vw"
               maxH="90vh"
             />
           </ModalBody>
