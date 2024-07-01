@@ -133,7 +133,7 @@ public class UserService {
                     }
 
                     JwtClaimsSet claims = JwtClaimsSet.builder()
-                            .issuer("LiveAuction")
+                            .issuer("Function")
                             .issuedAt(now)
                             .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
                             .subject(db.getId().toString())
@@ -167,7 +167,6 @@ public class UserService {
 
         User emailDB = mapper.selectUserByEmail(user.getEmail());
         User nickNameDB = mapper.selectUserByNickName(user.getNickName());
-        user.setPhoneNumber(user.getPhoneNumber().replaceAll("-", ""));
 
         if (emailDB != null) {
             return false;
@@ -200,7 +199,6 @@ public class UserService {
             return false;
         }
 
-        // 회원 가입 시 비밀번호가 정규식 일치하는지 & 혹은 Oauth 로그인인지 확인
         String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
         return user.getPassword().trim().matches(passwordPattern);
     }
@@ -316,8 +314,13 @@ public class UserService {
         int offset = (page - 1) * 10;
         Pageable pageable = PageRequest.of(page - 1, 10);
         List<User> userList = mapper.selectUserList(offset, type, keyword);
+        userList.forEach(user -> user.setAuthority(mapper.selectAuthoritiesByUserId(user.getId())));
 
         int totalUserNumber = mapper.selectTotalUserCount();
+        int newId = offset + 1;
+        for (int i = 0; i < userList.size(); i++) {
+            userList.get(i).setId(newId++);
+        }
         Page<User> pageImpl = new PageImpl<>(userList, pageable, totalUserNumber);
         PageInfo paeInfo = new PageInfo().setting(pageImpl);
 
@@ -340,5 +343,18 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    public boolean updateVerification(User user) {
+        if (!user.getPassword().isEmpty()) {
+            String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
+            return user.getPassword().trim().matches(passwordPattern);
+        }
+        return true;
+    }
+
+    public boolean checkUniquePhoneNumber(String phoneNumber) {
+        String email = mapper.selectEmailByPhoneNumber(phoneNumber);
+        return email == null;
     }
 }

@@ -48,7 +48,7 @@ export function UserPhoneNumber() {
                 onClick={codeInfo.handleSendCode}
                 isDisabled={codeInfo.isWrongPhoneNumberLength}
               >
-                인증 요청
+                인증요청
               </Button>
             )}
             {codeInfo.isSendingCode && (
@@ -74,7 +74,13 @@ export function UserPhoneNumber() {
           <InputRightElement width="4.5rem">
             {codeInfo.isCheckedCode || (
               <Button
-                {...InputGroupButton}
+                width="4.2rem"
+                h="1.75rem"
+                size="md"
+                colorScheme="teal"
+                variant="outline"
+                fontSize="sm"
+                p={1}
                 onClick={codeInfo.handleCheckCode}
                 isDisabled={codeInfo.isDisabledCheckButton}
               >

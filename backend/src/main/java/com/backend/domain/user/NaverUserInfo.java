@@ -35,8 +35,4 @@ public class NaverUserInfo implements OAuth2UserInfo {
         String phoneNumber = (String) attributes.get("mobile");
         return phoneNumber.replaceAll("-", "");
     }
-
-//    public String getProfileImage() {
-//        return (String) attributes.get("profile_image");
-//    }
 }

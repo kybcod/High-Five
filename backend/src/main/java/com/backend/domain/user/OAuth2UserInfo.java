@@ -10,6 +10,4 @@ public interface OAuth2UserInfo {
     String getNickName();
 
     String getPhoneNumber();
-
-//    String getProfileImage();
 }

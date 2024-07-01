@@ -76,35 +76,33 @@ export function UserInfo() {
       <Box>
         <HStack>
           <Image
+            width={"150px"}
+            height="150px"
             fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
             borderRadius="full"
             boxSize="150px"
             src={user.profileImage.src}
-            mr={3}
+            mr={7}
             ml={3}
           />
-          <VerticalLine
-            height="150px"
-            color="gray.200"
-            thickness="2px"
-            margin-left={"20px"}
-          />
-          <Box ml={5}>
+          <VerticalLine height="150px" color="gray.200" thickness="2px" />
+          <Box ml={8}>
             <Heading mb={3}>{user.email || ""}</Heading>
             <Text
               color="teal.500"
               onClick={() => navigate("/myPage/:userId/userEdit")}
               as="u"
+              cursor="pointer"
             >
               회원정보 수정
             </Text>
           </Box>
         </HStack>
-        <FormControl mt={10}>
+        <FormControl mt={12}>
           <FormLabel fontWeight="bold">닉네임</FormLabel>
           <Input variant="flushed" readOnly value={user.nickName || ""} />
         </FormControl>
-        <FormControl mt={5}>
+        <FormControl mt={12} mb={9}>
           <FormLabel fontWeight="bold">가입일시</FormLabel>
           <Input
             variant="flushed"
@@ -112,17 +110,15 @@ export function UserInfo() {
             value={user.signupDateAndTime.substring(0, 13)}
           />
         </FormControl>
-        <Button
-          mt={6}
-          bgColor={"#F05650"}
+        <Text
+          color="gray.500"
           onClick={onOpen}
-          color={"white"}
-          height={"33px"}
-          width={"120px"}
-          borderRadius={"5px"}
+          as="u"
+          cursor={"pointer"}
+          _hover={{ color: "red.500" }}
         >
           회원 탈퇴
-        </Button>
+        </Text>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -133,10 +129,24 @@ export function UserInfo() {
             <Input
               variant="flushed"
               onChange={(e) => setOldPassword(e.target.value)}
+              type={"password"}
             />
-            <Button onClick={onClose}>취소</Button>
-            <Button onClick={handleUserDelete} isLoading={isLoading}>
+            <Button
+              onClick={handleUserDelete}
+              isLoading={isLoading}
+              variant="outline"
+              colorScheme="teal"
+              borderWidth={2}
+            >
               삭제
+            </Button>
+            <Button
+              onClick={onClose}
+              variant="outline"
+              colorScheme="teal"
+              borderWidth={2}
+            >
+              취소
             </Button>
           </ModalFooter>
         </ModalContent>

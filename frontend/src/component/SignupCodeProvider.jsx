@@ -16,9 +16,6 @@ export function SignupCodeProvider({ children }) {
   const { successToast, errorToast } = CustomToast();
 
   useEffect(() => {
-    setPhoneNumber("");
-    setIsCheckedCode(false);
-    setVerificationCode("");
     if (time.current === -1) {
       clearInterval(timerId.current);
     }

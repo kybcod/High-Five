@@ -33,7 +33,7 @@ public class SmsUtil {
 
         message.setFrom(fromNumber);
         message.setTo(to);
-        message.setText(STR."[Live Auction] 아래의 인증번호를 입력해주세요.\n\{verificationCode}");
+        message.setText(STR."[Function] 아래의 인증번호를 입력해주세요.\n\{verificationCode}");
 
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         System.out.println(response);

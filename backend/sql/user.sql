@@ -59,7 +59,7 @@ SET black_count = 0
 WHERE id = 57;
 
 SELECT *
-FROM user_file;
+FROM user;
 
 # ALTER TABLE user_file
 #     CHANGE file_name file_src VARCHAR(500);
@@ -77,7 +77,6 @@ UPDATE user
 SET black_count = 0
 WHERE id = 57;
 
-# 아직 실행 안 함
 ALTER TABLE review
     MODIFY COLUMN user_id int NOT NULL;
 
