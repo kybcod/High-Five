@@ -60,7 +60,12 @@ public interface BoardMapper {
     List<Board> selectAll(int offset, String searchType, String keyword);
 
     @Select("""
-            SELECT b.id, b.title, b.user_id, u.nick_name nickName, b.inserted, b.content
+            SELECT b.id
+                   , b.title
+                   , b.user_id
+                   , u.nick_name nickName
+                   , b.inserted
+                   , b.content
             FROM board b JOIN user u ON b.user_id = u.id
             WHERE b.id = #{id}
             """)
@@ -167,4 +172,34 @@ public interface BoardMapper {
             WHERE id = #{id}
             """)
     Integer viewCountByBoardClick(Integer id);
+
+    @Select("""
+            SELECT b.id
+                   , b.title
+                   , b.user_id
+                   , u.nick_name nickName
+                   , b.inserted
+                   , b.content
+                   , (select MAX(id) from board) maxId
+            FROM board b JOIN user u ON b.user_id = u.id
+               WHERE b.id > #{id}
+            ORDER BY b.id
+            LIMIT 1;
+            """)
+    Board selectByNextId(@Param("id") int id);
+
+    @Select("""
+            SELECT b.id
+                   , b.title
+                   , b.user_id
+                   , u.nick_name nickName
+                   , b.inserted
+                   , b.content
+                   , (select MIN(id) from board) minId
+            FROM board b JOIN user u ON b.user_id = u.id
+               WHERE b.id < #{id}
+            ORDER BY b.id DESC
+            LIMIT 1;
+            """)
+    Board selectByPrevId(@Param("id") int id);
 }
