@@ -33,9 +33,4 @@ public class GoogleUserInfo implements OAuth2UserInfo {
     public String getPhoneNumber() {
         return "";
     }
-
-//    @Override
-//    public String getProfileImage() {
-//        return (String) attributes.get("picture");
-//    }
 }

@@ -8,7 +8,6 @@ import {
   GridItem,
   Image,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -29,7 +28,6 @@ export function LikeList() {
   const [hasNextPage, setHasNextPage] = useState(true);
   const [reviewList, setReviewList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const account = useContext(LoginContext);
   const navigate = useNavigate();
 

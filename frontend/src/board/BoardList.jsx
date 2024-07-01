@@ -38,6 +38,7 @@ export function BoardList() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [totalBoardNumber, setTotalBoardNumber] = useState(0);
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
@@ -50,8 +51,10 @@ export function BoardList() {
     }
 
     axios.get(`/api/board/list?${searchParams}`).then((res) => {
+      console.log(res.data);
       setBoardList(res.data.boardList);
       setPageInfo(res.data.pageInfo);
+      setTotalBoardNumber(res.data.totalBoardNumber);
       setSearchKeyword("");
     });
   }, [searchParams]);
@@ -97,14 +100,16 @@ export function BoardList() {
               </Tr>
             )}
             {boardList.length > 0 &&
-              boardList.map((board) => (
+              boardList.map((board, index) => (
                 <Tr
                   onClick={() => navigate(`/board/${board.id}`)}
                   key={board.id}
                   cursor={"pointer"}
                   _hover={{ background: "gray.200" }}
                 >
-                  <Td>{board.id}</Td>
+                  <Td>
+                    {totalBoardNumber - pageInfo.currentPageNumber * 10 - index}
+                  </Td>
                   <Td>
                     {board.title}
                     {board.numberOfImages > 0 && (
@@ -135,7 +140,11 @@ export function BoardList() {
                   </Td>
                   <Td>{board.nickName}</Td>
                   <Td>
-                    <FontAwesomeIcon icon={faComment} size={"sm"} />
+                    <FontAwesomeIcon
+                      icon={faComment}
+                      size={"sm"}
+                      style={{ marginRight: "5px" }}
+                    />
                     {board.numberOfComments}
                   </Td>
                   <Td>{board.viewCount}</Td>
@@ -171,8 +180,20 @@ export function BoardList() {
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
-          <Button onClick={handleSearchButtonClick}>
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          <Button
+            onClick={handleSearchButtonClick}
+            background={"none"}
+            _hover={{ background: "none" }}
+            sx={{
+              _focus: {
+                boxShadow: "none",
+              },
+              _active: {
+                bg: "transparent",
+              },
+            }}
+          >
+            <FontAwesomeIcon icon={faMagnifyingGlass} color={"teal"} />
           </Button>
         </Flex>
       </Center>
@@ -181,6 +202,9 @@ export function BoardList() {
           {pageInfo.prevPageNumber && (
             <Button
               onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+              variant={"outline"}
+              colorScheme={"teal"}
+              borderWidth={2}
             >
               <FontAwesomeIcon icon={faAnglesLeft} />
             </Button>
@@ -188,6 +212,9 @@ export function BoardList() {
           {pageInfo.leftPageNumber && (
             <Button
               onClick={() => handlePageButtonClick(pageInfo.leftPageNumber)}
+              variant={"outline"}
+              colorScheme={"teal"}
+              borderWidth={2}
             >
               <FontAwesomeIcon icon={faAngleLeft} />
             </Button>
@@ -197,12 +224,17 @@ export function BoardList() {
               key={pageNumber}
               onClick={() => handlePageButtonClick(pageNumber)}
             >
-              <Button>{pageNumber}</Button>
+              <Button variant={"outline"} colorScheme={"teal"} borderWidth={2}>
+                {pageNumber}
+              </Button>
             </ButtonGroup>
           ))}
           {pageInfo.rightPageNumber && (
             <Button
               onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+              variant={"outline"}
+              colorScheme={"teal"}
+              borderWidth={2}
             >
               <FontAwesomeIcon icon={faAngleRight} />
             </Button>
@@ -210,6 +242,9 @@ export function BoardList() {
           {pageInfo.nextPageNumber && (
             <Button
               onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+              variant={"outline"}
+              colorScheme={"teal"}
+              borderWidth={2}
             >
               <FontAwesomeIcon icon={faAnglesRight} />
             </Button>

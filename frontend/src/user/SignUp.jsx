@@ -48,20 +48,25 @@ export function SignUp() {
     codeInfo.setVerificationCode("");
 
     if (searchParams != null) {
-      setIsOauthLogin(true);
       const emailParam = searchParams.get("email");
+      console.log(emailParam);
       const nickNameParam = searchParams.get("nickName");
+      console.log(nickNameParam);
       const phoneNumber = searchParams.get("phoneNumber");
-      if (email) {
+      if (emailParam) {
+        setIsOauthLogin(true);
         setEmail(emailParam);
         setIsValidEmail(true);
         setIsCheckedEmail(true);
+        console.log(email);
       }
-      if (nickName) {
+      if (nickNameParam) {
         setNickName(nickNameParam);
+        console.log(nickName);
       }
       if (phoneNumber) {
         codeInfo.setPhoneNumber(phoneNumber);
+        console.log(codeInfo.phoneNumber);
       }
     }
   }, []);
@@ -80,7 +85,17 @@ export function SignUp() {
         successToast("회원가입이 완료되었습니다");
         navigate("/login");
       })
-      .catch(() => errorToast("회원가입 중 문제가 발생하였습니다"))
+      .catch((err) => {
+        if (err.response.status === 409) {
+          errorToast("이미 존재하는 휴대폰 번호입니다");
+        } else if (err.response.status === 400) {
+          errorToast(
+            "이메일, 비밀번호, 닉네임, 전화번호 형식 중 올바르지 않은 것이 있습니다",
+          );
+        } else {
+          errorToast("회원가입 중 문제가 발생하였습니다");
+        }
+      })
       .finally(() => setIsLoading(false));
   }
 
@@ -89,9 +104,9 @@ export function SignUp() {
       .get(`/api/users/emails?email=${email}`)
       .then(() => {
         successToast("사용가능한 이메일입니다");
+        setIsCheckedEmail(true);
       })
       .catch((err) => {
-        setIsCheckedEmail(true);
         if (err.response.status === 400) {
           errorToast("유효한 이메일 형식이 아닙니다");
         } else if (err.response.status === 409) {

@@ -31,6 +31,9 @@ public class Board {
         long minutes = duration.toMinutes();
         long hours = duration.toHours();
 
+        if (minutes == 0) {
+            return "방금 전";
+        }
         if (minutes < 60) {
             return minutes + "분 전";
         }

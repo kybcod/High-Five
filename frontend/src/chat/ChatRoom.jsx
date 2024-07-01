@@ -25,8 +25,8 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
@@ -40,8 +40,12 @@ import {
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import CustomModal from "./CustomModal.jsx";
 
-export function ChatRoom() {
-  const { productId, buyerId } = useParams();
+export function ChatRoom({ pId, bId, onBackClick }) {
+  let { productId, buyerId } = useParams();
+  if (pId != null && bId != null) {
+    productId = pId;
+    buyerId = bId;
+  }
   const account = useContext(LoginContext);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -79,14 +83,13 @@ export function ChatRoom() {
 
   // -- axios.get
   useEffect(() => {
-    // TODO : status 추가
+    setLoading(true);
     axios
       .get(`/api/chats/products/${productId}/buyer/${buyerId}`)
-      .then((res) => {
-        console.log(res.data);
+      .then((response) => {
         const { user, seller, product, chatRoom, bidder, previousChatList } =
-          res.data;
-        if (res.data != null) {
+          response.data;
+        if (response.data != null) {
           setData({
             seller: seller || {},
             product: product || {},
@@ -95,23 +98,27 @@ export function ChatRoom() {
             user: user || {},
             chatRoom: chatRoom || {},
           });
-          setMessageList(res.data.previousChatList);
-          setRoomId(res.data.chatRoom.id);
+          setMessageList(response.data.previousChatList);
+          setRoomId(response.data.chatRoom.id);
         }
+        console.log("Response:", response.data);
       })
-      .catch(() => {
+      .catch((error) => {
         toast({
           status: "warning",
           description: "채팅방 조회 중 문제가 발생하였습니다.",
           position: "top",
           duration: 1000,
         });
+        console.error("Error:", error);
         navigate(-1);
       })
-      .finally();
-  }, []);
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [reviewId, roomId]);
 
-  // -- stomp
+  // -- stomp;
   useEffect(() => {
     const client = new StompJs.Client({
       brokerURL: "http://localhost:8080/ws",
@@ -126,7 +133,6 @@ export function ChatRoom() {
       heartbeatIncoming: 30 * 1000,
       heartbeatOutgoing: 30 * 1000,
       onConnect: function () {
-        // TODO : 필요한 코드인지 생각해보기
         client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
         client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
           ack: "client",
@@ -136,17 +142,15 @@ export function ChatRoom() {
         console.error("STOMP error: ", frame);
       },
     });
-
-    // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    // client.activate(); // 활성화
-    // setStompClient(client);
+    client.activate(); // 활성화
+    setStompClient(client);
 
     return () => {
       if (stompClient) {
         disConnect();
       }
     };
-  }, [roomId]);
+  }, [reviewId]);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
@@ -179,16 +183,29 @@ export function ChatRoom() {
 
   // -- review list
   const handleReviewButtonClick = () => {
-    // TODO : status 추가
+    setLoading(true);
     axios
       .get(`/api/reviews/list`)
-      .then((res) => {
-        if (res.data != null) {
-          setReviewList(res.data);
+      .then((response) => {
+        if (response.data != null) {
+          setReviewList(response.data);
         }
+        console.log("Response:", response.data);
       })
-      .catch()
-      .finally();
+      .catch((error) => {
+        toast({
+          title: "후기 리스트 조회 실패",
+          description: "Unable to fetch data.",
+          status: "error",
+          duration: 1500,
+          position: "top",
+          isClosable: true,
+        });
+        console.error("Error:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // -- review check
@@ -220,39 +237,54 @@ export function ChatRoom() {
       })
       .then(() => {
         toast({
-          description: "리뷰가 등록되었습니다.",
+          title: "후기 등록 성공",
           status: "success",
           position: "top",
+          duration: 1500,
+          isClosable: true,
         });
         onClose();
       })
-      .catch((e) => {
-        const code = e.response.status;
-        if (code === 400) {
-          toast({
-            status: "error",
-            description: "리뷰 등록 실패",
-            position: "top",
-          });
-        }
+      .catch((error) => {
+        toast({
+          title: "후기 등록 실패",
+          status: "error",
+          position: "top",
+          duration: 1500,
+          isClosable: true,
+        });
+        console.error("Error:", error);
       })
       .finally(() => {
-        setLoading(false);
         setReviewId([]);
+        setLoading(false);
       });
   };
 
   // -- 후기 조회
   const handleGetReviewButtonClick = () => {
+    setLoading(true);
     axios
       .get(`/api/reviews/${data.product.id}`)
-      .then((res) => {
-        if (res.data != null) {
-          setReviewList(res.data);
+      .then((response) => {
+        if (response.data != null) {
+          setReviewList(response.data);
         }
+        console.log("Response:", response.data);
       })
-      .catch()
-      .finally();
+      .catch((error) => {
+        toast({
+          title: "후기 조회 실패",
+          status: "error",
+          position: "top",
+          duration: 1500,
+          isClosable: true,
+        });
+        console.error("Error:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // -- productStatusButton
@@ -336,45 +368,76 @@ export function ChatRoom() {
   };
   const buttonConfig = determineButton();
 
+  const handleStoreButtonClick = () => {
+    if (data.seller.id === tokenUserId) {
+      navigate(`/myPage/${data.user.id}/shop`);
+    } else {
+      navigate(`/myPage/${data.seller.id}/shop`);
+    }
+  };
+
+  const handleBackButtonClick = () => {
+    if (pId !== undefined) {
+      // 채팅방
+      onBackClick();
+    } else {
+      // 문의하기
+      disConnect();
+      navigate(-1);
+    }
+  };
+
   // -- spinner
   if (data.chatRoom == null) {
     return <Spinner />;
   }
 
   return (
-    <Box w={"70%"} border={"1px solid gray"}>
-      <Box border={"1px solid red"}>
+    <Box
+      w={pId !== undefined ? "100%" : "80%"}
+      border={"3px solid #00A457"}
+      borderRadius={"10px"}
+      h={"100%"}
+    >
+      <Box borderBottom={"2px solid #efefef"}>
         <Flex>
           {/* 뒤로 가기 */}
-          <Box w={"10%"} border={"1px solid gray"}>
+          <Box w={"10%"}>
             <Button
-              onClick={() => {
-                disConnect();
-                navigate(-1);
-              }}
+              onClick={handleBackButtonClick}
+              variant={"outline"}
+              color={"#00946F"}
+              borderColor={"#ffffff"}
+              w={"100%"}
             >
               <FontAwesomeIcon icon={faAngleLeft} />
             </Button>
           </Box>
           {/* 상대방 상점 */}
-          <Center cursor={"pointer"} w={"80%"} border={"1px solid blue"}>
+          <Center cursor={"pointer"} w={"80%"}>
             <Box fontSize={"xl"}>
-              {data.seller.id === tokenUserId ? (
-                <Text onClick={() => navigate(`/myPage/${data.user.id}/shop`)}>
-                  {data.user.nickName}
-                </Text>
-              ) : (
-                <Text
-                  onClick={() => navigate(`/myPage/${data.seller.id}/shop`)}
-                >
-                  {data.seller.nickName}
-                </Text>
-              )}
+              <Button
+                onClick={handleStoreButtonClick}
+                variant="link"
+                color={"#00946F"}
+                size={"lg"}
+                as={"b"}
+              >
+                {data.seller.id === tokenUserId
+                  ? `${data.user.nickName}`
+                  : `${data.seller.nickName}`}
+              </Button>
             </Box>
           </Center>
-          <Box w={"10%"} border={"1px solid yellow"}>
+          <Box w={"10%"}>
             <Menu>
-              <MenuButton as={Button}>
+              <MenuButton
+                as={Button}
+                w={"100%"}
+                variant={"outline"}
+                borderColor={"#ffffff"}
+                color={"#00946F"}
+              >
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </MenuButton>
               <MenuList>
@@ -402,14 +465,13 @@ export function ChatRoom() {
           </Box>
         </Flex>
       </Box>
-      <Box border={"1px solid green"}>
+      <Box borderBottom={"2px solid #efefef"} mb={2}>
         <Stack direction={"row"} align={"center"}>
           <Button
             w={"80%"}
-            variant="link"
-            isDisabled={
-              data.product.title == "삭제된 상품입니다." ? true : false
-            }
+            variant={"link"}
+            color={"#00946F"}
+            isDisabled={data.product.title === "삭제된 상품입니다."}
             onClick={() => navigate(`/product/${data.product.id}`)}
           >
             {data.product.title}
@@ -418,7 +480,9 @@ export function ChatRoom() {
           {buttonConfig && (
             <Button
               w={"20%"}
-              variant="ghost"
+              variant={"outline"}
+              borderColor={"#ffffff"}
+              color={"#00946F"}
               onClick={buttonConfig.action}
               isDisabled={buttonConfig.disabled}
             >
@@ -430,12 +494,13 @@ export function ChatRoom() {
       <Box>
         <Box>
           <VStack
-            h={"500px"}
+            h={"455px"}
             spacing={4}
             flex={1}
             // flexDirection={"column-reverse"}
             overflowY={"auto"}
             w={"full"}
+            borderBottom={"2px solid #efefef"}
           >
             {messageList.map((msg, index) => (
               <Flex
@@ -451,11 +516,14 @@ export function ChatRoom() {
                   alignItems={
                     msg.userId === tokenUserId ? "flex-end" : "flex-start"
                   }
+                  ml={msg.userId !== tokenUserId && 3}
+                  mr={msg.userId === tokenUserId && 3}
                 >
                   <Box
+                    border={"1px solid #f1f1f1"}
                     textAlign={msg.userId === tokenUserId ? "right" : "left"}
-                    bg={msg.userId === tokenUserId ? "green.200" : "gray.100"}
-                    borderRadius="18px"
+                    bg={msg.userId === tokenUserId ? "#efefef" : "#fcfcfc"}
+                    borderRadius={"15px"}
                     p={2}
                     maxW="100%"
                     mb={1}
@@ -470,16 +538,22 @@ export function ChatRoom() {
               </Flex>
             ))}
           </VStack>
-          <Box>
+          <Box p={1}>
             <Flex>
               <Input
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                focusBorderColor={"#006E7B"}
+                w={"80%"}
               />
               <Button
                 isDisabled={message.trim().length === 0}
                 onClick={sendMessage}
+                variant="outline"
+                color={"#006E7B"}
+                borderColor={"#efefef"}
+                w={"20%"}
               >
                 send
               </Button>
@@ -525,6 +599,9 @@ export function ChatRoom() {
               isDisabled={reviewId.length === 0}
               onClick={handleSaveReviewButtonClick}
               hidden={data.product.reviewStatus === true}
+              size={"sm"}
+              variant={"outline"}
+              colorScheme={"teal"}
             >
               후기 보내기
             </Button>

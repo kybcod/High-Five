@@ -165,7 +165,7 @@ public interface UserMapper {
 
     @Delete("""
                 DELETE FROM user_file
-                WHERE user_id = userId
+                WHERE user_id = #{userId}
             """)
     int deleteProfileImageById(Integer userId);
 

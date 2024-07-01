@@ -23,10 +23,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../component/CustomToast.jsx";
 import { buttonStyle } from "../component/css/style.js";
+import { useNavigate } from "react-router-dom";
 
 const VerticalLine = ({ height, color, thickness }) => {
   return <Box height={height} width={thickness} bg={color} />;
@@ -45,6 +46,7 @@ export function UserEdit() {
   const [isLoading, setIsLoading] = useState(false);
   const { successToast, errorToast } = CustomToast();
   const { onClose, isOpen, onOpen } = useDisclosure();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`/api/users/${account.id}`).then((res) => {
@@ -83,6 +85,7 @@ export function UserEdit() {
         setOldPassword("");
         onClose();
         setIsLoading(false);
+        navigate(`/myPage/${user.id}/userInfo`);
       });
   }
 
@@ -157,11 +160,12 @@ export function UserEdit() {
       <Box mt={10}>
         <Heading fontSize={"2xl"}>회원정보 수정</Heading>
         <HStack mt={10} ml={5}>
-          <Box>
+          <Box mr={7}>
             <Image
               width={"150px"}
+              height="150px"
               src={imgFile}
-              borderRadius={"100px"}
+              borderRadius={"full"}
               fallbackSrc={
                 !user.profileImage || user.profileImage.src === "null"
                   ? "https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
@@ -197,12 +201,12 @@ export function UserEdit() {
             thickness="2px"
             margin-left={"20px"}
           />
-          <Box ml={5}>
+          <Box ml={9}>
             <Heading mb={8}>{user.email || ""}</Heading>
             <Text>변경 시에만 비밀번호와 닉네임을 입력해주세요</Text>
           </Box>
         </HStack>
-        <FormControl mt={7}>
+        <FormControl mt={12}>
           <FormLabel>비밀번호</FormLabel>
           <Input
             type={"password"}
@@ -243,11 +247,11 @@ export function UserEdit() {
                 setIsCheckedNickName(false);
               }}
             />
-            <InputRightElement width="4.5rem">
+            <InputRightElement width="6rem">
               <Button
                 onClick={handleDuplicated}
                 isDisabled={!disabledNickNameCheckButton}
-                h="1.75rem"
+                h="2rem"
                 size="md"
                 colorScheme="teal"
                 variant="outline"
@@ -279,9 +283,22 @@ export function UserEdit() {
               variant="flushed"
               onChange={(e) => setOldPassword(e.target.value)}
             />
-            <Button onClick={onClose}>취소</Button>
-            <Button onClick={handleUserUpdate} isLoading={isLoading}>
+            <Button
+              onClick={handleUserUpdate}
+              isLoading={isLoading}
+              variant="outline"
+              colorScheme="teal"
+              borderWidth={2}
+            >
               확인
+            </Button>
+            <Button
+              onClick={onClose}
+              variant="outline"
+              colorScheme="gray"
+              borderWidth={2}
+            >
+              취소
             </Button>
           </ModalFooter>
         </ModalContent>

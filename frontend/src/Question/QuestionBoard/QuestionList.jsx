@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   Flex,
+  Image,
   Input,
   Select,
   Table,
@@ -23,7 +24,7 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
-  faImages,
+  faImage,
   faLock,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
@@ -66,6 +67,13 @@ export function QuestionList() {
     pageNumbers.push(i);
   }
 
+  // 페이지 번호를 계산하는 함수
+  const getPageNumber = (index) => {
+    return (
+      pageInfo.totalPostNumber - ((pageInfo.currentPageNumber - 1) * 10 + index)
+    );
+  };
+
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
     setSearchParams(searchParams);
@@ -94,52 +102,79 @@ export function QuestionList() {
           <Center m={20}>조회 결과가 없습니다.</Center>
         )}
         {questionList.length > 0 && (
-          <Box mt={10} w="90%" mx="auto">
+          <Box mt={10} w="92%" mx="auto">
             <Table variant="simple">
               <Thead>
                 <Tr>
                   <Th>No.</Th>
-                  <Th>제목</Th>
                   <Th textAlign="center">답변상태</Th>
+                  <Th>제목</Th>
                   <Th textAlign="center">작성자</Th>
                   <Th textAlign="center">조회수</Th>
                   <Th textAlign="center">작성일시</Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {questionList.map((question) => (
+                {questionList.map((question, index) => (
                   <Tr
                     _hover={{ bgColor: "gray.300" }}
                     cursor={"pointer"}
                     onClick={() => handleSecretTextClick(question)}
                     key={question.id}
+                    fontSize={"sm"}
                   >
-                    <Td width="8%">{question.id}</Td>
-                    <Td width="37%">
-                      <Flex gap={2}>
-                        {question.secretWrite && (
-                          <Box
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            <FontAwesomeIcon
-                              icon={faLock}
-                              style={{ marginRight: "4px" }}
-                            />
-                            <span style={{ color: "gray" }}>비밀글</span>
-                          </Box>
+                    <Td width="8%">{getPageNumber(index)}</Td>
+                    <Td width="12%" textAlign="center">
+                      {question.numberOfComments > 0 ? (
+                        <Box ml={2}>
+                          <Badge variant="outline" colorScheme="green">
+                            답변완료
+                          </Badge>
+                        </Box>
+                      ) : (
+                        <Box ml={2}>
+                          <Badge variant="outline">답변대기</Badge>
+                        </Box>
+                      )}
+                    </Td>
+                    <Td width="42%" fontSize={"15px"} whiteSpace={"wrap"}>
+                      <Flex gap={2} wrap={"wrap"}>
+                        {question.secretWrite ? (
+                          <Flex gap={2}>
+                            {/*<FontAwesomeIcon*/}
+                            {/*  icon={faLock}*/}
+                            {/*  style={{ marginRight: "4px" }}*/}
+                            {/*/>*/}
+                            <Image src={"/img/lock.svg"} />
+                            {!account.hasAccess(question.userId) &&
+                            !account.isAdmin(account.userId) ? (
+                              <span style={{ color: "gray", fontSize: "14px" }}>
+                                비밀글
+                              </span>
+                            ) : (
+                              <span
+                                style={{ color: "black", fontSize: "14px" }}
+                              >
+                                {question.title}
+                              </span>
+                            )}
+                          </Flex>
+                        ) : (
+                          <span>{question.title}</span>
                         )}
-                        {question.secretWrite || question.title}
+
                         {question.isNewBadge && (
                           <Badge colorScheme="green">New</Badge>
                         )}
                         {question.numberOfFiles > 0 && (
-                          <Box ml={2}>
-                            <FontAwesomeIcon
-                              icon={faImages}
-                              style={{ marginRight: "2px" }}
-                            />
-                            {question.numberOfFiles}
-                          </Box>
+                          <Badge ml={1} variant={"outline"} w={"35px"}>
+                            <Flex justifyContent={"center"}>
+                              <Box>
+                                <FontAwesomeIcon icon={faImage} />
+                              </Box>
+                              <Box ml={1}>{question.numberOfFiles}</Box>
+                            </Flex>
+                          </Badge>
                         )}
                         {question.numberOfComments > 0 && (
                           <Box
@@ -156,26 +191,13 @@ export function QuestionList() {
                         )}
                       </Flex>
                     </Td>
-                    <Td width="15%" textAlign="center">
-                      {question.numberOfComments > 0 ? (
-                        <Box ml={2}>
-                          <Badge variant="outline" colorScheme="green">
-                            답변완료
-                          </Badge>
-                        </Box>
-                      ) : (
-                        <Box ml={2}>
-                          <Badge variant="outline">답변대기</Badge>
-                        </Box>
-                      )}
-                    </Td>
-                    <Td width="15%" textAlign="center">
+                    <Td width="12%" textAlign="center">
                       {question.nickName}
                     </Td>
                     <Td width="10%" textAlign="center" fontSize={"sm"}>
                       {question.numberOfCount}
                     </Td>
-                    <Td width="20%" textAlign="center" fontSize={"sm"}>
+                    <Td width="15%" textAlign="center" fontSize={"sm"}>
                       {question.inserted}
                     </Td>
                   </Tr>

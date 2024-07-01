@@ -34,7 +34,6 @@ import SignupCodeProvider from "./component/SignupCodeProvider.jsx";
 import { UserPassword } from "./user/UserPassword.jsx";
 import { Payment } from "./pay/Payment.jsx";
 import { UserAuthSuccess } from "./user/oauth/UserAuthSuccess.jsx";
-import { SignupPhoneNumber } from "./user/oauth/SignupPhoneNumber.jsx";
 import { theme } from "./component/Theme.jsx";
 import { FAQ } from "./Question/FAQ.jsx";
 import { Question } from "./Question/Question.jsx";
@@ -67,7 +66,6 @@ const router = createBrowserRouter([
       { path: "user/email", element: <UserEmail /> },
       { path: "user/password", element: <UserPassword /> },
       { path: "user/auth/success", element: <UserAuthSuccess /> },
-      { path: "signup/phone_number", element: <SignupPhoneNumber /> },
 
       //question
       {

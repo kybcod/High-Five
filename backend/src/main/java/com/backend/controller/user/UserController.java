@@ -36,9 +36,13 @@ public class UserController {
     // user 회원 가입
     @PostMapping("users")
     public ResponseEntity addUser(@RequestBody User user) {
+        user.setPhoneNumber(user.getPhoneNumber().replaceAll("-", ""));
         if (service.signUpVerification(user)) {
-            service.addUser(user);
-            return ResponseEntity.ok().build();
+            if (service.checkUniquePhoneNumber(user.getPhoneNumber())) {
+                service.addUser(user);
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         return ResponseEntity.badRequest().build();
     }
@@ -47,11 +51,10 @@ public class UserController {
     // 회원가입 시 인증코드 받기
     @GetMapping("users/codes")
     public ResponseEntity sendCode(String phoneNumber) {
-        // TODO. 주석 삭제
         phoneNumber = phoneNumber.replaceAll("-", "");
-        System.out.println("phoneNumber = " + phoneNumber);
         if (phoneNumber.length() == 11) {
             String verificationCode = service.sendMessage(phoneNumber);
+            // TODO. 주석 삭제
             System.out.println("verificationCode = " + verificationCode);
             return ResponseEntity.ok(verificationCode);
         }
@@ -77,12 +80,11 @@ public class UserController {
     public ResponseEntity updateUser(User user, Authentication authentication,
                                      @RequestParam(value = "profileImages[]", required = false) MultipartFile profileImage) throws IOException {
         if (service.identificationToModify(user)) {
-            // TODO. 주석해제합시다용
-//            if (service.signUpVerification(user)) {
-            Map<String, Object> token = service.updateUser(user, authentication, profileImage);
-            return ResponseEntity.ok(token);
-//            }
-//            return ResponseEntity.badRequest().build();
+            if (service.updateVerification(user)) {
+                Map<String, Object> token = service.updateUser(user, authentication, profileImage);
+                return ResponseEntity.ok(token);
+            }
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
