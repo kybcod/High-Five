@@ -188,6 +188,13 @@ export function BoardList() {
                           setClickedId(board.id);
                           onOpen();
                         }}
+                        variant={"outline"}
+                        color={"red"}
+                        sx={{
+                          borderWidth: "2px",
+                          borderColor: "red",
+                        }}
+                        size={"sm"}
                       >
                         삭제
                       </Button>
@@ -200,7 +207,7 @@ export function BoardList() {
         </Table>
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalContent>
-            <ModalHeader>게시글 삭제</ModalHeader>
+            <ModalHeader>관리자 권한으로 게시글 삭제</ModalHeader>
             <ModalBody>
               <Text>게시글을 삭제하시겠습니까?</Text>
             </ModalBody>
@@ -212,6 +219,7 @@ export function BoardList() {
                     handleClickAdminDelete(e, clickedId);
                   }}
                   colorScheme={"red"}
+                  ml={"10px"}
                 >
                   삭제
                 </Button>
