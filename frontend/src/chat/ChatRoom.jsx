@@ -25,8 +25,8 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
 import * as StompJs from "@stomp/stompjs";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
@@ -86,10 +86,10 @@ export function ChatRoom({ pId, bId, onBackClick }) {
     setLoading(true);
     axios
       .get(`/api/chats/products/${productId}/buyer/${buyerId}`)
-      .then((res) => {
+      .then((response) => {
         const { user, seller, product, chatRoom, bidder, previousChatList } =
-          res.data;
-        if (res.data != null) {
+          response.data;
+        if (response.data != null) {
           setData({
             seller: seller || {},
             product: product || {},
@@ -98,9 +98,10 @@ export function ChatRoom({ pId, bId, onBackClick }) {
             user: user || {},
             chatRoom: chatRoom || {},
           });
-          setMessageList(res.data.previousChatList);
-          setRoomId(res.data.chatRoom.id);
+          setMessageList(response.data.previousChatList);
+          setRoomId(response.data.chatRoom.id);
         }
+        console.log("Response:", response.data);
       })
       .catch((error) => {
         toast({
@@ -109,14 +110,16 @@ export function ChatRoom({ pId, bId, onBackClick }) {
           position: "top",
           duration: 1000,
         });
-        console.log(error);
+        console.error("Error:", error);
         navigate(-1);
       })
       .finally(() => {
         setLoading(false);
       });
+  }, [reviewId, roomId]);
 
-    // -- stomp
+  // -- stomp;
+  useEffect(() => {
     const client = new StompJs.Client({
       brokerURL: "http://localhost:8080/ws",
       // connectHeaders: {
@@ -129,7 +132,6 @@ export function ChatRoom({ pId, bId, onBackClick }) {
       reconnectDelay: 5000,
       heartbeatIncoming: 30 * 1000,
       heartbeatOutgoing: 30 * 1000,
-
       onConnect: function () {
         client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
         client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
@@ -140,8 +142,6 @@ export function ChatRoom({ pId, bId, onBackClick }) {
         console.error("STOMP error: ", frame);
       },
     });
-
-    // TODO : merge 전 주석 생성 / update 이후 주석 제거
     client.activate(); // 활성화
     setStompClient(client);
 
@@ -150,40 +150,7 @@ export function ChatRoom({ pId, bId, onBackClick }) {
         disConnect();
       }
     };
-  }, [roomId, reviewId]);
-
-  // -- stomp
-  // useEffect(() => {
-  //   const client = new StompJs.Client({
-  //     brokerURL: "http://localhost:8080/ws",
-  //     // connectHeaders: {
-  //     //   login: "user",
-  //     //   passcode: "password",
-  //     // },
-  //     debug: function (str) {
-  //       console.log(str);
-  //     },
-  //     reconnectDelay: 5000,
-  //     heartbeatIncoming: 30 * 1000,
-  //     heartbeatOutgoing: 30 * 1000,
-  //     onConnect: function () {
-  //       client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
-  //       client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
-  //         ack: "client",
-  //       }); // 본인
-  //     },
-  //     onStompError: (frame) => {
-  //       console.error("STOMP error: ", frame);
-  //     },
-  //   });
-  //   // client.activate(); // 활성화
-  //   setStompClient(client);
-  //   return () => {
-  //     if (stompClient) {
-  //       disConnect();
-  //     }
-  //   };
-  // }, [roomId]);
+  }, [reviewId]);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
@@ -219,10 +186,11 @@ export function ChatRoom({ pId, bId, onBackClick }) {
     setLoading(true);
     axios
       .get(`/api/reviews/list`)
-      .then((res) => {
-        if (res.data != null) {
-          setReviewList(res.data);
+      .then((response) => {
+        if (response.data != null) {
+          setReviewList(response.data);
         }
+        console.log("Response:", response.data);
       })
       .catch((error) => {
         toast({
@@ -233,7 +201,7 @@ export function ChatRoom({ pId, bId, onBackClick }) {
           position: "top",
           isClosable: true,
         });
-        console.log(error);
+        console.error("Error:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -285,7 +253,7 @@ export function ChatRoom({ pId, bId, onBackClick }) {
           duration: 1500,
           isClosable: true,
         });
-        console.log("error : ", error);
+        console.error("Error:", error);
       })
       .finally(() => {
         setReviewId([]);
@@ -298,10 +266,11 @@ export function ChatRoom({ pId, bId, onBackClick }) {
     setLoading(true);
     axios
       .get(`/api/reviews/${data.product.id}`)
-      .then((res) => {
-        if (res.data != null) {
-          setReviewList(res.data);
+      .then((response) => {
+        if (response.data != null) {
+          setReviewList(response.data);
         }
+        console.log("Response:", response.data);
       })
       .catch((error) => {
         toast({
@@ -311,7 +280,7 @@ export function ChatRoom({ pId, bId, onBackClick }) {
           duration: 1500,
           isClosable: true,
         });
-        console.log("error : ", error);
+        console.error("Error:", error);
       })
       .finally(() => {
         setLoading(false);
