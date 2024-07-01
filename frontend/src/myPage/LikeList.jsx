@@ -167,27 +167,6 @@ export function LikeList() {
                       _hover={{ transform: "scale(1.02)" }}
                     />
 
-                    {account.isLoggedIn() && (
-                      <Box
-                        zIndex={2}
-                        position="absolute"
-                        top={2}
-                        right={2}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleLikeClick(product.id);
-                        }}
-                        transition="transform 0.2s"
-                        _hover={{ transform: "scale(1.1)" }}
-                      >
-                        <FontAwesomeIcon
-                          icon={likes[product.id] ? fullHeart : emptyHeart}
-                          style={{ color: "red" }}
-                          size="xl"
-                        />
-                      </Box>
-                    )}
-
                     {product.status || (
                       <Box
                         position="absolute"
@@ -209,9 +188,38 @@ export function LikeList() {
                   </Box>
 
                   <Box p={3}>
-                    <Text fontSize="lg" fontWeight="500" noOfLines={1} mb={1}>
-                      {product.title}
-                    </Text>
+                    <Flex
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                    >
+                      <Text
+                        fontSize="lg"
+                        fontWeight="500"
+                        noOfLines={1}
+                        mb={1}
+                        mr={1}
+                      >
+                        {product.title}
+                      </Text>
+                      {account.isLoggedIn() && (
+                        <Box
+                          zIndex={2}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLikeClick(product.id);
+                          }}
+                          transition="transform 0.2s"
+                          _hover={{ transform: "scale(1.1)" }}
+                        >
+                          <FontAwesomeIcon
+                            icon={likes[product.id] ? fullHeart : emptyHeart}
+                            style={{ color: "red" }}
+                            size="xl"
+                          />
+                        </Box>
+                      )}
+                    </Flex>
+
                     <Flex mb={1} alignItems={"baseline"}>
                       <Text
                         mr={2}

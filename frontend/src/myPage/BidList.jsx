@@ -143,27 +143,6 @@ export function BidList() {
                       _hover={{ transform: "scale(1.02)" }}
                     />
 
-                    {/*{account.isLoggedIn() && (*/}
-                    <Box
-                      position="absolute"
-                      top={2}
-                      right={2}
-                      zIndex={2}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleLikeClick(bid.product.id);
-                      }}
-                      transition="transform 0.2s"
-                      _hover={{ transform: "scale(1.1)" }}
-                    >
-                      <FontAwesomeIcon
-                        icon={likes[bid.product.id] ? fullHeart : emptyHeart}
-                        style={{ color: "red" }}
-                        size="xl"
-                      />
-                    </Box>
-                    {/*)}*/}
-
                     {bid.product.status || (
                       <Box
                         position="absolute"
@@ -186,9 +165,37 @@ export function BidList() {
 
                   {/*정보*/}
                   <Box p={3}>
-                    <Text mb={1} fontWeight={"500"} noOfLines={1} fontSize="lg">
-                      {bid.product.title}
-                    </Text>
+                    <Flex
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                    >
+                      <Text
+                        mr={2}
+                        mb={1}
+                        fontWeight={"500"}
+                        noOfLines={1}
+                        fontSize="lg"
+                      >
+                        {bid.product.title}
+                      </Text>
+                      {/*{account.isLoggedIn() && (*/}
+                      <Box
+                        zIndex={2}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLikeClick(bid.product.id);
+                        }}
+                        transition="transform 0.2s"
+                        _hover={{ transform: "scale(1.1)" }}
+                      >
+                        <FontAwesomeIcon
+                          icon={likes[bid.product.id] ? fullHeart : emptyHeart}
+                          style={{ color: "red" }}
+                          size="xl"
+                        />
+                      </Box>
+                      {/*)}*/}
+                    </Flex>
                     <Flex mb={1} alignItems={"baseline"}>
                       <Text
                         mr={2}

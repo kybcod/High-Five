@@ -81,7 +81,7 @@ const LivePopularProductSlider = ({
                   h="100%"
                   borderRadius={"5px"}
                   overflow="hidden"
-                  bgColor={"#F7F7F7"}
+                  border={"1px solid #eee"}
                 >
                   <CardBody position="relative" h="100%" p={0}>
                     <Box position="relative">
@@ -116,25 +116,6 @@ const LivePopularProductSlider = ({
                         </Text>
                       </Box>
 
-                      {account.isLoggedIn() && (
-                        <Box
-                          position="absolute"
-                          top={2}
-                          right={2}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleLikeClick(product.id);
-                          }}
-                          transition="transform 0.2s"
-                          _hover={{ transform: "scale(1.1)" }}
-                        >
-                          <FontAwesomeIcon
-                            icon={likes[product.id] ? fullHeart : emptyHeart}
-                            style={{ color: "red" }}
-                            size="xl"
-                          />
-                        </Box>
-                      )}
                       {!product.status && (
                         <Box
                           position="absolute"
@@ -154,9 +135,37 @@ const LivePopularProductSlider = ({
                       )}
                     </Box>
                     <Box p={3} textAlign="left">
-                      <Text fontSize="lg" fontWeight="500" noOfLines={1} mb={1}>
-                        {product.title}
-                      </Text>
+                      <Flex
+                        display={"flex"}
+                        justifyContent={"space-between"}
+                        alignItems={"center"}
+                      >
+                        <Text
+                          fontSize="lg"
+                          fontWeight="500"
+                          noOfLines={1}
+                          mb={1}
+                          mr={1}
+                        >
+                          {product.title}
+                        </Text>
+                        {account.isLoggedIn() && (
+                          <Box
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleLikeClick(product.id);
+                            }}
+                            transition="transform 0.2s"
+                            _hover={{ transform: "scale(1.1)" }}
+                          >
+                            <FontAwesomeIcon
+                              icon={likes[product.id] ? fullHeart : emptyHeart}
+                              style={{ color: "red" }}
+                              size="xl"
+                            />
+                          </Box>
+                        )}
+                      </Flex>
                       <Flex mb={3} alignItems="baseline">
                         <Text fontSize="xl" fontWeight="bold" mr={2}>
                           {product.startPrice

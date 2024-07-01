@@ -70,13 +70,13 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
               <Box key={index} width={"100%"} px={2}>
                 <Flex alignItems="center" justifyContent="center" width="100%">
                   <Card
+                    border={"1px solid #eee"}
                     onClick={() => navigate(`/product/${product.id}`)}
                     w={"80%"}
                     boxShadow={"none"}
                     cursor={"pointer"}
                     maxW="sm"
                     h="100%"
-                    borderBottomRadius={"0"}
                     overflow="hidden"
                   >
                     <CardBody position="relative" h="100%" p={0}>
@@ -88,25 +88,7 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
                           transition="transform 0.2s"
                           _hover={{ transform: "scale(1.05)" }}
                         />
-                        {account.isLoggedIn() && (
-                          <Box
-                            position="absolute"
-                            top={2}
-                            right={2}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleLikeClick(product.id);
-                            }}
-                            transition="transform 0.2s"
-                            _hover={{ transform: "scale(1.1)" }}
-                          >
-                            <FontAwesomeIcon
-                              icon={likes[product.id] ? fullHeart : emptyHeart}
-                              style={{ color: "red" }}
-                              size="xl"
-                            />
-                          </Box>
-                        )}
+
                         {!product.status && (
                           <Box
                             position="absolute"
@@ -130,14 +112,35 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
                         )}
                       </Box>
                       <Box p={3} textAlign="left">
-                        <Text
-                          fontSize="lg"
-                          fontWeight="500"
-                          noOfLines={1}
-                          mb={1}
-                        >
-                          {product.title}
-                        </Text>
+                        <Flex justifyContent={"space-between"}>
+                          <Text
+                            fontSize="lg"
+                            fontWeight="500"
+                            noOfLines={1}
+                            mb={1}
+                            mr={1}
+                          >
+                            {product.title}
+                          </Text>
+                          {account.isLoggedIn() && (
+                            <Box
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleLikeClick(product.id);
+                              }}
+                              transition="transform 0.2s"
+                              _hover={{ transform: "scale(1.1)" }}
+                            >
+                              <FontAwesomeIcon
+                                icon={
+                                  likes[product.id] ? fullHeart : emptyHeart
+                                }
+                                style={{ color: "red" }}
+                                size="xl"
+                              />
+                            </Box>
+                          )}
+                        </Flex>
                         <Flex mb={3} alignItems="baseline">
                           <Text fontSize="xl" fontWeight="bold" mr={2}>
                             {product.startPrice
