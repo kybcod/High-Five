@@ -24,6 +24,7 @@ export function ChatRoomList() {
   const [data, setData] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [showChat, setShowChat] = useState(false);
+  const [count, setCount] = useState(0);
   const navigate = useNavigate();
   const toast = useToast();
   // -- axios.get
@@ -49,12 +50,18 @@ export function ChatRoomList() {
       .finally();
   }, []);
 
-  const handleChatSelect = (item) => {
+  const handleChatSelect = (item, index) => {
     setShowChat(false);
     setTimeout(() => {
       setSelectedChat(item);
       setShowChat(true);
     });
+    // 안 읽은 메세지 클릭 시 0으로 변경
+    setData((prevItems) =>
+      prevItems.map((item, i) =>
+        i === index ? { ...item, chat: { ...item.chat, count: 0 } } : item,
+      ),
+    );
   };
 
   const handleBackClick = () => {
@@ -139,7 +146,7 @@ export function ChatRoomList() {
                   h={"35px"}
                   lineHeight={"30px"}
                   cursor={"pointer"}
-                  onClick={() => handleChatSelect(item)}
+                  onClick={() => handleChatSelect(item, index)}
                 >
                   <Flex>
                     <Box
