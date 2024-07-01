@@ -77,7 +77,6 @@ UPDATE user
 SET black_count = 0
 WHERE id = 57;
 
-# 아직 실행 안 함
 ALTER TABLE review
     MODIFY COLUMN user_id int NOT NULL;
 
