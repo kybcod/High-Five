@@ -171,10 +171,21 @@ export function QuestionEdit() {
                 {Array.isArray(question.fileList) &&
                   question.fileList.map((file) => (
                     <Card m={1} key={file.name}>
+                      <CardBody>
+                        <Image
+                          src={file.src}
+                          sx={
+                            removeFileList.includes(file.name)
+                              ? { filter: "blur(8px)" }
+                              : {}
+                          }
+                          w={"320px"}
+                        />
+                      </CardBody>
                       <CardFooter>
-                        <Flex gap={3}>
+                        <Flex gap={3} alignItems="center">
                           <Box>
-                            <FontAwesomeIcon color={"red"} icon={faTrashCan} />
+                            <FontAwesomeIcon icon={faTrashCan} />
                           </Box>
                           <Box>
                             <Switch
@@ -187,17 +198,6 @@ export function QuestionEdit() {
                           <Text>{file.name}</Text>
                         </Flex>
                       </CardFooter>
-                      <CardBody>
-                        <Image
-                          src={file.src}
-                          sx={
-                            removeFileList.includes(file.name)
-                              ? { filter: "blur(8px)" }
-                              : {}
-                          }
-                          w={"320px"}
-                        />
-                      </CardBody>
                     </Card>
                   ))}
               </Box>

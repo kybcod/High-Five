@@ -54,7 +54,7 @@ public class Question {
     }
 
     public String getInsertedAll() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return inserted.format(formatter);
     }
 }

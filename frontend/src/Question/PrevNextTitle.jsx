@@ -1,6 +1,6 @@
 import { Box, Flex, Image } from "@chakra-ui/react";
 
-export function ConditionalTitle({
+export function PrevNextTitle({
   secret,
   hasAccess,
   isAdmin,

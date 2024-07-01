@@ -4,16 +4,12 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Center,
   Checkbox,
   FormControl,
   FormHelperText,
-  FormLabel,
   Heading,
   Input,
   Image,
-  Stack,
-  StackDivider,
   Text,
   Textarea,
   Divider,
@@ -24,7 +20,7 @@ import {
   CardFooter,
   Switch,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../../component/CustomToast.jsx";
@@ -177,24 +173,6 @@ export function QuestionWrite() {
                       >
                         {previewList.map((src, index) => (
                           <Card key={index} m={1}>
-                            <CardFooter>
-                              <Flex gap={3} alignItems="center">
-                                <Box>
-                                  <FontAwesomeIcon
-                                    icon={faTrashCan}
-                                    onClick={() => handleRemoveFile(index)}
-                                  />
-                                </Box>
-                                <Box>
-                                  <Switch
-                                    colorScheme={"pink"}
-                                    isChecked={removeFileList.includes(index)}
-                                    onChange={() => handleRemoveFile(index)}
-                                  />
-                                </Box>
-                                <Text>{files[index].name}</Text>
-                              </Flex>
-                            </CardFooter>
                             <CardBody>
                               <Image
                                 src={src}
@@ -206,6 +184,21 @@ export function QuestionWrite() {
                                 w={"320px"}
                               />
                             </CardBody>
+                            <CardFooter>
+                              <Flex gap={3} alignItems="center">
+                                <Box>
+                                  <FontAwesomeIcon icon={faTrashCan} />
+                                </Box>
+                                <Box>
+                                  <Switch
+                                    colorScheme={"pink"}
+                                    isChecked={removeFileList.includes(index)}
+                                    onChange={() => handleRemoveFile(index)}
+                                  />
+                                </Box>
+                                <Text>{files[index].name}</Text>
+                              </Flex>
+                            </CardFooter>
                           </Card>
                         ))}
                       </Box>

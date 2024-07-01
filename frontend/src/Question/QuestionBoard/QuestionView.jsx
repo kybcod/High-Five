@@ -9,6 +9,7 @@ import {
   Image,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -16,7 +17,6 @@ import {
   Spinner,
   Table,
   Td,
-  Text,
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -29,15 +29,26 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { CustomToast } from "../../component/CustomToast.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { ConditionalTitle } from "../ConditionalTitle.jsx";
+import { PrevNextTitle } from "../PrevNextTitle.jsx";
 
 export function QuestionView() {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
   const navigate = useNavigate();
-  const { onOpen, onClose, isOpen } = useDisclosure();
+  const {
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+    isOpen: isDeleteOpen,
+  } = useDisclosure();
+  const {
+    onOpen: onImageOpen,
+    onClose: onImageClose,
+    isOpen: isImageOpen,
+  } = useDisclosure();
+  // const { onOpen, onClose, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
   const { successToast, errorToast } = CustomToast();
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     axios
@@ -75,7 +86,6 @@ export function QuestionView() {
 
   return (
     <Box m={8}>
-      {/*<Box mt={2}>/!*<Text value={question.id} />*!/</Box>*/}
       {account.hasAccess(question.userId) && (
         <Box>
           <Flex justify={"flex-end"} mr={10} mt={5} mb={5} gap={8}>
@@ -90,7 +100,7 @@ export function QuestionView() {
               w={6}
               h={6}
               color="red.500"
-              onClick={onOpen}
+              onClick={onDeleteOpen}
               cursor="pointer"
             />
           </Flex>
@@ -139,11 +149,19 @@ export function QuestionView() {
       <Box>
         <Box mt={30}>
           {question.fileList && (
-            <Flex flexWrap={"wrap"} gap={5} justifyContent={"space-evenly"}>
+            <Flex flexWrap={"wrap"} gap={5} justifyContent={"flex-start"}>
               {question.fileList.map((file) => (
                 <Card key={file.name}>
                   <CardBody>
-                    <Image boxSize="300px" src={file.src} />
+                    <Image
+                      boxSize="300px"
+                      src={file.src}
+                      onClick={() => {
+                        setSelectedImage(file.src);
+                        onImageOpen();
+                      }}
+                      cursor={"pointer"}
+                    />
                   </CardBody>
                 </Card>
               ))}
@@ -164,7 +182,7 @@ export function QuestionView() {
                   <FontAwesomeIcon icon={faChevronUp} />
                 </Box>
                 <Box w={"10%"}>이전글</Box>
-                <ConditionalTitle
+                <PrevNextTitle
                   secret={question.prevSecret}
                   hasAccess={(prevUserId) => account.hasAccess(prevUserId)}
                   isAdmin={() => account.isAdmin(account.userId)}
@@ -186,7 +204,7 @@ export function QuestionView() {
                 <Box w={"10%"}>
                   <a href={`/question/${question.nextId}`}>다음글</a>
                 </Box>
-                <ConditionalTitle
+                <PrevNextTitle
                   secret={question.nextSecret}
                   hasAccess={(nextUserId) => account.hasAccess(nextUserId)}
                   isAdmin={() => account.isAdmin(account.userId)}
@@ -221,19 +239,35 @@ export function QuestionView() {
           </Button>
         </Flex>
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
+
+      <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader></ModalHeader>
           <ModalBody>삭제하시겠습니까?</ModalBody>
           <ModalFooter>
             <Flex gap={2}>
-              <Button onClick={onClose}>취소</Button>
+              <Button onClick={onDeleteClose}>취소</Button>
               <Button onClick={handleRemoveClick} colorScheme={"red"}>
                 확인
               </Button>
             </Flex>
           </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isImageOpen} onClose={onImageClose} size="6xl">
+        <ModalOverlay />
+        <ModalContent maxW="40vw" maxH="90vh">
+          <ModalCloseButton />
+          <ModalBody
+            p={0}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Image src={selectedImage} alt="원본 이미지" objectFit="contain" />
+          </ModalBody>
         </ModalContent>
       </Modal>
     </Box>
