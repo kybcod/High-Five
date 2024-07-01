@@ -118,19 +118,6 @@ export function LikeList() {
     setSearchParams(searchParams);
   }
 
-  // const handleGetReviewButtonClick = (productId) => {
-  //   // TODO : 후기 조회 버튼 status 추가 예정
-  //   axios
-  //     .get(`/api/reviews/${productId}`)
-  //     .then((res) => {
-  //       if (res.data != null) {
-  //         setReviewList(res.data);
-  //       }
-  //     })
-  //     .catch()
-  //     .finally();
-  // };
-
   return (
     <Box>
       <SortButton sortOption={sortOption} handleSortChange={handleSortChange} />
@@ -152,7 +139,6 @@ export function LikeList() {
                 cursor={"pointer"}
                 maxW="sm"
                 h={"auto"}
-                borderBottomRadius={"0"}
                 overflow="hidden"
                 display="flex"
                 flexDirection="column"

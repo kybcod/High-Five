@@ -128,7 +128,6 @@ export function BidList() {
                 cursor={"pointer"}
                 maxW="sm"
                 h={"auto"}
-                borderBottomRadius={"0"}
                 overflow="hidden"
                 display="flex"
                 flexDirection="column"

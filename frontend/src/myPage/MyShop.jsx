@@ -106,7 +106,6 @@ export function MyShop() {
                 cursor={"pointer"}
                 maxW="sm"
                 h={"auto"} // 판매 중인 상품은 자동 높이, 종료된 상품은 100% 높이
-                borderBottomRadius={"0"}
                 overflow="hidden"
                 display="flex"
                 flexDirection="column"

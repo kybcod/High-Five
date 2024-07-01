@@ -6,6 +6,7 @@ export function Category() {
   const navigate = useNavigate();
 
   function handleCategoryClick(category) {
+    window.scrollTo({ top: 0, behavior: "auto" });
     if (category === "") {
       navigate(`/list`);
     } else {
