@@ -15,6 +15,7 @@ import {
   Textarea,
   Tooltip,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -25,16 +26,22 @@ import {
   faEye,
   faHandHoldingUsd,
   faHeart as fullHeart,
+  faTrashAlt,
+  faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SimpleSlider from "../component/slider/SimpleSlider.jsx";
-import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import {
+  faHeart as emptyHeart,
+  faTrashCan,
+} from "@fortawesome/free-regular-svg-icons";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
 import ReportButton from "../user/ReportButton.jsx";
 import AuctionModal from "./AuctionModal.jsx";
+import { ModalComponent } from "../component/ModalComponent.jsx";
 
 export function ProductDetails() {
   const { id } = useParams();
@@ -44,7 +51,10 @@ export function ProductDetails() {
   const [bidPrice, setBidPrice] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const account = useContext(LoginContext);
+  const deleteModal = useDisclosure();
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
   const { onOpen, onClose, isOpen } = useDisclosure({
     onClose: () => setBidPrice(""),
   });
@@ -116,6 +126,33 @@ export function ProductDetails() {
       navigate("/login");
     }
   };
+
+  function handleDeleteClick() {
+    setDeleteLoading(true);
+    axios
+      .delete(`/api/products/${id}`)
+      .then(() =>
+        toast({
+          status: "info",
+          description: "해당 상품이 삭제되었습니다.",
+          position: "top-right",
+          duration: 1000,
+        }),
+      )
+      .catch((err) => {
+        toast({
+          status: "warning",
+          description: "삭제되지 않았습니다. 다시 확인해주세요.",
+          position: "top-right",
+          duration: 1000,
+        });
+      })
+      .finally(() => {
+        deleteModal.onClose();
+        setDeleteLoading(false);
+        navigate("/");
+      });
+  }
 
   return (
     <Box>
@@ -193,6 +230,18 @@ export function ProductDetails() {
                 <Flex>
                   <ReportButton userId={product.userId} />
                 </Flex>
+              )}
+              {account.isAdmin() && (
+                <Tooltip label="해당 상품 삭제">
+                  <Button
+                    colorScheme={"red"}
+                    variant={"outline"}
+                    ml={2}
+                    onClick={deleteModal.onOpen}
+                  >
+                    <FontAwesomeIcon icon={faTrashCan} />
+                  </Button>
+                </Tooltip>
               )}
             </Flex>
           </Box>
@@ -375,6 +424,22 @@ export function ProductDetails() {
         bidPrice={bidPrice}
         isProcessing={isProcessing}
         product={product}
+      />
+
+      {/* 삭제 모달 */}
+      <ModalComponent
+        isOpen={deleteModal.isOpen}
+        onClose={deleteModal.onClose}
+        onClick={handleDeleteClick}
+        isLoading={deleteLoading}
+        loadingText="처리중"
+        header="삭제"
+        body="정말로 삭제하시겠습니까?"
+        confirmText="확인"
+        colorScheme="red"
+        icon={faTrashAlt}
+        headerIcon={faTriangleExclamation}
+        cancelText="취소"
       />
     </Box>
   );
