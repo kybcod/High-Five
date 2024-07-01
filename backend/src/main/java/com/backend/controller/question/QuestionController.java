@@ -69,7 +69,7 @@ public class QuestionController {
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity delete(@PathVariable Integer id, Authentication authentication) {
-        if (service.hasAccess(id, authentication)) {
+        if (service.hasAccess(id, authentication) || authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("SCOPE_admin"))) {
             service.delete(id);
             return ResponseEntity.ok().build();
         }

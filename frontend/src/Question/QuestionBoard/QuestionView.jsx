@@ -69,7 +69,7 @@ export function QuestionView() {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then(() => {
-        successToast(`${id}번 게시물이 삭제되었습니다.`);
+        successToast(`게시물이 삭제되었습니다.`);
         navigate("/question/list");
       })
       .catch((err) => {
@@ -85,31 +85,29 @@ export function QuestionView() {
 
   return (
     <Box m={8}>
-      {account.hasAccess(question.userId) && (
+      {(account.hasAccess(question.userId) ||
+        account.isAdmin(account.userId)) && (
         <Box>
           <Flex justify={"flex-end"} mr={10} mt={5} mb={5} gap={8}>
-            <EditIcon
-              w={6}
-              h={6}
-              color="blue.500"
-              cursor="pointer"
-              onClick={() => navigate(`/question/edit/${id}`)}
-            />
-          </Flex>
-        </Box>
-      )}
-
-      {(account.isAdmin(account.userId) ||
-        account.hasAccess(question.userId)) && (
-        <Box>
-          <Flex justify={"flex-end"} mr={10} mt={5} mb={5} gap={8}>
-            <DeleteIcon
-              w={6}
-              h={6}
-              color="red.500"
-              onClick={onDeleteOpen}
-              cursor="pointer"
-            />
+            {account.hasAccess(question.userId) && (
+              <EditIcon
+                w={6}
+                h={6}
+                color="blue.500"
+                cursor="pointer"
+                onClick={() => navigate(`/question/edit/${id}`)}
+              />
+            )}
+            {(account.isAdmin(account.userId) ||
+              account.hasAccess(question.userId)) && (
+              <DeleteIcon
+                w={6}
+                h={6}
+                color="red.500"
+                onClick={onDeleteOpen}
+                cursor="pointer"
+              />
+            )}
           </Flex>
         </Box>
       )}
