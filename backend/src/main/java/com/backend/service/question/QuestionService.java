@@ -105,6 +105,7 @@ public class QuestionService {
         pageInfo.put("lastPageNumber", lastPageNumber);
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
+        pageInfo.put("totalPostNumber", countAll);
 
         List<Question> questions = mapper.selectUsingPageable(offset, searchType, keyword);
         questions.forEach(q -> q.setIsNewBadge(q.getIsNewBadge()));
@@ -119,6 +120,23 @@ public class QuestionService {
         if (question == null) {
             return null;
         }
+        Question prevQuestion = mapper.getPrevId(id);
+        Question nextQuestion = mapper.getNextId(id);
+
+        if (prevQuestion != null) {
+            question.setPrevId(prevQuestion.getPrevId());
+            question.setPrevTitle(prevQuestion.getPrevTitle());
+            question.setPrevSecret(prevQuestion.getPrevSecret());
+            question.setPrevUserId(prevQuestion.getPrevUserId());
+        }
+
+        if (nextQuestion != null) {
+            question.setNextId(nextQuestion.getNextId());
+            question.setNextTitle(nextQuestion.getNextTitle());
+            question.setNextSecret(nextQuestion.getNextSecret());
+            question.setNextUserId(nextQuestion.getNextUserId());
+        }
+
         List<String> filesNames = mapper.selectFileByQuestionId(id);
         List<QuestionFile> files = filesNames.stream()
                 .map(name -> new QuestionFile(name, STR."\{srcPrefix}\{question.getId()}/\{name}"))

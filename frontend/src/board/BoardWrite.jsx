@@ -81,7 +81,18 @@ export function BoardWrite() {
             newFiles.splice(i, 1);
             setFiles(newFiles);
           }}
-          ml={3}
+          ml={1}
+          background={"none"}
+          _hover={"none"}
+          color={"red"}
+          sx={{
+            _focus: {
+              boxShadow: "none",
+            },
+            _active: {
+              bg: "transparent",
+            },
+          }}
         />
       </Flex>,
     );
@@ -118,7 +129,11 @@ export function BoardWrite() {
             <FormHelperText mb={"13px"} mr={3}>
               총 용량은 10MB를 초과할 수 없습니다
             </FormHelperText>
-            <Button mb={"5px"} onClick={() => fileInputRef.current.click()}>
+            <Button
+              mb={"10px"}
+              colorScheme={"teal"}
+              onClick={() => fileInputRef.current.click()}
+            >
               파일첨부
             </Button>
             <Input
@@ -141,16 +156,19 @@ export function BoardWrite() {
       <Box>
         <Input type={"hidden"} value={account.id} />
       </Box>
-      <Box>
+      <Flex justifyContent={"flex-end"} mt={"15px"}>
         <Button
           isLoading={isLoading}
           isDisabled={disableSaveButton}
           onClick={handleClickButton}
-          mt={"20px"}
+          colorScheme={"teal"}
+          variant={"outline"}
+          borderWidth={2}
+          ml={"10px"}
         >
           게시글 생성
         </Button>
-      </Box>
+      </Flex>
     </Box>
   );
 }

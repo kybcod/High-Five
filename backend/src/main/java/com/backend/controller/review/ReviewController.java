@@ -3,6 +3,7 @@ package com.backend.controller.review;
 import com.backend.domain.review.Review;
 import com.backend.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,7 @@ public class ReviewController {
     public ResponseEntity getReviewList() {
         List<Map<String, Object>> result = service.selectReviewList();
         if (result == null || result.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok().body(result);
     }
@@ -35,20 +36,20 @@ public class ReviewController {
                 if (success) {
                     return ResponseEntity.ok().build();
                 } else {
-                    return ResponseEntity.badRequest().build();
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
                 }
             } else {
-                return ResponseEntity.badRequest().body("Invalid review data.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("{productId}")
     public ResponseEntity getReviewById(@PathVariable Integer productId) throws Exception {
         List<Map<String, Object>> reviewList = service.selectReviewById(productId);
         if (reviewList == null || reviewList.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             return ResponseEntity.ok().body(reviewList);
         }

@@ -8,7 +8,17 @@ import {
   Grid,
   GridItem,
   Image,
+  List,
+  ListItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -16,6 +26,8 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
 import { SortButton } from "../component/SortButton.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 export function MyShop() {
   const { userId } = useParams();
@@ -26,6 +38,10 @@ export function MyShop() {
   const [sortOption, setSortOption] = useState("0");
   const account = useContext(LoginContext);
   const navigate = useNavigate();
+
+  // -- review
+  const [reviewList, setReviewList] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const currentPage = parseInt(searchParams.get("shopPage") || "1");
@@ -84,6 +100,19 @@ export function MyShop() {
     searchParams.set("shopSort", sortValue);
     setSearchParams(searchParams);
   }
+
+  // -- 후기 조회
+  const handleGetReviewButtonClick = (productId) => {
+    axios
+      .get(`/api/reviews/${productId}`)
+      .then((res) => {
+        if (res.data != null) {
+          setReviewList(res.data);
+        }
+      })
+      .catch()
+      .finally();
+  };
 
   return (
     <Box>
@@ -221,6 +250,11 @@ export function MyShop() {
                         variant={"outline"}
                         colorScheme={"teal"}
                         borderWidth={3}
+                        onClick={() => {
+                          onOpen();
+                          handleGetReviewButtonClick(product.id);
+                        }}
+                        hidden={!product.reviewStatus}
                       >
                         상품 후기
                       </Button>
@@ -242,6 +276,34 @@ export function MyShop() {
           />
         </Box>
       )}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>판매자님에게 보내는 후기</ModalHeader>
+          <ModalBody>
+            <List>
+              {reviewList.map((review) => (
+                <ListItem key={review.id}>
+                  <FontAwesomeIcon icon={faCircleCheck} />
+                  &nbsp;
+                  {review.content}
+                </ListItem>
+              ))}
+            </List>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              size="sm"
+              colorScheme="gray"
+              variant="outline"
+              onClick={onClose}
+            >
+              닫기
+            </Button>
+          </ModalFooter>
+          <ModalCloseButton />
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

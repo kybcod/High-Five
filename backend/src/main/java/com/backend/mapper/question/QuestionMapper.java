@@ -35,7 +35,7 @@ public interface QuestionMapper {
     Question selectById(Integer id);
 
     @Select("""
-            SELECT file_name FROM question_board_file WHERE question_id=#{id}
+            SELECT file_name FROM question_board_file WHERE question_id=#{id} ORDER BY id;
             """)
     List<String> selectFileByQuestionId(Integer id);
 
@@ -120,4 +120,14 @@ public interface QuestionMapper {
 
     @Select("SELECT * FROM faqCategory")
     List<FaqCategory> getAllCategories();
+
+    @Select("""
+            SELECT id prevId, title prevTitle, secret_write prevSecret, user_id prevUserId FROM question_board WHERE id<#{id} ORDER BY id DESC LIMIT 1;
+            """)
+    Question getPrevId(Integer id);
+
+    @Select("""
+            SELECT id nextId, title nextTitle, secret_write nextSecret, user_id nextUserId FROM question_board WHERE id>#{id} ORDER BY id ASC LIMIT 1;
+            """)
+    Question getNextId(Integer id);
 }

@@ -1,20 +1,24 @@
 import { Box, Center, Flex, Spacer, Text } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
-import { faHeadset, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClipboardQuestion,
+  faHeadset,
+  faQuestion,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Navbar.css";
 
 export function Navbar() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Flex
-      bgColor={"#99D8AF"}
-      // bgColor={"#fae76b"}
+      // bgColor={"#99D8AF"} // 원래 색
+      // bgColor={"#05a482"} // 약간 진한 초록색
       h={"30px"}
       p={4}
       justifyContent={"space-between"}
@@ -22,11 +26,7 @@ export function Navbar() {
       fontSize={"lg"}
       cursor={"pointer"}
     >
-      <Box
-        className="dropdown"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <Box className="dropdown">
         <Center
           onClick={() => navigate("/question/faq")}
           cursor="pointer"
@@ -37,17 +37,15 @@ export function Navbar() {
             고객센터
           </Text>
         </Center>
-        {isHovered && (
-          <Box
-            className="dropdown-content"
-            fontSize={"0.9rem"}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <Link to="/question/faq">FAQ</Link>
-            <Link to="/question/list">1:1 문의게시판</Link>
-          </Box>
-        )}
+        <Box className="dropdown-content" fontSize={"0.9rem"}>
+          <Link to="/question/faq">
+            <FontAwesomeIcon icon={faQuestion} /> &nbsp; FAQ
+          </Link>
+          <Link to="/question/list">
+            <FontAwesomeIcon icon={faClipboardQuestion} />
+            &nbsp;1:1 문의게시판
+          </Link>
+        </Box>
       </Box>
       <Center onClick={() => navigate("/board/list")} mx={2}>
         <Text fontSize={"small"} ml={2}>

@@ -19,7 +19,7 @@ public class BoardComment {
     private Integer userId;
     private String nickName;
     private UserFile profileImage;
-    
+
     private String content;
     private LocalDateTime inserted;
     private Integer commentId;
@@ -33,6 +33,9 @@ public class BoardComment {
         long minutes = duration.toMinutes();
         long hours = duration.toHours();
 
+        if (minutes == 0) {
+            return "방금 전";
+        }
         if (minutes < 60) {
             return minutes + "분 전";
         }
