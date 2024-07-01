@@ -50,6 +50,12 @@ public class BoardController {
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("prev/{id}")
+    public ResponseEntity prev(@PathVariable Integer id, Authentication authentication) {
+        Map<String, Object> result = service.selectByPrevId(id, authentication);
+        return ResponseEntity.ok().body(result);
+    }
+
     @PutMapping("modify")
     public ResponseEntity update(Board board,
                                  @RequestParam(value = "removeFileList[]", required = false) List<String> removeFileList,

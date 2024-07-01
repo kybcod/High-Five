@@ -120,6 +120,25 @@ export function BoardView() {
       });
   }
 
+  function handleClickPrev() {
+    setIsLoading(true);
+    axios
+      .get(`/api/board/prev/${board_id}`)
+      .then((res) => {
+        const prevBoard = res.data.board;
+        setBoard(prevBoard);
+        setBoardLike(res.data.boardLike);
+        setBoardId(prevBoard.id);
+        navigate(`/board/${prevBoard.id}`);
+      })
+      .catch((err) => {
+        if (err.response.status === 500) {
+          errorToast("다음 글이 없습니다");
+          setIsLoading(false);
+        }
+      });
+  }
+
   return (
     <Box>
       <Box>
@@ -232,8 +251,10 @@ export function BoardView() {
       </Box>
       <Box>
         <Text onClick={handleClickNext} disabled={isLast}>
-          {" "}
-          다음글{" "}
+          다음글
+        </Text>
+        <Text onClick={handleClickPrev} disabled={isLast}>
+          이전글
         </Text>
       </Box>
       <Box>

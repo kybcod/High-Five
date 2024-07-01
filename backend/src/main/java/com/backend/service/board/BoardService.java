@@ -230,4 +230,38 @@ public class BoardService {
         return result;
 
     }
+
+    public Map<String, Object> selectByPrevId(Integer id, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+
+        Board prevBoard = mapper.selectByPrevId(id);
+
+        List<String> fileNames = mapper.selectFileNameByBoardId(prevBoard.getId());
+        List<BoardFile> files = fileNames.stream()
+                .map(fileName -> new BoardFile(fileName, STR."\{srcPrefix}\{prevBoard.getId()}/\{fileName}"))
+                .toList();
+
+        prevBoard.setBoardFileList(files);
+
+        String fileName = mapper.selectFileNameByUserId(prevBoard.getUserId());
+        UserFile userFile = UserFile.builder()
+                .fileName(fileName).src(STR."\{srcPrefix}user/\{prevBoard.getUserId()}/\{fileName}").build();
+        prevBoard.setProfileImage(userFile);
+        System.out.println(userFile.getFileName());
+
+        Map<String, Object> boardLike = new HashMap<>();
+        if (authentication == null) {
+            boardLike.put("boardLike", false);
+        } else {
+            int c = mapper.selectLikeByBoardIdAndUserId(id, authentication.getName());
+            boardLike.put("boardLike", c == 1);
+        }
+        boardLike.put("count", mapper.selectCountLikeByBoardId(id));
+        result.put("board", prevBoard);
+        result.put("boardLike", boardLike);
+
+        mapper.viewCountByBoardClick(prevBoard.getId());
+
+        return result;
+    }
 }

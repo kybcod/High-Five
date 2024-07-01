@@ -187,4 +187,19 @@ public interface BoardMapper {
             LIMIT 1;
             """)
     Board selectByNextId(@Param("id") int id);
+
+    @Select("""
+            SELECT b.id
+                   , b.title
+                   , b.user_id
+                   , u.nick_name nickName
+                   , b.inserted
+                   , b.content
+                   , (select MIN(id) from board) minId
+            FROM board b JOIN user u ON b.user_id = u.id
+               WHERE b.id < #{id}
+            ORDER BY b.id DESC
+            LIMIT 1;
+            """)
+    Board selectByPrevId(@Param("id") int id);
 }

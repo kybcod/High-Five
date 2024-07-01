@@ -38,7 +38,7 @@ LIMIT 1;
 select *
 from board
 where id < 103
-ORDER BY ID desc
+ORDER BY ID DESC
 LIMIT 1;
 
 SELECT *
