@@ -26,6 +26,16 @@ public class Question {
     private Boolean isNewBadge;
     private Boolean secretWrite; //비밀글이면 TRUE, 아니면 FALSE
 
+    // 이전글, 다음글
+    private Integer prevId;
+    private Integer nextId;
+    private String prevTitle;
+    private String nextTitle;
+    private Boolean prevSecret;
+    private Boolean nextSecret;
+    private Integer prevUserId;
+    private Integer nextUserId;
+
     public String getInserted() {
         LocalDateTime midnightToday = LocalDateTime.now().with(LocalTime.MIDNIGHT);
 
@@ -40,11 +50,11 @@ public class Question {
 
     public Boolean getIsNewBadge() {
         Duration duration = Duration.between(inserted, LocalDateTime.now());
-        return duration.toHours() < 24;
+        return duration.toHours() < 48;
     }
 
     public String getInsertedAll() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return inserted.format(formatter);
     }
 }
