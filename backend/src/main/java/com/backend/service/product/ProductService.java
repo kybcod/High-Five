@@ -72,11 +72,23 @@ public class ProductService {
     }
 
     public Map<String, Object> list() {
+        //전체 상품
         List<Product> products = mapper.selectAll();
         settingFilePath(products);
+
+        // 오늘 상품
         List<Product> todayProduct = mapper.selectProductToday();
         settingFilePath(todayProduct);
-        return Map.of("products", products, "todayProduct", todayProduct);
+
+        // 추천 상품
+        List<Product> recommendProduct = mapper.selectRecommendProduct();
+        settingFilePath(recommendProduct);
+
+        //실시간 인기 상품
+        List<Product> livePopularProduct = mapper.selectPopularProduct();
+        settingFilePath(livePopularProduct);
+
+        return Map.of("products", products, "todayProduct", todayProduct, "recommendProduct", recommendProduct, "livePopularProduct", livePopularProduct);
     }
 
 
@@ -91,10 +103,11 @@ public class ProductService {
 //        키워드에 대한 검색 결과 갯수
         Integer keywordCount = mapper.selectKeywordCount(title);
         Integer categoryCount = mapper.selectCategoryCount(category);
+        Integer allTotalCount = mapper.selectAllTotalCount();
 
         return Map.of("content", content, "pageInfo", pageInfo,
                 "keywordCount", keywordCount,
-                "categoryCount", categoryCount);
+                "categoryCount", categoryCount, "allTotalCount", allTotalCount);
     }
 
     public Map<String, Object> get(Integer id, Authentication authentication) {

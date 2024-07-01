@@ -24,6 +24,8 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import LoadMoreAndFoldButton from "./customButton/LoadMoreAndFoldButton.jsx";
+import { SortButton } from "./customButton/SortButton.jsx";
 import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
 import { SortButton } from "../component/SortButton.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -123,149 +125,118 @@ export function MyShop() {
           판매한 상품이 없습니다.
         </Text>
       ) : (
-        <Grid templateColumns={"repeat(3, 1fr)"} gap={6}>
+        <Grid templateColumns={"repeat(3, 1fr)"} gap={16}>
           {productList.map((product) => (
             <GridItem key={product.id}>
               <Card
+                onClick={() => {
+                  navigate(`/product/${product.id}`);
+                  window.scrollTo({ top: 0, behavior: "auto" });
+                }}
+                w={"100%"}
                 boxShadow={"none"}
-                borderStyle={"solid"}
-                borderColor={"black.300"}
+                borderColor={"gray.200"}
                 borderWidth={"1px"}
                 cursor={"pointer"}
                 maxW="sm"
-                h="100%"
-                borderRadius="0"
+                h={"auto"} // 판매 중인 상품은 자동 높이, 종료된 상품은 100% 높이
+                overflow="hidden"
+                display="flex"
+                flexDirection="column"
               >
-                <CardBody position={"relative"} h={"100%"}>
-                  {product.status && (
-                    <Badge
-                      position={"absolute"}
-                      top={"1"}
-                      left={"1"}
-                      colorScheme={"teal"}
-                    >
-                      {product.endTimeFormat}
-                    </Badge>
-                  )}
-                  {!product.status &&
-                    product.productBidList &&
-                    product.productBidList.length > 0 && (
-                      <Badge
-                        cursor={"pointer"}
-                        position={"absolute"}
-                        top={"1"}
-                        left={"1"}
-                        colorScheme={"purple"}
-                        onClick={() => {
-                          navigate(
-                            `/chat/product/${product.id}/buyer/${product.productBidList[0].successBidUserId}`,
-                          );
-                        }}
-                      >
-                        낙찰자 : {product.productBidList[0].successBidNickName}
-                      </Badge>
-                    )}
-                  {!product.status &&
-                    (!product.productBidList ||
-                      product.productBidList.length === 0) && (
-                      <Badge
-                        position={"absolute"}
-                        top={"1"}
-                        left={"1"}
-                        colorScheme={"purple"}
-                      >
-                        <Text>낙찰자가 없습니다.</Text>
-                      </Badge>
-                    )}
-
-                  <Box mt={2} w="30%%">
-                    {product.status ? (
-                      <>
-                        {product.productFileList && (
-                          <Image
-                            onClick={() => navigate(`/product/${product.id}`)}
-                            src={product.productFileList[0].filePath}
-                            w={"100%"}
-                            h={"200px"}
-                            transition="transform 0.2s"
-                            _hover={{ transform: "scale(1.02)" }}
-                          />
-                        )}
-                      </>
-                    ) : (
+                <CardBody position={"relative"} p={0}>
+                  <Box position="relative">
+                    <Image
+                      src={product.productFileList[0].filePath}
+                      w={"100%"}
+                      h={"250px"}
+                      transition="transform 0.2s"
+                      _hover={{ transform: "scale(1.02)" }}
+                    />
+                    {!product.status && (
                       <Box
-                        transition="transform 0.2s"
-                        _hover={{ transform: "scale(1.02)" }}
-                        position={"relative"}
-                        w={"100%"}
-                        h={"200px"}
+                        position="absolute"
+                        top="0"
+                        left="0"
+                        right="0"
+                        bottom="0"
+                        bg="blackAlpha.600"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
                       >
-                        <Image
-                          src={product.productFileList[0].filePath}
-                          w="100%"
-                          h="200px"
-                          filter="brightness(50%)"
-                          position="absolute"
-                          top="0"
-                          left="0"
-                        />
-                        <Text
-                          onClick={() => navigate(`/product/${product.id}`)}
-                          cursor={"pointer"}
-                          borderRadius="lg"
-                          w="100%"
-                          h="200px"
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          color={"white"}
-                          display={"flex"}
-                          alignItems={"center"}
-                          justifyContent={"center"}
-                          fontSize={"2xl"}
-                          as="b"
-                        >
+                        <Text color="white" fontSize="2xl" fontWeight="bold">
                           판매완료
                         </Text>
                       </Box>
                     )}
                   </Box>
-                  <Text mt={2} as={"b"} noOfLines={1} fontSize="lg">
-                    {product.title}
-                  </Text>
-                  <Flex justifyContent={"space-between"}>
-                    <Text color="blue.600" fontSize="lg">
-                      {product.startPrice
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      원
+                  <Box p={4}>
+                    <Text fontSize="lg" fontWeight="500" noOfLines={1} mb={1}>
+                      {product.title}
                     </Text>
-                    <Text>{product.timeFormat}</Text>
-                  </Flex>
-                  {product.status || (
-                    <Box display="flex" justifyContent="center">
-                      <Button
-                        mt={2}
-                        w={"100%"}
-                        variant={"outline"}
-                        colorScheme={"teal"}
-                        borderWidth={3}
-                        onClick={() => {
-                          onOpen();
-                          handleGetReviewButtonClick(product.id);
-                        }}
-                        hidden={!product.reviewStatus}
+                    <Flex mb={1} alignItems="baseline">
+                      <Text
+                        fontSize={
+                          product.startPrice.toString().length > 8
+                            ? "sm"
+                            : product.startPrice.toString().length > 6
+                              ? "md"
+                              : "lg"
+                        }
+                        fontWeight="bold"
+                        mr={2}
                       >
-                        상품 후기
-                      </Button>
-                    </Box>
-                  )}
+                        {product.startPrice
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                        원
+                      </Text>
+                      <Text fontSize="sm" color="gray.500">
+                        (시작가)
+                      </Text>
+                    </Flex>
+                    <Badge
+                      colorScheme={product.status ? "yellow" : "purple"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      {product.status
+                        ? product.endTimeFormat
+                        : product.productBidList &&
+                            product.productBidList.length > 0
+                          ? `낙찰자: ${product.productBidList[0].successBidNickName}`
+                          : "낙찰자가 없습니다."}
+                    </Badge>
+                      {product.status || (
+                          <Box display="flex" justifyContent="center">
+                              <Button
+                                  mt={2}
+                                  w={"100%"}
+                                  variant={"outline"}
+                                  colorScheme={"teal"}
+                                  borderWidth={3}
+                                  onClick={(e) => {
+                                      e.stopPropagation();
+                                      onOpen();
+                                      handleGetReviewButtonClick(product.id);
+                                  }}
+                                  hidden={!product.reviewStatus}
+                              >
+                                  상품 후기
+                              </Button>
+                          </Box>
+                      )}
+                  </Box>
                 </CardBody>
               </Card>
             </GridItem>
           ))}
         </Grid>
       )}
+
+      {/*더보기 접기 버튼*/}
       {productList.length > 0 && (
         <Box display={"flex"} justifyContent={"center"}>
           <LoadMoreAndFoldButton

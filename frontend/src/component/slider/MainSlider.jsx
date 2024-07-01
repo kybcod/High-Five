@@ -15,15 +15,15 @@ const bannerData = [
   },
   {
     id: 3,
-    src: "https://media.bunjang.co.kr/images/nocrop/1208039827_w1197.jpg",
+    src: "https://media.bunjang.co.kr/images/nocrop/1211230859_w1197.jpg",
   },
   {
     id: 4,
-    src: "https://media.bunjang.co.kr/images/nocrop/1209483188_w1197.jpg",
+    src: "https://media.bunjang.co.kr/images/nocrop/1211171852_w1197.jpg",
   },
   {
     id: 5,
-    src: "https://media.bunjang.co.kr/images/nocrop/1200637633_w1197.jpg",
+    src: "https://media.bunjang.co.kr/images/nocrop/1210433469_w1197.jpg",
   },
 ];
 

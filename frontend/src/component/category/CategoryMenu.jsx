@@ -22,7 +22,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-export function Category() {
+export function CategoryMenu() {
   const navigate = useNavigate();
 
   function handleCategoryClick(category) {
@@ -102,7 +102,7 @@ export function Category() {
           </MenuItem>
         </MenuList>
       </Menu>
-      <Divider mt={2} borderWidth={1} borderColor={"green"} />
+      <Divider mt={2} borderWidth={1} borderColor={"teal"} />
     </Box>
   );
 }

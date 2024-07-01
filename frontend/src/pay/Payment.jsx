@@ -37,7 +37,6 @@ export function Payment() {
 
   useEffect(() => {
     axios.get(`/api/payments/${userId}/${productId}`).then((res) => {
-      console.log(res.data);
       setAmount(res.data.amount);
       setName(res.data.name);
       setBuyerName(res.data.buyerName);
@@ -96,10 +95,10 @@ export function Payment() {
           })
           .then(() => {
             navigate(`/chat/product/${product.id}/buyer/${product.userId}`);
-            alert(`결제 성공 : ${merchantUid}`);
+            alert(`${amount}원이 결제되었습니다.`);
           });
       } else {
-        alert(`결제 실패: ${error_msg}, ${merchantUid}`);
+        alert(`${error_msg} 이유로 결제를 실패하였습니다.`);
       }
     }
   }
@@ -155,7 +154,7 @@ export function Payment() {
         </Box>
         <Box>
           <Text mb={4} fontSize="lg" fontWeight="semibold">
-            주문명:
+            상품명:
           </Text>
           <Text mb={4} fontSize="md">
             {name}

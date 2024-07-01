@@ -7,7 +7,6 @@ import {
   Grid,
   GridItem,
   Image,
-  Stack,
   Text,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
@@ -17,8 +16,8 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
-import { SortButton } from "../component/SortButton.jsx";
+import LoadMoreAndFoldButton from "./customButton/LoadMoreAndFoldButton.jsx";
+import { SortButton } from "./customButton/SortButton.jsx";
 
 export function LikeList() {
   const { userId } = useParams();
@@ -40,7 +39,6 @@ export function LikeList() {
         `/api/products/user/${userId}/like?likePage=${currentPage}&likeSort=${likeSort}`,
       )
       .then((res) => {
-        console.log(res.data);
         if (currentPage === 1) {
           setLikeProductList(res.data.likeProductList);
         } else {
@@ -127,119 +125,123 @@ export function LikeList() {
           찜한 상품이 없습니다.
         </Text>
       ) : (
-        <Grid templateColumns={"repeat(3, 1fr)"} gap={6}>
+        <Grid templateColumns={"repeat(3, 1fr)"} gap={16}>
           {likeProductList.map((product) => (
             <GridItem key={product.id}>
               <Card
+                onClick={() => {
+                  navigate(`/product/${product.id}`);
+                  window.scrollTo({ top: 0, behavior: "auto" });
+                }}
+                w={"100%"}
                 boxShadow={"none"}
-                borderStyle={"solid"}
-                borderColor={"black.300"}
+                borderColor={"gray.200"}
                 borderWidth={"1px"}
                 cursor={"pointer"}
                 maxW="sm"
-                h="100%"
-                borderRadius="0"
+                h={"auto"}
+                overflow="hidden"
+                display="flex"
+                flexDirection="column"
               >
-                <CardBody position="relative" h="100%">
-                  <Box mt={2} w="100%">
-                    {product.status ? (
-                      <>
-                        {product.productFileList && (
-                          <Image
-                            onClick={() => navigate(`/product/${product.id}`)}
-                            src={product.productFileList[0].filePath}
-                            w="100%"
-                            h="200px"
-                            transition="transform 0.2s"
-                            _hover={{ transform: "scale(1.02)" }}
-                          />
-                        )}
-                        <Badge
-                          position="absolute"
-                          top="1"
-                          left="1"
-                          colorScheme="teal"
-                        >
-                          {product.endTimeFormat}
-                        </Badge>
-                      </>
-                    ) : (
+                <CardBody position="relative" h="100%" p={0}>
+                  <Box position={"relative"}>
+                    <Image
+                      src={product.productFileList[0].filePath}
+                      w="100%"
+                      h="250px"
+                      transition="transform 0.2s"
+                      _hover={{ transform: "scale(1.02)" }}
+                    />
+
+                    {product.status || (
                       <Box
-                        transition="transform 0.2s"
-                        _hover={{ transform: "scale(1.02)" }}
-                        position={"relative"}
-                        w={"100%"}
-                        h={"200px"}
+                        position="absolute"
+                        top="0"
+                        left="0"
+                        right="0"
+                        bottom="0"
+                        bg="blackAlpha.600"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        zIndex={1}
                       >
-                        <Image
-                          src={product.productFileList[0].filePath}
-                          w="100%"
-                          h="200px"
-                          filter="brightness(50%)"
-                          position="absolute"
-                          top="0"
-                          left="0"
-                        />
-                        <Text
-                          onClick={() => navigate(`/product/${product.id}`)}
-                          cursor={"pointer"}
-                          borderRadius="lg"
-                          w="100%"
-                          h="200px"
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          color={"white"}
-                          display={"flex"}
-                          alignItems={"center"}
-                          justifyContent={"center"}
-                          fontSize={"2xl"}
-                          as="b"
-                        >
+                        <Text color="white" fontSize="2xl" fontWeight="bold">
                           판매완료
                         </Text>
                       </Box>
                     )}
                   </Box>
-                  <Stack mt="6" spacing="3">
-                    <Flex justifyContent={"space-between"}>
-                      <Text as={"b"} noOfLines={1} fontSize="lg">
+
+                  <Box p={3}>
+                    <Flex
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                    >
+                      <Text
+                        fontSize="lg"
+                        fontWeight="500"
+                        noOfLines={1}
+                        mb={1}
+                        mr={1}
+                      >
                         {product.title}
                       </Text>
-
                       {account.isLoggedIn() && (
-                        <Box onClick={() => handleLikeClick(product.id)}>
-                          {(() => {
-                            const isLiked = likes[product.id];
-                            const icon = isLiked ? fullHeart : emptyHeart;
-                            return (
-                              <FontAwesomeIcon
-                                icon={icon}
-                                style={{ color: "red" }}
-                                cursor="pointer"
-                                size="xl"
-                              />
-                            );
-                          })()}
+                        <Box
+                          zIndex={2}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLikeClick(product.id);
+                          }}
+                          transition="transform 0.2s"
+                          _hover={{ transform: "scale(1.1)" }}
+                        >
+                          <FontAwesomeIcon
+                            icon={likes[product.id] ? fullHeart : emptyHeart}
+                            style={{ color: "red" }}
+                            size="xl"
+                          />
                         </Box>
                       )}
                     </Flex>
-                    <Flex justifyContent={"space-between"}>
-                      <Text color="blue.600" fontSize="lg">
+
+                    <Flex mb={1} alignItems={"baseline"}>
+                      <Text
+                        mr={2}
+                        fontSize={
+                          product.startPrice.toString().length > 8
+                            ? "sm"
+                            : product.startPrice.toString().length > 6
+                              ? "md"
+                              : "lg"
+                        }
+                        fontWeight="bold"
+                      >
                         {product.startPrice
                           .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
                         원
                       </Text>
-                      <Text>{product.timeFormat}</Text>
+                      <Text fontSize={"sm"} color={"gray.500"}>
+                        (시작가)
+                      </Text>
                     </Flex>
-                  </Stack>
+                    {product.status && (
+                      <Badge colorScheme="yellow">
+                        {product.endTimeFormat}
+                      </Badge>
+                    )}
+                  </Box>
                 </CardBody>
               </Card>
             </GridItem>
           ))}
         </Grid>
       )}
+
+      {/*더보기 접기 버튼*/}
       {likeProductList.length > 0 && (
         <Box display={"flex"} justifyContent={"center"}>
           <LoadMoreAndFoldButton

@@ -52,7 +52,6 @@ export function MyPage({ tab }) {
 
   useEffect(() => {
     axios.get(`/api/products/user/${userId}`).then((res) => {
-      console.log(res.data);
       setProduct(res.data.productList);
       setUserNickName(res.data.userNickName);
       setTotalSalesCount(res.data.totalSalesCount);
@@ -82,7 +81,7 @@ export function MyPage({ tab }) {
       >
         {/*  user 이미지*/}
         <TabList w={"30%"} m={3} mr={20}>
-          <Box mb={4} w="100%" border={"1px solid black"}>
+          <Box mb={4} w="100%">
             <Flex
               direction="column"
               justifyContent="center"
@@ -126,28 +125,48 @@ export function MyPage({ tab }) {
             </Flex>
           </Box>
           <Tab
+            fontWeight={"bold"}
+            height={"50px"}
             border={"1px solid #eee"}
-            _selected={{ borderColor: "green.500", fontWeight: "bold" }}
+            _selected={{
+              backgroundColor: "teal",
+              color: "white",
+            }}
           >
             판매 목록
           </Tab>
           {userId == account.id && (
             <>
               <Tab
+                height={"50px"}
                 border={"1px solid #eee"}
-                _selected={{ borderColor: "green.500", fontWeight: "bold" }}
+                fontWeight={"bold"}
+                _selected={{
+                  backgroundColor: "teal",
+                  color: "white",
+                }}
               >
                 찜 목록
               </Tab>
               <Tab
+                fontWeight={"bold"}
+                height={"50px"}
                 border={"1px solid #eee"}
-                _selected={{ borderColor: "green.500", fontWeight: "bold" }}
+                _selected={{
+                  backgroundColor: "teal",
+                  color: "white",
+                }}
               >
                 입찰 내역
               </Tab>
               <Tab
+                fontWeight={"bold"}
+                height={"50px"}
                 border={"1px solid #eee"}
-                _selected={{ borderColor: "green.500", fontWeight: "bold" }}
+                _selected={{
+                  backgroundColor: "teal",
+                  color: "white",
+                }}
               >
                 내 정보
               </Tab>

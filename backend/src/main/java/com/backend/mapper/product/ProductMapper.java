@@ -90,7 +90,7 @@ public interface ProductMapper {
                     p.status,
                     COUNT(pl.id)
             FROM product p LEFT JOIN product_like pl ON p.id = pl.product_id
-            WHERE p.title LIKE #{pattern}
+            WHERE p.title LIKE #{pattern} AND p.status = TRUE
             <if test="category != null and category != ''">
                 AND p.category = #{category}
             </if>
@@ -114,7 +114,7 @@ public interface ProductMapper {
             <script>
             <bind name="pattern" value="'%' + keyword + '%'" />
             SELECT COUNT(*) FROM product p
-            WHERE p.title LIKE #{pattern}
+            WHERE p.title LIKE #{pattern} AND status = TRUE
             <if test="category != null and category != ''">
                 AND p.category = #{category}
             </if>
@@ -229,11 +229,19 @@ public interface ProductMapper {
                    p.content,
                    p.status,
                    p.user_id,
-                   p.review_status
+                   p.review_status,
+                   pl.like_count
             FROM product p
-                     JOIN product_like pl ON p.id = pl.product_id
-            WHERE pl.user_id = #{userId}
-            ORDER BY p.end_time
+                     LEFT JOIN (select product_id, COUNT(*) as like_count from product_like group by `product_id`) pl
+                                ON p.id = pl.product_id
+                     LEFT JOIN product_like pl2 on p.id = pl2.product_id
+            WHERE pl2.user_id = #{userId}
+            ORDER BY 
+                    CASE WHEN #{likeSort} = 0 THEN  pl2.id END DESC,
+                    CASE WHEN #{likeSort} = 1 THEN  like_count END DESC,
+                    CASE WHEN #{likeSort} = 2 THEN  p.start_price END ASC,
+                    CASE WHEN #{likeSort} = 3 THEN  p.start_price END DESC,
+                    p.id DESC
             LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
             """)
     @Results(id = "productAndProductLikeList", value = {
@@ -363,15 +371,57 @@ public interface ProductMapper {
             <bind name="pattern" value="'%' + keyword + '%'" />
             SELECT COUNT(*)
             FROM product
-            WHERE title LIKE #{pattern}
+            WHERE title LIKE #{pattern} AND status = TRUE
             </script>
             """)
     Integer selectKeywordCount(String title);
 
     @Select("""
             SELECT COUNT(*) 
-            FROM product
-            WHERE category = #{category}
+            FROM product 
+            WHERE category = #{category} AND status = TRUE
             """)
     Integer selectCategoryCount(String category);
+
+    @Select("""
+            SELECT *
+            FROM product
+            WHERE status = 1
+            ORDER BY RAND()
+            LIMIT 15;
+            """)
+    @Results(id = "recommendProduct", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
+    List<Product> selectRecommendProduct();
+
+    @Select("""
+            SELECT p.id,
+                    p.title,
+                    p.category,
+                    p.start_price,
+                    p.start_time,
+                    p.end_time,
+                    p.content,
+                    p.status,
+                    p.user_id,
+                    p.review_status,
+                    COUNT(bl.product_id) AS JoinCount
+             FROM bid_list bl
+                      JOIN product p ON bl.product_id = p.id
+            WHERE p.status = 1
+             GROUP BY product_id
+             ORDER BY JoinCount DESC, p.id
+             LIMIT 20
+            """)
+    @Results(id = "popularProduct", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "productFileList", column = "id", many = @Many(select = "selectFileByProductId"))
+    })
+    List<Product> selectPopularProduct();
+
+    @Select("SELECT COUNT(*) FROM product WHERE status = TRUE")
+    Integer selectAllTotalCount();
+
 }

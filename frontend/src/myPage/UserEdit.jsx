@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Center,
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -260,9 +261,16 @@ export function UserEdit() {
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button onClick={onOpen} isDisabled={disabled} mt={10} {...buttonStyle}>
-          수정
-        </Button>
+        <Flex justifyContent={"flex-end"}>
+          <Button
+            onClick={onOpen}
+            isDisabled={disabled}
+            mt={10}
+            {...buttonStyle}
+          >
+            수정
+          </Button>
+        </Flex>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

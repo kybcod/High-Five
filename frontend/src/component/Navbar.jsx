@@ -9,7 +9,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./Navbar.css";
+import "./css/Navbar.css";
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -79,19 +79,8 @@ export function Navbar() {
         </>
       ) : (
         <>
-          <Center onClick={() => navigate("/signup")} mx={2}>
-            <Text fontSize={"small"} ml={2}>
-              회원 가입
-            </Text>
-          </Center>
-          <Box
-            height="24px"
-            borderLeft="1px solid #ccc"
-            mx={2}
-            alignSelf="center"
-          />
           <Center fontSize={"small"} onClick={() => navigate("/login")} mx={2}>
-            <Text ml={2}>로그인</Text>
+            <Text ml={2}>회원가입 / 로그인</Text>
           </Center>
         </>
       )}

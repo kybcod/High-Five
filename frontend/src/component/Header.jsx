@@ -64,14 +64,14 @@ export function Header() {
       <Flex align="center" justify="space-between" maxW="100%">
         {/* 로고 */}
         <Box>
-          <Box w={"200px"} onClick={() => navigate("/")}>
-            <Image src={"/img/fung.PNG"} />
+          <Box cursor={"pointer"} w={"200px"} onClick={() => navigate("/")}>
+            <Image src={"/img/fung1.png"} />
           </Box>
         </Box>
 
         {/* 검색 */}
         <Flex align={"center"}>
-          <InputGroup border={"1px solid green"}>
+          <InputGroup border={"2px solid teal"}>
             <Input
               _focus={{ boxShadow: "none" }}
               bg="transparent"
@@ -82,11 +82,12 @@ export function Header() {
               onChange={(e) => setKeyword(e.target.value)}
             />
             <InputRightAddon
+              cursor={"pointer"}
               bg="transparent"
               border="none"
               onClick={() => handleSearchClick(keyword)}
             >
-              <FontAwesomeIcon icon={faSearch} />
+              <FontAwesomeIcon icon={faSearch} style={{ color: "teal" }} />
             </InputRightAddon>
           </InputGroup>
         </Flex>

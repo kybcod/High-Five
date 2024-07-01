@@ -30,6 +30,10 @@ function ReportButton({ userId }) {
   return (
     <Box>
       <Button
+        fontSize={"smaller"}
+        width={"90px"}
+        variant={"outline"}
+        borderWidth={2}
         colorScheme="red"
         leftIcon={<FontAwesomeIcon icon={faExclamationTriangle} />}
         onClick={onOpen}

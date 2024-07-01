@@ -10,9 +10,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSearchParams } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { ProductGrid } from "./ProductGrid.jsx";
-import { CategorySwitchCase } from "../component/CategorySwitchCase.jsx";
-import { SortButton } from "../component/SortButton.jsx";
+import { ProductGrid } from "./main/ProductGrid.jsx";
+import { CategorySwitchCase } from "../component/category/CategorySwitchCase.jsx";
+import { SortButton } from "../myPage/customButton/SortButton.jsx";
 
 export function ProductList() {
   const [productList, setProductList] = useState([]);
@@ -23,6 +23,7 @@ export function ProductList() {
   const [keywordCount, setKeywordCount] = useState(0);
   const [categoryCount, setCategoryCount] = useState(0);
   const [sortOption, setSortOption] = useState("0");
+  const [allTotalCount, setAllTotalCount] = useState(0);
   const category = searchParams.get("category") || "";
   const translatedCategoryName = CategorySwitchCase({ categoryName: category });
 
@@ -32,6 +33,7 @@ export function ProductList() {
     axios
       .get(`/api/products/search?${searchParams}&sort=${sort}`)
       .then((res) => {
+        console.log(res.data);
         const products = res.data.content;
         const initialLikes = products.reduce((acc, product) => {
           acc[product.id] = product.like || false;
@@ -51,6 +53,7 @@ export function ProductList() {
         setKeywordCount(res.data.keywordCount);
         setCategoryCount(res.data.categoryCount);
         setSortOption(sort.toString());
+        setAllTotalCount(res.data.allTotalCount);
       });
   }, [searchParams]);
 
@@ -94,6 +97,7 @@ export function ProductList() {
         {searchParams.get("category") && (
           <Heading>{translatedCategoryName}</Heading>
         )}
+        {searchParams.size === 0 && <Heading>전체</Heading>}
       </Flex>
       <Flex mb={10} justifyContent={"space-between"} align={"center"}>
         <Box>
@@ -101,6 +105,12 @@ export function ProductList() {
             <Text fontSize={"medium"} fontWeight={"bold"}>
               {" "}
               총 {categoryCount} 건
+            </Text>
+          )}
+          {searchParams.size === 0 && (
+            <Text fontSize={"medium"} fontWeight={"bold"}>
+              {" "}
+              총 {allTotalCount} 건
             </Text>
           )}
           {searchParams.get("title") && productList.length !== 0 && (

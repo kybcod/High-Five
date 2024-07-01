@@ -4,22 +4,11 @@ import {
   Divider,
   Flex,
   FormControl,
-  FormHelperText,
   FormLabel,
   Heading,
-  Input,
-  InputGroup,
-  InputRightAddon,
   List,
   ListIcon,
   ListItem,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  OrderedList,
   Spacer,
   Spinner,
   Text,
@@ -36,7 +25,6 @@ import {
   faEye,
   faHandHoldingUsd,
   faHeart as fullHeart,
-  faMoneyBillAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SimpleSlider from "../component/slider/SimpleSlider.jsx";
@@ -46,6 +34,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
 import ReportButton from "../user/ReportButton.jsx";
+import AuctionModal from "./AuctionModal.jsx";
 
 export function ProductDetails() {
   const { id } = useParams();
@@ -63,7 +52,6 @@ export function ProductDetails() {
 
   useEffect(() => {
     axios.get(`/api/products/${id}`).then((res) => {
-      console.log(res.data);
       setProduct(res.data.product);
       setExistingFilePreviews(res.data.productFileList || []);
       setLike(res.data.like);
@@ -111,6 +99,10 @@ export function ProductDetails() {
     }
   }
 
+  function handleLoginRedirect() {
+    navigate("/login");
+  }
+
   if (product === null) {
     return <Spinner />;
   }
@@ -127,9 +119,6 @@ export function ProductDetails() {
 
   return (
     <Box>
-      {/*<Category />*/}
-      {/*<Divider my={10} borderColor="gray" />*/}
-
       <Flex alignItems="flex-start">
         <Box width="45%" mr={20}>
           <SimpleSlider
@@ -139,11 +128,16 @@ export function ProductDetails() {
         </Box>
 
         <Box flex="1">
-          <Box mb={7}>
+          <Box mb={6}>
             <Heading>{product.title}</Heading>
           </Box>
           <Flex mb={5} justifyContent="space-between">
-            <Text fontSize="2xl">{formattedPrice(product.startPrice)}원</Text>
+            <Text>
+              <Text fontSize="2xl" as="span" fontWeight={"500"} mr={1}>
+                {formattedPrice(product.startPrice)} 원
+              </Text>
+              (시작가)
+            </Text>
             <Text fontSize="2xl">
               {product.status || (
                 <>
@@ -204,7 +198,7 @@ export function ProductDetails() {
           </Box>
 
           <List spacing={3} fontSize="lg">
-            <ListItem display="flex" alignItems="center" mb={10}>
+            <ListItem display="flex" alignItems="center" mb={9}>
               <ListIcon
                 as={() => (
                   <FontAwesomeIcon icon={faCheckCircle} color="#adb5bd" />
@@ -217,17 +211,18 @@ export function ProductDetails() {
                 <Tooltip label="판매자 페이지로 이동">
                   <Text
                     textDecoration="underline"
-                    fontSize="xl"
+                    fontSize="medium"
                     cursor="pointer"
                     onClick={() => navigate(`/myPage/${product.userId}/shop`)}
                     ml={1}
+                    fontWeight={"500"}
                   >
                     {product.userNickName}
                   </Text>
                 </Tooltip>
               </Box>
             </ListItem>
-            <ListItem display="flex" alignItems="center" mb={10}>
+            <ListItem display="flex" alignItems="center" mb={9}>
               <ListIcon
                 as={() => (
                   <FontAwesomeIcon icon={faCheckCircle} color="#adb5bd" />
@@ -237,12 +232,12 @@ export function ProductDetails() {
                 <Text fontSize={"medium"} w={"100px"} mr={4}>
                   종료 시간
                 </Text>
-                <Text fontSize="xl" ml={1}>
+                <Text fontSize="medium" ml={1} fontWeight={"500"}>
                   {product.endTimeDetailsFormat}
                 </Text>
               </Box>
             </ListItem>
-            <ListItem display="flex" alignItems="center" mb={10}>
+            <ListItem display="flex" alignItems="center" mb={9}>
               <ListIcon
                 as={() => (
                   <FontAwesomeIcon icon={faCheckCircle} color="#adb5bd" />
@@ -252,7 +247,7 @@ export function ProductDetails() {
                 <Text fontSize={"medium"} w={"100px"} mr={4}>
                   참여 인원
                 </Text>
-                <Text fontSize="xl" ml={1}>
+                <Text fontSize="medium" ml={1} fontWeight={"500"}>
                   {product.numberOfJoin}명
                 </Text>
               </Box>
@@ -260,78 +255,91 @@ export function ProductDetails() {
           </List>
 
           {/*판매 완료, 로그인이 안되어 있는 상태, 자신의 상품일 때 보이지 않음*/}
-          {!account.isLoggedIn() || account.hasAccess(product.userId) || (
+          {account.hasAccess(product.userId) || (
             <Box mb={5}>
-              <Flex w={"100%"}>
+              <Flex
+                w={"100%"}
+                justifyContent={"space-between"}
+                alignItems="center"
+              >
                 <Box w={"100%"} mr={4}>
                   <Button
                     w={"100%"}
                     h={"60px"}
                     fontSize={"lg"}
-                    onClick={handleLikeClick}
+                    onClick={
+                      account.isLoggedIn()
+                        ? handleLikeClick
+                        : handleLoginRedirect
+                    }
                     leftIcon={
                       <FontAwesomeIcon
                         icon={like.like ? fullHeart : emptyHeart}
                         size="lg"
+                        color={like.like ? "white" : "red"}
                       />
                     }
                     colorScheme={like.like ? "red" : "gray"}
-                    variant="outline"
+                    color={like.like ? "white" : "black"}
                   >
-                    <Text fontSize={"lg"}>{like.count} </Text>
+                    <Text fontSize={"lg"}>{like.count}</Text>
                   </Button>
                 </Box>
 
-                {!product.status ||
-                  !account.isLoggedIn() ||
-                  account.hasAccess(product.userId) || (
-                    <Box w={"100%"} mr={4}>
-                      <Button
-                        h={"60px"}
-                        colorScheme="orange"
-                        w="100%"
-                        onClick={onOpen}
-                        fontSize={"lg"}
-                        leftIcon={<FontAwesomeIcon icon={faHandHoldingUsd} />}
-                      >
-                        참여하기
-                      </Button>
-                    </Box>
-                  )}
-                {(product.status && !account.isLoggedIn()) ||
-                  account.hasAccess(product.userId) || (
-                    <Box w={"100%"} mr={4}>
-                      <Button
-                        colorScheme="teal"
-                        w="100%"
-                        h={"60px"}
-                        leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
-                        onClick={handleEnterChatRoom}
-                        fontSize={"lg"}
-                      >
-                        문의하기
-                      </Button>
-                    </Box>
-                  )}
+                {!product.status || account.hasAccess(product.userId) || (
+                  <Box w={"100%"} mr={4}>
+                    <Button
+                      h={"60px"}
+                      colorScheme="orange"
+                      w="100%"
+                      onClick={
+                        account.isLoggedIn() ? onOpen : handleLoginRedirect
+                      }
+                      fontSize={"lg"}
+                      leftIcon={<FontAwesomeIcon icon={faHandHoldingUsd} />}
+                    >
+                      참여하기
+                    </Button>
+                  </Box>
+                )}
+
+                {account.hasAccess(product.userId) || (
+                  <Box w={"100%"}>
+                    <Button
+                      colorScheme="teal"
+                      w="100%"
+                      h={"60px"}
+                      leftIcon={<FontAwesomeIcon icon={faCommentDots} />}
+                      onClick={
+                        account.isLoggedIn()
+                          ? handleEnterChatRoom
+                          : handleLoginRedirect
+                      }
+                      fontSize={"lg"}
+                    >
+                      문의하기
+                    </Button>
+                  </Box>
+                )}
               </Flex>
             </Box>
           )}
-          {!account.isLoggedIn() ||
-            (account.hasAccess(product.userId) && (
-              <Box mb={5}>
-                <Button
-                  borderWidth={3}
-                  variant={"outline"}
-                  colorScheme={"teal"}
-                  w="100%"
-                  h={"50px"}
-                  fontSize={"lg"}
-                  onClick={() => navigate(`/edit/${product.id}`)}
-                >
-                  상품수정
-                </Button>
-              </Box>
-            ))}
+
+          {account.hasAccess(product.userId) && (
+            <Box mb={5}>
+              <Button
+                borderWidth={3}
+                variant={"outline"}
+                colorScheme={"teal"}
+                w="100%"
+                h={"60px"}
+                fontSize={"lg"}
+                onClick={() => navigate(`/edit/${product.id}`)}
+              >
+                상품수정
+              </Button>
+            </Box>
+          )}
         </Box>
       </Flex>
 
@@ -344,6 +352,7 @@ export function ProductDetails() {
           </FormLabel>
           {product.content !== null && product.content !== "" ? (
             <Textarea
+              borderWidth={0}
               height={"300px"}
               readOnly
               resize={"none"}
@@ -357,94 +366,16 @@ export function ProductDetails() {
       </Box>
 
       {/*모달 참여하기 */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Flex align="center">
-              <Box mr={2}>
-                <FontAwesomeIcon icon={faMoneyBillAlt} size="lg" />
-              </Box>
-              <Heading fontSize="xl">경매 참여하기</Heading>
-            </Flex>
-          </ModalHeader>
-          <ModalBody>
-            <Box
-              mb={6}
-              p={4}
-              border="1px solid"
-              borderColor="gray.200"
-              borderRadius="md"
-              bg="gray.50"
-            >
-              <Box>
-                <Heading fontSize="lg" mb={4}>
-                  경매 참여 시 유의사항
-                </Heading>
-
-                <OrderedList>
-                  <ListItem mb={2}>
-                    경매 참여는 신중하게 결정해야 합니다.
-                  </ListItem>
-                  <ListItem mb={2}>
-                    중복 참여는 가능하나 마지막으로 기록된 입찰 금액으로만
-                    경매에 참여하게 됩니다.
-                  </ListItem>
-                  <ListItem mb={2}>
-                    경매 종료 후{" "}
-                    <Box as="span" fontWeight="bold" color="blue.500">
-                      낙찰여부는 마이 페이지 입찰내역에서 확인
-                    </Box>
-                    가능 합니다.
-                  </ListItem>
-                  <ListItem mb={2}>
-                    입찰 금액을 입력할 때 반드시 제시된 가격보다 같거나 높아야
-                    합니다.
-                  </ListItem>
-                </OrderedList>
-              </Box>
-            </Box>
-            <Text fontWeight={"bold"} fontSize={"lg"} mb={4}>
-              시작가 : {formattedPrice(product.startPrice)} 원
-            </Text>
-            <FormControl mb={4}>
-              <FormLabel mb={4}>입찰 금액</FormLabel>
-              <InputGroup>
-                <Input
-                  type="text"
-                  value={formattedPrice(bidPrice)}
-                  onChange={(e) => handleIntegerNumber(e)}
-                  placeholder="숫자만 입력하세요."
-                  borderRadius="none"
-                  borderColor="gray.300"
-                  _hover={{ borderColor: "gray.400" }}
-                  _focus={{ borderColor: "blue.400", boxShadow: "outline" }}
-                />
-                <InputRightAddon>원</InputRightAddon>
-              </InputGroup>
-              {parseInt(bidPrice) < product.startPrice && (
-                <FormHelperText color="red" mt={2}>
-                  입찰 금액이 시작가보다 작습니다.
-                </FormHelperText>
-              )}
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              variant="outline"
-              colorScheme="blue"
-              onClick={handleJoinClick}
-              isLoading={isProcessing}
-              loadingText="처리중"
-            >
-              확인
-            </Button>
-            <Button variant="outline" onClick={onClose} ml={3}>
-              취소
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <AuctionModal
+        isOpen={isOpen}
+        onClose={onClose}
+        formattedPrice={formattedPrice}
+        handleJoinClick={handleJoinClick}
+        handleIntegerNumber={handleIntegerNumber}
+        bidPrice={bidPrice}
+        isProcessing={isProcessing}
+        product={product}
+      />
     </Box>
   );
 }

@@ -1,20 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { AbsoluteCenter, Box, Divider, Spinner } from "@chakra-ui/react";
+import { Box, Spinner, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../component/LoginProvider.jsx";
-import { ProductGrid } from "./ProductGrid.jsx";
+import ProductSlider from "../component/slider/ProductSlider.jsx";
+import { Category } from "../component/category/Category.jsx";
+import LivePopularProductSlider from "./main/LivePopularProductSlider.jsx";
+import { MainSlider } from "../component/slider/MainSlider.jsx";
 
 export function MainProduct() {
   const [productList, setProductList] = useState(null);
   const [todayProduct, setTodayProduct] = useState(null);
+  const [recommendProduct, setRecommendProduct] = useState(null);
+  const [livePopularProduct, setLivePopularProduct] = useState(null);
   const navigate = useNavigate();
   const [likes, setLikes] = useState({});
   const account = useContext(LoginContext);
 
   useEffect(() => {
     axios.get(`/api/products`).then((res) => {
-      console.log(res.data);
       const products = res.data.products;
       const initialLikes = products.reduce((acc, product) => {
         acc[product.id] = product.like || false;
@@ -32,6 +36,8 @@ export function MainProduct() {
 
       setProductList(products);
       setTodayProduct(res.data.todayProduct);
+      setRecommendProduct(res.data.recommendProduct);
+      setLivePopularProduct(res.data.livePopularProduct);
     });
   }, [account]);
 
@@ -51,49 +57,72 @@ export function MainProduct() {
       });
   }
 
-  if (productList === null) {
+  if (
+    productList === null ||
+    todayProduct === null ||
+    recommendProduct === null ||
+    livePopularProduct === null
+  ) {
     return <Spinner />;
   }
 
   return (
     <Box>
       <Box h="350px" w="100%" boxSizing="border-box" mx="auto">
-        {/*<MainSlider />*/}
+        <MainSlider />
       </Box>
 
-      {/* 오늘의 상품 */}
-      <Box position="relative" marginY="20">
-        <Divider border={"1px solid gray"} />
-        <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
-          📣 오늘의 경매 상품
-        </AbsoluteCenter>
-      </Box>
-      {todayProduct === null || todayProduct.length === 0 || (
-        <Box>
-          <ProductGrid
-            productList={todayProduct}
-            likes={likes}
-            handleLikeClick={handleLikeClick}
-            account={account}
-          />
-        </Box>
-      )}
-
-      <Box position="relative" marginY="20">
-        <Divider border={"1px solid gray"} />
-        <AbsoluteCenter fontSize={"2xl"} fontWeight={"bold"} bg="white" px="4">
-          👍 상품 추천
-        </AbsoluteCenter>
-      </Box>
-
-      <Box>
-        <ProductGrid
-          productList={productList}
+      {/*오늘의 경매 상품*/}
+      <Box marginY="36" textAlign="center">
+        <Text fontSize={"xl"} fontWeight={"bold"} mb={3}>
+          🔥 오늘의 경매 상품
+        </Text>
+        <Text fontSize={"smaller"} color={"gray"} mb={10}>
+          오늘 아니면 놓치는 구매 찬스!
+        </Text>
+        {/*상품*/}
+        <ProductSlider
+          product={todayProduct}
           likes={likes}
           handleLikeClick={handleLikeClick}
           account={account}
         />
       </Box>
+
+      {/*추천 상품*/}
+      <Box marginY="36" textAlign="center">
+        <Text fontSize={"xl"} fontWeight={"bold"} mb={3}>
+          📣 추천 상품
+        </Text>
+        <Text fontSize={"smaller"} color={"gray"} mb={10}>
+          오늘은 이거다!
+        </Text>
+        <ProductSlider
+          product={recommendProduct}
+          likes={likes}
+          handleLikeClick={handleLikeClick}
+          account={account}
+        />
+      </Box>
+
+      {/*실시간 판매 랭킹  */}
+      <Box marginY="36" textAlign="center">
+        <Text fontSize={"xl"} fontWeight={"bold"} mb={3}>
+          🏆 실시간 경매 참여 랭킹 🏆
+        </Text>
+        <Text fontSize={"smaller"} color={"gray"} mb={10}>
+          핫하다 핫해!
+        </Text>
+        <LivePopularProductSlider
+          product={livePopularProduct}
+          likes={likes}
+          handleLikeClick={handleLikeClick}
+          account={account}
+        />
+      </Box>
+
+      {/*카테고리 상품 */}
+      <Category />
     </Box>
   );
 }
