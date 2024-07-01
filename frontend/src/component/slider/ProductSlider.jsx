@@ -71,7 +71,10 @@ const ProductSlider = ({ product, likes, handleLikeClick, account }) => {
                 <Flex alignItems="center" justifyContent="center" width="100%">
                   <Card
                     border={"1px solid #eee"}
-                    onClick={() => navigate(`/product/${product.id}`)}
+                    onClick={() => {
+                      navigate(`/product/${product.id}`);
+                      window.scrollTo({ top: 0, behavior: "auto" });
+                    }}
                     w={"80%"}
                     boxShadow={"none"}
                     cursor={"pointer"}

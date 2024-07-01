@@ -13,9 +13,6 @@ export function Navbar() {
 
   return (
     <Flex
-      // bgColor={"#99D8AF"}
-      // borderBottom={"1px"}
-      // borderColor={"teal"}
       h={"30px"}
       p={4}
       justifyContent={"space-between"}

@@ -73,7 +73,10 @@ const LivePopularProductSlider = ({
                 transition="opacity 0.3s"
               >
                 <Card
-                  onClick={() => navigate(`/product/${product.id}`)}
+                  onClick={() => {
+                    navigate(`/product/${product.id}`);
+                    window.scrollTo({ top: 0, behavior: "auto" });
+                  }}
                   w={"70%"}
                   boxShadow={"none"}
                   cursor={"pointer"}

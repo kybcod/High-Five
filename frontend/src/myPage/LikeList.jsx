@@ -131,7 +131,10 @@ export function LikeList() {
           {likeProductList.map((product) => (
             <GridItem key={product.id}>
               <Card
-                onClick={() => navigate(`/product/${product.id}`)}
+                onClick={() => {
+                  navigate(`/product/${product.id}`);
+                  window.scrollTo({ top: 0, behavior: "auto" });
+                }}
                 w={"100%"}
                 boxShadow={"none"}
                 borderColor={"gray.200"}

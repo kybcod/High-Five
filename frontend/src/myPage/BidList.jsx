@@ -121,7 +121,10 @@ export function BidList() {
           {bidList.map((bid) => (
             <GridItem key={bid.id}>
               <Card
-                onClick={() => navigate(`/product/${bid.product.id}`)}
+                onClick={() => {
+                  navigate(`/product/${bid.product.id}`);
+                  window.scrollTo({ top: 0, behavior: "auto" });
+                }}
                 boxShadow={"none"}
                 borderColor={"gray.200"}
                 borderWidth={"1px"}
