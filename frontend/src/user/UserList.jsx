@@ -66,8 +66,6 @@ export function UserList() {
     navigate(`/user/list/?type=${type}&keyword=${searchKeyword}`);
   }
 
-  console.log(userList);
-
   return (
     <Box>
       <Flex gap={2}>

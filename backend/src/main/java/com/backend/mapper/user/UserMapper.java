@@ -90,9 +90,18 @@ public interface UserMapper {
     int deleteAuthorityById(Integer userId);
 
     @Select("""
-                SELECT COUNT(*) FROM user
-            """)
-    int selectTotalUserCount();
+                    <script>
+                    SELECT COUNT(*) FROM user
+            <bind name="pattern" value="'%' + keyword + '%'" />
+                    WHERE
+                        (email LIKE #{pattern} OR nick_name LIKE #{pattern})
+                        <if test="type == 'black'">
+                            AND black_count > 4
+                        </if>
+                    ORDER BY id DESC
+                    </script>
+                """)
+    int selectTotalUserCount(int offset, String type, String keyword);
 
     @Select("""
             SELECT id, nick_name
