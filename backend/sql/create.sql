@@ -132,51 +132,17 @@ CREATE TABLE bid_list
     status     BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-# -- 변경 전
-# 채팅 메시지 테이블
-# CREATE TABLE message
-# (
-#     id           INT PRIMARY KEY AUTO_INCREMENT,
-#     chat_room_id INT          NOT NULL REFERENCES chat_room (id),
-#     user_id      INT          NOT NULL REFERENCES user (id),
-#     content      VARCHAR(100) NOT NULL,
-#     inserted     DATETIME     NOT NULL DEFAULT NOW()
-# );
-
-# 채팅방 테이블
-# CREATE TABLE chat_room
-# (
-#     id       INT PRIMARY KEY AUTO_INCREMENT,
-#     inserted DATETIME NOT NULL DEFAULT NOW(),
-#     end_time DATETIME NULL
-# );
-
-# 리뷰 후기 테이블
-# CREATE TABLE review
-# (
-#     product_id INT      NOT NULL REFERENCES product (id),
-#     user_id    INT      NOT NULL REFERENCES user (id),
-#     review_id  INT      NOT NULL REFERENCES review_list (id),
-#     inserted   DATETIME NOT NULL DEFAULT NOW(),
-#     PRIMARY KEY (product_id, user_id)
-# );
-
-# message 테이블 삭제
-DROP TABLE message;
-# chat_room 테이블 삭제
-DROP TABLE chat_room;
-# review 테이블 삭제
-DROP TABLE review;
-
 # -- 변경 후
 # 채팅방 테이블
 CREATE TABLE chat_room
 (
-    id         INT PRIMARY KEY AUTO_INCREMENT,
-    product_id INT      NOT NULL REFERENCES product (id),
-    seller_id  INT      NOT NULL REFERENCES product (user_id),
-    user_id    INT      NOT NULL REFERENCES user (id),
-    inserted   DATETIME NOT NULL DEFAULT NOW()
+    id          INT PRIMARY KEY AUTO_INCREMENT,
+    product_id  INT      NOT NULL REFERENCES product (id),
+    seller_id   INT      NOT NULL REFERENCES product (user_id),
+    user_id     INT      NOT NULL REFERENCES user (id),
+    inserted    DATETIME NOT NULL DEFAULT NOW(),
+    user_exit   BOOLEAN  NOT NULL DEFAULT FALSE,
+    seller_exit BOOLEAN  NOT NULL DEFAULT FALSE
 );
 
 # 채팅 메시지 테이블
@@ -186,7 +152,8 @@ CREATE TABLE chat
     chat_room_id INT          NOT NULL REFERENCES chat_room (id),
     user_id      INT          NOT NULL REFERENCES user (id),
     message      VARCHAR(100) NOT NULL,
-    inserted     DATETIME     NOT NULL DEFAULT NOW()
+    inserted     DATETIME     NOT NULL DEFAULT NOW(),
+    read_check   BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
 # 리뷰 테이블
