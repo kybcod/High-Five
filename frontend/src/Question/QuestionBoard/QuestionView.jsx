@@ -45,7 +45,6 @@ export function QuestionView() {
     onClose: onImageClose,
     isOpen: isImageOpen,
   } = useDisclosure();
-  // const { onOpen, onClose, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
   const { successToast, errorToast } = CustomToast();
   const [selectedImage, setSelectedImage] = useState(null);
@@ -256,7 +255,7 @@ export function QuestionView() {
         </ModalContent>
       </Modal>
 
-      <Modal isOpen={isImageOpen} onClose={onImageClose} size="6xl">
+      <Modal isOpen={isImageOpen} onClose={onImageClose} size="5xl">
         <ModalOverlay />
         <ModalContent maxW="40vw" maxH="90vh">
           <ModalCloseButton />
@@ -266,7 +265,13 @@ export function QuestionView() {
             justifyContent="center"
             alignItems="center"
           >
-            <Image src={selectedImage} alt="원본 이미지" objectFit="contain" />
+            <Image
+              src={selectedImage}
+              alt="원본 이미지"
+              objectFit="contain"
+              maxW="40vw"
+              maxH="90vh"
+            />
           </ModalBody>
         </ModalContent>
       </Modal>
