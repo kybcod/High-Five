@@ -7,16 +7,23 @@ import {
   Flex,
   Heading,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Select,
   Spacer,
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,15 +37,21 @@ import {
   faImage,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import { LoginContext } from "../component/LoginProvider.jsx";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [clickedId, setClickedId] = useState(null);
+  const [totalBoardNumber, setTotalBoardNumber] = useState(0);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [totalBoardNumber, setTotalBoardNumber] = useState(0);
+  const account = useContext(LoginContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { successToast, errorToast } = CustomToast();
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
@@ -73,6 +86,23 @@ export function BoardList() {
     navigate(`/board/list/?type=${searchType}&keyword=${searchKeyword}`);
   }
 
+  function handleClickAdminDelete(e, id) {
+    console.log(id);
+    e.stopPropagation();
+    axios
+      .delete(`/api/board/${id}`)
+      .then(() => {
+        successToast("게시물이 삭제되었습니다");
+        setBoardList(boardList.filter((board) => board.id !== id));
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          errorToast("게시물 삭제에 실패했습니다. 다시 삭제해주세요");
+        }
+      })
+      .finally(() => onClose());
+  }
+
   return (
     <Box>
       <Flex>
@@ -89,6 +119,7 @@ export function BoardList() {
               <Th>댓글수</Th>
               <Th>조회수</Th>
               <Th>작성시간</Th>
+              {account.isAdmin(account.id) && <Th>admin</Th>}
             </Tr>
           </Thead>
           <Tbody>
@@ -149,11 +180,45 @@ export function BoardList() {
                   </Td>
                   <Td>{board.viewCount}</Td>
                   <Td>{board.inserted}</Td>
+                  {account.isAdmin(account.id) && (
+                    <Td>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setClickedId(board.id);
+                          onOpen();
+                        }}
+                      >
+                        삭제
+                      </Button>
+                    </Td>
+                  )}
                   <Td hidden>{board.content}</Td>
                 </Tr>
               ))}
           </Tbody>
         </Table>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalContent>
+            <ModalHeader>게시글 삭제</ModalHeader>
+            <ModalBody>
+              <Text>게시글을 삭제하시겠습니까?</Text>
+            </ModalBody>
+            <ModalFooter>
+              <Flex>
+                <Button onClick={onClose}>취소</Button>
+                <Button
+                  onClick={(e) => {
+                    handleClickAdminDelete(e, clickedId);
+                  }}
+                  colorScheme={"red"}
+                >
+                  삭제
+                </Button>
+              </Flex>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
       <Box display="flex" justifyContent="flex-end">
         <Button

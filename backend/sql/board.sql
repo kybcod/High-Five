@@ -63,6 +63,9 @@ INSERT INTO board (id, user_id, title, content, inserted)
 SELECT *
 FROM user;
 
+SELECT *
+FROM authority;
+
 INSERT INTO authority (user_id, name)
     VALUE (36, 'user');
 
