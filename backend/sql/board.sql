@@ -2,8 +2,8 @@ SELECT *
 FROM board
 order by id desc;
 
-SELECT MAX(ID) MAXID
-     , MIN(ID) MIDID
+SELECT MAX(id) MAXID
+     , MIN(id) MIDID
 FROM board;
 
 SELECT b.id,

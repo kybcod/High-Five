@@ -106,6 +106,7 @@ public class BoardService {
         Map<String, Object> result = new HashMap<>();
 
         Board board = mapper.selectById(id);
+
         List<String> fileNames = mapper.selectFileNameByBoardId(board.getId());
         List<BoardFile> files = fileNames.stream()
                 .map(fileName -> new BoardFile(fileName, STR."\{srcPrefix}\{board.getId()}/\{fileName}"))
@@ -195,4 +196,38 @@ public class BoardService {
         return result;
     }
 
+    public Map<String, Object> selectByNextId(Integer id, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+
+        Board nextBoard = mapper.selectByNextId(id);
+
+        List<String> fileNames = mapper.selectFileNameByBoardId(nextBoard.getId());
+        List<BoardFile> files = fileNames.stream()
+                .map(fileName -> new BoardFile(fileName, STR."\{srcPrefix}\{nextBoard.getId()}/\{fileName}"))
+                .toList();
+
+        nextBoard.setBoardFileList(files);
+
+        String fileName = mapper.selectFileNameByUserId(nextBoard.getUserId());
+        UserFile userFile = UserFile.builder()
+                .fileName(fileName).src(STR."\{srcPrefix}user/\{nextBoard.getUserId()}/\{fileName}").build();
+        nextBoard.setProfileImage(userFile);
+        System.out.println(userFile.getFileName());
+
+        Map<String, Object> boardLike = new HashMap<>();
+        if (authentication == null) {
+            boardLike.put("boardLike", false);
+        } else {
+            int c = mapper.selectLikeByBoardIdAndUserId(id, authentication.getName());
+            boardLike.put("boardLike", c == 1);
+        }
+        boardLike.put("count", mapper.selectCountLikeByBoardId(id));
+        result.put("board", nextBoard);
+        result.put("boardLike", boardLike);
+
+        mapper.viewCountByBoardClick(nextBoard.getId());
+
+        return result;
+
+    }
 }

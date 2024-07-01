@@ -36,7 +36,9 @@ import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 export function BoardView() {
   const [board, setBoard] = useState("");
   const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
+  const [isLoading, setIsLoading] = useState(false);
   const [isLikeProcess, setIsLikeProcess] = useState(false);
+  const [isLast, setIsLast] = useState(false);
   const navigate = useNavigate();
   const {
     isOpen: deleteModalIsOpen,
@@ -54,6 +56,7 @@ export function BoardView() {
 
   useEffect(() => {
     axios.get(`/api/board/${board_id}`).then((res) => {
+      console.log(board.maxId);
       setBoard(res.data.board);
       setBoardLike(res.data.boardLike);
     });
@@ -96,6 +99,24 @@ export function BoardView() {
       .then(() => successToast("신고처리 되었습니다"))
       .catch(() => errorToast("회원 신고 중 문제가 발생했습니다"))
       .finally(() => reportModalOnClose);
+  }
+
+  function handleClickNext() {
+    setIsLoading(true);
+    axios
+      .get(`/api/board/next/${board_id}`)
+      .then((res) => {
+        const nextBoard = res.data.board;
+        setBoard(nextBoard);
+        setBoardLike(res.data.boardLike);
+        navigate(`/board/${nextBoard.id}`);
+      })
+      .catch((err) => {
+        if (err.response.status === 500) {
+          errorToast("다음 글이 없습니다");
+          setIsLoading(false);
+        }
+      });
   }
 
   return (
@@ -207,6 +228,12 @@ export function BoardView() {
             {board.content}
           </Text>
         </Box>
+      </Box>
+      <Box>
+        <Text onClick={handleClickNext} disabled={isLast}>
+          {" "}
+          다음글{" "}
+        </Text>
       </Box>
       <Box>
         <BoardCommentComponent boardId={board_id} />
