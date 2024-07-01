@@ -36,6 +36,7 @@ import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 export function BoardView() {
   const [board, setBoard] = useState("");
   const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
+  const [boardId, setBoardId] = useState(board.id);
   const [isLoading, setIsLoading] = useState(false);
   const [isLikeProcess, setIsLikeProcess] = useState(false);
   const [isLast, setIsLast] = useState(false);
@@ -56,7 +57,6 @@ export function BoardView() {
 
   useEffect(() => {
     axios.get(`/api/board/${board_id}`).then((res) => {
-      console.log(board.maxId);
       setBoard(res.data.board);
       setBoardLike(res.data.boardLike);
     });
@@ -109,6 +109,7 @@ export function BoardView() {
         const nextBoard = res.data.board;
         setBoard(nextBoard);
         setBoardLike(res.data.boardLike);
+        setBoardId(nextBoard.id);
         navigate(`/board/${nextBoard.id}`);
       })
       .catch((err) => {

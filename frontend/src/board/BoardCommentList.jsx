@@ -45,7 +45,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
           setIsProcessing(false);
         });
     }
-  }, [isProcessing]);
+  }, [isProcessing, boardId]);
 
   function buildCommentTree(comments) {
     const map = new Map();
