@@ -189,7 +189,9 @@ public class ChatService {
             }
 
             Map<String, Object> chatMap = new HashMap<>(chat.getChatMessageAndInserted());
+
             chatMap.put("count", count);
+            chatMap.put("time", chat.getTimeFormat());
 
             map.put("chatRoom", chatRoom.getChatRoomIdAndBuyerId());
             map.put("chat", chatMap);

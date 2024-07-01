@@ -139,14 +139,18 @@ CREATE TABLE bid_list
     updated    DATETIME NOT NULL DEFAULT NOW()
 );
 
+
+# -- 변경 후
 # 채팅방 테이블
 CREATE TABLE chat_room
 (
-    id         INT PRIMARY KEY AUTO_INCREMENT,
-    product_id INT      NOT NULL REFERENCES product (id),
-    seller_id  INT      NOT NULL REFERENCES product (user_id),
-    user_id    INT      NOT NULL REFERENCES user (id),
-    inserted   DATETIME NOT NULL DEFAULT NOW()
+    id          INT PRIMARY KEY AUTO_INCREMENT,
+    product_id  INT      NOT NULL REFERENCES product (id),
+    seller_id   INT      NOT NULL REFERENCES product (user_id),
+    user_id     INT      NOT NULL REFERENCES user (id),
+    inserted    DATETIME NOT NULL DEFAULT NOW(),
+    user_exit   BOOLEAN  NOT NULL DEFAULT FALSE,
+    seller_exit BOOLEAN  NOT NULL DEFAULT FALSE
 );
 
 # 채팅 메시지 테이블
@@ -156,7 +160,8 @@ CREATE TABLE chat
     chat_room_id INT          NOT NULL REFERENCES chat_room (id),
     user_id      INT          NOT NULL REFERENCES user (id),
     message      VARCHAR(100) NOT NULL,
-    inserted     DATETIME     NOT NULL DEFAULT NOW()
+    inserted     DATETIME     NOT NULL DEFAULT NOW(),
+    read_check   BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
 # 리뷰 테이블
