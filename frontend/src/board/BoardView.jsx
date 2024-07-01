@@ -248,7 +248,7 @@ export function BoardView() {
           </Text>
         </Box>
       </Box>
-      <Flex justifyContent={"space-evenly"}>
+      <Flex justifyContent={"space-evenly"} mt={"10px"}>
         <Text onClick={handleClickNext} cursor={"pointer"}>
           ⟨ 다음글
         </Text>
