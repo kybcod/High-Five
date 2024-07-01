@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -17,11 +18,16 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../component/LoginProvider.jsx";
 import { CustomToast } from "../component/CustomToast.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faClipboardQuestion,
+  faShoppingCart,
+} from "@fortawesome/free-solid-svg-icons";
 
 const VerticalLine = ({ height, color, thickness }) => {
   return <Box height={height} width={thickness} bg={color} />;
@@ -33,6 +39,7 @@ export function UserInfo() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [oldPassword, setOldPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [totalQuestionCount, setTotalQuestionCount] = useState(0);
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -41,6 +48,13 @@ export function UserInfo() {
     axios.get(`/api/users/${userId}`).then((res) => {
       console.log(res.data);
       setUser(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    axios.get(`/api/question/user/${userId}`).then((res) => {
+      console.log(res.data);
+      setTotalQuestionCount(res.data.totalQuestionCount);
     });
   }, []);
 
@@ -110,6 +124,20 @@ export function UserInfo() {
             value={user.signupDateAndTime.substring(0, 13)}
           />
         </FormControl>
+
+        <Flex align="center" mt={2} mb={9}>
+          <Box mr={2}>
+            <FontAwesomeIcon icon={faClipboardQuestion} />
+          </Box>
+          <Text fontWeight="600">1:1 문의글 {totalQuestionCount} 회</Text>
+          &nbsp;
+          <Link to={`/question/list?type=nickName&keyword=${user.nickName}`}>
+            <Text color="teal.500" as="u" cursor={"pointer"}>
+              보러가기
+            </Text>
+          </Link>
+        </Flex>
+
         <Text
           color="gray.500"
           onClick={onOpen}

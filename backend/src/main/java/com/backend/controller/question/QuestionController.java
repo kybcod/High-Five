@@ -103,4 +103,10 @@ public class QuestionController {
         response.put("categories", categories);
         return response;
     }
+
+    @GetMapping("/user/{userId}")
+    public Map<String, Integer> count(@PathVariable Integer userId) {
+        System.out.println("userId = " + userId);
+        return service.getQuestionCount(userId);
+    }
 }
