@@ -185,9 +185,28 @@ public interface UserMapper {
     int deleteCodeByVerificationCode(int code);
 
     @Select("""
-                SELECT p.id
-                FROM product p JOIN user u ON u.id = p.user_id
-                WHERE u.id = #{userId}
+                SELECT id
+                FROM product
+                WHERE user_id = #{userId}
             """)
     List<Integer> selectProductIdByUserId(Integer userId);
+
+    @Select("""
+            SELECT id
+            FROM chat_room
+            WHERE seller_id = #{userId} || user_id = #{userId}
+                """)
+    List<Integer> selectChatRoomIdByUserId(Integer userId);
+
+    @Delete("""
+                DELETE FROM bid_list
+                WHERE user_id = #{id}
+            """)
+    int deleteBidListByUserId(Integer id);
+
+    @Delete("""
+                DELETE FROM product_like
+                WHERE user_id = #{userId}
+            """)
+    int deleteProductLikeById(Integer userId);
 }

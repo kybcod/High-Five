@@ -80,23 +80,50 @@ WHERE id = 57;
 ALTER TABLE review
     MODIFY COLUMN user_id int NOT NULL;
 
+ALTER TABLE review
+    DROP FOREIGN KEY review_ibfk_2;
+
 ALTER TABLE question_board_comment
-    MODIFY COLUMN user_id int NOT NULL;
+    MODIFY COLUMN user_id int NOT NULL
+
+ALTER TABLE question_board_comment
+    DROP FOREIGN KEY question_board_comment_ibfk_2;
 
 ALTER TABLE question_board
     MODIFY COLUMN user_id int NOT NULL;
 
+ALTER TABLE question_board
+    DROP FOREIGN KEY question_board_ibfk_1;
+
 ALTER TABLE board
     MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE board
+    DROP FOREIGN KEY board_ibfk_1;
 
 ALTER TABLE board_like
     MODIFY COLUMN user_id int NOT NULL;
 
+ALTER TABLE board_like
+    DROP FOREIGN KEY board_like_ibfk_2;
+
 ALTER TABLE board_comment
     MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE board_comment
+    DROP FOREIGN KEY board_comment_ibfk_2;
 
 ALTER TABLE chat
     MODIFY COLUMN user_id int NOT NULL;
 
+ALTER TABLE chat
+    DROP FOREIGN KEY chat_ibfk_2;
+
 ALTER TABLE chat_room
     MODIFY COLUMN user_id int NOT NULL;
+
+ALTER TABLE chat_room
+    DROP FOREIGN KEY chat_room_ibfk_3;
+
+SELECT *
+FROM product;

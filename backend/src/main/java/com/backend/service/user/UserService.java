@@ -234,9 +234,15 @@ public class UserService {
         // 프로필 사진 지우기
         mapper.deleteProfileImageById(id);
 
+        // 좋아요 지우기
+        mapper.deleteProductLikeById(id);
+
         // 상품 지우기
         List<Integer> productIdList = mapper.selectProductIdByUserId(id);
         productIdList.forEach(productService::remove);
+
+        // 입찰 내역 지우기
+        mapper.deleteBidListByUserId(id);
 
         // 회원 지우기
         mapper.deleteUserById(id);
@@ -356,5 +362,9 @@ public class UserService {
     public boolean checkUniquePhoneNumber(String phoneNumber) {
         String email = mapper.selectEmailByPhoneNumber(phoneNumber);
         return email == null;
+    }
+
+    public List<Integer> getChatRoomIdByUserId(Integer id) {
+        return mapper.selectChatRoomIdByUserId(id);
     }
 }
