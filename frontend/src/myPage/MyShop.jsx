@@ -26,8 +26,6 @@ import { LoginContext } from "../component/LoginProvider.jsx";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import LoadMoreAndFoldButton from "./customButton/LoadMoreAndFoldButton.jsx";
 import { SortButton } from "./customButton/SortButton.jsx";
-import LoadMoreAndFoldButton from "../component/LoadMoreAndFoldButton.jsx";
-import { SortButton } from "../component/SortButton.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
@@ -209,25 +207,25 @@ export function MyShop() {
                           ? `낙찰자: ${product.productBidList[0].successBidNickName}`
                           : "낙찰자가 없습니다."}
                     </Badge>
-                      {product.status || (
-                          <Box display="flex" justifyContent="center">
-                              <Button
-                                  mt={2}
-                                  w={"100%"}
-                                  variant={"outline"}
-                                  colorScheme={"teal"}
-                                  borderWidth={3}
-                                  onClick={(e) => {
-                                      e.stopPropagation();
-                                      onOpen();
-                                      handleGetReviewButtonClick(product.id);
-                                  }}
-                                  hidden={!product.reviewStatus}
-                              >
-                                  상품 후기
-                              </Button>
-                          </Box>
-                      )}
+                    {product.status || (
+                      <Box display="flex" justifyContent="center">
+                        <Button
+                          mt={2}
+                          w={"100%"}
+                          variant={"outline"}
+                          colorScheme={"teal"}
+                          borderWidth={3}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpen();
+                            handleGetReviewButtonClick(product.id);
+                          }}
+                          hidden={!product.reviewStatus}
+                        >
+                          상품 후기
+                        </Button>
+                      </Box>
+                    )}
                   </Box>
                 </CardBody>
               </Card>
@@ -247,6 +245,7 @@ export function MyShop() {
           />
         </Box>
       )}
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
