@@ -36,6 +36,8 @@ import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 export function BoardView() {
   const [board, setBoard] = useState("");
   const [boardLike, setBoardLike] = useState({ boardLike: false, count: 0 });
+  const [boardId, setBoardId] = useState(board.id);
+  const [isLoading, setIsLoading] = useState(false);
   const [isLikeProcess, setIsLikeProcess] = useState(false);
   const navigate = useNavigate();
   const {
@@ -90,30 +92,50 @@ export function BoardView() {
       });
   }
 
-  function handleClickPrev() {
-    const prevBoarId = board.id - 1;
-
-    axios.get(`/api/board/${prevBoarId}`).then((res) => {
-      setBoard(res.data.board);
-      setBoardLike(res.data.boardLike);
-    });
-  }
-
-  function handleClickNext() {
-    const nextBoardId = board.id + 1;
-
-    axios.get(`/api/board/${nextBoardId}`).then((res) => {
-      setBoard(res.data.board);
-      setBoardLike(res.data.boardLike);
-    });
-  }
-
   function handleReport() {
     axios
       .put(`/api/users/black/${board.userId}`)
       .then(() => successToast("신고처리 되었습니다"))
       .catch(() => errorToast("회원 신고 중 문제가 발생했습니다"))
       .finally(() => reportModalOnClose);
+  }
+
+  function handleClickNext() {
+    setIsLoading(true);
+    axios
+      .get(`/api/board/next/${board_id}`)
+      .then((res) => {
+        const nextBoard = res.data.board;
+        setBoard(nextBoard);
+        setBoardLike(res.data.boardLike);
+        setBoardId(nextBoard.id);
+        navigate(`/board/${nextBoard.id}`);
+      })
+      .catch((err) => {
+        if (err.response.status === 500) {
+          errorToast("다음 게시물이 없습니다");
+        }
+        setIsLoading(false);
+      });
+  }
+
+  function handleClickPrev() {
+    setIsLoading(true);
+    axios
+      .get(`/api/board/prev/${board_id}`)
+      .then((res) => {
+        const prevBoard = res.data.board;
+        setBoard(prevBoard);
+        setBoardLike(res.data.boardLike);
+        setBoardId(prevBoard.id);
+        navigate(`/board/${prevBoard.id}`);
+      })
+      .catch((err) => {
+        if (err.response.status === 500) {
+          errorToast("이전 게시물이 없습니다");
+        }
+        setIsLoading(false);
+      });
   }
 
   return (
@@ -226,9 +248,13 @@ export function BoardView() {
           </Text>
         </Box>
       </Box>
-      <Flex justifyContent={"space-evenly"} mt={"15px"}>
-        <Text onClick={handleClickPrev}>⟨ 이전글</Text>
-        <Text onClick={handleClickNext}>다음글 ⟩</Text>
+      <Flex justifyContent={"space-evenly"} mt={"10px"}>
+        <Text onClick={handleClickNext} cursor={"pointer"}>
+          ⟨ 다음글
+        </Text>
+        <Text onClick={handleClickPrev} cursor={"pointer"}>
+          이전글 ⟩
+        </Text>
       </Flex>
       <Box>
         <BoardCommentComponent boardId={board_id} />

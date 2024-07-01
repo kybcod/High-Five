@@ -17,15 +17,17 @@ CREATE TABLE question_board
     user_id  INT           NOT NULL REFERENCES user (id),
     title    VARCHAR(50)   NOT NULL,
     content  VARCHAR(2000) NOT NULL,
-    inserted DATETIME      NOT NULL DEFAULT NOW()
+    inserted DATETIME      NOT NULL DEFAULT NOW(),
+    number_of_count INT DEFAULT 0 NOT NULL,
+    secret_write BOOLEAN DEFAULT FALSE NOT NULL
 );
 
 # question board file 테이블
 CREATE TABLE question_board_file
 (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     question_id INT         NOT NULL REFERENCES question_board (id),
-    file_name   VARCHAR(50) NOT NULL,
-    PRIMARY KEY (question_id, file_name)
+    file_name   VARCHAR(200) NOT NULL
 );
 
 # 권한 테이블
@@ -49,11 +51,12 @@ CREATE TABLE question_board_comment
 # 자유 게시판
 CREATE TABLE board
 (
-    id       INT PRIMARY KEY AUTO_INCREMENT,
-    user_id  INT           NOT NULL REFERENCES user (id),
-    title    VARCHAR(50)   NOT NULL,
-    content  VARCHAR(2000) NOT NULL,
-    inserted DATETIME      NOT NULL DEFAULT NOW()
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    user_id    INT           NOT NULL REFERENCES user (id),
+    title      VARCHAR(50)   NOT NULL,
+    content    VARCHAR(2000) NOT NULL,
+    inserted   DATETIME      NOT NULL DEFAULT NOW(),
+    view_count INT                    DEFAULT 0
 );
 
 # 자유 게시판 file 테이블
@@ -75,44 +78,47 @@ CREATE TABLE board_like
 # 자유 게시판 댓글
 CREATE TABLE board_comment
 (
-    id         INT PRIMARY KEY AUTO_INCREMENT,
-    board_id   INT          NOT NULL REFERENCES board (id),
-    user_id    INT          NOT NULL REFERENCES user (id),
-    content    VARCHAR(200) NOT NULL,
-    inserted   DATETIME     NOT NULL DEFAULT NOW(),
-    comment_id INT          NOT NULL DEFAULT 0
+    id               INT PRIMARY KEY AUTO_INCREMENT,
+    board_id         INT          NOT NULL REFERENCES board (id),
+    user_id          INT          NOT NULL REFERENCES user (id),
+    content          VARCHAR(200) NOT NULL,
+    inserted         DATETIME     NOT NULL DEFAULT NOW(),
+    comment_id       INT          NOT NULL DEFAULT 0,
+    comment_sequence INT          NOT NULL DEFAULT 0,
+    reference_id     INT          NOT NULL DEFAULT 0
 );
 
 # 상품 테이블
 CREATE TABLE product
 (
-    id            INT PRIMARY KEY AUTO_INCREMENT,
-    user_id       INT           NOT NULL REFERENCES user (id),
-    title         VARCHAR(50)   NOT NULL,
-    category      VARCHAR(10)   NOT NULL,
-    start_price   INT           NOT NULL DEFAULT 0,
-    status        BOOLEAN       NOT NULL DEFAULT TRUE,
-    content       VARCHAR(2000) NOT NULL,
-    start_time    DATETIME      NOT NULL DEFAULT NOW(),
-    end_time      DATETIME      NOT NULL,
-    view_count    INT           NOT NULL DEFAULT 0,
-    review_status BOOLEAN       NOT NULL DEFAULT FALSE
+    id             INT PRIMARY KEY AUTO_INCREMENT,
+    user_id        INT           NOT NULL REFERENCES user (id),
+    title          VARCHAR(50)   NOT NULL,
+    category       VARCHAR(10)   NOT NULL,
+    start_price    INT           NOT NULL DEFAULT 0,
+    status         BOOLEAN       NOT NULL DEFAULT TRUE,
+    content        VARCHAR(2000) NOT NULL,
+    start_time     DATETIME      NOT NULL DEFAULT NOW(),
+    end_time       DATETIME      NOT NULL,
+    view_count     INT           NOT NULL DEFAULT 0,
+    review_status  BOOLEAN       NOT NULL DEFAULT FALSE,
+    payment_status BOOLEAN       NOT NULL DEFAULT FALSE
 );
 
 # 상품 파일 테이블
 CREATE TABLE product_file
 (
+    id         INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT NOT NULL REFERENCES product (id),
-    file_name  INT NOT NULL,
-    PRIMARY KEY (product_id, file_name)
+    file_name  INT NOT NULL
 );
 
 # 상품 찜 테이블
 CREATE TABLE product_like
 (
+    id         INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT NOT NULL REFERENCES product (id),
-    user_id    INT NOT NULL REFERENCES user (id),
-    PRIMARY KEY (product_id, user_id)
+    user_id    INT NOT NULL REFERENCES user (id)
 );
 
 # 리뷰 목록 테이블
@@ -126,11 +132,13 @@ CREATE TABLE review_list
 CREATE TABLE bid_list
 (
     id         INT PRIMARY KEY AUTO_INCREMENT,
-    product_id INT     NOT NULL REFERENCES product (id),
-    user_id    INT     NOT NULL REFERENCES user (id),
-    bid_price  INT     NOT NULL DEFAULT 0,
-    status     BOOLEAN NOT NULL DEFAULT FALSE
+    product_id INT      NOT NULL REFERENCES product (id),
+    user_id    INT      NOT NULL REFERENCES user (id),
+    bid_price  INT      NOT NULL DEFAULT 0,
+    bid_status BOOLEAN  NOT NULL DEFAULT FALSE,
+    updated    DATETIME NOT NULL DEFAULT NOW()
 );
+
 
 # -- 변경 후
 # 채팅방 테이블
@@ -190,6 +198,22 @@ CREATE TABLE payment
     merchant_uid VARCHAR(200) NOT NULL,
     amount       INT          NOT NULL,
     bid_list_id  INT          NOT NULL,
-    paid_status  BOOLEAN      NOT NULL,
     inserted     DATETIME     NOT NULL DEFAULT NOW()
+);
+
+# FAQ 카테고리 테이블
+CREATE TABLE faqCategory
+(
+    id   INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(10) NOT NULL
+);
+
+# FAQ 테이블
+CREATE TABLE faq
+(
+    id       INT PRIMARY KEY AUTO_INCREMENT,
+    category INT,
+    title    VARCHAR(200)  NOT NULL,
+    content  VARCHAR(2000) NOT NULL,
+    FOREIGN KEY (category) REFERENCES faqCategory (id)
 );
