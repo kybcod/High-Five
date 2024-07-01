@@ -28,21 +28,22 @@ export function ChatRoomList() {
   const toast = useToast();
   // -- axios.get
   useEffect(() => {
-    // TODO : status 추가
     axios
       .get(`/api/chats/list`)
-      .then((res) => {
-        if (res.data != null) {
-          setData(res.data);
+      .then((response) => {
+        if (response.data != null) {
+          setData(response.data);
         }
+        console.log("Response:", response.data);
       })
-      .catch(() => {
+      .catch((error) => {
         toast({
           status: "error",
           description: "채팅방 조회 중 문제가 발생하였습니다.",
           position: "top",
           duration: 1500,
         });
+        console.error("Error:", error);
         navigate(-1);
       })
       .finally();
@@ -121,7 +122,9 @@ export function ChatRoomList() {
                         </Button>
                       </Center>
                       <Box fontSize={"xs"} color={"#00A457"}>
-                        {item.chat.inserted}
+                        {item.chat.message === "대화를 시작해보세요!"
+                          ? item.chatRoom.time
+                          : item.chat.time}
                       </Box>
                     </HStack>
                   </Flex>
