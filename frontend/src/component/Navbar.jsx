@@ -1,12 +1,11 @@
 import { Box, Center, Flex, Spacer, Text } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
 import {
   faClipboardQuestion,
   faHeadset,
   faQuestion,
-  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./css/Navbar.css";
@@ -53,15 +52,17 @@ export function Navbar() {
         </Text>
       </Center>
 
-      {account.isAdmin() && (
-        <Center onClick={() => navigate("/user/list")} mx={2}>
-          <FontAwesomeIcon icon={faUsers} />
-          <Text fontSize={"small"} ml={2}>
-            회원 목록
-          </Text>
-        </Center>
-      )}
       <Spacer />
+      {account.isAdmin() && (
+        <>
+          <Center onClick={() => navigate("/user/list")} mx={2}>
+            <Text fontSize={"small"} mr={3}>
+              회원 목록
+            </Text>
+          </Center>
+          <Box height="24px" borderLeft="1px solid #ccc" />
+        </>
+      )}
       {account.isLoggedIn() ? (
         <>
           <Center
