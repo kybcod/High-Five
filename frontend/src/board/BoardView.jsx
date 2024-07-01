@@ -39,7 +39,6 @@ export function BoardView() {
   const [boardId, setBoardId] = useState(board.id);
   const [isLoading, setIsLoading] = useState(false);
   const [isLikeProcess, setIsLikeProcess] = useState(false);
-  const [isLast, setIsLast] = useState(false);
   const navigate = useNavigate();
   const {
     isOpen: deleteModalIsOpen,
@@ -114,9 +113,9 @@ export function BoardView() {
       })
       .catch((err) => {
         if (err.response.status === 500) {
-          errorToast("다음 글이 없습니다");
-          setIsLoading(false);
+          errorToast("다음 게시물이 없습니다");
         }
+        setIsLoading(false);
       });
   }
 
@@ -133,9 +132,9 @@ export function BoardView() {
       })
       .catch((err) => {
         if (err.response.status === 500) {
-          errorToast("다음 글이 없습니다");
-          setIsLoading(false);
+          errorToast("이전 게시물이 없습니다");
         }
+        setIsLoading(false);
       });
   }
 
@@ -249,14 +248,14 @@ export function BoardView() {
           </Text>
         </Box>
       </Box>
-      <Box>
-        <Text onClick={handleClickNext} disabled={isLast}>
-          다음글
+      <Flex justifyContent={"space-evenly"}>
+        <Text onClick={handleClickNext} cursor={"pointer"}>
+          ⟨ 다음글
         </Text>
-        <Text onClick={handleClickPrev} disabled={isLast}>
-          이전글
+        <Text onClick={handleClickPrev} cursor={"pointer"}>
+          이전글 ⟩
         </Text>
-      </Box>
+      </Flex>
       <Box>
         <BoardCommentComponent boardId={board_id} />
       </Box>
