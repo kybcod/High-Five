@@ -133,7 +133,7 @@ public class UserService {
                     }
 
                     JwtClaimsSet claims = JwtClaimsSet.builder()
-                            .issuer("LiveAuction")
+                            .issuer("Function")
                             .issuedAt(now)
                             .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
                             .subject(db.getId().toString())

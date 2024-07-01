@@ -50,7 +50,7 @@ export function Login() {
       <Box>
         <Center>
           <Box>
-            <Heading>Live Auction</Heading>
+            <Heading>Function</Heading>
             <Center mt={1} fontSize={"lg"} fontWeight={"bold"}>
               <Text>로그인</Text>
             </Center>
