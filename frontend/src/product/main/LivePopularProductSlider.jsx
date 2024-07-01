@@ -74,7 +74,7 @@ const LivePopularProductSlider = ({
               >
                 <Card
                   onClick={() => navigate(`/product/${product.id}`)}
-                  w={"65%"}
+                  w={"70%"}
                   boxShadow={"none"}
                   cursor={"pointer"}
                   maxW="sm"
