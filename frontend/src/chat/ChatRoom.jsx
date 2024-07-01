@@ -40,7 +40,7 @@ import {
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import CustomModal from "./CustomModal.jsx";
 
-export function ChatRoom({ pId, bId }) {
+export function ChatRoom({ pId, bId, onBackClick }) {
   let { productId, buyerId } = useParams();
   if (pId != null && bId != null) {
     productId = pId;
@@ -83,11 +83,10 @@ export function ChatRoom({ pId, bId }) {
 
   // -- axios.get
   useEffect(() => {
-    // TODO : status 추가
+    setLoading(true);
     axios
       .get(`/api/chats/products/${productId}/buyer/${buyerId}`)
       .then((res) => {
-        console.log(res.data);
         const { user, seller, product, chatRoom, bidder, previousChatList } =
           res.data;
         if (res.data != null) {
@@ -103,20 +102,21 @@ export function ChatRoom({ pId, bId }) {
           setRoomId(res.data.chatRoom.id);
         }
       })
-      .catch(() => {
+      .catch((error) => {
         toast({
           status: "warning",
           description: "채팅방 조회 중 문제가 발생하였습니다.",
           position: "top",
           duration: 1000,
         });
+        console.log(error);
         navigate(-1);
       })
-      .finally();
-  }, []);
+      .finally(() => {
+        setLoading(false);
+      });
 
-  // -- stomp
-  useEffect(() => {
+    // -- stomp
     const client = new StompJs.Client({
       brokerURL: "http://localhost:8080/ws",
       // connectHeaders: {
@@ -129,8 +129,8 @@ export function ChatRoom({ pId, bId }) {
       reconnectDelay: 5000,
       heartbeatIncoming: 30 * 1000,
       heartbeatOutgoing: 30 * 1000,
+
       onConnect: function () {
-        // TODO : 필요한 코드인지 생각해보기
         client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
         client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
           ack: "client",
@@ -142,15 +142,48 @@ export function ChatRoom({ pId, bId }) {
     });
 
     // TODO : merge 전 주석 생성 / update 이후 주석 제거
-    // client.activate(); // 활성화
-    // setStompClient(client);
+    client.activate(); // 활성화
+    setStompClient(client);
 
     return () => {
       if (stompClient) {
         disConnect();
       }
     };
-  }, [roomId]);
+  }, [roomId, reviewId]);
+
+  // -- stomp
+  // useEffect(() => {
+  //   const client = new StompJs.Client({
+  //     brokerURL: "http://localhost:8080/ws",
+  //     // connectHeaders: {
+  //     //   login: "user",
+  //     //   passcode: "password",
+  //     // },
+  //     debug: function (str) {
+  //       console.log(str);
+  //     },
+  //     reconnectDelay: 5000,
+  //     heartbeatIncoming: 30 * 1000,
+  //     heartbeatOutgoing: 30 * 1000,
+  //     onConnect: function () {
+  //       client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
+  //       client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
+  //         ack: "client",
+  //       }); // 본인
+  //     },
+  //     onStompError: (frame) => {
+  //       console.error("STOMP error: ", frame);
+  //     },
+  //   });
+  //   // client.activate(); // 활성화
+  //   setStompClient(client);
+  //   return () => {
+  //     if (stompClient) {
+  //       disConnect();
+  //     }
+  //   };
+  // }, [roomId]);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
@@ -183,7 +216,7 @@ export function ChatRoom({ pId, bId }) {
 
   // -- review list
   const handleReviewButtonClick = () => {
-    // TODO : status 추가
+    setLoading(true);
     axios
       .get(`/api/reviews/list`)
       .then((res) => {
@@ -191,8 +224,20 @@ export function ChatRoom({ pId, bId }) {
           setReviewList(res.data);
         }
       })
-      .catch()
-      .finally();
+      .catch((error) => {
+        toast({
+          title: "후기 리스트 조회 실패",
+          description: "Unable to fetch data.",
+          status: "error",
+          duration: 1500,
+          position: "top",
+          isClosable: true,
+        });
+        console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // -- review check
@@ -224,30 +269,33 @@ export function ChatRoom({ pId, bId }) {
       })
       .then(() => {
         toast({
-          description: "리뷰가 등록되었습니다.",
+          title: "후기 등록 성공",
           status: "success",
           position: "top",
+          duration: 1500,
+          isClosable: true,
         });
         onClose();
       })
-      .catch((e) => {
-        const code = e.response.status;
-        if (code === 400) {
-          toast({
-            status: "error",
-            description: "리뷰 등록 실패",
-            position: "top",
-          });
-        }
+      .catch((error) => {
+        toast({
+          title: "후기 등록 실패",
+          status: "error",
+          position: "top",
+          duration: 1500,
+          isClosable: true,
+        });
+        console.log("error : ", error);
       })
       .finally(() => {
-        setLoading(false);
         setReviewId([]);
+        setLoading(false);
       });
   };
 
   // -- 후기 조회
   const handleGetReviewButtonClick = () => {
+    setLoading(true);
     axios
       .get(`/api/reviews/${data.product.id}`)
       .then((res) => {
@@ -255,8 +303,19 @@ export function ChatRoom({ pId, bId }) {
           setReviewList(res.data);
         }
       })
-      .catch()
-      .finally();
+      .catch((error) => {
+        toast({
+          title: "후기 조회 실패",
+          status: "error",
+          position: "top",
+          duration: 1500,
+          isClosable: true,
+        });
+        console.log("error : ", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // -- productStatusButton
@@ -348,6 +407,17 @@ export function ChatRoom({ pId, bId }) {
     }
   };
 
+  const handleBackButtonClick = () => {
+    if (pId !== undefined) {
+      // 채팅방
+      onBackClick();
+    } else {
+      // 문의하기
+      disConnect();
+      navigate(-1);
+    }
+  };
+
   // -- spinner
   if (data.chatRoom == null) {
     return <Spinner />;
@@ -356,7 +426,7 @@ export function ChatRoom({ pId, bId }) {
   return (
     <Box
       w={pId !== undefined ? "100%" : "80%"}
-      border={"2px solid #efefef"}
+      border={"3px solid #00A457"}
       borderRadius={"10px"}
       h={"100%"}
     >
@@ -365,12 +435,8 @@ export function ChatRoom({ pId, bId }) {
           {/* 뒤로 가기 */}
           <Box w={"10%"}>
             <Button
-              onClick={() => {
-                disConnect();
-                navigate(-1);
-              }}
+              onClick={handleBackButtonClick}
               variant={"outline"}
-              // color={"#2F4858"}
               color={"#00946F"}
               borderColor={"#ffffff"}
               w={"100%"}
@@ -382,9 +448,9 @@ export function ChatRoom({ pId, bId }) {
           <Center cursor={"pointer"} w={"80%"}>
             <Box fontSize={"xl"}>
               <Button
-                variant="link"
                 onClick={handleStoreButtonClick}
-                color={"teal"}
+                variant="link"
+                color={"#00946F"}
                 size={"lg"}
                 as={"b"}
               >
@@ -401,7 +467,6 @@ export function ChatRoom({ pId, bId }) {
                 w={"100%"}
                 variant={"outline"}
                 borderColor={"#ffffff"}
-                // color={"#2F4858"}
                 color={"#00946F"}
               >
                 <FontAwesomeIcon icon={faEllipsisVertical} />
@@ -436,8 +501,7 @@ export function ChatRoom({ pId, bId }) {
           <Button
             w={"80%"}
             variant={"link"}
-            // color={"#2F4858"}
-            color={"teal"}
+            color={"#00946F"}
             isDisabled={data.product.title === "삭제된 상품입니다."}
             onClick={() => navigate(`/product/${data.product.id}`)}
           >
@@ -462,7 +526,6 @@ export function ChatRoom({ pId, bId }) {
         <Box>
           <VStack
             h={"455px"}
-            // h={"100%"}
             spacing={4}
             flex={1}
             // flexDirection={"column-reverse"}
@@ -567,6 +630,8 @@ export function ChatRoom({ pId, bId }) {
               isDisabled={reviewId.length === 0}
               onClick={handleSaveReviewButtonClick}
               hidden={data.product.reviewStatus === true}
+              size={"sm"}
+              variant={"outline"}
               colorScheme={"teal"}
             >
               후기 보내기

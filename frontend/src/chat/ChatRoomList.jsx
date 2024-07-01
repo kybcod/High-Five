@@ -7,6 +7,7 @@ import {
   Heading,
   HStack,
   Spinner,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
@@ -24,26 +25,28 @@ export function ChatRoomList() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const navigate = useNavigate();
-
+  const toast = useToast();
   // -- axios.get
   useEffect(() => {
     // TODO : status 추가
     axios
       .get(`/api/chats/list`)
       .then((res) => {
-        console.log(res.data);
         if (res.data != null) {
           setData(res.data);
         }
       })
-      .catch()
+      .catch(() => {
+        toast({
+          status: "error",
+          description: "채팅방 조회 중 문제가 발생하였습니다.",
+          position: "top",
+          duration: 1500,
+        });
+        navigate(-1);
+      })
       .finally();
   }, []);
-
-  // -- spinner
-  if (data == null) {
-    return <Spinner />;
-  }
 
   const handleChatSelect = (item) => {
     setShowChat(false);
@@ -60,17 +63,22 @@ export function ChatRoomList() {
     });
   };
 
+  // -- spinner
+  if (data == null) {
+    return <Spinner />;
+  }
+
   return (
     <Box>
       <Box mb={7}>
         <Heading>
-          <FontAwesomeIcon icon={faComments} size={"md"} color={"#2F4858"} />{" "}
+          <FontAwesomeIcon icon={faComments} size={"lg"} color={"#2F4858"} />{" "}
           채팅방
         </Heading>
       </Box>
       <Divider orientation="horizontal" mb={5} borderColor={"#2F4858"} />
       <Box display={"flex"} h={"600px"}>
-        <Box mr={4} overflowY="auto">
+        <Box mr={4} overflowY="auto" w={"40%"}>
           <VStack align="stretch">
             {/* 상품 제목, 닉네임, 대화내용, 대화시간 */}
             {data.map((item, index) => (
@@ -129,11 +137,6 @@ export function ChatRoomList() {
                   lineHeight={"30px"}
                   cursor={"pointer"}
                   onClick={() => handleChatSelect(item)}
-                  // onClick={() => {
-                  //   navigate(
-                  //     `/chat/product/${item.product.id}/buyer/${item.chatRoom.userId}`,
-                  //   );
-                  // }}
                 >
                   <Flex>
                     <Box
