@@ -249,14 +249,16 @@ export function QuestionView() {
       <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader></ModalHeader>
-          <ModalBody>삭제하시겠습니까?</ModalBody>
+          <ModalHeader>
+            <Image src={"/img/warning.png"} boxSize={"30px"} />
+          </ModalHeader>
+          <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
           <ModalFooter>
             <Flex gap={2}>
-              <Button onClick={onDeleteClose}>취소</Button>
               <Button onClick={handleRemoveClick} colorScheme={"red"}>
                 확인
               </Button>
+              <Button onClick={onDeleteClose}>취소</Button>
             </Flex>
           </ModalFooter>
         </ModalContent>

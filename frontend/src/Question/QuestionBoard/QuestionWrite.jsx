@@ -45,7 +45,8 @@ export function QuestionWrite() {
       .postForm("/api/question", {
         title,
         content,
-        files: files.filter((_, index) => !removeFileList.includes(index)),
+        // removeFileList에 포함되지 않은 파일들만 필터링하여 새로운 배열 생성
+        files: files.filter((i, index) => !removeFileList.includes(index)),
         secretWrite,
       })
       .then(() => {
@@ -72,20 +73,33 @@ export function QuestionWrite() {
   }
 
   function handleInsertFiles(e) {
-    const selectFiles = Array.from(e.target.files);
-    setFiles([...files, ...selectFiles]);
-    setPreviewList([
-      ...previewList,
+    const selectFiles = Array.from(e.target.files); // 선택한 파일들을 배열로 변환
+    setFiles((prevFiles) => [...prevFiles, ...selectFiles]); // 기존 파일 리스트에 새로 선택한 파일들을 추가
+    setPreviewList((prevPreviews) => [
+      ...prevPreviews,
       ...selectFiles.map((file) => URL.createObjectURL(file)),
-    ]);
+    ]); // 기존 미리보기 리스트('previewList')에 선택한 파일들의 미리보기 URL 추가
   }
 
+  // function handleRemoveFile(index) {
+  //   if (removeFileList.includes(index)) {
+  //     setRemoveFileList(removeFileList.filter((i) => i !== index));
+  //   } else {
+  //     setRemoveFileList([...removeFileList, index]);
+  //   }
+  // }
+
+  // 함수형 업데이트는 상태를 안전하게 업데이트하는 데 유용합니다.
+  // 특히 상태 업데이트가 비동기적으로 발생할 수 있는 React의 특성상, 함수형 업데이트를 사용하면 이전 상태를 정확하게 참조할 수 있습니다.
   function handleRemoveFile(index) {
-    if (removeFileList.includes(index)) {
-      setRemoveFileList(removeFileList.filter((i) => i !== index));
-    } else {
-      setRemoveFileList([...removeFileList, index]);
-    }
+    setRemoveFileList(
+      (
+        prevRemoveFileList, // removeFileList에 해당 index가 포함되어 있는지 확인
+      ) =>
+        prevRemoveFileList.includes(index)
+          ? prevRemoveFileList.filter((i) => i !== index) // 이미 removeFileList에 포함된 인덱스이면, 해당 인덱스 제거
+          : [...prevRemoveFileList, index], // 제거 리스트에 없는 경우 추가
+    );
   }
 
   return (
@@ -181,7 +195,7 @@ export function QuestionWrite() {
                                     ? { filter: "blur(8px)" }
                                     : {}
                                 }
-                                w={"320px"}
+                                w={"240px"}
                               />
                             </CardBody>
                             <CardFooter>

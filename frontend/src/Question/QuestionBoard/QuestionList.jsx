@@ -213,6 +213,7 @@ export function QuestionList() {
           <Button
             colorScheme={"teal"}
             variant={"outline"}
+            borderRadius={"unset"}
             onClick={() => navigate("/question/write")}
           >
             글쓰기

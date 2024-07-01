@@ -72,21 +72,20 @@ export function QuestionEdit() {
   }
 
   function handleChangeFiles(e) {
-    const newSelectedFiles = Array.from(e.target.files);
+    const newSelectedFiles = Array.from(e.target.files); // 선택한 파일들을 배열로 변환
     const newPreviews = newSelectedFiles.map((file) =>
       URL.createObjectURL(file),
-    );
-
-    setAddFileList(newSelectedFiles); // 새로 선택한 파일들로 덮어쓰기
-    setNewFilePreviews(newPreviews); // 새로운 미리보기로 덮어쓰기
+    ); // 배열로 변환된 파일들의 미리보기 URL 생성
+    setAddFileList(newSelectedFiles); // 새로 선택한 파일들로 상태 업데이트
+    setNewFilePreviews(newPreviews); // 새로운 미리보기로 상태 업데이트
   }
 
   function handleRemoveSwitch(name, checked) {
     if (checked) {
-      setRemoveFileList([...removeFileList, name]);
+      setRemoveFileList([...removeFileList, name]); // 체크되면 파일 리스트에 추가
     } else {
       setRemoveFileList(removeFileList.filter((item) => item !== name));
-    }
+    } // 체크가 해제되면 파일 리스트에서 제거
   }
 
   return (

@@ -60,9 +60,6 @@ public class QuestionController {
             }
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        if (question == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok().body(question);
     }
 
