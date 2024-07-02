@@ -26,6 +26,8 @@ export function ProductList() {
   const [allTotalCount, setAllTotalCount] = useState(0);
   const category = searchParams.get("category") || "";
   const translatedCategoryName = CategorySwitchCase({ categoryName: category });
+  const isAllCategory = !category || category === "";
+  const hasSearchTitle = !!searchParams.get("title");
 
   useEffect(() => {
     const sort = parseInt(searchParams.get("sort") || "0");
@@ -93,27 +95,25 @@ export function ProductList() {
 
   return (
     <Box>
-      <Flex justifyContent={"center"} align={"center"}>
-        {searchParams.get("category") && (
-          <Heading>{translatedCategoryName}</Heading>
-        )}
-        {searchParams.size === 0 && <Heading>전체</Heading>}
-      </Flex>
+      {!hasSearchTitle && (
+        <Flex justifyContent={"center"} align={"center"}>
+          {isAllCategory ? (
+            <Heading>전체</Heading>
+          ) : (
+            <Heading>{translatedCategoryName}</Heading>
+          )}
+        </Flex>
+      )}
       <Flex mb={10} justifyContent={"space-between"} align={"center"}>
         <Box>
-          {searchParams.get("category") && (
+          {!hasSearchTitle && (
             <Text fontSize={"medium"} fontWeight={"bold"}>
-              {" "}
-              총 {categoryCount} 건
+              {isAllCategory
+                ? `총 ${allTotalCount} 건`
+                : `총 ${categoryCount} 건`}
             </Text>
           )}
-          {searchParams.size === 0 && (
-            <Text fontSize={"medium"} fontWeight={"bold"}>
-              {" "}
-              총 {allTotalCount} 건
-            </Text>
-          )}
-          {searchParams.get("title") && productList.length !== 0 && (
+          {hasSearchTitle && productList.length !== 0 && (
             <Text>
               <Text as="span" fontWeight={"bold"}>
                 "{searchParams.get("title")}"
@@ -132,6 +132,7 @@ export function ProductList() {
           handleSortChange={handleSortChange}
         />
       </Flex>
+
       <ProductGrid
         productList={productList}
         likes={likes}
