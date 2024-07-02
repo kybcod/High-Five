@@ -101,7 +101,7 @@ public interface UserMapper {
                     ORDER BY id DESC
                     </script>
                 """)
-    int selectTotalUserCount(int offset, String type, String keyword);
+    int selectTotalUserCount(String type, String keyword);
 
     @Select("""
             SELECT id, nick_name

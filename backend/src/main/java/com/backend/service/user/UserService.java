@@ -322,7 +322,7 @@ public class UserService {
         List<User> userList = mapper.selectUserList(offset, type, keyword);
         userList.forEach(user -> user.setAuthority(mapper.selectAuthoritiesByUserId(user.getId())));
 
-        int totalUserNumber = mapper.selectTotalUserCount(offset, type, keyword);
+        int totalUserNumber = mapper.selectTotalUserCount(type, keyword);
         int newId = offset + 1;
         for (int i = 0; i < userList.size(); i++) {
             userList.get(i).setId(newId++);

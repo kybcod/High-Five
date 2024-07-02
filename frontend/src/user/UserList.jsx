@@ -25,7 +25,6 @@ export function UserList() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchParams] = useSearchParams();
 
-  // TODO. 주석 해제
   useEffect(() => {
     axios.get(`/api/users/list?${searchParams}`).then((res) => {
       setUserList(res.data.userList);
@@ -128,13 +127,18 @@ export function UserList() {
       </Center>
       <Center gap={3}>
         {pageNumbers.map((pageNumber) => (
-          <Link
+          <Button
             key={pageNumber}
-            _selected={{ borderColor: "green.500", fontWeight: "bold" }}
+            borderWidth={2}
+            _selected={"teal"}
+            colorScheme={
+              pageNumber - 1 === pageInfo.currentPageNumber ? "teal" : "gray"
+            }
+            variant="outline"
             onClick={() => handlePageButtonClick(pageNumber)}
           >
             {pageNumber}
-          </Link>
+          </Button>
         ))}
       </Center>
     </Box>
