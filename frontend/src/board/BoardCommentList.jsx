@@ -76,8 +76,10 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
         setBoardCommentList(buildCommentTree(res.data));
         navigate(`/board/${boardId}`);
       })
-      .catch(() => {
-        errorToast(`댓글 삭제 권한이 없습니다`);
+      .catch((err) => {
+        if (err.response.status === 400) {
+          errorToast("게시물 삭제에 실패했습니다. 다시 시도해주세요");
+        }
       })
       .finally(() => {
         setIsProcessing(false);
@@ -144,26 +146,31 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                     )}
                     <Text ml={"10px"}>{comment.nickName}</Text>
                     <Spacer />
-                    {account.hasAccess(comment.userId) && (
-                      <Menu>
-                        <MenuButton>
-                          <FontAwesomeIcon
-                            icon={faEllipsisVertical}
-                            size={"lg"}
-                          />
-                        </MenuButton>
-                        <MenuList>
-                          <MenuItem onClick={() => handleEditClick(comment.id)}>
-                            수정
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => handleClickCommentDelete(comment.id)}
-                          >
-                            삭제
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    )}
+                    {account.hasAccess(comment.userId) &&
+                      account.isLoggedIn(comment.userId) && (
+                        <Menu>
+                          <MenuButton>
+                            <FontAwesomeIcon
+                              icon={faEllipsisVertical}
+                              size={"lg"}
+                            />
+                          </MenuButton>
+                          <MenuList>
+                            <MenuItem
+                              onClick={() => handleEditClick(comment.id)}
+                            >
+                              수정
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() =>
+                                handleClickCommentDelete(comment.id)
+                              }
+                            >
+                              삭제
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                      )}
                   </Flex>
                   {isEditingId === comment.id || (
                     <Flex mt={"10px"}>

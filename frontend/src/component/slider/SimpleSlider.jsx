@@ -2,57 +2,9 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Box, IconButton, Image, Text } from "@chakra-ui/react";
-
-const NextArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <IconButton
-      aria-label="Next"
-      className={className}
-      style={{
-        ...style,
-        position: "absolute",
-        display: "block",
-        right: "10px",
-        top: "50%",
-        transform: "translateY(-50%)",
-        zIndex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        borderRadius: "50%",
-        color: "white",
-        fontSize: "20px",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)",
-      }}
-      onClick={onClick}
-    />
-  );
-};
-
-const PrevArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <IconButton
-      aria-label="Previous"
-      className={className}
-      style={{
-        ...style,
-        position: "absolute",
-        display: "block",
-        left: "10px",
-        top: "50%",
-        transform: "translateY(-50%)",
-        zIndex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        borderRadius: "50%",
-        color: "white",
-        fontSize: "20px",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)",
-      }}
-      onClick={onClick}
-    />
-  );
-};
+import { Box, Image, Text } from "@chakra-ui/react";
+import { SampleNextArrow } from "../../product/main/SampleNextArrow.jsx";
+import { SamplePrevArrow } from "../../product/main/SamplePrevArrow.jsx";
 
 function SimpleSlider({ images, isBrightness }) {
   const settings = {
@@ -62,8 +14,8 @@ function SimpleSlider({ images, isBrightness }) {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: images.length > 1,
-    nextArrow: images.length > 1 ? <NextArrow /> : false,
-    prevArrow: images.length > 1 ? <PrevArrow /> : false,
+    nextArrow: images.length > 1 ? <SampleNextArrow /> : null,
+    prevArrow: images.length > 1 ? <SamplePrevArrow /> : null,
     centerMode: false,
     overflow: "hidden",
   };

@@ -183,7 +183,11 @@ export function BoardView() {
         </Box>
         <Spacer />
         {isLikeProcess || (
-          <Flex onClick={handleClickLike} alignItems={"center"}>
+          <Flex
+            onClick={handleClickLike}
+            alignItems={"center"}
+            cursor={"pointer"}
+          >
             {boardLike.boardLike && (
               <FontAwesomeIcon icon={fullHeart} size={"xl"} color={"red"} />
             )}
@@ -282,7 +286,9 @@ export function BoardView() {
           <ModalBody>허위 신고 적발 시 불이익을 받게됩니다</ModalBody>
           <ModalFooter>
             <Button onClick={reportModalOnClose}>취소</Button>
-            <Button onClick={handleReport}>신고</Button>
+            <Button onClick={handleReport} ml={"10px"} colorScheme={"red"}>
+              신고
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

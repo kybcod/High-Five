@@ -63,6 +63,9 @@ INSERT INTO board (id, user_id, title, content, inserted)
 SELECT *
 FROM user;
 
+SELECT *
+FROM authority;
+
 INSERT INTO authority (user_id, name)
     VALUE (36, 'user');
 
@@ -94,9 +97,10 @@ SELECT *
 FROM board_comment
 WHERE board_id = 107;
 
+
 DELETE
 FROM board_comment
-WHERE board_id = 45;
+WHERE board_id = 107;
 
 SELECT *
 FROM user_file;

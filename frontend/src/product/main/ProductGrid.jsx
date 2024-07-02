@@ -43,25 +43,6 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                   transition="transform 0.2s"
                   _hover={{ transform: "scale(1.05)" }}
                 />
-                {account.isLoggedIn() && (
-                  <Box
-                    position="absolute"
-                    top={2}
-                    right={2}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleLikeClick(product.id);
-                    }}
-                    transition="transform 0.2s"
-                    _hover={{ transform: "scale(1.1)" }}
-                  >
-                    <FontAwesomeIcon
-                      icon={likes[product.id] ? fullHeart : emptyHeart}
-                      style={{ color: "red" }}
-                      size="xl"
-                    />
-                  </Box>
-                )}
                 {!product.status && (
                   <Box
                     position="absolute"
@@ -81,9 +62,33 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
                 )}
               </Box>
               <Box p={3}>
-                <Text fontSize="lg" fontWeight="500" noOfLines={1} mb={1}>
-                  {product.title}
-                </Text>
+                <Flex justifyContent={"space-between"} alignItems={"center"}>
+                  <Text
+                    fontSize="lg"
+                    fontWeight="500"
+                    noOfLines={1}
+                    mb={1}
+                    mr={1}
+                  >
+                    {product.title}
+                  </Text>
+                  {account.isLoggedIn() && (
+                    <Box
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLikeClick(product.id);
+                      }}
+                      transition="transform 0.2s"
+                      _hover={{ transform: "scale(1.1)" }}
+                    >
+                      <FontAwesomeIcon
+                        icon={likes[product.id] ? fullHeart : emptyHeart}
+                        style={{ color: "red" }}
+                        size="xl"
+                      />
+                    </Box>
+                  )}
+                </Flex>
                 <Flex mb={3} alignItems="baseline">
                   <Text fontSize="xl" fontWeight="bold" mr={2}>
                     {product.startPrice
