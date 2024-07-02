@@ -51,7 +51,7 @@ export function FormFields({
             value={category}
             onChange={setCategory}
           >
-            <Stack spacing={2}>
+            <Stack spacing={2} cursor={"pointer"}>
               <Flex align="center">
                 <Radio mr={2} value="clothes">
                   의류
