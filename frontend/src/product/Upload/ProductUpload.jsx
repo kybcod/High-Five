@@ -111,7 +111,7 @@ export function ProductUpload() {
           position: "top-right",
           duration: 3000,
         });
-        navigate("/");
+        navigate("/list");
       })
       .catch((err) => {
         if (err.response && err.response.status === 413) {
