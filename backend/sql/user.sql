@@ -17,6 +17,12 @@ VALUES (57, 'admin');
 SELECT *
 FROM authority;
 
+DELETE FROM authority
+WHERE user_id != 59;
+
+SELECT * FROM authority
+WHERE user_id != 59;
+
 SELECT name
 FROM authority
 WHERE user_id = 14;
