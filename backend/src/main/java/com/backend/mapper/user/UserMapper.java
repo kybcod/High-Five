@@ -90,9 +90,18 @@ public interface UserMapper {
     int deleteAuthorityById(Integer userId);
 
     @Select("""
-                SELECT COUNT(*) FROM user
-            """)
-    int selectTotalUserCount();
+                    <script>
+                    SELECT COUNT(*) FROM user
+            <bind name="pattern" value="'%' + keyword + '%'" />
+                    WHERE
+                        (email LIKE #{pattern} OR nick_name LIKE #{pattern})
+                        <if test="type == 'black'">
+                            AND black_count > 4
+                        </if>
+                    ORDER BY id DESC
+                    </script>
+                """)
+    int selectTotalUserCount(String type, String keyword);
 
     @Select("""
             SELECT id, nick_name
@@ -176,9 +185,28 @@ public interface UserMapper {
     int deleteCodeByVerificationCode(int code);
 
     @Select("""
-                SELECT p.id
-                FROM product p JOIN user u ON u.id = p.user_id
-                WHERE u.id = #{userId}
+                SELECT id
+                FROM product
+                WHERE user_id = #{userId}
             """)
     List<Integer> selectProductIdByUserId(Integer userId);
+
+    @Select("""
+            SELECT id
+            FROM chat_room
+            WHERE seller_id = #{userId} || user_id = #{userId}
+                """)
+    List<Integer> selectChatRoomIdByUserId(Integer userId);
+
+    @Delete("""
+                DELETE FROM bid_list
+                WHERE user_id = #{id}
+            """)
+    int deleteBidListByUserId(Integer id);
+
+    @Delete("""
+                DELETE FROM product_like
+                WHERE user_id = #{userId}
+            """)
+    int deleteProductLikeById(Integer userId);
 }

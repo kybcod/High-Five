@@ -234,9 +234,15 @@ public class UserService {
         // 프로필 사진 지우기
         mapper.deleteProfileImageById(id);
 
+        // 좋아요 지우기
+        mapper.deleteProductLikeById(id);
+
         // 상품 지우기
         List<Integer> productIdList = mapper.selectProductIdByUserId(id);
         productIdList.forEach(productService::remove);
+
+        // 입찰 내역 지우기
+        mapper.deleteBidListByUserId(id);
 
         // 회원 지우기
         mapper.deleteUserById(id);
@@ -316,7 +322,7 @@ public class UserService {
         List<User> userList = mapper.selectUserList(offset, type, keyword);
         userList.forEach(user -> user.setAuthority(mapper.selectAuthoritiesByUserId(user.getId())));
 
-        int totalUserNumber = mapper.selectTotalUserCount();
+        int totalUserNumber = mapper.selectTotalUserCount(type, keyword);
         int newId = offset + 1;
         for (int i = 0; i < userList.size(); i++) {
             userList.get(i).setId(newId++);
@@ -350,11 +356,18 @@ public class UserService {
             String passwordPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$";
             return user.getPassword().trim().matches(passwordPattern);
         }
+        if (user.getNickName().isEmpty()) {
+            return false;
+        }
         return true;
     }
 
     public boolean checkUniquePhoneNumber(String phoneNumber) {
         String email = mapper.selectEmailByPhoneNumber(phoneNumber);
         return email == null;
+    }
+
+    public List<Integer> getChatRoomIdByUserId(Integer id) {
+        return mapper.selectChatRoomIdByUserId(id);
     }
 }

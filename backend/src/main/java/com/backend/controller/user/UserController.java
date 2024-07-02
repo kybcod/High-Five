@@ -1,6 +1,7 @@
 package com.backend.controller.user;
 
 import com.backend.domain.user.User;
+import com.backend.service.chat.ChatService;
 import com.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,6 +23,7 @@ public class UserController {
 
     private final UserService service;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final ChatService chatService;
 
     // user_id 멤버 상세
 //    @PreAuthorize("isAuthenticated()")
@@ -94,6 +97,11 @@ public class UserController {
     @DeleteMapping("users/{id}")
     public ResponseEntity removeUser(@RequestBody User user, Authentication authentication) {
         if (service.identificationToDelete(user, authentication)) {
+            // userId로 chatRoom Id 조회
+            List<Integer> chatRoomId = service.getChatRoomIdByUserId(user.getId());
+            // userId로 chatRoom 삭제
+            chatRoomId.forEach(roomId -> chatService.deleteChatRoomById(roomId, authentication));
+            
             service.removeUserById(user.getId());
             return ResponseEntity.ok().build();
         }
