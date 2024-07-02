@@ -45,7 +45,6 @@ export function QuestionView() {
     onClose: onImageClose,
     isOpen: isImageOpen,
   } = useDisclosure();
-  // const { onOpen, onClose, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
   const { successToast, errorToast } = CustomToast();
   const [selectedImage, setSelectedImage] = useState(null);
@@ -70,7 +69,7 @@ export function QuestionView() {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then(() => {
-        successToast(`${id}번 게시물이 삭제되었습니다.`);
+        successToast(`게시물이 삭제되었습니다.`);
         navigate("/question/list");
       })
       .catch((err) => {
@@ -86,26 +85,33 @@ export function QuestionView() {
 
   return (
     <Box m={8}>
-      {account.hasAccess(question.userId) && (
+      {(account.hasAccess(question.userId) ||
+        account.isAdmin(account.userId)) && (
         <Box>
           <Flex justify={"flex-end"} mr={10} mt={5} mb={5} gap={8}>
-            <EditIcon
-              w={6}
-              h={6}
-              color="blue.500"
-              cursor="pointer"
-              onClick={() => navigate(`/question/edit/${id}`)}
-            />
-            <DeleteIcon
-              w={6}
-              h={6}
-              color="red.500"
-              onClick={onDeleteOpen}
-              cursor="pointer"
-            />
+            {account.hasAccess(question.userId) && (
+              <EditIcon
+                w={6}
+                h={6}
+                color="blue.500"
+                cursor="pointer"
+                onClick={() => navigate(`/question/edit/${id}`)}
+              />
+            )}
+            {(account.isAdmin(account.userId) ||
+              account.hasAccess(question.userId)) && (
+              <DeleteIcon
+                w={6}
+                h={6}
+                color="red.500"
+                onClick={onDeleteOpen}
+                cursor="pointer"
+              />
+            )}
           </Flex>
         </Box>
       )}
+
       <Divider borderColor={"black"} />
       <Table fontSize={"15px"}>
         <Tr>
@@ -243,22 +249,24 @@ export function QuestionView() {
       <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader></ModalHeader>
-          <ModalBody>삭제하시겠습니까?</ModalBody>
+          <ModalHeader>
+            <Image src={"/img/warning.png"} boxSize={"30px"} />
+          </ModalHeader>
+          <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
           <ModalFooter>
             <Flex gap={2}>
-              <Button onClick={onDeleteClose}>취소</Button>
               <Button onClick={handleRemoveClick} colorScheme={"red"}>
                 확인
               </Button>
+              <Button onClick={onDeleteClose}>취소</Button>
             </Flex>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      <Modal isOpen={isImageOpen} onClose={onImageClose} size="6xl">
+      <Modal isOpen={isImageOpen} onClose={onImageClose} size="5xl">
         <ModalOverlay />
-        <ModalContent maxW="40vw" maxH="90vh">
+        <ModalContent maxW="50vw" maxH="90vh">
           <ModalCloseButton />
           <ModalBody
             p={0}
@@ -266,7 +274,13 @@ export function QuestionView() {
             justifyContent="center"
             alignItems="center"
           >
-            <Image src={selectedImage} alt="원본 이미지" objectFit="contain" />
+            <Image
+              src={selectedImage}
+              alt="원본 이미지"
+              objectFit="contain"
+              maxW="50vw"
+              maxH="90vh"
+            />
           </ModalBody>
         </ModalContent>
       </Modal>
