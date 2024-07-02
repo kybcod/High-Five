@@ -382,4 +382,8 @@ public class UserService {
     public List<Integer> getChatRoomIdByUserId(Integer id) {
         return mapper.selectChatRoomIdByUserId(id);
     }
+
+    public Integer getBoardCountByUserId(Integer userId) {
+        return mapper.selectBoardCountByUserId(userId);
+    }
 }

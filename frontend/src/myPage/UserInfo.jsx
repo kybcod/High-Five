@@ -26,7 +26,7 @@ import { CustomToast } from "../component/CustomToast.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClipboardQuestion,
-  faShoppingCart,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 
 const VerticalLine = ({ height, color, thickness }) => {
@@ -40,22 +40,29 @@ export function UserInfo() {
   const [oldPassword, setOldPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [totalQuestionCount, setTotalQuestionCount] = useState(0);
+  const [totalBoardCount, setTotalBoardCount] = useState(0);
   const { successToast, errorToast } = CustomToast();
   const navigate = useNavigate();
   const { userId } = useParams();
 
   useEffect(() => {
     axios.get(`/api/users/${userId}`).then((res) => {
-      console.log(res.data);
       setUser(res.data);
     });
   }, []);
 
   useEffect(() => {
     axios.get(`/api/question/user/${userId}`).then((res) => {
-      console.log(res.data);
       setTotalQuestionCount(res.data.totalQuestionCount);
     });
+  }, []);
+
+  useEffect(() => {
+    axios.get(`/api/user/board/${userId}`).then((res) => {
+      console.log(res.data);
+      setTotalBoardCount(res.data);
+    });
+    console.log(totalBoardCount);
   }, []);
 
   function handleUserDelete() {
@@ -126,18 +133,33 @@ export function UserInfo() {
         </FormControl>
 
         <Flex align="center" mt={2} mb={9}>
-          <Box mr={2}>
-            <FontAwesomeIcon icon={faClipboardQuestion} />
-          </Box>
-          <Text fontWeight="600">1:1 문의글 {totalQuestionCount} 회</Text>
-          &nbsp;
-          <Link to={`/question/list?type=nickName&keyword=${user.nickName}`}>
-            <Text color="teal.500" as="u" cursor={"pointer"}>
-              보러가기
+          <Flex mr={9}>
+            <Box mr={2}>
+              <FontAwesomeIcon icon={faClipboardQuestion} />
+            </Box>
+            <Text fontWeight="600">1:1 문의글 {totalQuestionCount} 회</Text>
+            &nbsp;
+            <Link to={`/question/list?type=nickName&keyword=${user.nickName}`}>
+              <Text color="teal.500" as="u" cursor={"pointer"}>
+                보러가기
+              </Text>
+            </Link>
+          </Flex>
+          <Flex>
+            <Box mr={2}>
+              <FontAwesomeIcon icon={faUsers} />
+            </Box>
+            <Text fontWeight="600">
+              자유게시판 글 작성 {totalBoardCount} 회
             </Text>
-          </Link>
+            &nbsp;
+            <Link to={`/board/list/?type=nickName&keyword=${user.nickName}`}>
+              <Text color="teal.500" as="u" cursor={"pointer"}>
+                보러가기
+              </Text>
+            </Link>
+          </Flex>
         </Flex>
-
         <Text
           color="gray.500"
           onClick={onOpen}

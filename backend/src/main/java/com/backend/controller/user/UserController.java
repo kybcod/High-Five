@@ -190,4 +190,11 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/user/board/{userId}")
+    public ResponseEntity getBoard(@PathVariable Integer userId) {
+        System.out.println("board" + userId);
+        Integer boardCount = service.getBoardCountByUserId(userId);
+        return ResponseEntity.ok(String.valueOf(boardCount));
+    }
 }
