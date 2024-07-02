@@ -148,6 +148,7 @@ export function ProductList() {
           <Box mt={"30px"}>
             {pageInfo.currentPageNumber == 0 || (
               <Button
+                variant={"outline"}
                 mr={"10px"}
                 onClick={() => handlePageButtonClick(pageInfo.firstPageNumber)}
               >
@@ -169,7 +170,7 @@ export function ProductList() {
                 onClick={() => handlePageButtonClick(pageNumber)}
                 key={pageNumber}
                 variant={"outline"}
-                borderWidth={3}
+                borderWidth={2}
                 colorScheme={
                   pageNumber - 1 == pageInfo.currentPageNumber ? "teal" : "gray"
                 }
@@ -188,6 +189,7 @@ export function ProductList() {
             )}
             {pageInfo.currentPageNumber === pageInfo.lastPageNumber - 1 || (
               <Button
+                variant={"outline"}
                 onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
               >
                 <FontAwesomeIcon icon={faAnglesRight} />
