@@ -99,10 +99,10 @@ public interface ChatMapper {
 
     @Delete("""
             DELETE chat, chat_room
-                        FROM chat_room\s
-                        LEFT JOIN chat
-                        ON chat.chat_room_id = chat_room.id
-                        WHERE chat_room.id = #{chatRoomId}
+            FROM chat_room 
+            LEFT JOIN chat
+            ON chat.chat_room_id = chat_room.id
+            WHERE chat_room.id = #{chatRoomId}
             """)
     int deleteAllChatById(Integer chatRoomId);
 }

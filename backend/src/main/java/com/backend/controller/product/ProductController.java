@@ -3,6 +3,7 @@ package com.backend.controller.product;
 
 import com.backend.domain.product.Product;
 import com.backend.service.product.ProductService;
+import com.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class ProductController {
 
     private final ProductService service;
+    private final UserService userService;
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -85,7 +87,7 @@ public class ProductController {
     @PreAuthorize("isAuthenticated()")
     @Description("상품삭제")
     public ResponseEntity deleteProduct(@PathVariable Integer id, Authentication authentication) {
-        if (service.hasAccess(id, authentication)) {
+        if (service.hasAccess(id, authentication) || service.isAdmin(authentication)) {
             service.remove(id);
             return ResponseEntity.ok().build();
         }

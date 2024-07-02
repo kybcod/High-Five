@@ -2,21 +2,28 @@ import {
   Badge,
   Box,
   Button,
-  ButtonGroup,
   Center,
   Flex,
   Heading,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Select,
   Spacer,
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,15 +37,21 @@ import {
   faImage,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import { LoginContext } from "../component/LoginProvider.jsx";
+import { CustomToast } from "../component/CustomToast.jsx";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [clickedId, setClickedId] = useState(null);
+  const [totalBoardNumber, setTotalBoardNumber] = useState(0);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [totalBoardNumber, setTotalBoardNumber] = useState(0);
+  const account = useContext(LoginContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { successToast, errorToast } = CustomToast();
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
@@ -73,6 +86,23 @@ export function BoardList() {
     navigate(`/board/list/?type=${searchType}&keyword=${searchKeyword}`);
   }
 
+  function handleClickAdminDelete(e, id) {
+    console.log(id);
+    e.stopPropagation();
+    axios
+      .delete(`/api/board/${id}`)
+      .then(() => {
+        successToast("게시물이 삭제되었습니다");
+        setBoardList(boardList.filter((board) => board.id !== id));
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          errorToast("게시물 삭제에 실패했습니다. 다시 삭제해주세요");
+        }
+      })
+      .finally(() => onClose());
+  }
+
   return (
     <Box>
       <Flex>
@@ -89,6 +119,7 @@ export function BoardList() {
               <Th>댓글수</Th>
               <Th>조회수</Th>
               <Th>작성시간</Th>
+              {account.isAdmin(account.id) && <Th>admin</Th>}
             </Tr>
           </Thead>
           <Tbody>
@@ -149,11 +180,53 @@ export function BoardList() {
                   </Td>
                   <Td>{board.viewCount}</Td>
                   <Td>{board.inserted}</Td>
+                  {account.isAdmin(account.id) && (
+                    <Td>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setClickedId(board.id);
+                          onOpen();
+                        }}
+                        variant={"outline"}
+                        color={"red"}
+                        sx={{
+                          borderWidth: "2px",
+                          borderColor: "red",
+                        }}
+                        size={"sm"}
+                      >
+                        삭제
+                      </Button>
+                    </Td>
+                  )}
                   <Td hidden>{board.content}</Td>
                 </Tr>
               ))}
           </Tbody>
         </Table>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalContent>
+            <ModalHeader>관리자 권한으로 게시글 삭제</ModalHeader>
+            <ModalBody>
+              <Text>게시글을 삭제하시겠습니까?</Text>
+            </ModalBody>
+            <ModalFooter>
+              <Flex>
+                <Button onClick={onClose}>취소</Button>
+                <Button
+                  onClick={(e) => {
+                    handleClickAdminDelete(e, clickedId);
+                  }}
+                  colorScheme={"red"}
+                  ml={"10px"}
+                >
+                  삭제
+                </Button>
+              </Flex>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
       <Box display="flex" justifyContent="flex-end">
         <Button
@@ -199,56 +272,65 @@ export function BoardList() {
       </Center>
       <Center mt={"15px"}>
         <Flex gap={1}>
-          {pageInfo.prevPageNumber && (
+          <Tooltip label="맨 앞 페이지" placement="bottom">
             <Button
-              onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
-              variant={"outline"}
-              colorScheme={"teal"}
+              onClick={() => handlePageButtonClick(1)}
+              variant="outline"
               borderWidth={2}
             >
               <FontAwesomeIcon icon={faAnglesLeft} />
             </Button>
+          </Tooltip>
+          {pageInfo.prevPageNumber && (
+            <>
+              <Tooltip label="이전 페이지" placement="bottom">
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+                  variant="outline"
+                  borderWidth={2}
+                >
+                  <FontAwesomeIcon icon={faAngleLeft} />
+                </Button>
+              </Tooltip>
+            </>
           )}
-          {pageInfo.leftPageNumber && (
-            <Button
-              onClick={() => handlePageButtonClick(pageInfo.leftPageNumber)}
-              variant={"outline"}
-              colorScheme={"teal"}
-              borderWidth={2}
-            >
-              <FontAwesomeIcon icon={faAngleLeft} />
-            </Button>
-          )}
+
           {pageNumbers.map((pageNumber) => (
-            <ButtonGroup
-              key={pageNumber}
-              onClick={() => handlePageButtonClick(pageNumber)}
-            >
-              <Button variant={"outline"} colorScheme={"teal"} borderWidth={2}>
-                {pageNumber}
-              </Button>
-            </ButtonGroup>
-          ))}
-          {pageInfo.rightPageNumber && (
             <Button
-              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-              variant={"outline"}
-              colorScheme={"teal"}
+              onClick={() => handlePageButtonClick(pageNumber)}
+              key={pageNumber}
+              colorScheme={
+                pageNumber - 1 === pageInfo.currentPageNumber ? "teal" : "gray"
+              }
+              variant="outline"
               borderWidth={2}
             >
-              <FontAwesomeIcon icon={faAngleRight} />
+              {pageNumber}
             </Button>
-          )}
+          ))}
+
           {pageInfo.nextPageNumber && (
+            <>
+              <Tooltip label="다음 페이지" placement="bottom">
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+                  variant="outline"
+                  borderWidth={2}
+                >
+                  <FontAwesomeIcon icon={faAngleRight} />
+                </Button>
+              </Tooltip>
+            </>
+          )}
+          <Tooltip label="맨 끝 페이지" placement="bottom">
             <Button
               onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-              variant={"outline"}
-              colorScheme={"teal"}
+              variant="outline"
               borderWidth={2}
             >
               <FontAwesomeIcon icon={faAnglesRight} />
             </Button>
-          )}
+          </Tooltip>
         </Flex>
       </Center>
     </Box>

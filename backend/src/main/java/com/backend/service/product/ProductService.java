@@ -283,10 +283,18 @@ public class ProductService {
 
     //userId 받고 있는지 확인하기 위해 즉 로그인 했는지
     public boolean hasAccess(Integer id, Authentication authentication) {
-
         Product product = mapper.selectById(id);
         return product.getUserId().equals(Integer.valueOf(authentication.getName()));
     }
+
+    public boolean isAdmin(Authentication authentication) {
+        boolean admin = authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("SCOPE_admin"));
+
+        return admin;
+    }
+
 }
 
 
