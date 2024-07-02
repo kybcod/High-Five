@@ -52,7 +52,7 @@ const Scroll = ({ isTop }) => {
         <>
           <Box
             onClick={scrollToTop}
-            style={buttonStyle(isTop ? "90px" : "50px")}
+            style={buttonStyle(isTop ? "60px" : "50px")}
           >
             <Image src={"/img/arrowTop.png"} boxSize={"40px"} />
           </Box>

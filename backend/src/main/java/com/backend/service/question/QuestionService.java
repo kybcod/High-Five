@@ -201,4 +201,10 @@ public class QuestionService {
     public List<FaqCategory> getAllCategories() {
         return mapper.getAllCategories();
     }
+
+    public Map<String, Integer> getQuestionCount(Integer userId) {
+        Map<String, Integer> totalQuestionCount = new HashMap<>();
+        totalQuestionCount.put("totalQuestionCount", mapper.selectTotalQuestionCount(userId));
+        return totalQuestionCount;
+    }
 }

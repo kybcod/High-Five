@@ -130,4 +130,9 @@ public interface QuestionMapper {
             SELECT id nextId, title nextTitle, secret_write nextSecret, user_id nextUserId FROM question_board WHERE id>#{id} ORDER BY id ASC LIMIT 1;
             """)
     Question getNextId(Integer id);
+
+    @Select("""
+            SELECT COUNT(*) FROM question_board WHERE user_id = #{userId}
+            """)
+    Integer selectTotalQuestionCount(Integer userId);
 }

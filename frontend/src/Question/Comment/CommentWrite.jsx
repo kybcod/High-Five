@@ -30,7 +30,6 @@ export function CommentWrite({
 
     request
       .then(() => {
-        // todo : DOM을 직접 수정하는건 안좋은 방식. 다른 방식으로 생각해보기
         setContent("");
         successToast(
           comment ? "댓글이 수정되었습니다." : "댓글이 등록되었습니다.",
@@ -60,11 +59,22 @@ export function CommentWrite({
               onClick={handleWriteClick}
               isDisabled={content.trim().length === 0}
               isLoading={isProcessing}
+              colorScheme={"teal"}
+              height={"auto"}
+              width={"5%"}
             >
               {comment ? "수정" : "등록"}
             </Button>
             {comment && (
-              <Button onClick={() => setIsEditing(false)}>취소</Button>
+              <Button
+                onClick={() => setIsEditing(false)}
+                colorScheme={"teal"}
+                height={"auto"}
+                variant={"outline"}
+                width={"5%"}
+              >
+                취소
+              </Button>
             )}
           </Flex>
         </>

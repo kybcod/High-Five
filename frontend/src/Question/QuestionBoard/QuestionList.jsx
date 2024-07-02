@@ -141,10 +141,6 @@ export function QuestionList() {
                       <Flex gap={2} wrap={"wrap"}>
                         {question.secretWrite ? (
                           <Flex gap={2}>
-                            {/*<FontAwesomeIcon*/}
-                            {/*  icon={faLock}*/}
-                            {/*  style={{ marginRight: "4px" }}*/}
-                            {/*/>*/}
                             <Image src={"/img/lock.svg"} />
                             {!account.hasAccess(question.userId) &&
                             !account.isAdmin(account.userId) ? (
@@ -213,6 +209,7 @@ export function QuestionList() {
           <Button
             colorScheme={"teal"}
             variant={"outline"}
+            borderRadius={"unset"}
             onClick={() => navigate("/question/write")}
           >
             글쓰기
@@ -272,9 +269,10 @@ export function QuestionList() {
               onClick={() => handlePageButtonClick(pageNumber)}
               key={pageNumber}
               colorScheme={
-                pageNumber === pageInfo.currentPageNumber ? "green" : "gray"
+                pageNumber === pageInfo.currentPageNumber ? "teal" : "gray"
               }
               variant="outline"
+              borderWidth={2}
             >
               {pageNumber}
             </Button>
