@@ -177,7 +177,6 @@ export function ProductUpload() {
             variant={"outline"}
             colorScheme={"teal"}
             onClick={handleUploadClick}
-            borderRadius={"unset"}
           >
             상품 업로드
           </Button>

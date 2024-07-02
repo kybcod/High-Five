@@ -14,7 +14,6 @@ export const SamplePrevArrow = ({ onClick }) => {
       transform="translateY(-50%)"
       top="50%"
       left="10px"
-      // color="#06A458"
       color="teal"
       fontSize="30px"
       zIndex="1"
