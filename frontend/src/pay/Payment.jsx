@@ -94,8 +94,10 @@ export function Payment() {
             bidListId,
           })
           .then(() => {
-            navigate(`/chat/product/${product.id}/buyer/${product.userId}`);
             alert(`${amount}원이 결제되었습니다.`);
+          })
+          .finally(() => {
+            navigate(`/chat/product/${product.id}/buyer/${product.userId}`);
           });
       } else {
         alert(`${error_msg} 이유로 결제를 실패하였습니다.`);
