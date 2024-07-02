@@ -240,7 +240,7 @@ export function UserEdit() {
             <Input
               variant="flushed"
               placeholer={"닉네임 중복 확인 필수"}
-              fontSize={"xs"}
+              fontSize={"medium"}
               value={user.nickName}
               onChange={(e) => {
                 setUser({ ...user, nickName: e.target.value });
@@ -279,11 +279,13 @@ export function UserEdit() {
           <ModalBody>비밀번호를 입력해주세요</ModalBody>
           <ModalFooter>
             <Input
+              mr={2}
               type={"password"}
               variant="flushed"
               onChange={(e) => setOldPassword(e.target.value)}
             />
             <Button
+              mr={2}
               onClick={handleUserUpdate}
               isLoading={isLoading}
               variant="outline"
