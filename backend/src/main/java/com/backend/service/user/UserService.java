@@ -9,7 +9,6 @@ import com.backend.util.PageInfo;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -58,7 +57,7 @@ public class UserService {
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
         // TODO. 주석풀기
-        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
+//        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
 
         Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
         if (dbCode != null) {
@@ -321,7 +320,19 @@ public class UserService {
         int offset = (page - 1) * 10;
         Pageable pageable = PageRequest.of(page - 1, 10);
         List<User> userList = mapper.selectUserList(offset, type, keyword);
-        userList.forEach(user -> user.setAuthority(mapper.selectAuthoritiesByUserId(user.getId())));
+        userList.forEach(user ->
+                {
+                    user.setAuthority(mapper.selectAuthoritiesByUserId(user.getId()));
+                    String fileName = mapper.selectFileNameByUserId(user.getId());
+                    UserFile userFile = UserFile.builder()
+                            .fileName("null").src("null").build();
+                    if (fileName != null) {
+                        userFile = UserFile.builder()
+                                .fileName(fileName).src(STR."\{srcPrefix}user/\{user.getId()}/\{fileName}").build();
+                    }
+                    user.setProfileImage(userFile);
+                }
+        );
 
         int totalUserNumber = mapper.selectTotalUserCount(type, keyword);
         int newId = offset + 1;

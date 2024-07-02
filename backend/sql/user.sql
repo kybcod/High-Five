@@ -42,7 +42,7 @@ GROUP BY u.id;
 
 INSERT INTO authority
     (user_id, name)
-VALUES (14, 'user');
+VALUES (14, 'admin');
 
 DELETE
 FROM user
@@ -80,8 +80,8 @@ SELECT *
 FROM user_file;
 
 UPDATE user
-SET black_count = 0
-WHERE id = 57;
+SET nick_name = '스프링'
+WHERE id = 62;
 
 ALTER TABLE review
     MODIFY COLUMN user_id int NOT NULL;
