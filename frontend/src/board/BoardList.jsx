@@ -300,7 +300,7 @@ export function BoardList() {
               onClick={() => handlePageButtonClick(pageNumber)}
               key={pageNumber}
               colorScheme={
-                pageNumber === pageInfo.currentPageNumber ? "teal" : "gray"
+                pageNumber - 1 === pageInfo.currentPageNumber ? "teal" : "gray"
               }
               variant="outline"
               borderWidth={2}
