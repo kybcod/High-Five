@@ -144,7 +144,7 @@ export function ChatRoom({
         console.error("STOMP error: ", frame);
       },
     });
-    client.activate(); // 활성화
+    // client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
