@@ -9,6 +9,7 @@ import com.backend.util.PageInfo;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -57,16 +58,16 @@ public class UserService {
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
         // TODO. 주석풀기
-//        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
+        SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
 
         Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
         if (dbCode != null) {
             mapper.deleteCodeByPhoneNumber(phoneNumber);
         }
 
-//        if (response.getStatusCode().equals("2000")) {
-        mapper.insertCode(phoneNumber, verificationCode);
-//        }
+        if (response.getStatusCode().equals("2000")) {
+            mapper.insertCode(phoneNumber, verificationCode);
+        }
 
         TimerTask timeOutCodeDelete = new TimerTask() {
             public void run() {

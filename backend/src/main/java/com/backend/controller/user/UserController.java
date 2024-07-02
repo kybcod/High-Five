@@ -154,7 +154,7 @@ public class UserController {
     }
 
     // user 리스트 조회
-//    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     @GetMapping("/users/list")
     public Map<String, Object> list(@RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false) String type,

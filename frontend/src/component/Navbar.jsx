@@ -53,16 +53,16 @@ export function Navbar() {
       </Center>
 
       <Spacer />
-      {/*{account.isAdmin() && (*/}
-      <>
-        <Center onClick={() => navigate("/user/list")} mx={2}>
-          <Text fontSize={"small"} mr={3}>
-            회원 목록
-          </Text>
-        </Center>
-        <Box height="24px" borderLeft="1px solid #ccc" />
-      </>
-      {/*)}*/}
+      {account.isAdmin() && (
+        <>
+          <Center onClick={() => navigate("/user/list")} mx={2}>
+            <Text fontSize={"small"} mr={3}>
+              회원 목록
+            </Text>
+          </Center>
+          <Box height="24px" borderLeft="1px solid #ccc" />
+        </>
+      )}
       {account.isLoggedIn() ? (
         <>
           <Center
