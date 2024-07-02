@@ -60,16 +60,13 @@ public class QuestionController {
             }
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        if (question == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok().body(question);
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity delete(@PathVariable Integer id, Authentication authentication) {
-        if (service.hasAccess(id, authentication)) {
+        if (service.hasAccess(id, authentication) || authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("SCOPE_admin"))) {
             service.delete(id);
             return ResponseEntity.ok().build();
         }
@@ -102,5 +99,11 @@ public class QuestionController {
         response.put("faqList", faqList);
         response.put("categories", categories);
         return response;
+    }
+
+    @GetMapping("/user/{userId}")
+    public Map<String, Integer> count(@PathVariable Integer userId) {
+        System.out.println("userId = " + userId);
+        return service.getQuestionCount(userId);
     }
 }
