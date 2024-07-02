@@ -14,6 +14,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Spinner,
   Table,
   Td,
@@ -30,6 +31,7 @@ import { CustomToast } from "../../component/CustomToast.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { PrevNextTitle } from "../PrevNextTitle.jsx";
+import { faMagnifyingGlassPlus } from "@fortawesome/free-solid-svg-icons/faMagnifyingGlassPlus";
 
 export function QuestionView() {
   const { id } = useParams();
@@ -159,6 +161,13 @@ export function QuestionView() {
               {question.fileList.map((file) => (
                 <Card key={file.name}>
                   <CardBody>
+                    {/*<Image*/}
+                    {/*  src={"/img/full-screen.png"}*/}
+                    {/*  boxSize={"20px"}*/}
+                    {/*  position={"absolute"}*/}
+                    {/*  left={"290px"}*/}
+                    {/*  // top={"20px"}*/}
+                    {/*/>*/}
                     <Image
                       boxSize="300px"
                       src={file.src}
@@ -168,6 +177,29 @@ export function QuestionView() {
                       }}
                       cursor={"pointer"}
                     />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="icon icon-tabler icons-tabler-outline icon-tabler-zoom-in"
+                      style={{
+                        position: "relative",
+                        left: "270px",
+                        top: "-30px",
+                      }}
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                      <path d="M7 10l6 0" />
+                      <path d="M10 7l0 6" />
+                      <path d="M21 21l-6 -6" />
+                    </svg>
                   </CardBody>
                 </Card>
               ))}

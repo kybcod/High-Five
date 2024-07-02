@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
@@ -29,6 +29,7 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import Scroll from "../Scroll.jsx";
 
 export function QuestionList() {
   const [questionList, setQuestionList] = useState([]);
@@ -144,7 +145,7 @@ export function QuestionList() {
                             <Image src={"/img/lock.svg"} />
                             {!account.hasAccess(question.userId) &&
                             !account.isAdmin(account.userId) ? (
-                              <span style={{ color: "gray", fontSize: "14px" }}>
+                              <span style={{ color: "gray", fontSize: "12px" }}>
                                 비밀글
                               </span>
                             ) : (
