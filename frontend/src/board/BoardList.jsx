@@ -2,7 +2,6 @@ import {
   Badge,
   Box,
   Button,
-  ButtonGroup,
   Center,
   Flex,
   Heading,
@@ -20,6 +19,7 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -272,56 +272,65 @@ export function BoardList() {
       </Center>
       <Center mt={"15px"}>
         <Flex gap={1}>
-          {pageInfo.prevPageNumber && (
+          <Tooltip label="맨 앞 페이지" placement="bottom">
             <Button
-              onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
-              variant={"outline"}
-              colorScheme={"teal"}
+              onClick={() => handlePageButtonClick(1)}
+              variant="outline"
               borderWidth={2}
             >
               <FontAwesomeIcon icon={faAnglesLeft} />
             </Button>
+          </Tooltip>
+          {pageInfo.prevPageNumber && (
+            <>
+              <Tooltip label="이전 페이지" placement="bottom">
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+                  variant="outline"
+                  borderWidth={2}
+                >
+                  <FontAwesomeIcon icon={faAngleLeft} />
+                </Button>
+              </Tooltip>
+            </>
           )}
-          {pageInfo.leftPageNumber && (
-            <Button
-              onClick={() => handlePageButtonClick(pageInfo.leftPageNumber)}
-              variant={"outline"}
-              colorScheme={"teal"}
-              borderWidth={2}
-            >
-              <FontAwesomeIcon icon={faAngleLeft} />
-            </Button>
-          )}
+
           {pageNumbers.map((pageNumber) => (
-            <ButtonGroup
-              key={pageNumber}
-              onClick={() => handlePageButtonClick(pageNumber)}
-            >
-              <Button variant={"outline"} colorScheme={"teal"} borderWidth={2}>
-                {pageNumber}
-              </Button>
-            </ButtonGroup>
-          ))}
-          {pageInfo.rightPageNumber && (
             <Button
-              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-              variant={"outline"}
-              colorScheme={"teal"}
+              onClick={() => handlePageButtonClick(pageNumber)}
+              key={pageNumber}
+              colorScheme={
+                pageNumber === pageInfo.currentPageNumber ? "teal" : "gray"
+              }
+              variant="outline"
               borderWidth={2}
             >
-              <FontAwesomeIcon icon={faAngleRight} />
+              {pageNumber}
             </Button>
-          )}
+          ))}
+
           {pageInfo.nextPageNumber && (
+            <>
+              <Tooltip label="다음 페이지" placement="bottom">
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+                  variant="outline"
+                  borderWidth={2}
+                >
+                  <FontAwesomeIcon icon={faAngleRight} />
+                </Button>
+              </Tooltip>
+            </>
+          )}
+          <Tooltip label="맨 끝 페이지" placement="bottom">
             <Button
               onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-              variant={"outline"}
-              colorScheme={"teal"}
+              variant="outline"
               borderWidth={2}
             >
               <FontAwesomeIcon icon={faAnglesRight} />
             </Button>
-          )}
+          </Tooltip>
         </Flex>
       </Center>
     </Box>
