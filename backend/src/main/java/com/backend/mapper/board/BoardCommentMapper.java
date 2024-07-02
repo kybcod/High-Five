@@ -63,4 +63,11 @@ public interface BoardCommentMapper {
             WHERE user_id = #{userId}
             """)
     String selectFileNameByUserId(Integer userId);
+
+    @Delete("""
+            DELETE FROM board_comment
+            WHERE reference_id = #{refId}
+            """)
+    void deleteByChildCommentId(Integer refId);
+
 }

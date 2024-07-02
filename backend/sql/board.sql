@@ -97,9 +97,10 @@ SELECT *
 FROM board_comment
 WHERE board_id = 107;
 
+
 DELETE
 FROM board_comment
-WHERE board_id = 45;
+WHERE board_id = 107;
 
 SELECT *
 FROM user_file;

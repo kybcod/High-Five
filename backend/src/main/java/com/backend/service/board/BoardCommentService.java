@@ -92,7 +92,12 @@ public class BoardCommentService {
     }
 
     public void deleteComment(BoardComment boardComment) {
-        mapper.deleteByCommentId(boardComment.getId());
+        int parId = boardComment.getId();
+        mapper.deleteByCommentId(parId);
+
+        if (boardComment.getRefId() == null) {
+            mapper.deleteByChildCommentId(parId);
+        }
     }
 
     public BoardComment getCommentById(Integer id) {
