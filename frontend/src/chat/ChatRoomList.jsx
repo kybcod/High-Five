@@ -23,8 +23,8 @@ export function ChatRoomList() {
   const [chatRoomList, setChatRoomList] = useState([]);
   const [data, setData] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [selectedChatRoom, setSelectedChatRoom] = useState(null);
   const [showChat, setShowChat] = useState(false);
-  const [count, setCount] = useState(0);
   const navigate = useNavigate();
   const toast = useToast();
   // -- axios.get
@@ -60,6 +60,17 @@ export function ChatRoomList() {
     setData((prevItems) =>
       prevItems.map((item, i) =>
         i === index ? { ...item, chat: { ...item.chat, count: 0 } } : item,
+      ),
+    );
+    setSelectedChatRoom(index);
+  };
+
+  const handleMessageReceived = (chatRoomId) => {
+    setData((prevItems) =>
+      prevItems.map((item) =>
+        item.chat.id === chatRoomId
+          ? { ...item, chat: { ...item.chat, count: item.chat.count + 1 } }
+          : item,
       ),
     );
   };
@@ -173,6 +184,8 @@ export function ChatRoomList() {
               pId={selectedChat.product.id}
               bId={selectedChat.chatRoom.userId}
               onBackClick={handleBackClick}
+              chatRoomId={selectedChat.chatRoom.id}
+              onMessageReceived={handleMessageReceived}
             />
           )}
         </Box>

@@ -40,7 +40,13 @@ import {
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import CustomModal from "./CustomModal.jsx";
 
-export function ChatRoom({ pId, bId, onBackClick }) {
+export function ChatRoom({
+  pId,
+  bId,
+  onBackClick,
+  chatRoomId,
+  onMessageReceived,
+}) {
   let { productId, buyerId } = useParams();
   if (pId != null && bId != null) {
     productId = pId;
@@ -83,7 +89,6 @@ export function ChatRoom({ pId, bId, onBackClick }) {
 
   // -- axios.get
   useEffect(() => {
-    setLoading(true);
     axios
       .get(`/api/chats/products/${productId}/buyer/${buyerId}`)
       .then((response) => {
@@ -112,16 +117,13 @@ export function ChatRoom({ pId, bId, onBackClick }) {
         });
         console.error("Error:", error);
         navigate(-1);
-      })
-      .finally(() => {
-        setLoading(false);
       });
-  }, [reviewId, roomId]);
+  }, [reviewId]);
 
   // -- stomp;
   useEffect(() => {
     const client = new StompJs.Client({
-      brokerURL: "http://localhost:8080/ws",
+      brokerURL: "ws://localhost:8080/ws",
       // connectHeaders: {
       //   login: "user",
       //   passcode: "password",
@@ -150,14 +152,14 @@ export function ChatRoom({ pId, bId, onBackClick }) {
         disConnect();
       }
     };
-  }, [reviewId]);
+  }, [roomId, chatRoomId, onMessageReceived]);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
-    // 전송 시간 추가
     receivedMessage.inserted = new Date().toLocaleTimeString();
     setMessageList((prevMessages) => [...prevMessages, receivedMessage]);
     message.ack();
+    onMessageReceived(receivedMessage.chatRoomId);
   };
 
   const sendMessage = () => {
@@ -532,7 +534,10 @@ export function ChatRoom({ pId, bId, onBackClick }) {
                     <Text p={1}>{msg.message}</Text>
                   </Box>
                   <Text fontSize="xs" color="gray.500">
-                    {msg.readCheck !== true && "전송됨"} {msg.inserted}
+                    {msg.readCheck !== true &&
+                      msg.userId === tokenUserId &&
+                      "전송됨"}{" "}
+                    {msg.inserted}
                   </Text>
                 </Flex>
               </Flex>
