@@ -23,6 +23,7 @@ export function ChatRoomList() {
   const [chatRoomList, setChatRoomList] = useState([]);
   const [data, setData] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [selectedChatRoom, setSelectedChatRoom] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
@@ -49,12 +50,29 @@ export function ChatRoomList() {
       .finally();
   }, []);
 
-  const handleChatSelect = (item) => {
+  const handleChatSelect = (item, index) => {
     setShowChat(false);
     setTimeout(() => {
       setSelectedChat(item);
       setShowChat(true);
     });
+    // 안 읽은 메세지 클릭 시 0으로 변경
+    setData((prevItems) =>
+      prevItems.map((item, i) =>
+        i === index ? { ...item, chat: { ...item.chat, count: 0 } } : item,
+      ),
+    );
+    setSelectedChatRoom(index);
+  };
+
+  const handleMessageReceived = (chatRoomId) => {
+    setData((prevItems) =>
+      prevItems.map((item) =>
+        item.chat.id === chatRoomId
+          ? { ...item, chat: { ...item.chat, count: item.chat.count + 1 } }
+          : item,
+      ),
+    );
   };
 
   const handleBackClick = () => {
@@ -139,7 +157,7 @@ export function ChatRoomList() {
                   h={"35px"}
                   lineHeight={"30px"}
                   cursor={"pointer"}
-                  onClick={() => handleChatSelect(item)}
+                  onClick={() => handleChatSelect(item, index)}
                 >
                   <Flex>
                     <Box
@@ -166,6 +184,8 @@ export function ChatRoomList() {
               pId={selectedChat.product.id}
               bId={selectedChat.chatRoom.userId}
               onBackClick={handleBackClick}
+              chatRoomId={selectedChat.chatRoom.id}
+              onMessageReceived={handleMessageReceived}
             />
           )}
         </Box>
