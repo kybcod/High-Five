@@ -183,7 +183,11 @@ export function BoardView() {
         </Box>
         <Spacer />
         {isLikeProcess || (
-          <Flex onClick={handleClickLike} alignItems={"center"}>
+          <Flex
+            onClick={handleClickLike}
+            alignItems={"center"}
+            cursor={"pointer"}
+          >
             {boardLike.boardLike && (
               <FontAwesomeIcon icon={fullHeart} size={"xl"} color={"red"} />
             )}
