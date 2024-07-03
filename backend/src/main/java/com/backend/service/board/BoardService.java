@@ -118,7 +118,6 @@ public class BoardService {
         UserFile userFile = UserFile.builder()
                 .fileName(fileName).src(STR."\{srcPrefix}user/\{board.getUserId()}/\{fileName}").build();
         board.setProfileImage(userFile);
-        System.out.println(userFile.getFileName());
 
         Map<String, Object> boardLike = new HashMap<>();
         if (authentication == null) {
@@ -172,7 +171,7 @@ public class BoardService {
         boardCommentMapper.deleteCommentByBoardId(id);
         mapper.deleteLikeByBoardId(id);
         mapper.deleteFileByBoardId(id);
-        
+
 
         return mapper.deleteById(id);
     }
