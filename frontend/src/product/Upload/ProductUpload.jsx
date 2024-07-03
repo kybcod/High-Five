@@ -112,6 +112,7 @@ export function ProductUpload() {
           duration: 3000,
         });
         navigate(`/product/${res.data.productId}`);
+        window.scrollTo({ top: 0, behavior: "auto" });
       })
       .catch((err) => {
         if (err.response && err.response.status === 413) {

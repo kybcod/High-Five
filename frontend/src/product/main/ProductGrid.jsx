@@ -23,7 +23,10 @@ export function ProductGrid({ productList, likes, handleLikeClick, account }) {
       {productList.map((product) => (
         <GridItem key={product.id}>
           <Card
-            onClick={() => navigate(`/product/${product.id}`)}
+            onClick={() => {
+              navigate(`/product/${product.id}`);
+              window.scrollTo({ top: 0, behavior: "auto" });
+            }}
             w={"85%"}
             boxShadow={"none"}
             borderColor={"white"}
