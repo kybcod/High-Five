@@ -41,11 +41,8 @@ public class UserController {
     public ResponseEntity addUser(@RequestBody User user) {
         user.setPhoneNumber(user.getPhoneNumber().replaceAll("-", ""));
         if (service.signUpVerification(user)) {
-            if (service.checkUniquePhoneNumber(user.getPhoneNumber())) {
-                service.addUser(user);
-                return ResponseEntity.ok().build();
-            }
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            service.addUser(user);
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
     }
@@ -171,7 +168,7 @@ public class UserController {
     public ResponseEntity getEmails(@PathVariable String phoneNumber) {
         phoneNumber = phoneNumber.replaceAll("-", "");
         if (phoneNumber.length() == 11) {
-            String email = service.getEmailByPhoneNumber(phoneNumber);
+            List<String> email = service.getEmailByPhoneNumber(phoneNumber);
             if (email != null) {
                 return ResponseEntity.ok(email);
             }

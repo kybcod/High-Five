@@ -86,9 +86,7 @@ export function SignUp() {
         navigate("/login");
       })
       .catch((err) => {
-        if (err.response.status === 409) {
-          errorToast("이미 존재하는 휴대폰 번호입니다");
-        } else if (err.response.status === 400) {
+        if (err.response.status === 400) {
           errorToast(
             "이메일, 비밀번호, 닉네임, 전화번호 형식 중 올바르지 않은 것이 있습니다",
           );

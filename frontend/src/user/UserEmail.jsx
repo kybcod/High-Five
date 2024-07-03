@@ -1,4 +1,4 @@
-import { Box, Button, Center, Divider, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Checkbox, Divider, Text } from "@chakra-ui/react";
 import { UserPhoneNumber } from "./UserPhoneNumber.jsx";
 import { useContext, useEffect, useState } from "react";
 import { SignupCodeContext } from "../component/SignupCodeProvider.jsx";
@@ -9,10 +9,12 @@ import { useNavigate } from "react-router-dom";
 
 export function UserEmail() {
   const codeInfo = useContext(SignupCodeContext);
-  const [email, setEmail] = useState("");
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [emails, setEmails] = useState([]);
   const [hasEmail, setHasEmail] = useState(false);
   const { errorToast } = CustomToast();
   const navigate = useNavigate();
+  const [emailParam, setEmailParam] = useState("");
 
   useEffect(() => {
     codeInfo.setPhoneNumber("");
@@ -21,11 +23,14 @@ export function UserEmail() {
     setHasEmail(false);
   }, []);
 
+  const allChecked = checkedItems.every(Boolean);
+  const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
+
   function handleFindEmail() {
     axios
       .get(`/api/users/emails/${codeInfo.phoneNumber}`)
       .then((res) => {
-        setEmail(res.data);
+        setEmails(res.data);
         setHasEmail(true);
       })
       .catch((err) => {
@@ -75,9 +80,19 @@ export function UserEmail() {
                 <Text fontSize={"sm"}>
                   휴대전화 정보와 일치하는 이메일입니다
                 </Text>
-                <Center>
-                  <Text fontSize={"lg"}>{"Email : " + email}</Text>
-                </Center>
+                {emails.map((email, index) => (
+                  <Center key={index}>
+                    <Checkbox
+                      fontSize={"lg"}
+                      isChecked={email === emailParam}
+                      onChange={(e) => {
+                        setEmailParam(email);
+                      }}
+                    >
+                      {"Email : " + email}
+                    </Checkbox>
+                  </Center>
+                ))}
               </Box>
             </Center>
             <Center>
@@ -87,7 +102,7 @@ export function UserEmail() {
                 mt={5}
                 onClick={() =>
                   navigate(
-                    `/user/password?email=${email}&phoneNumber=${codeInfo.phoneNumber}`,
+                    `/user/password?email=${emailParam}&phoneNumber=${codeInfo.phoneNumber}`,
                   )
                 }
                 cursor={"pointer"}
