@@ -35,9 +35,10 @@ public class ChatController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity getChatList(Authentication authentication) {
         List<Map<String, Object>> result = service.getChatRoomList(authentication);
-        if (result.size() == 0 || result == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        // 신규 회원 채팅방 0 일때 NOT_FOUND error
+//        if (result.size() == 0 || result == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
         return ResponseEntity.ok().body(result);
     }
 

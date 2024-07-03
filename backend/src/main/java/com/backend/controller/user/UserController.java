@@ -57,8 +57,6 @@ public class UserController {
         phoneNumber = phoneNumber.replaceAll("-", "");
         if (phoneNumber.length() == 11) {
             String verificationCode = service.sendMessage(phoneNumber);
-            // TODO. 주석 삭제
-            System.out.println("verificationCode = " + verificationCode);
             return ResponseEntity.ok(verificationCode);
         }
         return ResponseEntity.badRequest().build();
