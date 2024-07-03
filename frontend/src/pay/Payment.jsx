@@ -7,9 +7,10 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { LoginContext } from "../component/LoginProvider.jsx";
 
 export function Payment() {
   const { userId, productId } = useParams();
@@ -22,6 +23,7 @@ export function Payment() {
   const [buyerEmail, setBuyerEmail] = useState("");
   const [bidListId, setBidListId] = useState(0);
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
 
   useEffect(() => {
     const iamport = document.createElement("script");
@@ -47,6 +49,7 @@ export function Payment() {
     });
 
     axios.get(`/api/products/${productId}`).then((res) => {
+      console.log(res.data);
       setProduct(res.data.product);
     });
   }, []);
@@ -72,7 +75,7 @@ export function Payment() {
       pg: "html5_inicis", // PG사
       pay_method: "card", // 결제수단
       merchant_uid: merchantUid, // 주문번호
-      amount: amount, // 결제금액
+      amount: 100, // 결제금액
       name: name, // 주문명
       buyer_name: buyerName, // 구매자 이름
       buyer_tel: buyerTel, // 구매자 전화번호
@@ -97,7 +100,7 @@ export function Payment() {
             alert(`${amount}원이 결제되었습니다.`);
           })
           .finally(() => {
-            navigate(`/chat/product/${product.id}/buyer/${product.userId}`);
+            navigate(`/chat/product/${product.id}/buyer/${account.id}`);
           });
       } else {
         alert(`${error_msg} 이유로 결제를 실패하였습니다.`);
