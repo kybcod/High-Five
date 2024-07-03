@@ -75,7 +75,7 @@ export function Payment() {
       pg: "html5_inicis", // PG사
       pay_method: "card", // 결제수단
       merchant_uid: merchantUid, // 주문번호
-      amount: 100, // 결제금액
+      amount: amount, // 결제금액
       name: name, // 주문명
       buyer_name: buyerName, // 구매자 이름
       buyer_tel: buyerTel, // 구매자 전화번호
