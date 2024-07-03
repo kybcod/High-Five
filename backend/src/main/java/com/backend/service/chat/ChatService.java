@@ -148,6 +148,7 @@ public class ChatService {
         List<Map<String, Object>> result = new ArrayList<>();
 
         List<ChatRoom> chatRoomList = mapper.selectChatRoomListByUserId(tokenUserId);
+        
         for (ChatRoom chatRoom : chatRoomList) {
             Map<String, Object> map = new HashMap<>();
 
