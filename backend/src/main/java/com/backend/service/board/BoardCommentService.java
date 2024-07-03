@@ -41,9 +41,6 @@ public class BoardCommentService {
 
     public void add(BoardComment boardComment, Authentication authentication) {
         boardComment.setUserId(Integer.valueOf(authentication.getName()));
-        // 우선, 댓글의 대댓글(첫번째 대댓글)만 작성할 수 있는 기능부터
-//        boardComment.setCommentId(boardComment.getCommentId() + 1);     // 0을 얻어서 1 더함.. 증가하지 않음 수정필요
-
 
         if (boardComment.getRefId() != null && boardComment.getRefId() > 0) {
             int maxSeq = mapper.getMaxCommentSeq(boardComment.getBoardId());
@@ -53,9 +50,6 @@ public class BoardCommentService {
             boardComment.setCommentId(0);
         }
 
-        System.out.println(boardComment.getCommentId());
-        System.out.println(boardComment.getCommentSeq());
-        System.out.println(boardComment.getRefId());
         mapper.addComment(boardComment);
     }
 

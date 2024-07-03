@@ -228,17 +228,19 @@ export function BoardList() {
           </ModalContent>
         </Modal>
       </Box>
-      <Box display="flex" justifyContent="flex-end">
-        <Button
-          variant={"outline"}
-          colorScheme={"teal"}
-          sx={{ borderWidth: 2 }}
-          onClick={() => navigate(`/board`)}
-          mt={"20px"}
-        >
-          글쓰기
-        </Button>
-      </Box>
+      {account.isLoggedIn(account.userId) && (
+        <Box display="flex" justifyContent="flex-end">
+          <Button
+            variant={"outline"}
+            colorScheme={"teal"}
+            sx={{ borderWidth: 2 }}
+            onClick={() => navigate(`/board`)}
+            mt={"20px"}
+          >
+            글쓰기
+          </Button>
+        </Box>
+      )}
       <Center mt={"10px"}>
         <Flex gap={2}>
           <Select
@@ -294,7 +296,6 @@ export function BoardList() {
               </Tooltip>
             </>
           )}
-
           {pageNumbers.map((pageNumber) => (
             <Button
               onClick={() => handlePageButtonClick(pageNumber)}
@@ -308,7 +309,6 @@ export function BoardList() {
               {pageNumber}
             </Button>
           ))}
-
           {pageInfo.nextPageNumber && (
             <>
               <Tooltip label="다음 페이지" placement="bottom">
