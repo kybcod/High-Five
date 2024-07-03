@@ -135,16 +135,24 @@ export function ChatRoom({
       heartbeatIncoming: 30 * 1000,
       heartbeatOutgoing: 30 * 1000,
       onConnect: function () {
-        client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
-        client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
-          ack: "client",
-        }); // 본인
+        if (!client.subscribe[`/user/queue/chat`]) {
+          client.subscribe(`/user/queue/chat`, callback, { ack: "client" });
+        }
+        if (!client.subscribe[`/topic/chat/${data.chatRoom.id}`]) {
+          client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
+            ack: "client",
+          });
+        }
+        // client.subscribe(`/user/queue/chat`, callback, { ack: "client" }); // 상대방
+        // client.subscribe(`/topic/chat/${data.chatRoom.id}`, callback, {
+        //   ack: "client",
+        // }); // 본인
       },
       onStompError: (frame) => {
         console.error("STOMP error: ", frame);
       },
     });
-    // client.activate(); // 활성화
+    client.activate(); // 활성화
     setStompClient(client);
 
     return () => {
@@ -152,14 +160,26 @@ export function ChatRoom({
         disConnect();
       }
     };
-  }, [roomId, chatRoomId, onMessageReceived]);
+  }, [roomId, chatRoomId]);
 
   const callback = (message) => {
     const receivedMessage = JSON.parse(message.body);
     receivedMessage.inserted = new Date().toLocaleTimeString();
     setMessageList((prevMessages) => [...prevMessages, receivedMessage]);
     message.ack();
+    // 메시지가 읽혔음을 나타내기 위해 readCheck 업데이트
+    updateMessageReadCheck(receivedMessage);
     onMessageReceived(receivedMessage.chatRoomId);
+  };
+
+  const updateMessageReadCheck = (receivedMessage) => {
+    setMessageList((prevMessages) =>
+      prevMessages.map((msg) =>
+        tokenUserId !== receivedMessage.userId
+          ? { ...msg, readCheck: true }
+          : msg,
+      ),
+    );
   };
 
   const sendMessage = () => {
