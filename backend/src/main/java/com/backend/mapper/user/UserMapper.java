@@ -209,4 +209,24 @@ public interface UserMapper {
                 WHERE user_id = #{userId}
             """)
     int deleteProductLikeById(Integer userId);
+
+    @Select("""
+                SELECT COUNT(*) FROM board
+                WHERE user_id = #{userId}
+            """)
+    Integer selectBoardCountByUserId(Integer userId);
+
+    @Select("""
+                SELECT id
+                FROM board
+                WHERE user_id = #{userId}
+            """)
+    List<Integer> selectBoardIdByUserId(Integer id);
+
+    @Select("""
+                SELECT id
+                FROM question_board
+                WHERE user_id = #{userId}
+            """)
+    List<Integer> selectQuestionByUserId(Integer id);
 }

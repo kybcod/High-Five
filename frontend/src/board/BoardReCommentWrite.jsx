@@ -64,7 +64,7 @@ export function BoardReCommentWrite({
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      <Stack>
+      <Stack ml={"5px"}>
         <Button
           isDisabled={disableSaveButton}
           onClick={() => handleClickSave(boardComment.id)}

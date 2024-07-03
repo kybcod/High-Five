@@ -9,29 +9,35 @@ import java.util.List;
 public interface BoardMapper {
 
     @Insert("""
-            INSERT INTO board ( title, user_id, content)
-            VALUES (#{title}, #{userId}, #{content})
+            INSERT INTO board ( title
+                                , user_id
+                                , content )
+            VALUES (#{title}
+                    , #{userId}
+                    , #{content} )
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Board board);
 
     @Insert("""
-            INSERT INTO board_file (board_id, file_name)
-            VALUES (#{boardId}, #{fileName})
+            INSERT INTO board_file (board_id
+                                    , file_name)
+            VALUES (#{boardId}
+                    , #{fileName})
             """)
     void insertFileName(Integer boardId, String fileName);
 
     @Select("""
             <script>
-            SELECT b.id,
-                    b.title,
-                    b.content,
-                    u.nick_name nickName,
-                    b.inserted,
-                    b.view_count viewCount,
-                    COUNT(DISTINCT f.file_name) AS number_of_images,
-                    COUNT(DISTINCT l.user_id) AS number_of_likes,
-                    COUNT(DISTINCT c.id) AS number_of_comments
+            SELECT b.id
+                   , b.title
+                   , b.content
+                   , u.nick_name nickName
+                   , b.inserted
+                   , b.view_count viewCount
+                   , COUNT(DISTINCT f.file_name) AS number_of_images
+                   , COUNT(DISTINCT l.user_id) AS number_of_likes
+                   , COUNT(DISTINCT c.id) AS number_of_comments
             FROM board b LEFT JOIN board_file f ON b.id = f.board_id
                          LEFT JOIN board_like l ON b.id = l.board_id
                          LEFT JOIN board_comment c ON b.id = c.board_id
@@ -73,7 +79,10 @@ public interface BoardMapper {
 
     @Update("""
             UPDATE board
-            SET id = #{id}, title = #{title}, content = #{content}, inserted = NOW()
+            SET   id = #{id}
+                , title = #{title}
+                , content = #{content}
+                , inserted = NOW()
             WHERE id = #{id}
             """)
     int update(Board board);
@@ -85,7 +94,8 @@ public interface BoardMapper {
     int deleteById(Integer boardId);
 
     @Select("""
-            SELECT file_name FROM board_file
+            SELECT file_name
+            FROM board_file
             WHERE board_id = #{boardId}
             """)
     List<String> selectFileNameByBoardId(Integer boardId);
@@ -93,20 +103,22 @@ public interface BoardMapper {
     @Delete("""
             DELETE FROM board_file
             WHERE board_id = #{boardId}
-            AND file_name = #{fileName}
+            AND   file_name = #{fileName}
             """)
     void deleteFileByBoardIdAndName(Integer boardId, String fileName);
 
     @Delete("""
             DELETE FROM board_like
             WHERE board_id = #{boardId}
-            AND user_id = #{userId}
+            AND   user_id = #{userId}
             """)
     int deleteLikeByBoardIdAndUserId(Integer boardId, Integer userId);
 
     @Insert("""
-            INSERT INTO board_like (board_id, user_id)
-            VALUES (#{boardId}, #{userId})
+            INSERT INTO board_like (board_id
+                                    , user_id)
+            VALUES (#{boardId}
+                    , #{userId})
             """)
     void insertLikeByIdAndUserId(Integer boardId, Integer userId);
 
@@ -120,7 +132,7 @@ public interface BoardMapper {
     @Select("""
             SELECT COUNT(*) FROM board_like
             WHERE board_id = #{boardId}
-            AND user_id = #{userId}
+            AND   user_id = #{userId}
             """)
     int selectLikeByBoardIdAndUserId(Integer boardId, String userId);
 

@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   Flex,
+  Image,
   Input,
   Spinner,
   Table,
@@ -79,6 +80,7 @@ export function UserList() {
         <Thead>
           <Tr>
             <Th>No.</Th>
+            <Th>PIC</Th>
             <Th>이메일</Th>
             <Th>닉네임</Th>
             <Th>가입일시</Th>
@@ -89,6 +91,15 @@ export function UserList() {
           {userList.map((user) => (
             <Tr key={user.id}>
               <Td>{user.id}</Td>
+              <Td>
+                <Image
+                  src={user.profileImage.src}
+                  fallbackSrc="https://study34980.s3.ap-northeast-2.amazonaws.com/prj3/profile/original_profile.jpg"
+                  borderRadius="full"
+                  width={"50px"}
+                  h={"50px"}
+                />
+              </Td>
               <Td>
                 {user.email}
                 {user.authority.includes("admin") && (

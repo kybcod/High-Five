@@ -3,13 +3,11 @@ import { Box, Center, Flex, Heading, Image, Text } from "@chakra-ui/react";
 export default function Footer(props) {
   return (
     <Box
-      h={"100px"}
       borderTop={"1px solid black"}
       p={4}
       align="center"
       fontSize={"lg"}
       sx={{
-        bottom: 0,
         textAlign: "center",
         backgroundColor: "white",
       }}

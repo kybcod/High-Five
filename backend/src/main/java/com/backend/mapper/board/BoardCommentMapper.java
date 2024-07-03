@@ -10,8 +10,18 @@ public interface BoardCommentMapper {
 
     @Insert("""
             INSERT INTO board_comment
-            (board_id, user_id, content, comment_id, comment_sequence, reference_id)
-            VALUES (#{boardId}, #{userId}, #{content}, #{commentId}, #{commentSeq}, #{refId})
+            (board_id
+            , user_id
+            , content
+            , comment_id
+            , comment_sequence
+            , reference_id)
+            VALUES (#{boardId}
+                    , #{userId}
+                    , #{content}
+                    , #{commentId}
+                    , #{commentSeq}
+                    , #{refId})
             """)
     void addComment(BoardComment boardComment);
 
@@ -23,30 +33,37 @@ public interface BoardCommentMapper {
     int getMaxCommentSeq(int boardId);
 
     @Select("""
-            SELECT c.id, c.board_id, u.nick_name nickName, c.user_id,
-                    c.content, c.inserted, c.comment_id, 
-                    c.comment_sequence commentSeq, c.reference_id refId
-            FROM board_comment c JOIN user u ON c.user_id = u.id 
-            WHERE c.board_id = #{boardId}
+            SELECT c.id
+                   , c.board_id
+                   , u.nick_name nickName
+                   , c.user_id
+                   , c.content
+                   , c.inserted
+                   , c.comment_id
+                   , c.comment_sequence commentSeq
+                   , c.reference_id refId
+            FROM board_comment c JOIN user u ON c.user_id = u.id
+            WHERE              c.board_id = #{boardId}
             """)
     List<BoardComment> selectAllComment(Integer boardId);
 
     @Select("""
             SELECT *
             FROM board_comment c JOIN user u ON c.user_id = u.id
-            WHERE c.id = #{id}
+            WHERE              c.id = #{id}
             """)
     BoardComment selectById(Integer id);
 
     @Delete("""
-             DELETE FROM board_comment
-             WHERE id = #{id}
+            DELETE FROM board_comment
+            WHERE id = #{id}
             """)
     void deleteByCommentId(Integer id);
 
     @Update("""
             UPDATE board_comment
-            SET content = #{content}, inserted = NOW()
+            SET content = #{content}
+                , inserted = NOW()
             WHERE id = #{id}
             """)
     void updateByCommentId(String content, Integer id);
