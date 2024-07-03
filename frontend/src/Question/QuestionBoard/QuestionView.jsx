@@ -265,7 +265,10 @@ export function QuestionView() {
             w={"100px"}
             variant={"outline"}
             borderRadius={"unset"}
-            onClick={() => navigate("/question/list")}
+            onClick={() => {
+              navigate("/question/list");
+              window.scrollTo({ top: 0, behavior: "auto" });
+            }}
           >
             글 목록
           </Button>
@@ -274,7 +277,10 @@ export function QuestionView() {
             w={"100px"}
             variant={"outline"}
             borderRadius={"unset"}
-            onClick={() => navigate("/question/write")}
+            onClick={() => {
+              navigate("/question/write");
+              window.scrollTo({ top: 160, behavior: "auto" });
+            }}
           >
             글쓰기
           </Button>
