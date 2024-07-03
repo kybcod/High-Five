@@ -92,6 +92,7 @@ export function QuestionList() {
       alert("비밀글에 접근할 권한이 없습니다.");
     } else {
       navigate(`/question/${question.id}`);
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
   };
 
@@ -210,7 +211,10 @@ export function QuestionList() {
             colorScheme={"teal"}
             variant={"outline"}
             borderRadius={"unset"}
-            onClick={() => navigate("/question/write")}
+            onClick={() => {
+              navigate("/question/write");
+              window.scrollTo({ top: 160, behavior: "auto" });
+            }}
           >
             글쓰기
           </Button>
@@ -299,6 +303,7 @@ export function QuestionList() {
             </Button>
           </Tooltip>
         </Flex>
+        <Scroll isTop={true} />
       </Center>
     </>
   );

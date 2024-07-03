@@ -51,6 +51,7 @@ export function QuestionEdit() {
       .then(() => {
         successToast("게시물이 수정되었습니다.");
         navigate(`/question/${id}`);
+        window.scrollTo({ top: 0, behavior: "auto" });
       })
       .catch((err) => {
         err.response.status === 413
