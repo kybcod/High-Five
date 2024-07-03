@@ -3,22 +3,22 @@ import {
   Button,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Checkbox,
+  Divider,
+  Flex,
   FormControl,
   FormHelperText,
   Heading,
-  Input,
   Image,
+  Input,
+  Switch,
+  Table,
+  Td,
   Text,
   Textarea,
-  Divider,
-  Table,
   Tr,
-  Td,
-  Flex,
-  CardFooter,
-  Switch,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import axios from "axios";
@@ -72,22 +72,22 @@ export function QuestionWrite() {
     setSecretWrite(!secretWrite);
   }
 
-  // function handleInsertFiles(e) {
-  //   const selectFiles = Array.from(e.target.files); // 선택한 파일들을 배열로 변환
-  //   setFiles((prevFiles) => [...prevFiles, ...selectFiles]); // 기존 파일 리스트에 새로 선택한 파일들을 추가
-  //   setPreviewList((prevPreviews) => [
-  //     ...prevPreviews,
-  //     ...selectFiles.map((file) => URL.createObjectURL(file)),
-  //   ]); // 기존 미리보기 리스트('previewList')에 선택한 파일들의 미리보기 URL 생성하여 추가
-  // }
-
   function handleInsertFiles(e) {
-    const selectFiles = e.target.files;
-    setFiles(selectFiles);
-    setPreviewList(
-      Array.from(files).map((file, index) => URL.createObjectURL(file, index)),
-    );
+    const selectFiles = Array.from(e.target.files); // 선택한 파일들을 배열로 변환
+    setFiles((prevFiles) => [...prevFiles, ...selectFiles]); // 기존 파일 리스트에 새로 선택한 파일들을 추가
+    setPreviewList((prevPreviews) => [
+      ...prevPreviews,
+      ...selectFiles.map((file) => URL.createObjectURL(file)),
+    ]); // 기존 미리보기 리스트('previewList')에 선택한 파일들의 미리보기 URL 생성하여 추가
   }
+
+  // function handleInsertFiles(e) {
+  //   const selectFiles = e.target.files;
+  //   setFiles(selectFiles);
+  //   setPreviewList(
+  //     Array.from(files).map((file, index) => URL.createObjectURL(file, index)),
+  //   );
+  // }
 
   // function handleRemoveFile(index) {
   //   if (removeFileList.includes(index)) {
