@@ -104,14 +104,14 @@ export function ProductUpload() {
         content: content,
         files: files,
       })
-      .then(() => {
+      .then((res) => {
         toast({
           description: "새 상품이 등록되었습니다. 지금부터 판매 시작합니다.",
           status: "success",
           position: "top-right",
           duration: 3000,
         });
-        navigate("/list");
+        navigate(`/product/${res.data.productId}`);
       })
       .catch((err) => {
         if (err.response && err.response.status === 413) {

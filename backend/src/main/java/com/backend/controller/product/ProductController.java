@@ -29,11 +29,11 @@ public class ProductController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     @Description("상품 업로드")
-    public ResponseEntity upload(Product product, Authentication authentication,
+    public ResponseEntity upload(Product request, Authentication authentication,
                                  @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
-        if (service.validate(product)) {
-            service.upload(product, files, authentication);
-            return ResponseEntity.ok().build();
+        if (service.validate(request)) {
+            Map<String, Object> product = service.upload(request, files, authentication);
+            return ResponseEntity.ok().body(product);
         }
         return ResponseEntity.badRequest().build();
     }

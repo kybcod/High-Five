@@ -38,7 +38,7 @@ export function BoardCommentEdit({
           defaultValue={boardComment.content}
           onChange={(e) => setUpdatedContent(e.target.value)}
         />
-        <Stack>
+        <Stack ml={"5px"}>
           <Button onClick={handleClickSave}>저장</Button>
           <Button onClick={() => setIsEditingId(null)}>취소</Button>
         </Stack>
