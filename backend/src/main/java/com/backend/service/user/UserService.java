@@ -368,12 +368,12 @@ public class UserService {
     public boolean modifyPassword(User user) {
         User dbUser = getUserByEmail(user.getEmail());
         if (dbUser != null) {
-            if (dbUser.getPhoneNumber().equals(user.getPhoneNumber())) {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-                mapper.updatePassword(user);
-                return true;
-            }
-            return false;
+//            if (dbUser.getPhoneNumber().equals(user.getPhoneNumber())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            mapper.updatePassword(user);
+            return true;
+//            }
+//            return false;
         }
         return false;
     }
