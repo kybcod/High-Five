@@ -358,7 +358,7 @@ public interface ProductMapper {
             SELECT *
             FROM product
             WHERE DATE(end_time) = CURDATE()
-            ORDER BY end_time;
+            ORDER BY status DESC, end_time
             """)
     @Results(id = "todayProduct", value = {
             @Result(property = "id", column = "id"),
