@@ -101,7 +101,7 @@ public class UserController {
             List<Integer> chatRoomId = service.getChatRoomIdByUserId(user.getId());
             // userId로 chatRoom 삭제
             chatRoomId.forEach(roomId -> chatService.deleteChatRoomById(roomId, authentication));
-            
+
             service.removeUserById(user.getId());
             return ResponseEntity.ok().build();
         }
@@ -189,5 +189,12 @@ public class UserController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/user/board/{userId}")
+    public ResponseEntity getBoard(@PathVariable Integer userId) {
+        System.out.println("board" + userId);
+        Integer boardCount = service.getBoardCountByUserId(userId);
+        return ResponseEntity.ok(String.valueOf(boardCount));
     }
 }

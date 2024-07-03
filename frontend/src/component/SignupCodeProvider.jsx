@@ -54,6 +54,7 @@ export function SignupCodeProvider({ children }) {
   }
 
   function handleSendCode() {
+    setVerificationCode("");
     clearInterval(timerId.current);
     time.current = 180;
     timerId.current = setInterval(() => {
