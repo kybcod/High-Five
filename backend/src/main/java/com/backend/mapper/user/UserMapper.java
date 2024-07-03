@@ -142,7 +142,7 @@ public interface UserMapper {
                 FROM user
                 WHERE phone_number = #{phoneNumber}
             """)
-    String selectEmailByPhoneNumber(String phoneNumber);
+    List<String> selectEmailByPhoneNumber(String phoneNumber);
 
     @Update("""
                 UPDATE user

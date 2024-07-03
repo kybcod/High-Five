@@ -67,6 +67,9 @@ WHERE id = 57;
 SELECT *
 FROM user;
 
+DELETE FROM user
+WHERE id = 99;
+
 # ALTER TABLE user_file
 #     CHANGE file_name file_src VARCHAR(500);
 
@@ -133,3 +136,8 @@ ALTER TABLE chat_room
 
 SELECT *
 FROM product;
+
+ALTER TABLE user
+    MODIFY COLUMN phone_number VARCHAR(11) NOT NULL;
+
+DROP INDEX phone_number_2 ON user;

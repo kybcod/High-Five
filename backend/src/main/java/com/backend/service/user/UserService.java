@@ -61,7 +61,6 @@ public class UserService {
 
     public String sendMessage(String phoneNumber) {
         String verificationCode = Integer.toString((int) (Math.random() * 8999) + 1000);
-        // TODO. 주석풀기
         SingleMessageSentResponse response = sms.sendOne(phoneNumber, verificationCode);
 
         Integer dbCode = mapper.selectCodeByPhoneNumber(phoneNumber);
@@ -362,16 +361,19 @@ public class UserService {
         mapper.updateBlackCountByUserId(id);
     }
 
-    public String getEmailByPhoneNumber(String phoneNumber) {
+    public List<String> getEmailByPhoneNumber(String phoneNumber) {
         return mapper.selectEmailByPhoneNumber(phoneNumber);
     }
 
     public boolean modifyPassword(User user) {
         User dbUser = getUserByEmail(user.getEmail());
         if (dbUser != null) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            mapper.updatePassword(user);
-            return true;
+            if (dbUser.getPhoneNumber().equals(user.getPhoneNumber())) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                mapper.updatePassword(user);
+                return true;
+            }
+            return false;
         }
         return false;
     }
@@ -385,11 +387,6 @@ public class UserService {
             return false;
         }
         return true;
-    }
-
-    public boolean checkUniquePhoneNumber(String phoneNumber) {
-        String email = mapper.selectEmailByPhoneNumber(phoneNumber);
-        return email == null;
     }
 
     public List<Integer> getChatRoomIdByUserId(Integer id) {

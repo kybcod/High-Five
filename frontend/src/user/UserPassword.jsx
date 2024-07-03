@@ -49,7 +49,11 @@ export function UserPassword() {
 
   function handleUpdatePassword() {
     axios
-      .put("/api/user/passwords", { email, password })
+      .put("/api/user/passwords", {
+        email,
+        password,
+        phoneNumber: codeInfo.phoneNumber,
+      })
       .then(() => {
         successToast("비밀번호가 변경되었습니다");
         navigate("/login");
