@@ -4,7 +4,9 @@ import com.backend.component.SmsUtil;
 import com.backend.domain.user.User;
 import com.backend.domain.user.UserFile;
 import com.backend.mapper.user.UserMapper;
+import com.backend.service.board.BoardService;
 import com.backend.service.product.ProductService;
+import com.backend.service.question.QuestionService;
 import com.backend.util.PageInfo;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,8 @@ public class UserService {
     private final JwtEncoder jwtEncoder;
     private final S3Client s3Client;
     private final ProductService productService;
+    private final BoardService boardService;
+    private final QuestionService questionService;
 
     @Value("${aws.s3.bucket.name}")
     String bucketName;
@@ -65,9 +69,9 @@ public class UserService {
             mapper.deleteCodeByPhoneNumber(phoneNumber);
         }
 
-//        if (response.getStatusCode().equals("2000")) {
-        mapper.insertCode(phoneNumber, verificationCode);
-//        }
+        if (response.getStatusCode().equals("2000")) {
+            mapper.insertCode(phoneNumber, verificationCode);
+        }
 
         TimerTask timeOutCodeDelete = new TimerTask() {
             public void run() {
@@ -245,6 +249,14 @@ public class UserService {
         // 입찰 내역 지우기
         mapper.deleteBidListByUserId(id);
 
+        // 자유 게시판 글 지우기
+        List<Integer> boardList = mapper.selectBoardIdByUserId(id);
+        boardList.forEach(boardService::deleteById);
+
+        // QnA 글 지우기
+        List<Integer> questionList = mapper.selectQuestionByUserId(id);
+        questionList.forEach(questionService::delete);
+
         // 회원 지우기
         mapper.deleteUserById(id);
     }
@@ -321,7 +333,19 @@ public class UserService {
         int offset = (page - 1) * 10;
         Pageable pageable = PageRequest.of(page - 1, 10);
         List<User> userList = mapper.selectUserList(offset, type, keyword);
-        userList.forEach(user -> user.setAuthority(mapper.selectAuthoritiesByUserId(user.getId())));
+        userList.forEach(user ->
+                {
+                    user.setAuthority(mapper.selectAuthoritiesByUserId(user.getId()));
+                    String fileName = mapper.selectFileNameByUserId(user.getId());
+                    UserFile userFile = UserFile.builder()
+                            .fileName("null").src("null").build();
+                    if (fileName != null) {
+                        userFile = UserFile.builder()
+                                .fileName(fileName).src(STR."\{srcPrefix}user/\{user.getId()}/\{fileName}").build();
+                    }
+                    user.setProfileImage(userFile);
+                }
+        );
 
         int totalUserNumber = mapper.selectTotalUserCount(type, keyword);
         int newId = offset + 1;
@@ -370,5 +394,9 @@ public class UserService {
 
     public List<Integer> getChatRoomIdByUserId(Integer id) {
         return mapper.selectChatRoomIdByUserId(id);
+    }
+
+    public Integer getBoardCountByUserId(Integer userId) {
+        return mapper.selectBoardCountByUserId(userId);
     }
 }

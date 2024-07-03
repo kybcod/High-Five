@@ -21,7 +21,7 @@ import {
   InputStyle,
   title,
 } from "../component/css/style.js";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export function UserPassword() {
   const [email, setEmail] = useState("");
@@ -30,6 +30,7 @@ export function UserPassword() {
   const codeInfo = useContext(SignupCodeContext);
   const { successToast, errorToast } = CustomToast();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const emailParam = searchParams.get("email");
@@ -49,7 +50,10 @@ export function UserPassword() {
   function handleUpdatePassword() {
     axios
       .put("/api/user/passwords", { email, password })
-      .then(() => successToast("비밀번호가 변경되었습니다"))
+      .then(() => {
+        successToast("비밀번호가 변경되었습니다");
+        navigate("/login");
+      })
       .catch((err) => {
         if (err.response.status === 404) {
           errorToast("입력한 정보에 맞는 회원 정보가 없습니다");
@@ -106,7 +110,7 @@ export function UserPassword() {
         <UserPhoneNumber />
         {codeInfo.isCheckedCode && (
           <Center mt={10}>
-            <Box border={"1px"} borderColor={"gray.200"} p={5}>
+            <Box border={"1px"} borderColor={"gray.200"} p={5} w={"500px"}>
               <Center>
                 <Heading fontSize={"lg"}>새 비밀번호를 입력해주세요</Heading>
               </Center>
