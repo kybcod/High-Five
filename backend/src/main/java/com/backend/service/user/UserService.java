@@ -4,7 +4,9 @@ import com.backend.component.SmsUtil;
 import com.backend.domain.user.User;
 import com.backend.domain.user.UserFile;
 import com.backend.mapper.user.UserMapper;
+import com.backend.service.board.BoardService;
 import com.backend.service.product.ProductService;
+import com.backend.service.question.QuestionService;
 import com.backend.util.PageInfo;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,8 @@ public class UserService {
     private final JwtEncoder jwtEncoder;
     private final S3Client s3Client;
     private final ProductService productService;
+    private final BoardService boardService;
+    private final QuestionService questionService;
 
     @Value("${aws.s3.bucket.name}")
     String bucketName;
@@ -244,6 +248,14 @@ public class UserService {
 
         // 입찰 내역 지우기
         mapper.deleteBidListByUserId(id);
+
+        // 자유 게시판 글 지우기
+        List<Integer> boardList = mapper.selectBoardIdByUserId(id);
+        boardList.forEach(boardService::deleteById);
+
+        // QnA 글 지우기
+        List<Integer> questionList = mapper.selectQuestionByUserId(id);
+        questionList.forEach(questionService::delete);
 
         // 회원 지우기
         mapper.deleteUserById(id);
