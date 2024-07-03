@@ -57,8 +57,7 @@ export function QuestionView() {
       })
       .catch((err) => {
         err.response.status === 403
-          ? // errorToast("비밀글에 접근할 권한이 없습니다.")
-            alert("비밀글에 접근할 권한이 없습니다.")
+          ? alert("비밀글에 접근할 권한이 없습니다.")
           : (errorToast("해당 게시글이 없습니다."), navigate("/question/list"));
       });
   }, [id]);
@@ -168,6 +167,30 @@ export function QuestionView() {
                       }}
                       cursor={"pointer"}
                     />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="icon icon-tabler icons-tabler-outline icon-tabler-zoom-in"
+                      style={{
+                        position: "relative",
+                        left: "270px",
+                        top: "-30px",
+                        color: "gray",
+                      }}
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                      <path d="M7 10l6 0" />
+                      <path d="M10 7l0 6" />
+                      <path d="M21 21l-6 -6" />
+                    </svg>
                   </CardBody>
                 </Card>
               ))}
@@ -181,31 +204,11 @@ export function QuestionView() {
 
         <Box mb={10} mt={20}>
           <Divider borderColor={"gray"} />
-          {question.prevId && (
-            <>
-              <Flex h={10} alignItems={"center"} textAlign={"center"}>
-                <Box w={"5%"}>
-                  <FontAwesomeIcon icon={faChevronUp} />
-                </Box>
-                <Box w={"10%"}>이전글</Box>
-                <PrevNextTitle
-                  secret={question.prevSecret}
-                  hasAccess={(prevUserId) => account.hasAccess(prevUserId)}
-                  isAdmin={() => account.isAdmin(account.userId)}
-                  title={question.prevTitle}
-                  userId={question.prevUserId}
-                  navigateTo={() => navigate(`/question/${question.prevId}`)}
-                />
-              </Flex>
-              <Divider borderColor={"gray"} />
-            </>
-          )}
-
           {question.nextId && (
             <>
               <Flex h={10} alignItems={"center"} textAlign={"center"}>
                 <Box w={"5%"}>
-                  <FontAwesomeIcon icon={faChevronDown} />
+                  <FontAwesomeIcon icon={faChevronUp} />
                 </Box>
                 <Box w={"10%"}>
                   <a href={`/question/${question.nextId}`}>다음글</a>
@@ -217,6 +220,25 @@ export function QuestionView() {
                   title={question.nextTitle}
                   userId={question.nextUserId}
                   navigateTo={() => navigate(`/question/${question.nextId}`)}
+                />
+              </Flex>
+              <Divider borderColor={"gray"} />
+            </>
+          )}
+          {question.prevId && (
+            <>
+              <Flex h={10} alignItems={"center"} textAlign={"center"}>
+                <Box w={"5%"}>
+                  <FontAwesomeIcon icon={faChevronDown} />
+                </Box>
+                <Box w={"10%"}>이전글</Box>
+                <PrevNextTitle
+                  secret={question.prevSecret}
+                  hasAccess={(prevUserId) => account.hasAccess(prevUserId)}
+                  isAdmin={() => account.isAdmin(account.userId)}
+                  title={question.prevTitle}
+                  userId={question.prevUserId}
+                  navigateTo={() => navigate(`/question/${question.prevId}`)}
                 />
               </Flex>
               <Divider borderColor={"gray"} />

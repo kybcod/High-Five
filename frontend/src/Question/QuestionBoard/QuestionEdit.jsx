@@ -4,19 +4,14 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
   Checkbox,
   Divider,
   Flex,
   FormControl,
   FormHelperText,
-  FormLabel,
-  Heading,
   Image,
   Input,
   Spinner,
-  Stack,
-  StackDivider,
   Switch,
   Table,
   Td,
@@ -54,7 +49,7 @@ export function QuestionEdit() {
         secretWrite: question.secretWrite,
       })
       .then(() => {
-        successToast(`${id}번 게시물이 수정되었습니다.`);
+        successToast("게시물이 수정되었습니다.");
         navigate(`/question/${id}`);
       })
       .catch((err) => {

@@ -1,12 +1,5 @@
 import axios from "axios";
-import {
-  Box,
-  Card,
-  CardBody,
-  Image,
-  Stack,
-  StackDivider,
-} from "@chakra-ui/react";
+import { Box, Card, CardBody, Stack, StackDivider } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Comment } from "./Comment.jsx";
 import Scroll from "../Scroll.jsx";
