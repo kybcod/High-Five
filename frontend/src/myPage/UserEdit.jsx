@@ -207,7 +207,7 @@ export function UserEdit() {
           </Box>
         </HStack>
         <FormControl mt={12}>
-          <FormLabel>비밀번호</FormLabel>
+          <FormLabel>새 비밀번호</FormLabel>
           <Input
             type={"password"}
             variant="flushed"
@@ -222,7 +222,7 @@ export function UserEdit() {
           )}
         </FormControl>
         <FormControl mt={7}>
-          <FormLabel>비밀번호 확인</FormLabel>
+          <FormLabel>새 비밀번호 확인</FormLabel>
           <Input
             type={"password"}
             variant="flushed"
@@ -276,7 +276,7 @@ export function UserEdit() {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>수정하시겠습니까?</ModalHeader>
-          <ModalBody>비밀번호를 입력해주세요</ModalBody>
+          <ModalBody>기존 비밀번호를 입력해주세요</ModalBody>
           <ModalFooter>
             <Input
               mr={2}
