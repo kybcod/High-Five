@@ -30,8 +30,11 @@ public interface QuestionMapper {
     List<Question> getList(Integer page);
 
     @Select("""
-            SELECT qb.id, qb.title, qb.content, qb.inserted, user.nick_name nickName, qb.user_id, qb.secret_write FROM question_board qb JOIN user ON qb.user_id = user.id WHERE qb.id = #{id}
-            """)
+            SELECT qb.id, qb.title, qb.content, qb.inserted, user.nick_name nickName, qb.user_id, qb.secret_write, qbc.numberOfComments FROM question_board qb 
+            LEFT JOIN (SELECT question_id, COUNT(*) AS numberOfComments
+                                                      FROM question_board_comment
+                                                      GROUP BY question_id) qbc ON qb.id= qbc.question_id
+            JOIN user ON qb.user_id = user.id WHERE qb.id = #{id}""")
     Question selectById(Integer id);
 
     @Select("""

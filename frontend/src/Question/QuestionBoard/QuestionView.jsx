@@ -20,7 +20,7 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
@@ -128,6 +128,19 @@ export function QuestionView() {
                 <Badge colorScheme="green" fontSize={"10px"}>
                   New
                 </Badge>
+              )}
+            </Box>
+            <Box>
+              {question.numberOfComments > 0 ? (
+                <Box ml={2}>
+                  <Badge variant="outline" colorScheme="green">
+                    답변완료
+                  </Badge>
+                </Box>
+              ) : (
+                <Box ml={2}>
+                  <Badge variant="outline">답변대기</Badge>
+                </Box>
               )}
             </Box>
           </Td>
