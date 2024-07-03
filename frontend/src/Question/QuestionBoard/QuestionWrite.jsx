@@ -82,25 +82,6 @@ export function QuestionWrite() {
     ]); // 기존 미리보기 리스트('previewList')에 선택한 파일들의 미리보기 URL 생성하여 추가
   }
 
-  // function handleInsertFiles(e) {
-  //   const selectFiles = e.target.files;
-  //   setFiles(selectFiles);
-  //   setPreviewList(
-  //     Array.from(files).map((file, index) => URL.createObjectURL(file, index)),
-  //   );
-  // }
-
-  // function handleRemoveFile(index) {
-  //   if (removeFileList.includes(index)) {
-  //     setRemoveFileList(removeFileList.filter((i) => i !== index));
-  //   } else {
-  //     setRemoveFileList([...removeFileList, index]);
-  //   }
-  // }
-
-  // 함수형 업데이트는 상태를 안전하게 업데이트하는 데 유용합니다.
-  // 특히 상태 업데이트가 비동기적으로 발생할 수 있는 React의 특성상, 함수형 업데이트를 사용하면 이전 상태를 정확하게 참조할 수 있습니다.
-
   function handleRemoveFile(index) {
     setRemoveFileList(
       (

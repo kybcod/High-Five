@@ -25,7 +25,6 @@ import {
   faAnglesLeft,
   faAnglesRight,
   faImage,
-  faLock,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { LoginContext } from "../../component/LoginProvider.jsx";

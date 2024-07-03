@@ -47,7 +47,6 @@ public class QuestionController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(value = "type", required = false) String searchType,
             @RequestParam(value = "keyword", defaultValue = "") String keyword) {
-//        return service.list(PageRequest.of(page - 1, 5), searchType, keyword);
         return service.list(page, searchType, keyword);
     }
 

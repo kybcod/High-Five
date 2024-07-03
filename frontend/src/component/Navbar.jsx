@@ -16,8 +16,6 @@ export function Navbar() {
 
   return (
     <Flex
-      // bgColor={"#99D8AF"} // 원래 색
-      // bgColor={"#05a482"} // 약간 진한 초록색
       h={"30px"}
       p={4}
       justifyContent={"space-between"}

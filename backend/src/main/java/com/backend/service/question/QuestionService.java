@@ -71,14 +71,6 @@ public class QuestionService {
         return true;
     }
 
-//    public Map<String, Object> list(Pageable pageable, String searchType, String keyword) {
-//        int total = mapper.countAllWithSearch(searchType, keyword);
-//        List<Question> content = mapper.selectUsingPageable(pageable, searchType, keyword);
-//        Page<Question> page = new PageImpl<>(content, pageable, total);
-//        PageInfo pageInfo = new PageInfo().setting(page);
-//        return Map.of("content", content, "pageInfo", pageInfo);
-//    }
-
     public Map<String, Object> list(Integer page, String searchType, String keyword) {
         Map pageInfo = new HashMap<>();
 
@@ -153,8 +145,7 @@ public class QuestionService {
 
     public void edit(Question question, MultipartFile[] addFileList, List<String> removeFileList) throws IOException {
 
-        // 파일 먼저 지우고
-        // 파일 추가
+        // 파일 먼저 지우고 파일 추가
         if (removeFileList != null && removeFileList.size() > 0) {
             for (String name : removeFileList) {
                 String key = STR."prj3/\{question.getId()}/\{name}";
