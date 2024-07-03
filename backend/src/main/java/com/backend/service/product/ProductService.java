@@ -45,7 +45,7 @@ public class ProductService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
-    public void upload(Product product, MultipartFile[] files, Authentication authentication) throws IOException {
+    public Map<String, Object> upload(Product product, MultipartFile[] files, Authentication authentication) throws IOException {
         Integer userId = Integer.valueOf(authentication.getName());
         product.setUserId(userId);
 
@@ -69,6 +69,7 @@ public class ProductService {
                         RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             }
         }
+        return Map.of("productId", product.getId());
     }
 
     public Map<String, Object> list() {
