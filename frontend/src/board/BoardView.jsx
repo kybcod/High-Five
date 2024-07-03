@@ -271,9 +271,16 @@ export function BoardView() {
           </ModalBody>
           <ModalFooter>
             <Flex>
-              <Button onClick={deleteModalOnClose}>취소</Button>
-              <Button onClick={handleClickDelete} colorScheme={"red"}>
+              <Button
+                onClick={handleClickDelete}
+                colorScheme={"red"}
+                variant={"outline"}
+                borderWidth={2}
+              >
                 삭제
+              </Button>
+              <Button onClick={deleteModalOnClose} ml={"10px"}>
+                취소
               </Button>
             </Flex>
           </ModalFooter>
