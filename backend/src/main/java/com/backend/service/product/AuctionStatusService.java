@@ -30,8 +30,6 @@ public class AuctionStatusService {
                 productService.updateStatus(product); //판매 종료
                 auctionService.updateBidStatus(product.getId()); // 낙찰
             }
-            System.out.println("currentTime = " + currentTime);
-            System.out.println(STR."\{product.getTitle()} : 끝나는 시간(\{product.getEndTime()}) , 상품 상태 : \{product.getStatus()}");
         }
     }
 }
