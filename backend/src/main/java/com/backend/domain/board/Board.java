@@ -7,7 +7,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 @Data
 public class Board {
@@ -41,7 +40,7 @@ public class Board {
             return hours + "시간 전";
         } else {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("a hh:mm:ss").withLocale(Locale.KOREAN);
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("a hh:mm:ss");
             LocalDateTime beforeOneDay = now.minusDays(1);
 
             if (inserted.isBefore(beforeOneDay)) {
