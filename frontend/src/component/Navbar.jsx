@@ -31,7 +31,7 @@ export function Navbar() {
         >
           <FontAwesomeIcon size={"sm"} icon={faHeadset} />
           <Text fontSize={"small"} ml={1}>
-            고객센터다
+            고객센터
           </Text>
         </Center>
         <Box className="dropdown-content" fontSize={"0.9rem"}>
