@@ -99,19 +99,19 @@ export function Login() {
           <Text>간편 로그인</Text>
         </Center>
         <Flex mt={5} justifyContent={"center"} gap={7}>
-          <a href="http://localhost:8080/oauth2/authorization/kakao">
+          <a href="http://3.39.193.68:8080/oauth2/authorization/kakao">
             <Image
               width={"50px"}
               src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Ft1vHi%2FbtsIiWtmqdW%2FMFrKl7D3oAVOmICc4zTVuk%2Fimg.webp"
             />
           </a>
-          <a href="http://localhost:8080/oauth2/authorization/google">
+          <a href="http://3.39.193.68:8080/oauth2/authorization/google">
             <Image
               width={"50px"}
               src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb22uox%2FbtsIhMyuE9r%2FO3yYJ4lf8iWgzslXfvE5X0%2Fimg.png"
             />
           </a>
-          <a href="http://localhost:8080/oauth2/authorization/naver">
+          <a href="http://3.39.193.68:8080/oauth2/authorization/naver">
             <Image
               width={"50px"}
               src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FnrXzH%2FbtsIjibSXmY%2FhuvZ5Dc784XBP392KnCx8k%2Fimg.png"
