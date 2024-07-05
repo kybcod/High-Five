@@ -103,7 +103,7 @@ export function Payment() {
             navigate(`/chat/product/${product.id}/buyer/${account.id}`);
           });
       } else {
-        alert(`${error_msg} 이유로 결제를 실패하였습니다.`);
+        alert(`${error_msg}.`);
       }
     }
   }
