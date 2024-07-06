@@ -176,8 +176,9 @@ export function UserEdit() {
               <Button
                 onClick={() => imgRef.current.click()}
                 colorScheme="teal"
+                variant={"outline"}
                 height={"30px"}
-                fontSize={"xs"}
+                fontSize={"smaller"}
               >
                 이미지 업로드
               </Button>
@@ -252,7 +253,7 @@ export function UserEdit() {
                 onClick={handleDuplicated}
                 isDisabled={!disabledNickNameCheckButton}
                 h="2rem"
-                size="md"
+                size="lg"
                 colorScheme="teal"
                 variant="outline"
               >
