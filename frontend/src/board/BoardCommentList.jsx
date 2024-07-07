@@ -194,6 +194,7 @@ export function BoardCommentList({ boardId, isProcessing, setIsProcessing }) {
                     {showReCommentId === comment.id || (
                       <Box>
                         <Text
+                          cursor={"pointer"}
                           onClick={() => handleClickReComment(comment.id)}
                           fontSize={"small"}
                         >
