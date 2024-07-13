@@ -16,7 +16,7 @@ export function Navbar() {
 
   return (
     <Flex
-      h={"30px"}
+      h={"15px"}
       p={4}
       justifyContent={"space-between"}
       align="center"
