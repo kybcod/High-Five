@@ -26,3 +26,5 @@ ssh -i src/main/resources/secret/key0527.pem ubuntu@3.39.193.68 'docker rm funct
 ssh -i src/main/resources/secret/key0527.pem ubuntu@3.39.193.68 'docker pull ybk0215/function'
 # 컨테이너 실행
 ssh -i src/main/resources/secret/key0527.pem ubuntu@3.39.193.68 'docker run -d -p 8080:8080 --restart always --name function ybk0215/function'
+# 필요없는 이미지 삭제
+ssh -i src/main/resources/secret/key0527.pem ubuntu@3.39.193.68 'docker image prune -f'
