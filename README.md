@@ -30,6 +30,8 @@
 
 ## **👨‍👨‍👧‍👦 팀원 소개**
 
+[팀 노션](https://www.notion.so/huitopia/2c4fb555828c41f4b69f4a675689e282)
+
 **Da Hee Kim**
 
 - 🐶 Github: [https://github.com/huitopia]
@@ -51,6 +53,18 @@ Jeong Yun Heo
 - 🐴 Github : [https://github.com/JeongYunheo]
 
 <br>
+
+| Name            | Role                | 
+| --------------- | ------------------- |
+| 김예빈       | Product     | 
+| 김다희       | Chat     | 
+| 안진아       | User     | 
+| 허정윤       | Board     | 
+| 조화영       | QnA     | 
+
+<br>
+
+
 
 ## **⛓ 기술 스택**
 
